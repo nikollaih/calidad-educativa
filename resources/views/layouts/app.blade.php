@@ -34,12 +34,12 @@
         <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/core.css') }}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/theme-default.css') }}" />
         <link rel="stylesheet" href="{{asset('assets/css/demo.css')}}" />
-        
+
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
-        
+
         @yield('vendors_css')
-        
+
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
         <style>.light-style .menu .app-brand.demo {height: 80px !important;}</style>
@@ -57,12 +57,12 @@
                                         height="26px"
                                         viewBox="0 0 26 26"
                                         version="1.1"
-                                        xmlns="{{asset('storage/iconos')}}/{{ session('icono') ? session('icono') : 'icono_empresa.png' }}"
+                                        xmlns="{{asset('/logo.png')}}"
                                         xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>{{ env('APP_NAME') }}</title>
                                 </svg>
                             </span>
-                            <img src="{{asset('storage/logos')}}/{{ session('logo') ? session('logo') : 'logo_empresa.png' }}" width="170px;" alt="Logo">
+                            <img src="{{asset('logo.png')}}" width="90px;" height="70" alt="Logo">
                         </a>
                     </div>
                     <div class="menu-divider mt-0"></div>
@@ -93,10 +93,25 @@
                                     </a>
                                 </li>
                             </ul>
+
+                        </li>
+                        <li class="menu-item">
+                            <a href="javascript:void(1);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons fa fa-solid fa-school"></i>
+                                <div data-i18n="Gestion de instituciones">Gestión de perfil institucional</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-university"></i>
+                                        <div data-i18n="Instituciones"> Instituciones</div>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </aside>
-                <div class="layout-page">    
+                <div class="layout-page">
                     <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
                         <div class="container-fluid">
                             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -186,7 +201,7 @@
                                 </div>
                             </div>
                         </footer>
-                        
+
                         <div class="content-backdrop fade"></div>
                     </div>
                 </div>
@@ -204,7 +219,7 @@
         <script src="{{ asset('assets/vendor/libs/i18n/i18n.js')}}"></script>
         <script src="{{ asset('assets/vendor/libs/typeahead-js/typeahead.js')}}"></script>
         <script src="{{ asset('assets/vendor/js/menu.js')}}"></script>
-        
+
         @yield('vendors_js')
         <script src="{{ asset('assets/js/main.js')}}"></script>
 
