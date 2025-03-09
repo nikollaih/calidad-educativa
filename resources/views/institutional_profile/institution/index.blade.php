@@ -6,7 +6,7 @@
             <h1 class="card-header">Instituciones</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('permissions.create') }}" class="btn btn-primary mb-3">Crear institución</a>
+                    <a href="{{ route('institution.create') }}" class="btn btn-primary mb-3">Crear institución</a>
 
                     @if(session('success'))
                         <div class="alert alert-success">
@@ -34,10 +34,10 @@
                             <td>sanjose@colegio.edu.co</td>
                             <td>María González</td>
                             <td>
-                                <a href="{{ route('usuarios.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('usuarios.destroy', 1) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -49,10 +49,10 @@
                             <td>itcentral@instituto.edu.co</td>
                             <td>Carlos Martínez</td>
                             <td>
-                                <a href="{{ route('usuarios.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('usuarios.destroy', 1) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -64,10 +64,10 @@
                             <td>liceomoderno@colegio.edu.co</td>
                             <td>Ana López</td>
                             <td>
-                                <a href="{{ route('usuarios.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('usuarios.destroy', 1) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -79,10 +79,10 @@
                             <td>lasalle@colegio.edu.co</td>
                             <td>Jorge Ramírez</td>
                             <td>
-                                <a href="{{ route('usuarios.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('usuarios.destroy', 1) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -94,10 +94,10 @@
                             <td>normal@escuela.edu.co</td>
                             <td>Laura Díaz</td>
                             <td>
-                                <a href="{{ route('usuarios.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('usuarios.destroy', 1) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>

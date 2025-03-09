@@ -49,7 +49,7 @@
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                    <div class="app-brand demo">
+                    <div class="app-brand demo justify-content-center">
                         <a href="{{  url('empleados') }}" class="app-brand-link">
                             <span class="app-brand-logo demo">
                                 <svg
@@ -105,6 +105,18 @@
                                     <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
                                         <i class="menu-icon fa-solid fa-university"></i>
                                         <div data-i18n="Instituciones"> Instituciones</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('institutional_profile/sede')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fas fa-sitemap"></i><i class=""></i>
+                                        <div data-i18n="Sedes"> Sedes</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('institutional_profile/educational-offer')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-graduation-cap"></i><i class=""></i>
+                                        <div data-i18n="education-offer"> Ofertas educativas</div>
                                     </a>
                                 </li>
                             </ul>

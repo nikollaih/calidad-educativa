@@ -18,12 +18,12 @@ class InstitutionController extends Controller
     public function create()
     {
        // $roles = Role::all();
-        return view('institutional_profile.institutional_profile.create');
+        return view('institutional_profile.institution.create');
     }
 
     public function store(Request $request)
     {
-        return redirect()->route('institutional_profile.institution.index')->with('success', 'Institución creada correctamente.');
+        return redirect()->route('institution.index')->with('success', 'Institución creada correctamente.');
     }
 
     public function edit(User $usuario)

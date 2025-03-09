@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use \App\Http\Controllers\InstitutionController;
+use \App\Http\Controllers\EducationalOfferController;
 
 
 /*
@@ -59,6 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('institutional_profile')->group(function () {
         // Rutas para la gestion de instituciones
         Route::resource('institution'             , InstitutionController::class);
+        // Rutas para la gestion de sedes
+        Route::resource('sede'             , \App\Http\Controllers\SedeController::class);
+        // Rutas para la gestion de ofertas educativas
+        Route::resource('educational-offer'             , EducationalOfferController::class);
     });
 
 });
