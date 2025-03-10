@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use \App\Http\Controllers\InstitutionController;
+use \App\Http\Controllers\EducationalOfferController;
 
 
 /*
@@ -46,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
     Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-    
+
     // permissions
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
@@ -54,6 +56,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/permissions/{role}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
     Route::patch('/permissions/{role}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('/permissions/{role}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    Route::prefix('institutional_profile')->group(function () {
+        // Rutas para la gestion de instituciones
+        Route::resource('institution'             , InstitutionController::class);
+        // Rutas para la gestion de sedes
+        Route::resource('sede'             , \App\Http\Controllers\SedeController::class);
+        // Rutas para la gestion de ofertas educativas
+        Route::resource('educational-offer'             , EducationalOfferController::class);
+    });
+
 });
 
 require __DIR__.'/auth.php';
