@@ -50,19 +50,19 @@
             <div class="layout-container">
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                     <div class="app-brand demo justify-content-center">
-                        <a href="{{  url('empleados') }}" class="app-brand-link">
+                        <a href="{{  url('usuarios') }}" class="app-brand-link">
                             <span class="app-brand-logo demo">
                                 <svg
                                         width="26px"
                                         height="26px"
                                         viewBox="0 0 26 26"
                                         version="1.1"
-                                        xmlns="{{asset('/logo.png')}}"
+                                        xmlns="{{asset('imagenes/educacion_menu.png')}}"
                                         xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>{{ env('APP_NAME') }}</title>
                                 </svg>
                             </span>
-                            <img src="{{asset('logo.png')}}" width="90px;" height="70" alt="Logo">
+                            <img src="{{asset('imagenes/educacion_menu.png')}}" width="190px;" height="70" alt="Logo">
                         </a>
                     </div>
                     <div class="menu-divider mt-0"></div>
