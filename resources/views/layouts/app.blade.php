@@ -121,6 +121,70 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="menu-item">
+                            <a href="javascript:void(1);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons fas fa-tools"></i>
+                                <div data-i18n="Gestion de instituciones">PAM (Plan de Apoyo al Mejoramiento)</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('pam/index')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-folder-open"></i>
+                                        <div data-i18n="education-offer"> General</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pam/matriz')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-th-list"></i>
+                                        <div data-i18n="education-offer"> Matriz de fortalezas y debilidades</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pam/forms_ie_pestanas')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-chart-line"></i>
+                                        <div data-i18n="education-offer"> Plan de Mejoramiento Institucional 1</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pam/forms_ie')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-chart-line"></i>
+                                        <div data-i18n="education-offer"> Plan de Mejoramiento Institucional 2</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <a href="javascript:void(1);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons fas fa-lightbulb"></i>
+                                <div data-i18n="Gestion de instituciones">PEI (Proyecto Educativo Institucional)</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('pei/autoevaluation')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-check-circle"></i>
+                                        <div data-i18n="education-offer"> Autoevaluación</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pei/academic-management')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-book-open"></i>
+                                        <div data-i18n="education-offer"> Gestión académica</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pei/community-management')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-users"></i>
+                                        <div data-i18n="education-offer"> Gestión de la comunidad</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('pei/executive-management')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-user-tie"></i>
+                                        <div data-i18n="education-offer"> Gestión directiva</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </aside>
                 <div class="layout-page">

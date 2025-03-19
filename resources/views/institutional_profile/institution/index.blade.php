@@ -26,83 +26,30 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- Institución 1 -->
-                        <tr>
-                            <td>Colegio San José</td>
-                            <td>800.123.456-1</td>
-                            <td>17654321</td>
-                            <td>sanjose@colegio.edu.co</td>
-                            <td>María González</td>
-                            <td>
-                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <!-- Institución 2 -->
-                        <tr>
-                            <td>Instituto Técnico Central</td>
-                            <td>900.234.567-2</td>
-                            <td>23456789</td>
-                            <td>itcentral@instituto.edu.co</td>
-                            <td>Carlos Martínez</td>
-                            <td>
-                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <!-- Institución 3 -->
-                        <tr>
-                            <td>Liceo Moderno de Bogotá</td>
-                            <td>700.345.678-3</td>
-                            <td>34567890</td>
-                            <td>liceomoderno@colegio.edu.co</td>
-                            <td>Ana López</td>
-                            <td>
-                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <!-- Institución 4 -->
-                        <tr>
-                            <td>Colegio La Salle</td>
-                            <td>600.456.789-4</td>
-                            <td>45678901</td>
-                            <td>lasalle@colegio.edu.co</td>
-                            <td>Jorge Ramírez</td>
-                            <td>
-                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <!-- Institución 5 -->
-                        <tr>
-                            <td>Escuela Normal Superior</td>
-                            <td>500.567.890-5</td>
-                            <td>56789012</td>
-                            <td>normal@escuela.edu.co</td>
-                            <td>Laura Díaz</td>
-                            <td>
-                                <a href="{{ route('institution.edit', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('institution.destroy', 1) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
+
+                        @foreach ($paginate as $institucion)
+                            <tr>
+                                <td>{{$institucion->nombre}}</td>
+                                <td>{{$institucion->nit}}</td>
+                                <td>{{$institucion->dane}}</td>
+                                <td>{{$institucion->email}}</td>
+                                <td>{{$institucion->nombre_rector}}</td>
+                                <td>
+                                    <a href="{{ route('institution.edit', $institucion->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form action="{{ route('institution.destroy', $institucion->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center">
+                        {{ $paginate->links() }}
+                    </div>
                 </div>
             </div>
         </div>

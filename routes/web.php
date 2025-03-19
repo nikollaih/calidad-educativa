@@ -7,7 +7,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use \App\Http\Controllers\InstitutionController;
 use \App\Http\Controllers\EducationalOfferController;
-
+use App\Http\Controllers\PAMController;
+use App\Http\Controllers\PEIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +20,7 @@ use \App\Http\Controllers\EducationalOfferController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -64,6 +62,20 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('sede'             , \App\Http\Controllers\SedeController::class);
         // Rutas para la gestion de ofertas educativas
         Route::resource('educational-offer'             , EducationalOfferController::class);
+    });
+    Route::prefix('pam')->group(function () {
+        // Rutas para la gestion de instituciones
+        Route::get('/index'             , [PAMController::class, 'index']);
+        Route::get('/matriz'             , [PAMController::class, 'matriz']);
+        Route::get('/forms_ie_pestanas'             , [PAMController::class, 'forms_ie_pestanas']);
+        Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
+    });
+    Route::prefix('pei')->group(function () {
+        Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
+        Route::get('/academic-management'             , [PEIController::class, 'academicManagement']);
+        Route::get('/community-management'             , [PEIController::class, 'communityManagement']);
+        Route::get('/executive-management'             , [PEIController::class, 'executiveManagement']);
+
     });
 
 });

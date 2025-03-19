@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-/*
+        //
         $superAdmin = Role::create(['name' => 'super_admin']);
         $admin = Role::create(['name' => 'administrador']);
         $vendedor = Role::create(['name' => 'rector']);
@@ -49,9 +49,8 @@ class DatabaseSeeder extends Seeder
         // Asignar permisos a los roles
         $superAdmin->givePermissionTo(Permission::all());
         // $admin->givePermissionTo(['crear usuarios', 'editar usuarios']);
-        */
         // Asignar rol a un usuario por defecto
-        $user = User::find(1); // Cambiar por un usuario existente
+        $user = User::where('email','admin@gmail.com')->first(); // Cambiar por un usuario existente
         $user->assignRole('super_admin');
     }
 }
