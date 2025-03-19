@@ -7,7 +7,7 @@
                 <h1>Crear Institución</h1>
             </div>
             <div class="card-body">
-                <form action="{{ route('institution.store') }}" method="POST">
+                <form action="{{ route('institution.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
@@ -15,7 +15,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)</label>
-                                <input type="text" name="nombre_ie" class="form-control" required>
+                                <input type="text" name="nombre" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
@@ -38,12 +38,12 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono_ie" class="form-control" required>
+                                <input type="text" name="telefono" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="pagina_web" class="form-control">
+                                <input type="url" name="web_url" class="form-control">
                             </div>
 
                             <div class="mb-3">
@@ -58,7 +58,7 @@
 
                             <div class="mb-3">
                                 <label for="nombre_coordinador" class="form-label">Nombre del Coordinador/es</label>
-                                <input type="text" name="nombre_coordinador" class="form-control">
+                                <input type="text" name="nombre_coordinadores" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -85,6 +85,7 @@
                                                 <strong>{{ $red['nombre'] }}</strong>
                                             </div>
                                             <label class="form-label mt-2">URL</label>
+                                            <input hidden name="redes_sociales[{{ $index }}][nombre]" value="{{ $red['nombre'] }}">
                                             <input type="url" name="redes_sociales[{{ $index }}][url]" class="form-control"
                                                    placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com">
                                         </div>
