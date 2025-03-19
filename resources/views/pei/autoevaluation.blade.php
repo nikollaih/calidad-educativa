@@ -466,7 +466,7 @@
                                 </div>
                                 <div class="tab-pane fade" id="navs-tab-gestion-academica" role="tabpanel">
                                     <div class="card-datatable table-responsive pt-0">
-                                      <table border="1">
+                                      <table border="1" class="w-100">
                                         <tr>
                                             <td colspan="6" style="background-color: #A52A2A; color: white;"><b>2. GESTIÓN ACADEMICA</b></td>
                                         </tr>
