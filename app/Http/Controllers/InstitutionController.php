@@ -35,16 +35,22 @@ class InstitutionController extends Controller
     public function store(Request $request)
     {
 
+        // Valida si hay un file de licencia de funcionamiento
         if (!$request->hasFile('licencia_funcionamiento')) {
             return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar una licencia de funcionamiento.');
         }
+
+        // Intenta almacenar el Adjunto
         $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto($request->file('licencia_funcionamiento'),'institucion/licencia_funcionamiento','public');
-        if ($storeAdjuntoResponse['success'] == false){
-            return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse['msg']);
+
+        if ($storeAdjuntoResponse->success == false){
+            return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse->msg);
         }
         $institutionData = $request->all();
-        $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse['content']->id;
+        $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse->data->id;
+        // Crea la institucion
         $institutionCreated = Institucion::create($institutionData);
+        // Sincroniza las redes sociales de la institucion
         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'],$institutionCreated);
 
 
@@ -54,7 +60,7 @@ class InstitutionController extends Controller
     public function edit(int $institucion)
     {
 
-        $institucion = Institucion::with('licenciaFuncionamiento','redesSociales')
+        $institucion = Institucion::with('licenciaFuncionamiento','redesSociales','sedes')
             ->where('id',$institucion)
             ->first();
 
@@ -79,10 +85,10 @@ class InstitutionController extends Controller
 
          if ($request->hasFile('licencia_funcionamiento')) {
             $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto($request->file('licencia_funcionamiento'),'institucion/licencia_funcionamiento','public');
-             if ($storeAdjuntoResponse['success'] == false){
-                return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse['msg']);
+             if ($storeAdjuntoResponse->success == false){
+                return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse->msg);
              }
-            $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse['content']->id;
+            $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse->data->id;
          }
          $institucionToUpdate->fill($institutionData);
          $institucionToUpdate->save();
