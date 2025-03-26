@@ -1,6 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #d98b8b;
+        }
+        .mejoramiento {
+            background-color: green;
+            color: white;
+        }
+        .apropiacion {
+            background-color: yellow;
+        }
+        .existencia {
+            background-color: lightgray;
+        }
+        .categoria {
+            font-weight: bold;
+            background-color: #d9a6a6;
+        }
+        .mejoramiento {
+            background-color: green;
+            color: white;
+            text-align: center;
+        }
+    </style>
   <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->

@@ -2,14 +2,21 @@
 
 @section('content')
     <div class="container">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
         <div class="card">
             <div class="card-header">
-                <h1>Editar Sede</h1>
+                <h1>Crear Sede </h1>
             </div>
             <div class="card-body">
-                <form action="{{ route('sede.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('sede.store', [ 'institutionId' => $institutionId ] ) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
+                    <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $institutionId }}" required>
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
@@ -39,22 +46,22 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" name="nombre" class="form-control" required>
+                                <label for="sede[name]" class="form-label">Nombre</label>
+                                <input type="text" name="sede[name]" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="dane" class="form-label">Código DANE</label>
-                                <input type="text" name="dane" class="form-control" required>
+                                <label for="sede[dane]" class="form-label">Código DANE</label>
+                                <input type="text" name="sede[dane]" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" name="direccion" class="form-control" required>
+                                <label for="sede[address]" class="form-label">Dirección</label>
+                                <input type="text" name="sede[address]" class="form-control" required>
                             </div>
                             <div class="mb-3">
                                 <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
-                                <select name="titularidad_sede" id="titularidad_sede" class="form-control w-full" required>
+                                <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full" required>
                                     <option value="Municipio">Municipio</option>
                                     <option value="Departamento">Departamento</option>
                                     <option value="Comité de Cafeteros">Comité de Cafeteros</option>
@@ -65,14 +72,14 @@
                             <div class="row" id="otro_titularidad_container" style="display: none;">
                                 <div class="mb-3">
                                     <label for="otro_titularidad" class="form-label">Especifique</label>
-                                    <input type="text" name="otro_titularidad" class="form-control">
+                                    <input type="text" name="titularity[name]" class="form-control">
                                 </div>
                             </div>
 
-                            <div class="row" id="anexo_certificado_container" style="display: none;">
+                            <div class="row" id="anexo_certificado_container" >
                                 <div class="mb-3">
                                     <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
-                                    <input type="file" name="anexo_certificado" class="form-control" accept="application/pdf">
+                                    <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" required>
                                 </div>
                             </div>
                         </div>
@@ -81,54 +88,72 @@
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                             <div class="mb-3">
-                                <label for="zona" class="form-label">Zona</label>
-                                <input type="text" name="zona" class="form-control" required>
+                                <label for="sede[zone]" class="form-label">Zona</label>
+                                <select name="sede[zone]" id="titularidad_sede" class="form-control w-full" required>
+                                    <option value="RURAL">Rural</option>
+                                    <option value="URBANA">Urbana</option>
+                                </select>
                             </div>
 
                             <div class="mb-3">
-                                <label for="longitud" class="form-label">Longitud</label>
-                                <input type="text" name="longitud" class="form-control" placeholder="Ej: -74.123456" required>
+                                <label for="sede[longitude]" class="form-label">Longitud</label>
+                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="latitud" class="form-label">Latitud</label>
-                                <input type="text" name="latitud" class="form-control" placeholder="Ej: 4.123456" required>
+                                <label for="sede[latitude]" class="form-label">Latitud</label>
+                                <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="acto_administrativo" class="form-label">Acto Administrativo (Opcional)</label>
-                                <input type="file" name="acto_administrativo" class="form-control" accept="application/pdf">
+                                <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
+                                <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">¿Es escuela nueva?</label>
                                 <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="escuela_nueva" id="escuela_nueva_si" value="1" required>
-                                        <label class="form-check-label" for="escuela_nueva_si">Sí</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="escuela_nueva" id="escuela_nueva_no" value="0" required>
-                                        <label class="form-check-label" for="escuela_nueva_no">No</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="1">
+                                        <label class="form-check-label" for="sede[is_new_school]">¿Es una nueva escuela?</label>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Nuevo campo: ¿Cuenta con aulas STEAM? -->
-                            <div class="mb-3">
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" name="cuenta_aulas_steam" id="cuenta_aulas_steam" value="1">
-                                        <label class="form-check-label" for="cuenta_aulas_steam">¿Cuenta con aulas STEAM?</label>
-                                    </div>
+                        </div>
+                        <div>
+                            <!-- Sección de Aulas Steam -->
+                            <div id="aulas_steam_container" class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="aulas_steam_checkbox">
+                                    <label class="form-check-label" for="aulas_steam_checkbox">¿Cuenta con Aulas Steam?</label>
                                 </div>
                             </div>
 
+                            <!-- Campos adicionales ocultos -->
+                            <div id="aulas_steam_fields" style="display: none;">
+                                <div class="row">
+                                    <!-- Campo para cantidad de aulas -->
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
+                                        <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" placeholder="Ingrese cantidad">
+                                    </div>
 
-
+                                    <!-- Campo para fase -->
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="fase_aula">Fase</label>
+                                        <select name="steam_classroom[phase]"  class="form-control w-full" required>
+                                            <option value="Fase 1">Fase 1</option>
+                                            <option value="Fase 2">Fase 2</option>
+                                            <option value="Fase 3">Fase 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="form-label">Equipos disponibles</label>
                             <!-- Sección de equipos (oculta inicialmente) -->
-                            <div id="aulas_steam_container" style="display: none;">
-                                <label class="form-label">Equipos disponibles</label>
+                            <div class="row row-cols-1 row-cols-md-2 g-3" >
                                 @php
                                     $equipos = [
                                         'Equipo Servidor',
@@ -153,7 +178,7 @@
                                         'Cabinas de sonido',
                                     ];
                                 @endphp
-                                @foreach ($equipos as $equipo)
+                                @foreach ($equipos as $key => $equipo)
                                     <div class="mb-3">
                                         <div class="row align-items-center">
                                             <div class="col-md-3">
@@ -167,7 +192,8 @@
                                                 <div id="label_fuente_{{ Str::slug($equipo) }}" style="display: none;">
                                                     <label class="form-check-label">Fuente de financiación</label>
                                                 </div>
-                                                <select name="fuente_financiacion_{{ Str::slug($equipo) }}" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
+                                                <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
+                                                <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
                                                     <option value="Computadores para educar">Computadores para educar</option>
                                                     <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
                                                     <option value="Aula Steam">Aula Steam</option>
@@ -181,7 +207,7 @@
                                                 <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: none;">
                                                     <label class="form-check-label">Cantidad</label>
                                                 </div>
-                                                <input type="number" name="cantidad_{{ Str::slug($equipo) }}" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
+                                                <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
                                             </div>
                                         </div>
                                     </div>
@@ -195,7 +221,7 @@
                         <button type="submit" class="btn btn-success me-2">
                             <i class="fas fa-save"></i> Guardar
                         </button>
-                        <a href="{{ route('sede.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('sede.index', [ 'institutionId' => $institutionId ]) }}" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
                     </div>
@@ -207,7 +233,6 @@
     <!-- Script para manejar la lógica de los campos -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const cuentaAulasSteam = document.getElementById('cuenta_aulas_steam');
             const aulasSteamContainer = document.getElementById('aulas_steam_container');
             const equiposContainer = document.getElementById('equipos_container');
             const tipoSedeSelect = document.getElementById('tipo_sede');
@@ -225,17 +250,6 @@
             if (tipoSedeSelect.value === 'Adscrita a una principal') {
                 sedePrincipalContainer.style.display = 'block';
             }
-            // Mostrar/ocultar campos de aulas STEAM y equipos
-            cuentaAulasSteam.addEventListener('change', function () {
-                if (this.checked) {
-                    aulasSteamContainer.style.display = 'block';
-                    equiposContainer.style.display = 'block';
-                } else {
-                    aulasSteamContainer.style.display = 'none';
-                    equiposContainer.style.display = 'none';
-                }
-            });
-
             const equiposCheckboxes = document.querySelectorAll('input[name="equipos[]"]');
             equiposCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function () {
@@ -275,5 +289,13 @@
                 anexoContainer.style.display = 'none';
             }
         });
+            document.getElementById('aulas_steam_checkbox').addEventListener('change', function () {
+        let fields = document.getElementById('aulas_steam_fields');
+        if (this.checked) {
+            fields.style.display = 'block';
+        } else {
+            fields.style.display = 'none';
+        }
+    });
     </script>
 @endsection

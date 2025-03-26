@@ -5,7 +5,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>Editar Institución</h1>
+                <h1>Editar Sede</h1>
             </div>
             <div class="card-body">
                 <form action="{{ route('institution.store') }}" method="POST">

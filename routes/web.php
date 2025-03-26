@@ -9,6 +9,7 @@ use \App\Http\Controllers\InstitutionController;
 use \App\Http\Controllers\EducationalOfferController;
 use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PEIController;
+use \App\Http\Controllers\SedeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +60,9 @@ Route::middleware(['auth'])->group(function () {
         // Rutas para la gestion de instituciones
         Route::resource('institution'             , InstitutionController::class);
         // Rutas para la gestion de sedes
-        Route::resource('sede'             , \App\Http\Controllers\SedeController::class);
+        Route::resource('{institutionId}/sede-with-institution'             , SedeController::class);
+        Route::resource('sede', SedeController::class);
+
         // Rutas para la gestion de ofertas educativas
         Route::resource('educational-offer'             , EducationalOfferController::class);
     });

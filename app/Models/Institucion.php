@@ -29,6 +29,9 @@ class Institucion extends Model
     public function licenciaFuncionamiento (){
         return $this->belongsTo(Adjunto::class,'licencia_funcionamiento');
     }
+    public function sedes (){
+        return $this->hasMany(Sede::class,'institution_id');
+    }
     public function getMorphClass() {
         return "institution";
     }

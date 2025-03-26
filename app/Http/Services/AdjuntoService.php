@@ -3,11 +3,12 @@
 namespace App\Http\Services;
 
 use App\Models\Adjunto;
+use App\DTOs\Result;
 use Illuminate\Http\UploadedFile;
 
 class AdjuntoService {
     // Permite almacenar un adjunto
-    public function storeAdjunto(UploadedFile $adjunto, string $ruta, string $disk = 'public') {
+    public function storeAdjunto(UploadedFile $adjunto, string $ruta, string $disk = 'public'):Result {
              $adjuntoInfo = [];
 
              // Obtener la extensión original del archivo
@@ -30,9 +31,9 @@ class AdjuntoService {
              if ($rutaArchivo) {
                 $adjuntoInfo['ruta'] = $rutaArchivo;
                 $adjuntoCreated = Adjunto::create($adjuntoInfo);
-                return ['msg' => 'Archivo guardado exitosamente', 'success' => true, 'content' => $adjuntoCreated];
+                return Result::success(msg:'Archivo guardado exitosamente',data: $adjuntoCreated);
              }
-            return ['msg' => 'Error al guardar el archivo', 'success' => false, 'content' => null];
+            return Result::error(msg:'Error al guardar el archivo');
     }
 
 }

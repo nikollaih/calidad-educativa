@@ -37,11 +37,19 @@
 
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/typography.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/katex.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/editor.css')}}" />
 
         @yield('vendors_css')
+        <!-- Custom CSS -->
+        @yield('custom_css')
 
+        <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
+        <script src="{{asset('assets/js/forms-editors-pei.js')}}"></script>
+
         <style>.light-style .menu .app-brand.demo {height: 80px !important;}</style>
     </head>
 
@@ -57,12 +65,12 @@
                                         height="26px"
                                         viewBox="0 0 26 26"
                                         version="1.1"
-                                        xmlns="{{asset('imagenes/educacion_menu.png')}}"
+                                        xmlns="{{asset('imagenes/educacion_menu-nobg.png')}}"
                                         xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>{{ env('APP_NAME') }}</title>
                                 </svg>
                             </span>
-                            <img src="{{asset('imagenes/educacion_menu.png')}}" width="190px;" height="70" alt="Logo">
+                            <img src="{{asset('imagenes/educacion_menu-nobg.png')}}" width="190px;" height="70" alt="Logo">
                         </a>
                     </div>
                     <div class="menu-divider mt-0"></div>
@@ -98,7 +106,7 @@
                         <li class="menu-item">
                             <a href="javascript:void(1);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons fa fa-solid fa-school"></i>
-                                <div data-i18n="Gestion de instituciones">Gestión de perfil institucional</div>
+                                <div data-i18n="Gestion de instituciones">Perfil institucional</div>
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
@@ -107,12 +115,14 @@
                                         <div data-i18n="Instituciones"> Instituciones</div>
                                     </a>
                                 </li>
+                                <!--
                                 <li class="menu-item">
                                     <a href="{{ url('institutional_profile/sede')}}" class="menu-link">
                                         <i class="menu-icon fa-solid fas fa-sitemap"></i><i class=""></i>
                                         <div data-i18n="Sedes"> Sedes</div>
                                     </a>
                                 </li>
+                                -->
                                 <li class="menu-item">
                                     <a href="{{ url('institutional_profile/educational-offer')}}" class="menu-link">
                                         <i class="menu-icon fa-solid fa-graduation-cap"></i><i class=""></i>
@@ -124,15 +134,9 @@
                         <li class="menu-item">
                             <a href="javascript:void(1);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons fas fa-tools"></i>
-                                <div data-i18n="Gestion de instituciones">PAM (Plan de Apoyo al Mejoramiento)</div>
+                                <div data-i18n="Gestion de instituciones">PAM</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="{{ url('pam/index')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-folder-open"></i>
-                                        <div data-i18n="education-offer"> General</div>
-                                    </a>
-                                </li>
                                 <li class="menu-item">
                                     <a href="{{ url('pam/matriz')}}" class="menu-link">
                                         <i class="menu-icon fas fa-th-list"></i>
@@ -142,13 +146,13 @@
                                 <li class="menu-item">
                                     <a href="{{ url('pam/forms_ie_pestanas')}}" class="menu-link">
                                         <i class="menu-icon fas fa-chart-line"></i>
-                                        <div data-i18n="education-offer"> Plan de Mejoramiento Institucional 1</div>
+                                        <div data-i18n="education-offer">PMI</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('pam/forms_ie')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-chart-line"></i>
-                                        <div data-i18n="education-offer"> Plan de Mejoramiento Institucional 2</div>
+                                    <a href="{{ url('pam/index')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-folder-open"></i>
+                                        <div data-i18n="education-offer"> Plan de apoyo al mejoramiento</div>
                                     </a>
                                 </li>
                             </ul>
@@ -156,7 +160,7 @@
                         <li class="menu-item">
                             <a href="javascript:void(1);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons fas fa-lightbulb"></i>
-                                <div data-i18n="Gestion de instituciones">PEI (Proyecto Educativo Institucional)</div>
+                                <div data-i18n="Gestion de instituciones">PEI</div>
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
