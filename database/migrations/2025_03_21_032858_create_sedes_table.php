@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreign('administrative_act')->references('id')->on('adjuntos')->nullOnDelete();
             $table->foreign('institution_id')->references('id')->on('institucions');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

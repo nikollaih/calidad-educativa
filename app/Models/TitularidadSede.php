@@ -15,6 +15,8 @@ class TitularidadSede extends Model
         'sede_id',
         'support_file_id',
     ];
-
+    public function adjunto (){
+        return $this->belongsTo(Adjunto::class,'support_file_id');
+    }
 
 }

@@ -269,6 +269,9 @@
                         labelCantidad.style.display = 'none';
                         fuenteFinanciacion.style.display = 'none';
                         cantidad.style.display = 'none';
+                        cantidad.value = '';
+
+
                     }
                 });
             });

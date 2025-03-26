@@ -48,7 +48,7 @@
         <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
-        <script src="{{asset('assets/js/forms-editors-pei.js')}}"></script>
+        <!--<script src="{{asset('assets/js/forms-editors-pei.js')}}"></script> -->
 
         <style>.light-style .menu .app-brand.demo {height: 80px !important;}</style>
     </head>

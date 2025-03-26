@@ -169,7 +169,7 @@
                                 <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
                                 <td>
                                     <a href="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('sede.destroy', [$institution->id, 'sede' => $sede->id]) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('sede.destroy', ['sede' => $sede->id]) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
                                     </form>

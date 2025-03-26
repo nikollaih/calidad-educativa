@@ -96,20 +96,93 @@ class SedeController extends Controller
         return redirect()->back()->with('success', 'Sede creada correctamente.');
     }
 
-    public function edit(User $usuario)
+    public function edit(int $sede = null)
     {
-        $roles = Role::all();
-        return view('institutional_profile.sede.edit');
+        $sede = Sede::where('id',$sede)->with(
+            'administrativeAct',
+            'parentSede:id,name,dane',
+            'institution:id,nombre,dane',
+            'titularidadSede.adjunto',
+            'steamClassroom',
+            'inventories'
+        )->first();
+        if (empty($sede))
+                return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
+        return view('institutional_profile.sede.edit',['sede' => $sede]);
     }
 
-    public function update(Request $request, User $usuario)
+    public function update(Request $request, int $sede = null)
     {
-        return redirect()->route('institutional_profile.sede.index')->with('success', 'Institución actualizada correctamente.');
+        $sedeToUpdate = Sede::find($sede);
+        if(empty($sedeToUpdate)){
+            return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
+        }
+        $sedeData =  $request->input('sede');
+
+        if( !isset($sedeData['is_new_school']) )
+            $sedeData['is_new_school'] = false ;
+
+        $titularityData = $request->input('titularity');
+        $steamClassroomData = $request->input('steam_classroom');
+        $inventoryData = $request->input('inventory');
+
+        if($request->hasFile('administrative_act_file')){
+                // Intenta almacenar el Adjunto
+            $storeAdministrativeActResponse = $this->adjuntoService->storeAdjunto(
+                adjunto: $request->file('administrative_act_file'),
+                ruta: 'sedes/'.$sedeData['institution_id'],
+                disk: 'public');
+            if($storeAdministrativeActResponse->success){
+                $sedeData['administrative_act'] = $storeAdministrativeActResponse->data->id;
+            }else{
+                return redirect()->back()->with('flash_error_message', $storeAdministrativeActResponse->msg);
+            }
+        }
+        if($request->hasFile('titularity_certificate')){
+                // Intenta almacenar el Adjunto
+            $storeTitularityCertificateResponse = $this->adjuntoService->storeAdjunto(
+                adjunto: $request->file('titularity_certificate'),
+                ruta: 'sedes/'.$sedeData['institution_id'],
+                disk: 'public');
+            if($storeTitularityCertificateResponse->success){
+                $titularityData['support_file_id'] = $storeTitularityCertificateResponse->data->id;
+            }else{
+                return redirect()->back()->with('flash_error_message', $storeAdministrativeActResponse->msg);
+            }
+        }
+
+        $sedeToUpdate->fill($sedeData);
+        $sedeToUpdate->save();
+        $titularityData['sede_id'] = $sedeToUpdate->id;
+        $sedeToUpdate->titularidadSede->fill($titularityData);
+        $sedeToUpdate->titularidadSede->save();
+        // Agrega el aula steam en caso de que exista
+        if(!empty($steamClassroomData['phase']) && !empty($steamClassroomData['quantity'])){
+            $steamClassroomData['sede_id'] = $sedeToUpdate->id ;
+            if($sedeToUpdate->steamClassroom == null){
+                $steamClassroomResponse =  $this->steamClassroomService->create($steamClassroomData);
+
+                if($steamClassroomResponse->success == false)
+                    return redirect()->back()->with('flash_error_message', $steamClassroomResponse->msg);
+            }else{
+                $sedeToUpdate->steamClassroom->fill($steamClassroomData);
+                $sedeToUpdate->steamClassroom->save();
+            }
+
+        }else{
+            $sedeToUpdate?->steamClassroom?->delete();
+        }
+        $this->inventoryService->syncInventory(inventoryArray: $inventoryData, sedeId: $sedeToUpdate->id);
+        return redirect()->back()->with('success', 'Sede actualizada correctamente.');
     }
 
-    public function destroy(User $usuario)
+    public function destroy(int $sede = null)
     {
-        $usuario->delete();
-        return redirect()->route('institutional_profile.sede.index')->with('success', 'Institución eliminada correctamente.');
+        $sedeToDel = Sede::find($sede);
+        if(empty($sedeToDel)){
+            return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
+        }
+        $sedeToDel->delete();
+        return redirect()->back()->with('success', 'Sede eliminada correctamente.');
     }
 }
