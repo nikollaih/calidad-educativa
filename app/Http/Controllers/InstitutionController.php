@@ -60,7 +60,14 @@ class InstitutionController extends Controller
     public function edit(int $institucion)
     {
 
-        $institucion = Institucion::with('licenciaFuncionamiento','redesSociales','sedes')
+        $institucion = Institucion::with(
+            'licenciaFuncionamiento',
+            'redesSociales',
+            'sedes.sedeEducationalOffer.educationalLevels',
+            'sedes.sedeEducationalOffer.schedule',
+            'sedes.sedeEducationalOffer.schedule.anexo',
+            'sedes.sedeEducationalOffer.educationalOffer',
+            )
             ->where('id',$institucion)
             ->first();
 

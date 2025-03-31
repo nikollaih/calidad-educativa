@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class EducationalOfferSchedule extends Model
 {
     use HasFactory;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'schedule',
+        'document_id',
+        'sede_offer_id',
+        'notes',
+    ];
+    public function anexo (){
+        return $this->belongsTo(Adjunto::class,'document_id');
+    }
+
 }

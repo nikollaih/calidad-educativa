@@ -11,4 +11,12 @@ enum EducationalOfferLevelCategoryEnum: string {
     case Specialty      = 'especialidad';
     case Emphasis       = 'énfasis';
     case Agreement      = 'convenio';
+
+    public static function toArray(): array
+    {
+        return array_combine(
+            array_map(fn($case) => $case->name, self::cases()),
+            array_map(fn($case) => $case->value, self::cases())
+        );
+    }
 }

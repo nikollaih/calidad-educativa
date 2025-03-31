@@ -138,6 +138,7 @@
         </div>
     </div>
 
+    <!-- seccion de las sedes asociadas a la institucion -->
     <div class="container pt-3">
     <div class="col-md-12">
         <div class="card">
@@ -183,4 +184,54 @@
         </div>
     </div>
     </div>
+
+    <!-- fin session de las sedes asociadas a la institucion -->
+ <!-- seccion de las sedes asociadas a la institucion -->
+    <div class="container pt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <h1 class="card-header">Ofertas educativas de esta institución</h1>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <a href="{{ route('educational-offer.vinculate') }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>NIVELES Educativos</th>
+                            <th>JORNADA</th>
+                            <th>NOMBRE SEDE</th>
+                            <th>TIPO DE SEDE</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Institución 1 -->
+                             @foreach ($institution->sedes as $sede)
+                             @foreach ($sede->sedeEducationalOffer as $educationalOffer)
+                                <tr>
+                                    <td>{{ $educationalOffer?->educationalOffer?->name }}</td>
+                                    <td>{{ implode(', ', $educationalOffer?->educationalLevels->pluck('name')->toArray()) }}</td>
+                                    <td>{{ \App\Models\Enums\EducationalOfferScheduleEnum::getValueByCase($educationalOffer->schedule->name) }}</td>
+                                    <td>{{ $sede->name }}</td>
+                                    <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                    <td>
+                                        <a href="{{ route('educational-offer.vinculate-edit',['sedeEducationalId' => $educationalOffer->id]) }}" class="btn btn-warning btn-sm">Editar</a>
+                                        <form action="{{ route('educational-offer.vinculate-destroy', ['sedeEducationalId' => $educationalOffer->id]) }}" method="POST" style="display:inline;">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                         </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- fin session de las sedes asociadas a la institucion -->
 @endsection
