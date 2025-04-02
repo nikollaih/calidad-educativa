@@ -24,4 +24,9 @@ class EducationalOfferSchedule extends Model
         return $this->belongsTo(Adjunto::class,'document_id');
     }
 
+    public function levelSedeEducational()
+    {
+        return $this->belongsToMany(SedeEducationalOffer::class, 'level_sede_educationals', 'educational_shedule_id', 'sede_educational_offer_id')
+            ->withPivot('educational_level_id');
+    }
 }

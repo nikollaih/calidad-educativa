@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('educational-offer/vinculate-edit/{sedeEducationalId}', [EducationalOfferController::class,'vinculationEdit'])->name('educational-offer.vinculate-edit');
         Route::delete('educational-offer/vinculate-destroy/{sedeEducationalId}', [EducationalOfferController::class,'vinculationDestroy'])->name('educational-offer.vinculate-destroy');
         Route::post('educational-offer/makeVinculation/{sedeId}', [EducationalOfferController::class,'makeVinculation'])->name('educational-offer.make-vinculation');
+        Route::post('/educational-offer/vinculation/{sedeEducationalId}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
         Route::resource('educational-offer'             , EducationalOfferController::class);
     });
     Route::prefix('pam')->group(function () {
