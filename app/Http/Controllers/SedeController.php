@@ -96,7 +96,7 @@ class SedeController extends Controller
         return redirect()->back()->with('success', 'Sede creada correctamente.');
     }
 
-    public function edit(int $sede = null)
+    public function edit(int $institutionId = null,int $sede = null)
     {
         $sede = Sede::where('id',$sede)->with(
             'administrativeAct',
@@ -118,6 +118,7 @@ class SedeController extends Controller
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
         }
         $sedeData =  $request->input('sede');
+        unset($sedeData['institution_id']);
 
         if( !isset($sedeData['is_new_school']) )
             $sedeData['is_new_school'] = false ;

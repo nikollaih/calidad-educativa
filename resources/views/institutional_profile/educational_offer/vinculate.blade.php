@@ -1,0 +1,440 @@
+@extends('layouts.app')
+
+@section('content')
+
+<div class="container">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <form id="vinculationForm" action="{{ route('educational-offer.make-vinculation', $allSedes->first()->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        <!-- Selección de sede -->
+        <div class="mb-4">
+            <label for="sede" class="form-label fw-bold">Selecciona una sede <span class="text-danger fw-bold">*</span></label>
+            <select class="form-select" name="sede_educational[sede_id]" id="sede">
+                @foreach($allSedes as $sede)
+                    <option value="{{ $sede->id }}" {{ $loop->first ? 'selected' : '' }}>
+                        {{ $sede->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Selección de oferta educativa -->
+        <div class="mb-4">
+            <label for="educational_offer" class="form-label fw-bold">Oferta Educativa <span class="text-danger fw-bold">*</span></label>
+            <select class="form-select" name="sede_educational[educational_offer_id]" id="educational_offer">
+                @foreach($allEducationalOffers as $offer)
+                    <option value="{{ $offer->id }}">{{ $offer->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Contenedor para niveles educativos -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Niveles Educativos <span class="text-danger fw-bold">*</span></label>
+            <div id="educational-levels-container" class="card p-3">
+                <!-- Sección para Preescolar -->
+                <div class="mb-3">
+                    <h5>Preescolar</h5>
+                    @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::PreSchool->value) as $preescolar)
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input level-checkbox" type="checkbox"
+                                   id="preescolar-{{ $preescolar->id }}"
+                                   value="{{ $preescolar->id }}"
+                                   data-category="preescolar">
+                            <label class="form-check-label" for="preescolar-{{ $preescolar->id }}">
+                                {{ $preescolar->name }}
+                            </label>
+                            @if($preescolar->document_id)
+                                <a href="{{ $preescolar->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-eye"></i> Ver Anexo
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                    <div id="custom-preescolar-container" class="mt-2" style="display: none;">
+                        <input type="text" class="form-control mb-2" placeholder="Nombre del grado preescolar (ej: Prejardín, Jardín)">
+                        <div class="mb-2">
+                            <label class="form-label">Anexo (opcional)</label>
+                            <input type="file" class="form-control preescolar-anexo" accept="application/pdf">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('preescolar')">Agregar</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('preescolar')">
+                        + Agregar otro nivel de preescolar
+                    </button>
+                </div>
+
+                <!-- Sección para Énfasis -->
+                <div class="mb-3">
+                    <h5>Énfasis</h5>
+                    @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Emphasis->value) as $emphasis)
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input level-checkbox" type="checkbox"
+                                   id="emphasis-{{ $emphasis->id }}"
+                                   value="{{ $emphasis->id }}"
+                                   data-category="emphasis">
+                            <label class="form-check-label" for="emphasis-{{ $emphasis->id }}">
+                                {{ $emphasis->name }}
+                            </label>
+                            @if($emphasis->document_id)
+                                <a href="{{ $emphasis->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-eye"></i> Ver Anexo
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                    <div id="custom-emphasis-container" class="mt-2" style="display: none;">
+                        <input type="text" class="form-control mb-2" placeholder="Nuevo énfasis (ej: Música, Danza)">
+                        <div class="mb-2">
+                            <label class="form-label">Anexo (opcional)</label>
+                            <input type="file" class="form-control emphasis-anexo" accept="application/pdf">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('emphasis')">Agregar</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('emphasis')">
+                        + Agregar otro énfasis
+                    </button>
+                </div>
+
+                <!-- Sección para Convenios -->
+                <div class="mb-3">
+                    <h5>Convenios</h5>
+                    @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Agreement->value) as $agreement)
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input level-checkbox" type="checkbox"
+                                   id="agreement-{{ $agreement->id }}"
+                                   value="{{ $agreement->id }}"
+                                   data-category="agreement">
+                            <label class="form-check-label" for="agreement-{{ $agreement->id }}">
+                                {{ $agreement->name }}
+                            </label>
+                            @if($agreement->document_id)
+                                <a href="{{ $agreement->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-eye"></i> Ver Anexo
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                    <div id="custom-agreement-container" class="mt-2" style="display: none;">
+                        <input type="text" class="form-control mb-2" placeholder="Nuevo convenio (ej: Universidad X)">
+                        <div class="mb-2">
+                            <label class="form-label">Anexo (opcional)</label>
+                            <input type="file" class="form-control agreement-anexo" accept="application/pdf">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('agreement')">Agregar</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('agreement')">
+                        + Agregar otro convenio
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor para los horarios -->
+        <div id="schedules-container" class="mb-4">
+            <h4 class="fw-bold mb-3">Horarios por Nivel Educativo</h4>
+            <!-- Los horarios se agregarán aquí dinámicamente -->
+        </div>
+
+        <!-- Botón para guardar -->
+        <button type="submit" class="btn btn-primary w-100">Guardar Vinculación</button>
+    </form>
+</div>
+
+<!-- Plantilla para el formulario de horario (hidden) -->
+<div id="scheduleTemplate" class="card mb-4" style="display: none;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Horario para: <span class="level-name"></span></h5>
+        <button type="button" class="btn btn-sm btn-danger" onclick="removeSchedule(this)">Eliminar</button>
+    </div>
+    <div class="card-body">
+        <input type="hidden" class="schedule-index">
+        <div class="level-info-group">
+            <input type="hidden" class="level-id">
+            <input type="hidden" class="is-custom">
+            <input type="hidden" class="custom-category">
+        </div>
+        <div class="schedule-info-group">
+            <input type="hidden" class="schedule-name">
+            <input type="hidden" class="schedule-value">
+            <input type="hidden" class="schedule-notes">
+        </div>
+
+        <!-- Selección de horario -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
+            <select class="form-select schedule-select" required>
+                @foreach($educationalSchedules as $key => $value)
+                    <option value="{{ $key }}">{{ $value }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Campo de texto para describir el horario -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Descripción breve del horario <span class="text-danger fw-bold">*</span></label>
+            <input type="text" class="form-control schedule-description" placeholder="Ej: Horario matutino de 8 AM a 12 PM" required>
+        </div>
+
+        <!-- Área de texto para descripción detallada -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Descripción Detallada (opcional)</label>
+            <textarea class="form-control schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
+        </div>
+
+        <!-- Adjuntar archivo -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Adjuntar Anexo de horario</label>
+            <input type="file" class="form-control schedule-attachment" name="schedule_attachments[]">
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Configuración inicial
+    const sedeSelect = document.getElementById('sede');
+    const vinculationForm = document.getElementById('vinculationForm');
+
+    // Actualizar la URL del formulario cuando cambia la selección de sede
+    sedeSelect.addEventListener('change', function() {
+        const selectedSedeId = this.value;
+        const baseRoute = "{{ route('educational-offer.make-vinculation', '') }}";
+        vinculationForm.action = baseRoute + '/' + selectedSedeId;
+    });
+
+    // Manejar cambios en los checkboxes de niveles educativos
+    document.querySelectorAll('.level-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSchedules();
+        });
+    });
+});
+
+// Objeto para almacenar los niveles seleccionados
+const selectedLevels = {
+    preescolar: [],
+    emphasis: [],
+    agreement: []
+};
+
+// Función para mostrar/ocultar los inputs personalizados
+function toggleCustomInput(category) {
+    const container = document.getElementById(`custom-${category}-container`);
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+}
+
+// Función para actualizar los formularios de horario
+function updateSchedules() {
+    const schedulesContainer = document.getElementById('schedules-container');
+    const scheduleTemplate = document.getElementById('scheduleTemplate');
+
+    // Limpiar contenedor
+    schedulesContainer.innerHTML = '<h4 class="fw-bold mb-3">Horarios por Nivel Educativo</h4>';
+
+    // Recoger todos los niveles seleccionados
+    const allSelectedLevels = [];
+
+    // Agregar niveles predefinidos seleccionados
+    document.querySelectorAll('.level-checkbox:checked').forEach(checkbox => {
+        const category = checkbox.dataset.category;
+        const value = checkbox.value;
+
+        // Solo agregar si no es un nivel personalizado (los personalizados ya están en selectedLevels)
+        if (!value.startsWith('custom-')) {
+            allSelectedLevels.push({
+                id: value,
+                name: checkbox.nextElementSibling.textContent.replace(' (personalizado)', ''),
+                isCustom: false,
+                category: category
+            });
+        }
+    });
+
+    // Agregar niveles personalizados seleccionados
+    for (const category in selectedLevels) {
+        selectedLevels[category].forEach(level => {
+            if (document.getElementById(level.id)?.checked) {
+                allSelectedLevels.push(level);
+            }
+        });
+    }
+
+    // Crear un horario para cada nivel seleccionado
+    allSelectedLevels.forEach((level, index) => {
+        // Clonar la plantilla
+        const scheduleCard = scheduleTemplate.cloneNode(true);
+        scheduleCard.style.display = 'block';
+
+        // Actualizar los datos del nivel
+        scheduleCard.querySelector('.level-name').textContent = level.name;
+        scheduleCard.querySelector('.level-id').value = level.id;
+        scheduleCard.querySelector('.is-custom').value = level.isCustom ? '1' : '0';
+        scheduleCard.querySelector('.custom-category').value = level.category;
+        scheduleCard.querySelector('.schedule-index').value = index;
+
+        // Agregar campo oculto para el nombre del nivel personalizado
+        const customNameInput = document.createElement('input');
+        customNameInput.type = 'hidden';
+        customNameInput.name = `level_schedules[${index}][level_info][name]`;
+        customNameInput.value = level.name;
+        scheduleCard.querySelector('.level-info-group').appendChild(customNameInput);
+
+        // Agregar campo de anexo para niveles personalizados
+        if (level.isCustom && level.anexo) {
+            const anexoInput = document.createElement('input');
+            anexoInput.type = 'file';
+            anexoInput.name = `level_attachments[${index}]`;
+            anexoInput.style.display = 'none';
+            anexoInput.dataset.file = level.anexo.name;
+            
+            // Crear un nuevo FileList con el archivo
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(level.anexo);
+            anexoInput.files = dataTransfer.files;
+            
+            scheduleCard.querySelector('.card-body').appendChild(anexoInput);
+        }
+
+        // Actualizar los nombres de los campos para usar el índice
+        const levelInfoGroup = scheduleCard.querySelector('.level-info-group');
+        const scheduleInfoGroup = scheduleCard.querySelector('.schedule-info-group');
+
+        levelInfoGroup.querySelector('.level-id').name = `level_schedules[${index}][level_info][id]`;
+        levelInfoGroup.querySelector('.is-custom').name = `level_schedules[${index}][level_info][is_custom]`;
+        levelInfoGroup.querySelector('.custom-category').name = `level_schedules[${index}][level_info][category]`;
+
+        scheduleInfoGroup.querySelector('.schedule-name').name = `level_schedules[${index}][schedule][name]`;
+        scheduleInfoGroup.querySelector('.schedule-value').name = `level_schedules[${index}][schedule][schedule]`;
+        scheduleInfoGroup.querySelector('.schedule-notes').name = `level_schedules[${index}][schedule][notes]`;
+
+        // Agregar eventos para actualizar los campos ocultos
+        const scheduleSelect = scheduleCard.querySelector('.schedule-select');
+        const scheduleDescription = scheduleCard.querySelector('.schedule-description');
+        const scheduleNotes = scheduleCard.querySelector('.schedule-notes-input');
+
+        // Seleccionar el primer valor por defecto y actualizar el campo oculto
+        scheduleSelect.value = scheduleSelect.options[0].value;
+        scheduleCard.querySelector('.schedule-name').value = scheduleSelect.value;
+
+        scheduleSelect.addEventListener('change', function() {
+            scheduleCard.querySelector('.schedule-name').value = this.value;
+        });
+
+        scheduleDescription.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-value').value = this.value;
+        });
+
+        scheduleNotes.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-notes').value = this.value;
+        });
+
+        // Agregar al contenedor
+        schedulesContainer.appendChild(scheduleCard);
+    });
+}
+
+// Función para eliminar un horario
+function removeSchedule(button) {
+    const scheduleCard = button.closest('.card');
+    const levelId = scheduleCard.querySelector('.level-id').value;
+
+    // Eliminar del DOM
+    scheduleCard.remove();
+
+    // Desmarcar el checkbox correspondiente si existe
+    const checkbox = document.getElementById(levelId);
+    if (checkbox) {
+        checkbox.checked = false;
+    }
+
+    // Eliminar de selectedLevels si es un nivel personalizado
+    if (levelId.startsWith('custom-')) {
+        const category = levelId.split('-')[1];
+        selectedLevels[category] = selectedLevels[category].filter(level => level.id !== levelId);
+    }
+}
+
+// Función para agregar niveles personalizados
+function addCustomLevel(category) {
+    const input = document.querySelector(`#custom-${category}-container input[type="text"]`);
+    const levelName = input.value.trim();
+    const anexoInput = document.querySelector(`.${category}-anexo`);
+
+    if (levelName) {
+        // Generar un ID único para el nivel personalizado
+        const customId = `custom-${category}-${Date.now()}`;
+
+        // Mapear categorías en inglés a español
+        const categoryMap = {
+            'preescolar': 'preescolar',
+            'emphasis': 'énfasis',
+            'agreement': 'convenio'
+        };
+
+        // Crear un objeto File si hay un archivo seleccionado
+        let anexoFile = null;
+        if (anexoInput && anexoInput.files[0]) {
+            anexoFile = anexoInput.files[0];
+        }
+
+        // Agregar al objeto de niveles seleccionados
+        selectedLevels[category].push({
+            id: customId,
+            name: levelName,
+            isCustom: true,
+            category: categoryMap[category],
+            anexo: anexoFile
+        });
+
+        // Crear el elemento en la lista
+        const container = document.getElementById('educational-levels-container');
+        const newCheckbox = document.createElement('div');
+        newCheckbox.className = 'form-check';
+        newCheckbox.innerHTML = `
+            <input class="form-check-input level-checkbox" type="checkbox"
+                   id="${customId}"
+                   value="${customId}"
+                   data-category="${category}"
+                   checked>
+            <label class="form-check-label" for="${customId}">
+                ${levelName} (personalizado)
+            </label>
+            ${anexoFile ? `
+                <span class="badge bg-info ms-2">Anexo: ${anexoFile.name}</span>
+                <a href="#" class="btn btn-outline-info btn-sm ms-2 view-anexo" data-file="${anexoFile.name}" title="Ver anexo">
+                    <i class="fas fa-eye"></i> Ver Anexo
+                </a>
+            ` : ''}
+        `;
+
+        // Insertar después del contenedor de inputs
+        document.getElementById(`custom-${category}-container`).after(newCheckbox);
+
+        // Limpiar los inputs
+        input.value = '';
+        if (anexoInput) {
+            anexoInput.value = '';
+        }
+
+        // Ocultar el contenedor de inputs
+        document.getElementById(`custom-${category}-container`).style.display = 'none';
+
+        // Agregar evento al nuevo checkbox
+        newCheckbox.querySelector('input').addEventListener('change', function() {
+            updateSchedules();
+        });
+
+        // Actualizar horarios
+        updateSchedules();
+    }
+}
+</script>
+
+@endsection

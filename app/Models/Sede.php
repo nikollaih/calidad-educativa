@@ -47,6 +47,9 @@ class Sede extends Model
     public function inventories (){
         return $this->hasMany(Inventory::class,'sede_id');
     }
+    public function sedeEducationalOffer (){
+        return $this->hasMany(SedeEducationalOffer::class,'sede_id');
+    }
         /**
      * The attributes that should be casted to native types.
      *
