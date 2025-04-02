@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('schedule');
             $table->unsignedBigInteger('document_id')->nullable();
             $table->foreign('document_id')->references('id')->on('adjuntos');
-            $table->foreignId('sede_offer_id')->constrained('sede_educational_offers');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

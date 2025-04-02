@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('parent_id')->nullable();
+            $table->unsignedBigInteger('document_id')->nullable();
             $table->string('category');
             $table->foreign('parent_id')->references('id')->on('educational_offer_levels')->onDelete('cascade');
+            $table->foreign('document_id')->references('id')->on('adjuntos');
             $table->timestamps();
         });
     }

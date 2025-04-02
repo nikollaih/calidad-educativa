@@ -23,7 +23,7 @@ class SedeEducationalOffer extends Model
             return $this->belongsToMany(EducationalOfferLevel::class, 'level_sede_educationals', 'sede_educational_offer_id', 'educational_level_id');
         }
     public function schedule () {
-            return $this->hasOne(EducationalOfferSchedule::class,'sede_offer_id');
+            return $this->belongsToMany(EducationalOfferSchedule::class, 'level_sede_educationals', 'sede_educational_offer_id', 'educational_shedule_id');
     }
     public function educationalOffer () {
             return $this->belongsTo(EducationalOffer::class,'educational_offer_id');

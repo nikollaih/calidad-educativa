@@ -123,7 +123,14 @@ class EducationalOfferController extends Controller
         $allSedes = Sede::select('id','name')->get();
         $allEducationalOffers = EducationalOffer::select('id','name')->get();
 
-        $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[EducationalOfferLevelCategoryEnum::Emphasis->value, EducationalOfferLevelCategoryEnum::Agreement->value])
+        $allEducationalLevels =  EducationalOfferLevel::whereIn('category',
+            [
+                EducationalOfferLevelCategoryEnum::Emphasis->value,
+                EducationalOfferLevelCategoryEnum::Agreement->value,
+                EducationalOfferLevelCategoryEnum::PreSchool->value,
+                EducationalOfferLevelCategoryEnum::Primary->value,
+                EducationalOfferLevelCategoryEnum::Secondary->value,
+            ])
         ->get();
         $educationalCategories = EducationalOfferLevelCategoryEnum::toArray();
         $educationalSchedules = EducationalOfferScheduleEnum::toArray();
@@ -140,6 +147,7 @@ class EducationalOfferController extends Controller
     }
     public function makeVinculation(Request $request) {
 
+        return $request->all();
         $sedeEducationalData = $request->input('sede_educational');
         $educationalLevelsData = $request->input('educational_levels');
         $schedule = $request->input('schedule');
@@ -186,7 +194,13 @@ class EducationalOfferController extends Controller
         $allSedes = Sede::select('id','name')->get();
         $allEducationalOffers = EducationalOffer::select('id','name')->get();
 
-        $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[EducationalOfferLevelCategoryEnum::Emphasis->value, EducationalOfferLevelCategoryEnum::Agreement->value])
+        $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[
+            EducationalOfferLevelCategoryEnum::Emphasis->value, 
+            EducationalOfferLevelCategoryEnum::Agreement->value,
+            EducationalOfferLevelCategoryEnum::PreSchool->value,
+            EducationalOfferLevelCategoryEnum::Primary->value,
+            EducationalOfferLevelCategoryEnum::Secondary->value
+        ])
         ->get();
         $educationalCategories = EducationalOfferLevelCategoryEnum::toArray();
         $educationalSchedules = EducationalOfferScheduleEnum::toArray();

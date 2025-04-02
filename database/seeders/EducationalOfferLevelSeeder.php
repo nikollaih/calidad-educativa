@@ -20,28 +20,25 @@ class EducationalOfferLevelSeeder extends Seeder
 
             // Subniveles
             [ 'name' => 'Prejardín', 'parent_id' => 1, 'category' => 'subnivel'],
-            [ 'name' => 'Jardín', 'parent_id' => 4, 'category' => 'subnivel'],
-            [ 'name' => 'Transición', 'parent_id' => 4, 'category' => 'subnivel'],
+            [ 'name' => 'Jardín', 'parent_id' => 4, 'category' => 'preescolar'],
+            [ 'name' => 'Transición', 'parent_id' => 4, 'category' => 'preescolar'],
 
-            [ 'name' => 'Primaria', 'parent_id' => 2, 'category' => 'subnivel'],
-            [ 'name' => 'Secundaria', 'parent_id' => 2, 'category' => 'subnivel'],
+            [ 'name' => 'Primaria', 'parent_id' => 2, 'category' => 'primaria'],
+            [ 'name' => 'Secundaria', 'parent_id' => 2, 'category' => 'secundaria'],
 
-            [ 'name' => 'Grados', 'parent_id' => 3, 'category' => 'subnivel'],
 
             // Especialidades de Media
-            [ 'name' => 'Académica', 'parent_id' => 9, 'category' => 'especialidad'],
-            [ 'name' => 'Articulada', 'parent_id' => 9, 'category' => 'especialidad'],
+            [ 'name' => 'Académica', 'parent_id' => 3, 'category' => 'especialidad'],
+            [ 'name' => 'Articulada', 'parent_id' => 3, 'category' => 'especialidad'],
 
             // Enfasis en Académica
-            [ 'name' => 'Bilingüismo', 'parent_id' => 10, 'category' => 'énfasis'],
-            [ 'name' => 'Educación Artística', 'parent_id' => 10, 'category' => 'énfasis'],
-            [ 'name' => 'Educación Física', 'parent_id' => 10, 'category' => 'énfasis'],
-            [ 'name' => 'Otros', 'parent_id' => 10, 'category' => 'énfasis'],
+            [ 'name' => 'Bilingüismo', 'parent_id' => 9, 'category' => 'énfasis'],
+            [ 'name' => 'Educación Artística', 'parent_id' => 9, 'category' => 'énfasis'],
+            [ 'name' => 'Educación Física', 'parent_id' => 9, 'category' => 'énfasis'],
 
             // Convenios en Articulada
-            [ 'name' => 'SENA', 'parent_id' => 11, 'category' => 'convenio'],
-            [ 'name' => 'UQ', 'parent_id' => 11, 'category' => 'convenio'],
-            [ 'name' => 'Otras Instituciones', 'parent_id' => 11, 'category' => 'convenio'],
+            [ 'name' => 'SENA', 'parent_id' => 10, 'category' => 'convenio'],
+            [ 'name' => 'UQ', 'parent_id' => 10, 'category' => 'convenio'],
         ];
             foreach ($educationalOfferLevels as $level) {
             EducationalOfferLevel::firstOrCreate(
