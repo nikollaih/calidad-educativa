@@ -63,18 +63,16 @@ class InstitutionController extends Controller
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
-            'sedes.sedeEducationalOffer.educationalLevels',
-            'sedes.sedeEducationalOffer.schedule',
-            'sedes.sedeEducationalOffer.schedule.anexo',
-            'sedes.sedeEducationalOffer.educationalOffer',
+            'sedes.levelSedeEducational.educationalLevel',
+            'sedes.levelSedeEducational.schedule',
+            'sedes.levelSedeEducational.schedule.anexo',
+            'sedes.educationalOffer'
             )
             ->where('id',$institucion)
             ->first();
-
          if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
          }
-
         return view('institutional_profile.institution.edit', ['institution' => $institucion]);
     }
 

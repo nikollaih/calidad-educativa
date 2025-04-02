@@ -24,16 +24,6 @@
             </select>
         </div>
 
-        <!-- Selección de oferta educativa -->
-        <div class="mb-4">
-            <label for="educational_offer" class="form-label fw-bold">Oferta Educativa <span class="text-danger fw-bold">*</span></label>
-            <select class="form-select" name="sede_educational[educational_offer_id]" id="educational_offer">
-                @foreach($allEducationalOffers as $offer)
-                    <option value="{{ $offer->id }}">{{ $offer->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
         <!-- Contenedor para niveles educativos -->
         <div class="mb-4">
             <label class="form-label fw-bold">Niveles Educativos <span class="text-danger fw-bold">*</span></label>

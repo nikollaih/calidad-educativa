@@ -197,8 +197,7 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>NOMBRE</th>
-                            <th>NIVELES Educativos</th>
+                            <th>NIVELES EDUCATIVOS</th>
                             <th>JORNADA</th>
                             <th>NOMBRE SEDE</th>
                             <th>TIPO DE SEDE</th>
@@ -207,36 +206,29 @@
                         </thead>
                         <tbody>
                             @foreach ($institution->sedes as $sede)
-                                @foreach ($sede->sedeEducationalOffer as $educationalOffer)
+                                @foreach ($sede->levelSedeEducational as $levelSede)
                                     <tr>
-                                        <td>{{ $educationalOffer?->educationalOffer?->name }}</td>
                                         <td>
-                                            @foreach($educationalOffer->educationalLevels as $level)
-                                                {{ $level->name }}
-                                                @if($level->document_id)
-                                                    <a href="{{ $level->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                        <i class="fas fa-eye"></i> Ver Anexo
-                                                    </a>
-                                                @endif
-                                                <br>
-                                            @endforeach
+                                            {{ $levelSede->educationalLevel->name }}
+                                            @if($levelSede->educationalLevel->document_id)
+                                                <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                    <i class="fas fa-eye"></i> Ver Anexo
+                                                </a>
+                                            @endif
                                         </td>
                                         <td>
-                                            @foreach($educationalOffer->schedule as $schedule)
-                                                {{ $schedule->schedule }}
-                                                @if($schedule->document_id)
-                                                    <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                        <i class="fas fa-eye"></i> Ver Anexo
-                                                    </a>
-                                                @endif
-                                                <br>
-                                            @endforeach
+                                            {{ $levelSede->schedule->schedule }}
+                                            @if($levelSede->schedule->document_id)
+                                                <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                    <i class="fas fa-eye"></i> Ver Anexo
+                                                </a>
+                                            @endif
                                         </td>
                                         <td>{{ $sede->name }}</td>
                                         <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
                                         <td>
-                                            <a href="{{ route('educational-offer.vinculate-edit',['sedeEducationalId' => $educationalOffer->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                            <form action="{{ route('educational-offer.vinculate-destroy', ['sedeEducationalId' => $educationalOffer->id]) }}" method="POST" style="display:inline;">
+                                            <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
+                                            <form action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
                                                 @csrf @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta vinculación?')">Eliminar</button>
                                             </form>

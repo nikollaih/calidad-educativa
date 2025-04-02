@@ -12,7 +12,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\Enums\TitularityTypes;
-
+use App\Models\EducationalModel;
+use App\Http\Services\EducationalOfferService;
+use App\Http\Services\EducationalModelService;
+use App\Models\EducationalOffer;
 class SedeController extends Controller
 {
     public function __construct(
@@ -21,6 +24,8 @@ class SedeController extends Controller
         private TitularitySedesService $titularitySedesService,
         private SteamClassroomService $steamClassroomService,
         private InventoryService $inventoryService,
+        private EducationalOfferService $educationalOfferService,
+        private EducationalModelService $educationalModelService,
     ){}
 
 
@@ -31,8 +36,9 @@ class SedeController extends Controller
 
     public function create(int $institutionId = null)
     {
+        $eduactionalModels = EducationalModel::get();
         $availableSedes = Sede::select('name','id')->get();
-        return view('institutional_profile.sede.create',['institutionId' => $institutionId, 'availableSedes' => $availableSedes]);
+        return view('institutional_profile.sede.create',['institutionId' => $institutionId, 'availableSedes' => $availableSedes, 'eduactionalModels' => $eduactionalModels ]);
     }
 
     public function store(Request $request)
@@ -41,6 +47,8 @@ class SedeController extends Controller
         $titularityData = $request->input('titularity');
         $steamClassroomData = $request->input('steam_classroom');
         $inventoryData = $request->input('inventory');
+        $educationalOfferData =  $request->input('educational_offer');
+        $educationalModelsData =  $request->input('educational_models');
 
         if($request->hasFile('administrative_act_file')){
                 // Intenta almacenar el Adjunto
@@ -70,12 +78,32 @@ class SedeController extends Controller
                 return redirect()->back()->with('flash_error_message', "Este tipo de titularidad de sede debe tener un anexo");
         }
 
+        if($request->hasFile('validation_authorization')){
+            // Intenta almacenar el Adjunto
+            $storeAuthorizationResponse = $this->adjuntoService->storeAdjunto(
+                adjunto: $request->file('validation_authorization'),
+                ruta: 'educational_offer/validation _authorization',
+                disk: 'public');
+            if($storeAuthorizationResponse->success){
+                $educationalOfferData['validation_authorization'] = $storeAuthorizationResponse->data->id;
+            }else{
+                return redirect()->back()->with('flash_error_message', $storeAuthorizationResponse->msg);
+            }
+        }
+    
 
         $sedeCreatedResponse = $this->sedesService->createSede($sedeData);
 
         if($sedeCreatedResponse->success == false)
                 return redirect()->back()->with('flash_error_message', $sedeCreatedResponse->msg);
 
+        $educationalOfferData['sede_id'] = $sedeCreatedResponse->data->id;
+        $educationalOfferResponse = $this->educationalOfferService->create($educationalOfferData);
+        
+        if($educationalOfferResponse->success == false)
+                return redirect()->back()->with('flash_error_message', $educationalOfferResponse->msg);
+        
+        $this->educationalModelService->syncEducationalModel($educationalModelsData,$educationalOfferResponse->data->id);
         $titularityData['sede_id'] = $sedeCreatedResponse->data->id;
         $titularityCreatedResponse = $this->titularitySedesService->create($titularityData);
 
@@ -106,23 +134,51 @@ class SedeController extends Controller
             'steamClassroom',
             'inventories'
         )->first();
-        if (empty($sede))
-                return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
-        return view('institutional_profile.sede.edit',['sede' => $sede]);
+
+        if (empty($sede)){
+            return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
+        }
+        $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
+        $eduactionalModels = EducationalModel::get();
+
+        return view('institutional_profile.sede.edit',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels]);
     }
 
     public function update(Request $request, int $sede = null)
     {
         $sedeToUpdate = Sede::find($sede);
+        
         if(empty($sedeToUpdate)){
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
         }
+        $educationalOffer = EducationalOffer::where('sede_id', $sedeToUpdate->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
+        if(!empty($educationalOffer)){
+            $educationalOfferData =  $request->input('educational_offer');
+            $educationalModelsData =  $request->input('educational_models');
+
+            if($request->hasFile('validation_authorization')){
+                    // Intenta almacenar el Adjunto
+                $storeAuthorizationResponse = $this->adjuntoService->storeAdjunto(
+                    adjunto: $request->file('validation_authorization'),
+                    ruta: 'educational_offer/validation _authorization',
+                    disk: 'public');
+                if($storeAuthorizationResponse->success){
+                    $educationalOfferData['validation_authorization'] = $storeAuthorizationResponse->data->id;
+                }else{
+                    return redirect()->back()->with('flash_error_message', $storeAuthorizationResponse->msg);
+                }
+            }
+            $educationalOffer->fill($educationalOfferData);
+            $educationalOffer->save();
+
+            $this->educationalModelService->syncEducationalModel($educationalModelsData, $educationalOffer->id);
+        }
         $sedeData =  $request->input('sede');
+
         unset($sedeData['institution_id']);
 
         if( !isset($sedeData['is_new_school']) )
             $sedeData['is_new_school'] = false ;
-
         $titularityData = $request->input('titularity');
         $steamClassroomData = $request->input('steam_classroom');
         $inventoryData = $request->input('inventory');
@@ -174,7 +230,11 @@ class SedeController extends Controller
             $sedeToUpdate?->steamClassroom?->delete();
         }
         $this->inventoryService->syncInventory(inventoryArray: $inventoryData, sedeId: $sedeToUpdate->id);
-        return redirect()->back()->with('success', 'Sede actualizada correctamente.');
+        return redirect()->route('sede-with-institution.edit', [
+            'institutionId' => $sedeToUpdate->institution_id,
+            'sede_with_institution' => $sedeToUpdate->id
+        ])->with('success', 'Sede actualizada correctamente.');
+        //return redirect()->route('sede.edit',['institution'=>$sedeToUpdate->institution_id,  'sede' => $sedeToUpdate->id])->with('success', 'Sede actualizada correctamente.');
     }
 
     public function destroy(int $sede = null)

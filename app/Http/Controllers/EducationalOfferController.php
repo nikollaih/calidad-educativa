@@ -123,7 +123,6 @@ class EducationalOfferController extends Controller
     {
         $selectedSede = Sede::where('id', $sedeId)->select('id','name')->first();
         $allSedes = Sede::select('id','name')->get();
-        $allEducationalOffers = EducationalOffer::select('id','name')->get();
 
         $allEducationalLevels =  EducationalOfferLevel::with('anexo')->whereIn('category',
             [
@@ -140,7 +139,6 @@ class EducationalOfferController extends Controller
         [
             'selectedSede' => $selectedSede,
             'allSedes' => $allSedes,
-            'allEducationalOffers' => $allEducationalOffers,
             'educationalLevels' => $allEducationalLevels,
             'educationalCategories' => $educationalCategories,
             'educationalSchedules' => $educationalSchedules
@@ -156,15 +154,9 @@ class EducationalOfferController extends Controller
 
             $sedeEducationalData = $request->input('sede_educational');
             $levelSchedules = $request->input('level_schedules');
+            $sede = Sede::where('id',$sedeEducationalData['sede_id'])->firstOrFail();
 
-            // Crear o actualizar la vinculación sede-oferta educativa
-            $sedeEducational = SedeEducationalOffer::updateOrCreate(
-                [
-                    'sede_id' => $sedeEducationalData['sede_id'],
-                    'educational_offer_id' => $sedeEducationalData['educational_offer_id']
-                ],
-                $sedeEducationalData
-            );
+
 
             // Procesar cada nivel y su horario
             foreach ($levelSchedules as $index => $levelSchedule) {
@@ -245,7 +237,7 @@ class EducationalOfferController extends Controller
                 LevelSedeEducational::create([
                     'educational_level_id' => $level->id,
                     'educational_shedule_id' => $schedule->id,
-                    'sede_educational_offer_id' => $sedeEducational->id
+                    'sede_id' => $sede->id
                 ]);
             }
 
@@ -254,23 +246,23 @@ class EducationalOfferController extends Controller
             return redirect()->back()->with('flash_error_message', 'Error al vincular la oferta educativa: ' . $e->getMessage());
         }
     }
-    public function vinculationEdit(int $sedeEducationalId = null)
+    public function vinculationEdit(int $levelSedeId = null)
     {
-        $sedeEducational = SedeEducationalOffer::with([
-            'educationalLevels',
-            'educationalLevels.schedule',
-            'educationalLevels.schedule.anexo',
-            'educationalOffer',
+        $levelSede = LevelSedeEducational::with([
+            'educationalLevel',
+            'schedule',
+            'schedule.anexo',
+            'sede:id,name,institution_id',
+            'sede.institution:id'
         ])
-        ->where('id',$sedeEducationalId)
+        ->where('id',$levelSedeId)
         ->first();
 
-        if(empty($sedeEducational))
-            return redirect()->back()->with('flash_error_message', "Oferta educativa no encontrada");
+        if(empty($levelSedeId))
+            return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
 
-        $selectedSede = Sede::where('id', $sedeEducational->sede_id)->select('id','name')->first();
+        $selectedSede = $levelSede->sede;
         $allSedes = Sede::select('id','name')->get();
-        $allEducationalOffers = EducationalOffer::select('id','name')->get();
 
         $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[
             EducationalOfferLevelCategoryEnum::Emphasis->value, 
@@ -284,215 +276,74 @@ class EducationalOfferController extends Controller
         $educationalSchedules = EducationalOfferScheduleEnum::toArray();
         return view('institutional_profile.educational_offer.vinculate_edit',
         [
-            'sedeEducational' => $sedeEducational,
+            'levelSede' => $levelSede,
             'selectedSede' => $selectedSede,
-            'allSedes' => $allSedes,
-            'allEducationalOffers' => $allEducationalOffers,
-            'educationalLevels' => $allEducationalLevels,
             'educationalCategories' => $educationalCategories,
             'educationalSchedules' => $educationalSchedules
-
         ]);
     }
-    public function vinculationDestroy(int $sedeEducationalId = null)
+    public function vinculationDestroy(int $levelSedeId = null)
     {
-        try {
-            $sedeEducational = SedeEducationalOffer::with([
-                'educationalLevels',
-                'educationalLevels.schedule',
-                'educationalLevels.schedule.anexo',
-                'educationalOffer',
-            ])
-            ->where('id',$sedeEducationalId)
-            ->first();
+        $levelSede = LevelSedeEducational::where('id',$levelSedeId)->first();
+        if(empty($levelSede))
+            return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
 
-            if(empty($sedeEducational)) {
-                return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
-            }
-
-            // Eliminar todas las relaciones en la tabla pivote
-            DB::table('level_sede_educationals')
-                ->where('sede_educational_offer_id', $sedeEducationalId)
-                ->delete();
-
-            // Eliminar la vinculación sede-oferta educativa
-            $sedeEducational->delete();
-
-            return redirect()->back()->with('success', 'Vinculación de oferta educativa eliminada correctamente.');
-        } catch (\Exception $e) {
-            \Log::error('Error en vinculationDestroy', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('flash_error_message', 'Error al eliminar la vinculación: ' . $e->getMessage());
-        }
+        $levelSede->schedule->delete();
+        $levelSede->educationalLevel->delete();
+        $levelSede->delete();
+        
+         return redirect()->back()->with('success', 'Vinculación de oferta educativa eliminada correctamente.');
     }
-    public function updateVinculation(Request $request, int $sedeEducationalId = null)
+    public function updateVinculation(Request $request, int $levelSede = null)
     {
         try {
-            \Log::info('Iniciando updateVinculation', [
-                'request_data' => $request->all(),
-                'files' => $request->allFiles(),
-                'sede_educational_id' => $sedeEducationalId
-            ]);
+            DB::beginTransaction();
+            $levelSedeToUpdate = LevelSedeEducational::where('id',$levelSede)->first();
 
-            $sedeEducational = SedeEducationalOffer::with([
-                'educationalLevels',
-                'educationalLevels.schedule',
-                'educationalLevels.schedule.anexo',
-                'educationalOffer',
-            ])
-            ->where('id', $sedeEducationalId)
-            ->first();
+            // Actualizar el horario
+            $schedule = $levelSedeToUpdate->schedule;
+            $schedule->name = $request->input('schedule.name');
+            $schedule->schedule = $request->input('schedule.schedule');
+            $schedule->notes = $request->input('schedule.notes');
 
-            if(empty($sedeEducational)) {
-                return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
-            }
+            // Manejar el documento del horario si se subió uno nuevo
+            if ($request->hasFile('schedule_attachment')) {
+                $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
+                    $request->file('schedule_attachment'),
+                    'educational_offer/schedule',
+                    'public'
+                );
 
-            $sedeEducationalData = $request->input('sede_educational');
-            $levelSchedules = $request->input('level_schedules');
-
-            \Log::info('Datos recibidos', [
-                'sede_educational_data' => $sedeEducationalData,
-                'level_schedules' => $levelSchedules
-            ]);
-
-            // Actualizar datos básicos de la vinculación
-            if (!empty($sedeEducationalData)) {
-                $sedeEducational->update($sedeEducationalData);
-            }
-
-            // Si no hay niveles en la solicitud, eliminar todas las relaciones existentes
-            if (empty($levelSchedules)) {
-                \Log::info('No se proporcionaron nuevos niveles, eliminando todas las relaciones existentes');
-                
-                // Eliminar todas las relaciones existentes
-                DB::table('level_sede_educationals')
-                    ->where('sede_educational_offer_id', $sedeEducationalId)
-                    ->delete();
-
-                return redirect()->back()->with('success', 'Se han eliminado todos los niveles educativos vinculados.');
-            }
-
-            // Obtener los IDs de los niveles que vienen en la solicitud
-            $requestedLevelIds = collect($levelSchedules)
-                ->pluck('level_info.id')
-                ->filter()
-                ->values()
-                ->toArray();
-
-            // Eliminar las relaciones que ya no están en la solicitud
-            DB::table('level_sede_educationals')
-                ->where('sede_educational_offer_id', $sedeEducationalId)
-                ->whereNotIn('educational_level_id', $requestedLevelIds)
-                ->delete();
-
-            // Procesar cada nivel y su horario
-            foreach ($levelSchedules as $index => $levelSchedule) {
-                $levelInfo = $levelSchedule['level_info'];
-                $scheduleInfo = $levelSchedule['schedule'];
-
-                // Si es un nivel personalizado, crear el nivel primero
-                if ($levelInfo['is_custom'] == '1') {
-                    $levelData = [
-                        'name' => $levelInfo['name'],
-                        'category' => $levelInfo['category']
-                    ];
-
-                    // Procesar el anexo del nivel si existe
-                    if ($request->hasFile("level_attachments.{$index}")) {
-                        $storeLevelResponse = $this->adjuntoService->storeAdjunto(
-                            adjunto: $request->file("level_attachments.{$index}"),
-                            ruta: 'educational_offer/level_adjunto',
-                            disk: 'public'
-                        );
-
-                        if ($storeLevelResponse->success) {
-                            $levelData['document_id'] = $storeLevelResponse->data->id;
-                        } else {
-                            throw new \Exception($storeLevelResponse->msg);
-                        }
-                    }
-
-                    $level = EducationalOfferLevel::create($levelData);
-                } else {
-                    $level = EducationalOfferLevel::find($levelInfo['id']);
+                if (!$storeAdjuntoResponse->success) {
+                    throw new \Exception($storeAdjuntoResponse->msg);
                 }
-
-                // Buscar si ya existe un horario para este nivel en esta sede
-                $existingSchedule = DB::table('level_sede_educationals')
-                    ->where('educational_level_id', $level->id)
-                    ->where('sede_educational_offer_id', $sedeEducationalId)
-                    ->first();
-
-                if ($existingSchedule) {
-                    // Actualizar el horario existente
-                    $schedule = EducationalOfferSchedule::find($existingSchedule->educational_shedule_id);
-                    if ($schedule) {
-                        $scheduleData = [
-                            'name' => $scheduleInfo['name'],
-                            'schedule' => $scheduleInfo['schedule'],
-                            'notes' => $scheduleInfo['notes'] ?? null
-                        ];
-
-                        // Procesar el anexo del horario si existe
-                        if ($request->hasFile("schedule_attachments.{$index}")) {
-                            $storeScheduleResponse = $this->adjuntoService->storeAdjunto(
-                                adjunto: $request->file("schedule_attachments.{$index}"),
-                                ruta: 'educational_offer/schedule_adjunto',
-                                disk: 'public'
-                            );
-
-                            if ($storeScheduleResponse->success) {
-                                $scheduleData['document_id'] = $storeScheduleResponse->data->id;
-                            } else {
-                                throw new \Exception($storeScheduleResponse->msg);
-                            }
-                        }
-
-                        $schedule->update($scheduleData);
-                    }
-                } else {
-                    // Crear nuevo horario
-                    $scheduleData = [
-                        'name' => $scheduleInfo['name'],
-                        'schedule' => $scheduleInfo['schedule'],
-                        'notes' => $scheduleInfo['notes'] ?? null
-                    ];
-
-                    // Procesar el anexo del horario si existe
-                    if ($request->hasFile("schedule_attachments.{$index}")) {
-                        $storeScheduleResponse = $this->adjuntoService->storeAdjunto(
-                            adjunto: $request->file("schedule_attachments.{$index}"),
-                            ruta: 'educational_offer/schedule_adjunto',
-                            disk: 'public'
-                        );
-
-                        if ($storeScheduleResponse->success) {
-                            $scheduleData['document_id'] = $storeScheduleResponse->data->id;
-                        } else {
-                            throw new \Exception($storeScheduleResponse->msg);
-                        }
-                    }
-
-                    $schedule = EducationalOfferSchedule::create($scheduleData);
-
-                    // Crear la relación en la tabla pivote
-                    DB::table('level_sede_educationals')->insert([
-                        'educational_level_id' => $level->id,
-                        'educational_shedule_id' => $schedule->id,
-                        'sede_educational_offer_id' => $sedeEducationalId
-                    ]);
-                }
+                $schedule->document_id = $storeAdjuntoResponse->data->id;
             }
 
-            return redirect()->back()->with('success', 'Vinculación de oferta educativa actualizada correctamente.');
+            $schedule->save();
+            // Actualizar el anexo del nivel educativo si se subió uno nuevo
+            if ($request->hasFile('level_attachment')) {
+                $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
+                    $request->file('level_attachment'),
+                    'educational_offer/level',
+                    'public'
+                );
+                if (!$storeAdjuntoResponse->success) {
+                    throw new \Exception($storeAdjuntoResponse->msg);
+                }
+                $levelSedeToUpdate->educationalLevel->document_id = $storeAdjuntoResponse->data->id;
+                $levelSedeToUpdate->educationalLevel->save();
+            }
+            DB::commit();
+
+            return redirect()->route('institution.edit', ['institution' => $levelSede->sede->institution_id])
+                ->with('success', 'Vinculación de oferta educativa actualizada correctamente.');
+
         } catch (\Exception $e) {
-            \Log::error('Error en updateVinculation', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('flash_error_message', 'Error al actualizar la oferta educativa: ' . $e->getMessage());
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error al actualizar la vinculación: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
