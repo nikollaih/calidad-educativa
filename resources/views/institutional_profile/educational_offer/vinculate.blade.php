@@ -65,26 +65,6 @@
                     </button>
                 </div>
 
-                <!-- Sección para Primaria/Secundaria -->
-                <div class="mb-3">
-                    <h5>Primaria/Secundaria</h5>
-                    @foreach($educationalLevels->whereIn('category', [
-                        App\Models\Enums\EducationalOfferLevelCategoryEnum::Primary->value,
-                        App\Models\Enums\EducationalOfferLevelCategoryEnum::Secondary->value
-                    ]) as $nivel)
-                        <div class="form-check">
-                            <input class="form-check-input level-checkbox" type="checkbox"
-                                   name="educational_levels[]"
-                                   id="{{ $nivel->category }}-{{ $nivel->id }}"
-                                   value="{{ $nivel->id }}"
-                                   data-category="{{ $nivel->category }}">
-                            <label class="form-check-label" for="{{ $nivel->category }}-{{ $nivel->id }}">
-                                {{ $nivel->name }}
-                            </label>
-                        </div>
-                    @endforeach
-                </div>
-
                 <!-- Sección para Énfasis -->
                 <div class="mb-3">
                     <h5>Énfasis</h5>
@@ -159,14 +139,22 @@
         <button type="button" class="btn btn-sm btn-danger" onclick="removeSchedule(this)">Eliminar</button>
     </div>
     <div class="card-body">
-        <input type="hidden" name="schedules[][educational_level_id]" class="level-id">
-        <input type="hidden" name="schedules[][is_custom]" class="is-custom">
-        <input type="hidden" name="schedules[][custom_category]" class="custom-category">
+        <input type="hidden" class="schedule-index">
+        <div class="level-info-group">
+            <input type="hidden" class="level-id">
+            <input type="hidden" class="is-custom">
+            <input type="hidden" class="custom-category">
+        </div>
+        <div class="schedule-info-group">
+            <input type="hidden" class="schedule-name">
+            <input type="hidden" class="schedule-value">
+            <input type="hidden" class="schedule-notes">
+        </div>
 
         <!-- Selección de horario -->
         <div class="mb-3">
             <label class="form-label fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
-            <select class="form-select" name="schedules[][name]" required>
+            <select class="form-select schedule-select" required>
                 @foreach($educationalSchedules as $key => $value)
                     <option value="{{ $key }}">{{ $value }}</option>
                 @endforeach
@@ -176,19 +164,19 @@
         <!-- Campo de texto para describir el horario -->
         <div class="mb-3">
             <label class="form-label fw-bold">Descripción breve del horario <span class="text-danger fw-bold">*</span></label>
-            <input type="text" class="form-control" name="schedules[][schedule]" placeholder="Ej: Horario matutino de 8 AM a 12 PM" required>
+            <input type="text" class="form-control schedule-description" placeholder="Ej: Horario matutino de 8 AM a 12 PM" required>
         </div>
 
         <!-- Área de texto para descripción detallada -->
         <div class="mb-3">
             <label class="form-label fw-bold">Descripción Detallada (opcional)</label>
-            <textarea class="form-control" name="schedules[][notes]" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
+            <textarea class="form-control schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
         </div>
 
         <!-- Adjuntar archivo -->
         <div class="mb-3">
             <label class="form-label fw-bold">Adjuntar Anexo de horario</label>
-            <input type="file" class="form-control" name="schedule_attachments[]">
+            <input type="file" class="form-control schedule-attachment" name="schedule_attachments[]">
         </div>
     </div>
 </div>
@@ -321,7 +309,7 @@ function updateSchedules() {
     }
 
     // Crear un horario para cada nivel seleccionado
-    allSelectedLevels.forEach(level => {
+    allSelectedLevels.forEach((level, index) => {
         // Clonar la plantilla
         const scheduleCard = scheduleTemplate.cloneNode(true);
         scheduleCard.style.display = 'block';
@@ -331,13 +319,40 @@ function updateSchedules() {
         scheduleCard.querySelector('.level-id').value = level.id;
         scheduleCard.querySelector('.is-custom').value = level.isCustom ? '1' : '0';
         scheduleCard.querySelector('.custom-category').value = level.category;
+        scheduleCard.querySelector('.schedule-index').value = index;
 
-        // Manejar el anexo si existe
-        if (level.anexo) {
-            const fileInput = scheduleCard.querySelector('input[type="file"]');
-            fileInput.name = `level_anexos[${level.id}]`;
-            fileInput.accept = 'application/pdf';
-        }
+        // Actualizar los nombres de los campos para usar el índice
+        const levelInfoGroup = scheduleCard.querySelector('.level-info-group');
+        const scheduleInfoGroup = scheduleCard.querySelector('.schedule-info-group');
+
+        levelInfoGroup.querySelector('.level-id').name = `level_schedules[${index}][level_info][id]`;
+        levelInfoGroup.querySelector('.is-custom').name = `level_schedules[${index}][level_info][is_custom]`;
+        levelInfoGroup.querySelector('.custom-category').name = `level_schedules[${index}][level_info][category]`;
+
+        scheduleInfoGroup.querySelector('.schedule-name').name = `level_schedules[${index}][schedule][name]`;
+        scheduleInfoGroup.querySelector('.schedule-value').name = `level_schedules[${index}][schedule][schedule]`;
+        scheduleInfoGroup.querySelector('.schedule-notes').name = `level_schedules[${index}][schedule][notes]`;
+
+        // Agregar eventos para actualizar los campos ocultos
+        const scheduleSelect = scheduleCard.querySelector('.schedule-select');
+        const scheduleDescription = scheduleCard.querySelector('.schedule-description');
+        const scheduleNotes = scheduleCard.querySelector('.schedule-notes-input');
+
+        // Seleccionar el primer valor por defecto y actualizar el campo oculto
+        scheduleSelect.value = scheduleSelect.options[0].value;
+        scheduleCard.querySelector('.schedule-name').value = scheduleSelect.value;
+
+        scheduleSelect.addEventListener('change', function() {
+            scheduleCard.querySelector('.schedule-name').value = this.value;
+        });
+
+        scheduleDescription.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-value').value = this.value;
+        });
+
+        scheduleNotes.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-notes').value = this.value;
+        });
 
         // Agregar al contenedor
         schedulesContainer.appendChild(scheduleCard);
