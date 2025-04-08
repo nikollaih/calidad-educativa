@@ -31,17 +31,10 @@
                             </div>
                             <div class="mb-3" id="sede_principal_container" style="display: none;">
                                 <label for="sede_principal_id" class="form-label">Sede Principal</label>
-                                <select name="sede_principal_id" id="sede_principal_id" class="form-control">
+                                <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
                                     <option value="">Seleccione una sede principal</option>
-                                    @php
-                                        $sedes_principales = [
-                                            (object) ['id' => 1, 'nombre' => 'Sede Principal Norte'],
-                                            (object) ['id' => 2, 'nombre' => 'Sede Principal Sur'],
-                                            (object) ['id' => 3, 'nombre' => 'Sede Principal Centro'],
-                                        ];
-                                    @endphp
-                                    @foreach ($sedes_principales as $sede_principal)
-                                        <option value="{{ $sede_principal->id }}">{{ $sede_principal->nombre }}</option>
+                                    @foreach ($availableSedes as $sede_principal)
+                                        <option value="{{ $sede_principal->id }}">{{ $sede_principal->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

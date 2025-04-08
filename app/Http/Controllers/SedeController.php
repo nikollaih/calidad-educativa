@@ -37,7 +37,7 @@ class SedeController extends Controller
     public function create(int $institutionId = null)
     {
         $eduactionalModels = EducationalModel::get();
-        $availableSedes = Sede::select('name','id')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
         return view('institutional_profile.sede.create',['institutionId' => $institutionId, 'availableSedes' => $availableSedes, 'eduactionalModels' => $eduactionalModels ]);
     }
 
@@ -90,7 +90,7 @@ class SedeController extends Controller
                 return redirect()->back()->with('flash_error_message', $storeAuthorizationResponse->msg);
             }
         }
-    
+
 
         $sedeCreatedResponse = $this->sedesService->createSede($sedeData);
 
@@ -99,10 +99,10 @@ class SedeController extends Controller
 
         $educationalOfferData['sede_id'] = $sedeCreatedResponse->data->id;
         $educationalOfferResponse = $this->educationalOfferService->create($educationalOfferData);
-        
+
         if($educationalOfferResponse->success == false)
                 return redirect()->back()->with('flash_error_message', $educationalOfferResponse->msg);
-        
+
         $this->educationalModelService->syncEducationalModel($educationalModelsData,$educationalOfferResponse->data->id);
         $titularityData['sede_id'] = $sedeCreatedResponse->data->id;
         $titularityCreatedResponse = $this->titularitySedesService->create($titularityData);
@@ -141,13 +141,15 @@ class SedeController extends Controller
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
         $eduactionalModels = EducationalModel::get();
 
-        return view('institutional_profile.sede.edit',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels]);
+        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
+
+        return view('institutional_profile.sede.edit',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels, 'availableSedes'=>$availableSedes]);
     }
 
     public function update(Request $request, int $sede = null)
     {
         $sedeToUpdate = Sede::find($sede);
-        
+
         if(empty($sedeToUpdate)){
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
         }
