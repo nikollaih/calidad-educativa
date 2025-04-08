@@ -15,7 +15,7 @@ class EducationalOffer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'sede_id',
         'has_study_validation_auth',
         'serves_juvenile_justice',
         'national_protection_students',

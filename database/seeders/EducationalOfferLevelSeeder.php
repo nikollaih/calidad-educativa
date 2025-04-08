@@ -38,7 +38,7 @@ class EducationalOfferLevelSeeder extends Seeder
 
             // Convenios en Articulada
             [ 'name' => 'SENA', 'parent_id' => 10, 'category' => 'convenio'],
-            [ 'name' => 'UQ', 'parent_id' => 10, 'category' => 'convenio'],
+            [ 'name' => 'Universidad del Quindío', 'parent_id' => 10, 'category' => 'convenio'],
         ];
             foreach ($educationalOfferLevels as $level) {
             EducationalOfferLevel::firstOrCreate(

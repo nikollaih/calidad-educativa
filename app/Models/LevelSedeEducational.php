@@ -13,7 +13,7 @@ class LevelSedeEducational extends Model
     protected $fillable = [
         'educational_level_id',
         'educational_shedule_id',
-        'sede_educational_offer_id'
+        'sede_id'
     ];
 
     public function educationalLevel()
@@ -26,8 +26,8 @@ class LevelSedeEducational extends Model
         return $this->belongsTo(EducationalOfferSchedule::class, 'educational_shedule_id');
     }
 
-    public function sedeEducationalOffer()
+    public function sede()
     {
-        return $this->belongsTo(SedeEducationalOffer::class, 'sede_educational_offer_id');
+        return $this->belongsTo(Sede::class, 'sede_id');
     }
 } 

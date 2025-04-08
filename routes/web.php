@@ -65,10 +65,10 @@ Route::middleware(['auth'])->group(function () {
 
         // Rutas para la gestion de ofertas educativas
         Route::get('educational-offer/vinculate/{sedeId?}', [EducationalOfferController::class,'vinculationView'])->name('educational-offer.vinculate');
-        Route::get('educational-offer/vinculate-edit/{sedeEducationalId}', [EducationalOfferController::class,'vinculationEdit'])->name('educational-offer.vinculate-edit');
-        Route::delete('educational-offer/vinculate-destroy/{sedeEducationalId}', [EducationalOfferController::class,'vinculationDestroy'])->name('educational-offer.vinculate-destroy');
+        Route::get('educational-offer/vinculate-edit/{levelSedeId}', [EducationalOfferController::class,'vinculationEdit'])->name('educational-offer.vinculate-edit');
+        Route::delete('educational-offer/vinculate-destroy/{levelSedeId}', [EducationalOfferController::class,'vinculationDestroy'])->name('educational-offer.vinculate-destroy');
         Route::post('educational-offer/makeVinculation/{sedeId}', [EducationalOfferController::class,'makeVinculation'])->name('educational-offer.make-vinculation');
-        Route::post('/educational-offer/vinculation/{sedeEducationalId}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
+        Route::put('/educational-offer/vinculation/{levelSede}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
         Route::resource('educational-offer'             , EducationalOfferController::class);
     });
     Route::prefix('pam')->group(function () {

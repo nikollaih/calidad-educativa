@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('educational_offers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->boolean("has_study_validation_auth")->default(false);
             $table->boolean("serves_juvenile_justice")->default(false);
             $table->boolean("national_protection_students")->default(false);
             $table->boolean("serves_ethnic_population")->default(false);
             $table->unsignedBigInteger('validation_authorization')->nullable()->comment("Archivo de autorizacion para validaciones de estudios");
+            $table->unsignedBigInteger('sede_id')->nullable()->comment("Sede a la que se ofrece la oferta educativa");
             $table->foreign('validation_authorization')->references('id')->on('adjuntos')->nullOnDelete();
+            $table->foreign('sede_id')->references('id')->on('sedes')->nullOnDelete();
             $table->timestamps();
         });
     }

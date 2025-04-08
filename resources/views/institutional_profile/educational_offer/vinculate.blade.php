@@ -24,16 +24,6 @@
             </select>
         </div>
 
-        <!-- Selección de oferta educativa -->
-        <div class="mb-4">
-            <label for="educational_offer" class="form-label fw-bold">Oferta Educativa <span class="text-danger fw-bold">*</span></label>
-            <select class="form-select" name="sede_educational[educational_offer_id]" id="educational_offer">
-                @foreach($allEducationalOffers as $offer)
-                    <option value="{{ $offer->id }}">{{ $offer->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
         <!-- Contenedor para niveles educativos -->
         <div class="mb-4">
             <label class="form-label fw-bold">Niveles Educativos <span class="text-danger fw-bold">*</span></label>
@@ -67,6 +57,70 @@
                     </div>
                     <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('preescolar')">
                         + Agregar otro nivel de preescolar
+                    </button>
+                </div>
+
+                <!-- Sección para Primaria -->
+                <div class="mb-3">
+                    <h5>Primaria</h5>
+                    @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Primary->value) as $primaria)
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input level-checkbox" type="checkbox"
+                                   id="primaria-{{ $primaria->id }}"
+                                   value="{{ $primaria->id }}"
+                                   data-category="primaria">
+                            <label class="form-check-label" for="primaria-{{ $primaria->id }}">
+                                {{ $primaria->name }}
+                            </label>
+                            @if($primaria->document_id)
+                                <a href="{{ $primaria->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-eye"></i> Ver Anexo
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                    <div id="custom-primaria-container" class="mt-2" style="display: none;">
+                        <input type="text" class="form-control mb-2" placeholder="Nombre del grado de primaria">
+                        <div class="mb-2">
+                            <label class="form-label">Anexo (opcional)</label>
+                            <input type="file" class="form-control primaria-anexo" accept="application/pdf">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('primaria')">Agregar</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('primaria')">
+                        + Agregar otro nivel de primaria
+                    </button>
+                </div>
+
+                <!-- Sección para Secundaria -->
+                <div class="mb-3">
+                    <h5>Secundaria</h5>
+                    @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Secondary->value) as $secundaria)
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input level-checkbox" type="checkbox"
+                                   id="secundaria-{{ $secundaria->id }}"
+                                   value="{{ $secundaria->id }}"
+                                   data-category="secundaria">
+                            <label class="form-check-label" for="secundaria-{{ $secundaria->id }}">
+                                {{ $secundaria->name }}
+                            </label>
+                            @if($secundaria->document_id)
+                                <a href="{{ $secundaria->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-eye"></i> Ver Anexo
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                    <div id="custom-secundaria-container" class="mt-2" style="display: none;">
+                        <input type="text" class="form-control mb-2" placeholder="Nombre del grado de secundaria">
+                        <div class="mb-2">
+                            <label class="form-label">Anexo (opcional)</label>
+                            <input type="file" class="form-control secundaria-anexo" accept="application/pdf">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('secundaria')">Agregar</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link mt-1" onclick="toggleCustomInput('secundaria')">
+                        + Agregar otro nivel de secundaria
                     </button>
                 </div>
 
@@ -374,6 +428,8 @@ function addCustomLevel(category) {
         // Mapear categorías en inglés a español
         const categoryMap = {
             'preescolar': 'preescolar',
+            'primaria': 'primaria',
+            'secundaria': 'secundaria',
             'emphasis': 'énfasis',
             'agreement': 'convenio'
         };
