@@ -104,11 +104,11 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">¿Es escuela nueva?</label>
+                                <label class="form-label">¿Es escuela nueva? (Opcional)</label>
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="1">
-                                        <label class="form-check-label" for="sede[is_new_school]">¿Es una nueva escuela?</label>
+                                        <label class="form-check-label" for="sede[is_new_school]">¿Tiene Implementado modelo Escuela Nueva?</label>
                                     </div>
                                 </div>
                             </div>
@@ -213,8 +213,8 @@
                             <!-- Modelos educativos -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="modelos" class="form-label">Modelos Educativos</label>
-                                    <select name="educational_models[]" class="form-control" multiple required>
+                                    <label for="modelos" class="form-label">Modelos Educativos Flexibles</label>
+                                    <select name="educational_models[]" class="form-control" multiple >
                                         @foreach($eduactionalModels as $model)
                                             <option value="{{ $model->id }}">{{ $model->name }}</option>
                                         @endforeach

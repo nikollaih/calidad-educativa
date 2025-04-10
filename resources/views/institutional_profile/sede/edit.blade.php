@@ -17,7 +17,7 @@
                     @csrf
                     @method('PUT')
 
-                    <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $sede->id }}" required>
+                    <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $sede->institution_id }}" required>
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
@@ -25,8 +25,8 @@
                             <div class="mb-3">
                                 <label for="tipo_sede" class="form-label">Tipo de Sede</label>
                                 <select name="tipo_sede" id="tipo_sede" class="form-control" required>
-                                    <option value="Principal">Principal</option>
-                                    <option value="Adscrita a una principal">Adscrita a una principal</option>
+                                    <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
+                                    <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                 </select>
                             </div>
                             <div class="mb-3" id="sede_principal_container" style="display: none;">
@@ -34,7 +34,7 @@
                                 <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
                                     <option value="">Seleccione una sede principal</option>
                                     @foreach ($availableSedes as $sede_principal)
-                                        <option value="{{ $sede_principal->id }}">{{ $sede_principal->name }}</option>
+                                        <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -61,11 +61,11 @@
                                         </a>
                                     @endif
                                 <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  required>
-                                    <option value="Municipio" @selected($sede->titularidadSede->titularity_type == 'Municipio')>Municipio</option>
-                                     <option value="Departamento" @selected($sede->titularidadSede->titularity_type == 'Departamento')>Departamento</option>
-                                     <option value="Comité de Cafeteros" @selected($sede->titularidadSede->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
-                                     <option value="Otro" @selected($sede->titularidadSede->titularity_type == 'Otro')>Otro</option>
-                                     <option value="En arriendo" @selected($sede->titularidadSede->titularity_type == 'En arriendo')>En arriendo</option>
+                                    <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
+                                     <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
+                                     <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
+                                     <option value="Otro" @selected($sede?->titularidadSede?->titularity_type == 'Otro')>Otro</option>
+                                     <option value="En arriendo" @selected($sede?->titularidadSede?->titularity_type == 'En arriendo')>En arriendo</option>
                                 </select>
                             </div>
                             <div class="row" id="otro_titularidad_container" style="display: none;">
@@ -226,8 +226,8 @@
                         <!-- Modelos educativos -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="modelos" class="form-label">Modelos Educativos</label>
-                                <select name="educational_models[]" class="form-control" multiple required>
+                                <label for="modelos" class="form-label">Modelos Educativos Flexibles</label>
+                                <select name="educational_models[]" class="form-control" multiple>
                                     @foreach($eduactionalModels as $model)
                                         <option value="{{ $model->id }}" @selected($educationalOffer->educationalModels->contains('id', $model->id))>
                                             {{ $model->name }}

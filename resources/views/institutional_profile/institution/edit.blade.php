@@ -193,7 +193,7 @@
             <h1 class="card-header">Ofertas educativas de esta institución</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('educational-offer.vinculate') }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                    <a href="{{ route('educational-offer.vinculate', $institution->id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
                     <table class="table">
                         <thead>
                         <tr>

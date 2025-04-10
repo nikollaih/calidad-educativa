@@ -58,13 +58,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('institutional_profile')->group(function () {
         // Rutas para la gestion de instituciones
+        Route::get('institution/{institution}/autoevaluaciones'             , [InstitutionController::class, 'autoevaluaciones'])->name('institution.autoevaluaciones');
         Route::resource('institution'             , InstitutionController::class);
         // Rutas para la gestion de sedes
         Route::resource('{institutionId}/sede-with-institution'             , SedeController::class);
         Route::resource('sede', SedeController::class);
 
         // Rutas para la gestion de ofertas educativas
-        Route::get('educational-offer/vinculate/{sedeId?}', [EducationalOfferController::class,'vinculationView'])->name('educational-offer.vinculate');
+        Route::get('educational-offer/vinculate/{institutionId}', [EducationalOfferController::class,'vinculationView'])->name('educational-offer.vinculate');
         Route::get('educational-offer/vinculate-edit/{levelSedeId}', [EducationalOfferController::class,'vinculationEdit'])->name('educational-offer.vinculate-edit');
         Route::delete('educational-offer/vinculate-destroy/{levelSedeId}', [EducationalOfferController::class,'vinculationDestroy'])->name('educational-offer.vinculate-destroy');
         Route::post('educational-offer/makeVinculation/{sedeId}', [EducationalOfferController::class,'makeVinculation'])->name('educational-offer.make-vinculation');

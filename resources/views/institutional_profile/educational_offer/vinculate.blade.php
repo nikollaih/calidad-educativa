@@ -32,7 +32,7 @@
                 <div class="mb-3">
                     <h5>Preescolar</h5>
                     @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::PreSchool->value) as $preescolar)
-                        <div class="form-check d-flex align-items-center">
+                        <div class="form-check d-flex align-items-center gap-2">
                             <input class="form-check-input level-checkbox" type="checkbox"
                                    id="preescolar-{{ $preescolar->id }}"
                                    value="{{ $preescolar->id }}"
@@ -64,7 +64,7 @@
                 <div class="mb-3">
                     <h5>Primaria</h5>
                     @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Primary->value) as $primaria)
-                        <div class="form-check d-flex align-items-center">
+                        <div class="form-check d-flex align-items-center  gap-2">
                             <input class="form-check-input level-checkbox" type="checkbox"
                                    id="primaria-{{ $primaria->id }}"
                                    value="{{ $primaria->id }}"
@@ -94,9 +94,9 @@
 
                 <!-- Sección para Secundaria -->
                 <div class="mb-3">
-                    <h5>Secundaria</h5>
+                    <h5>Básica y Media</h5>
                     @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Secondary->value) as $secundaria)
-                        <div class="form-check d-flex align-items-center">
+                        <div class="form-check d-flex align-items-center gap-2">
                             <input class="form-check-input level-checkbox" type="checkbox"
                                    id="secundaria-{{ $secundaria->id }}"
                                    value="{{ $secundaria->id }}"
@@ -128,7 +128,7 @@
                 <div class="mb-3">
                     <h5>Énfasis</h5>
                     @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Emphasis->value) as $emphasis)
-                        <div class="form-check d-flex align-items-center">
+                        <div class="form-check d-flex align-items-center gap-2">
                             <input class="form-check-input level-checkbox" type="checkbox"
                                    id="emphasis-{{ $emphasis->id }}"
                                    value="{{ $emphasis->id }}"
@@ -160,7 +160,7 @@
                 <div class="mb-3">
                     <h5>Convenios</h5>
                     @foreach($educationalLevels->where('category', App\Models\Enums\EducationalOfferLevelCategoryEnum::Agreement->value) as $agreement)
-                        <div class="form-check d-flex align-items-center">
+                        <div class="form-check d-flex align-items-center gap-2">
                             <input class="form-check-input level-checkbox" type="checkbox"
                                    id="agreement-{{ $agreement->id }}"
                                    value="{{ $agreement->id }}"
@@ -274,6 +274,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Objeto para almacenar los niveles seleccionados
 const selectedLevels = {
     preescolar: [],
+    primaria: [],
+    secundaria: [],
     emphasis: [],
     agreement: []
 };
@@ -347,12 +349,12 @@ function updateSchedules() {
             anexoInput.name = `level_attachments[${index}]`;
             anexoInput.style.display = 'none';
             anexoInput.dataset.file = level.anexo.name;
-            
+
             // Crear un nuevo FileList con el archivo
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(level.anexo);
             anexoInput.files = dataTransfer.files;
-            
+
             scheduleCard.querySelector('.card-body').appendChild(anexoInput);
         }
 

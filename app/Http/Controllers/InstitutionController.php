@@ -26,6 +26,11 @@ class InstitutionController extends Controller
         );
     }
 
+    public function autoevaluaciones()
+    {
+       // $roles = Role::all();
+        return view('institutional_profile.institution.autoevaluaciones.index');
+    }
     public function create()
     {
        // $roles = Role::all();

@@ -13,7 +13,7 @@ class TitularitySedesService {
         try {
             $titularitySedeCreated = TitularidadSede::create($titularitySedesData);
             if($titularitySedeCreated)
-            return Result::success('Titularidad creada con éxito', $titularitySedeCreated);
+                return Result::success('Titularidad creada con éxito', $titularitySedeCreated);
         } catch (Exception $e) {
             return Result::error($e->getMessage());
         }
