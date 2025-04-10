@@ -104,32 +104,10 @@
 
                         </li>
                         <li class="menu-item">
-                            <a href="javascript:void(1);" class="menu-link menu-toggle">
-                                <i class="menu-icon tf-icons fa fa-solid fa-school"></i>
-                                <div data-i18n="Gestion de instituciones">Perfil institucional</div>
+                            <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
+                                <i class="menu-icon fa-solid fa-university"></i>
+                                <div data-i18n="Instituciones"> Instituciones</div>
                             </a>
-                            <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
-                                        <i class="menu-icon fa-solid fa-university"></i>
-                                        <div data-i18n="Instituciones"> Instituciones</div>
-                                    </a>
-                                </li>
-                                <!--
-                                <li class="menu-item">
-                                    <a href="{{ url('institutional_profile/sede')}}" class="menu-link">
-                                        <i class="menu-icon fa-solid fas fa-sitemap"></i><i class=""></i>
-                                        <div data-i18n="Sedes"> Sedes</div>
-                                    </a>
-                                </li>
-                                -->
-                                <li class="menu-item">
-                                    <a href="{{ url('institutional_profile/educational-offer')}}" class="menu-link">
-                                        <i class="menu-icon fa-solid fa-graduation-cap"></i><i class=""></i>
-                                        <div data-i18n="education-offer"> Ofertas educativas</div>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="menu-item">
                             <a href="javascript:void(1);" class="menu-link menu-toggle">

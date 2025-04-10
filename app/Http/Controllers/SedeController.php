@@ -181,15 +181,15 @@ class SedeController extends Controller
 
         if( !isset($sedeData['is_new_school']) )
             $sedeData['is_new_school'] = false ;
+
         $titularityData = $request->input('titularity');
         $steamClassroomData = $request->input('steam_classroom');
         $inventoryData = $request->input('inventory');
-
         if($request->hasFile('administrative_act_file')){
                 // Intenta almacenar el Adjunto
             $storeAdministrativeActResponse = $this->adjuntoService->storeAdjunto(
                 adjunto: $request->file('administrative_act_file'),
-                ruta: 'sedes/'.$sedeData['institution_id'],
+                ruta: 'sedes/'.$sedeToUpdate->institution_id,
                 disk: 'public');
             if($storeAdministrativeActResponse->success){
                 $sedeData['administrative_act'] = $storeAdministrativeActResponse->data->id;
@@ -201,7 +201,7 @@ class SedeController extends Controller
                 // Intenta almacenar el Adjunto
             $storeTitularityCertificateResponse = $this->adjuntoService->storeAdjunto(
                 adjunto: $request->file('titularity_certificate'),
-                ruta: 'sedes/'.$sedeData['institution_id'],
+                ruta: 'sedes/'.$sedeToUpdate->institution_id,
                 disk: 'public');
             if($storeTitularityCertificateResponse->success){
                 $titularityData['support_file_id'] = $storeTitularityCertificateResponse->data->id;
@@ -213,8 +213,16 @@ class SedeController extends Controller
         $sedeToUpdate->fill($sedeData);
         $sedeToUpdate->save();
         $titularityData['sede_id'] = $sedeToUpdate->id;
-        $sedeToUpdate->titularidadSede->fill($titularityData);
-        $sedeToUpdate->titularidadSede->save();
+
+        if ($sedeToUpdate->titularidadSede) {
+            // Update existing record
+            $sedeToUpdate->titularidadSede->fill($titularityData);
+            $sedeToUpdate->titularidadSede->save();
+        } else {
+            // Create new related record
+            $sedeToUpdate->titularidadSede()->create($titularityData);
+        }
+
         // Agrega el aula steam en caso de que exista
         if(!empty($steamClassroomData['phase']) && !empty($steamClassroomData['quantity'])){
             $steamClassroomData['sede_id'] = $sedeToUpdate->id ;
