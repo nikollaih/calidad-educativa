@@ -12,7 +12,8 @@ class EducationalOfferLevel extends Model
     protected $fillable = [
         'name',
         'category',
-        'document_id'
+        'document_id',
+        'institution_id'
     ];
 
     public function children()
