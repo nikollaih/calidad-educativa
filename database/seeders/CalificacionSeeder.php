@@ -151,6 +151,199 @@ class CalificacionSeeder extends Seeder
                 'indice' => '1.6.4',
                 'grupo_indice' => '1.6'
             ],
+            // Gestion academica
+            [ 
+                'nombre' => 'Plan de estudios',
+                'indice' => '2.1.1',
+                'grupo_indice' => '2.1'
+            ],
+            [ 
+                'nombre' => 'Enfoque metodológico',
+                'indice' => '2.1.2',
+                'grupo_indice' => '2.1'
+            ],
+            [ 
+                'nombre' => 'Recursos para el aprendizaje',
+                'indice' => '2.1.4.',
+                'grupo_indice' => '2.1'
+            ],
+            [ 
+                'nombre' => 'Sistema los estudiantes (SIEE)',
+                'indice' => '2.1.5',
+                'grupo_indice' => '2.1'
+            ],
+
+            [ 
+                'nombre' => 'Estrategias para las tareas escolares',
+                'indice' => '2.2.2',
+                'grupo_indice' => '2.2'
+            ],
+            [ 
+                'nombre' => 'Uso articulado de los recursos para el aprendizaje',
+                'indice' => '2.2.3',
+                'grupo_indice' => '2.2'
+            ],
+
+            [ 
+                'nombre' => 'Ambientes de aprendizaje',
+                'indice' => '2.3.1',
+                'grupo_indice' => '2.3'
+            ],
+            [ 
+                'nombre' => 'Plan de aula, opciones didácticas y temas de enseñanza obligatoria',
+                'indice' => '2.3.2',
+                'grupo_indice' => '2.3'
+            ],
+            [ 
+                'nombre' => 'Evaluación en el aula',
+                'indice' => '2.3.4',
+                'grupo_indice' => '2.3'
+            ],
+
+            [ 
+                'nombre' => 'Seguimiento a los desempeños de los estudiantes',
+                'indice' => '2.4.1',
+                'grupo_indice' => '2.4'
+            ],
+            [ 
+                'nombre' => 'Uso pedagógico de las evaluaciones externas',
+                'indice' => '2.4.2',
+                'grupo_indice' => '2.4'
+            ],
+            [ 
+                'nombre' => 'Apoyo pedagógico para estudiantes con dificultades de aprendizaje',
+                'indice' => '2.4.5',
+                'grupo_indice' => '2.4'
+            ],
+            // gestion administrativa
+            [ 
+                'nombre' => 'Proceso de matrícula',
+                'indice' => '3.1.1',
+                'grupo_indice' => '3.1'
+            ],
+            [ 
+                'nombre' => 'Sistema de información académica',
+                'indice' => '3.1.2',
+                'grupo_indice' => '3.1'
+            ],
+
+            [ 
+                'nombre' => 'Mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa',
+                'indice' => '3.2.1',
+                'grupo_indice' => '3.2'
+            ],
+            [ 
+                'nombre' => 'Dotación, mantenimiento y uso de recursos para el aprendizaje',
+                'indice' => '3.2.4',
+                'grupo_indice' => '3.2'
+            ],
+            [ 
+                'nombre' => 'Programas de seguridad',
+                'indice' => '3.2.5',
+                'grupo_indice' => '3.2'
+            ],
+            [ 
+                'nombre' => 'Estrategias de acceso y permanencia (PAE, transporte escolar y otros).',
+                'indice' => '3.3.1',
+                'grupo_indice' => '3.3'
+            ],
+
+
+            [ 
+                'nombre' => 'Perfiles, asignación académica y de funciones',
+                'indice' => '3.4.1',
+                'grupo_indice' => '3.4'
+            ],
+            [ 
+                'nombre' => 'Programa de formación y capacitación institucional',
+                'indice' => '3.4.3',
+                'grupo_indice' => '3.4'
+            ],
+            [ 
+                'nombre' => 'Pertenencia del personal vinculado',
+                'indice' => '3.4.5',
+                'grupo_indice' => '3.4'
+            ],
+            [ 
+                'nombre' => 'Evaluación del desempeño de directivos, docentes  y administrativos',
+                'indice' => '3.4.6',
+                'grupo_indice' => '3.4'
+            ],
+            [ 
+                'nombre' => 'Convivencia y manejo de conflictos',
+                'indice' => '3.4.9',
+                'grupo_indice' => '3.4'
+            ],
+
+
+            [ 
+                'nombre' => 'Presupuesto anual del Fondo de Servicios Educativos (FSE)',
+                'indice' => '3.5.1',
+                'grupo_indice' => '3.5'
+            ],
+            [ 
+                'nombre' => 'Contabilidad',
+                'indice' => '3.5.2',
+                'grupo_indice' => '3.5'
+            ],
+            [ 
+                'nombre' => 'Contratación',
+                'indice' => '3.5.3',
+                'grupo_indice' => '3.5'
+            ],
+            [ 
+                'nombre' => 'Control fiscal',
+                'indice' => '3.5.4',
+                'grupo_indice' => '3.5'
+            ],
+
+            // Gestion de la comunidad
+
+
+            [ 
+                'nombre' => 'Atención educativa a grupos poblacionales o en situación de vulnerabilidad que experimentan barreras en el aprendizaje y la participación',
+                'indice' => '4.1.1',
+                'grupo_indice' => '4.1'
+            ],
+            [ 
+                'nombre' => 'Necesidades y expectativas de los estudiantes',
+                'indice' => '4.1.3',
+                'grupo_indice' => '4.1'
+            ],
+            [ 
+                'nombre' => 'Proyectos de vida',
+                'indice' => '4.1.4',
+                'grupo_indice' => '4.1'
+            ],
+
+
+            [ 
+                'nombre' => 'Escuela de padres',
+                'indice' => '4.2.1',
+                'grupo_indice' => '4.2'
+            ],
+            [ 
+                'nombre' => 'Oferta de servicios a la comunidad',
+                'indice' => '4.2.2',
+                'grupo_indice' => '4.2'
+            ],
+            [ 
+                'nombre' => 'Programa de servicio social institucional',
+                'indice' => '4.2.4',
+                'grupo_indice' => '4.2'
+            ],
+
+            [ 
+                'nombre' => 'Prevención de riesgos físicos',
+                'indice' => '4.4.1',
+                'grupo_indice' => '4.4'
+            ],
+            [ 
+                'nombre' => 'Prevención de riesgos psicosociales',
+                'indice' => '4.4.2',
+                'grupo_indice' => '4.4'
+            ],
+
 
         ];
             foreach ($calificaciones as $calificacion) {

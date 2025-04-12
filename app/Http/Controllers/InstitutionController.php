@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\RedesSocialesService;
+use App\Models\Autoevaluacion;
+use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use Illuminate\Http\Request;
 
@@ -26,10 +28,25 @@ class InstitutionController extends Controller
         );
     }
 
-    public function autoevaluaciones()
+    public function autoevaluaciones(int $institution = null)
     {
+        //$autoevaluaciones = Autoevaluacion::where('institution_id',$institution)->get();
        // $roles = Role::all();
-        return view('institutional_profile.institution.autoevaluaciones.index');
+        return view('institutional_profile.institution.autoevaluaciones.index', ['institutionId' => $institution]);
+    }
+    public function autoevaluacionesCrear(int $institution = null)
+    {
+        $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'calificaciones'])
+            ->whereNull('padre_id')
+            ->get();
+        //$autoevaluaciones = Autoevaluacion::where('institution_id',$institution)->get();
+        // $roles = Role::all();
+        return view('institutional_profile.institution.autoevaluaciones.create',
+            [
+                'institutionId' => $institution,
+                'gruposCalificaciones' => $gruposCalificaciones
+            ]
+        );
     }
     public function create()
     {
