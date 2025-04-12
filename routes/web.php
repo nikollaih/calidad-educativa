@@ -7,6 +7,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use \App\Http\Controllers\InstitutionController;
 use \App\Http\Controllers\EducationalOfferController;
+use App\Http\Controllers\GestionAcademicaController;
+use App\Http\Controllers\GestionAdministrativaController;
+use App\Http\Controllers\GestionComunidadController;
+use App\Http\Controllers\GestionDirectivaController;
 use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PEIController;
 use \App\Http\Controllers\SedeController;
@@ -60,10 +64,10 @@ Route::middleware(['auth'])->group(function () {
         // Rutas para la gestion de instituciones
         Route::get('institution/{institution}/autoevaluaciones'             , [InstitutionController::class, 'autoevaluaciones'])->name('institution.autoevaluaciones');
         Route::resource('institution'             , InstitutionController::class);
+        Route::get('institution/{institutionId}/pei', [InstitutionController::class, 'pei'])->name('institution.pei');
         // Rutas para la gestion de sedes
         Route::resource('{institutionId}/sede-with-institution'             , SedeController::class);
         Route::resource('sede', SedeController::class);
-
         // Rutas para la gestion de ofertas educativas
         Route::get('educational-offer/vinculate/{institutionId}', [EducationalOfferController::class,'vinculationView'])->name('educational-offer.vinculate');
         Route::get('educational-offer/vinculate-edit/{levelSedeId}', [EducationalOfferController::class,'vinculationEdit'])->name('educational-offer.vinculate-edit');
@@ -71,6 +75,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('educational-offer/makeVinculation/{sedeId}', [EducationalOfferController::class,'makeVinculation'])->name('educational-offer.make-vinculation');
         Route::put('/educational-offer/vinculation/{levelSede}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
         Route::resource('educational-offer'             , EducationalOfferController::class);
+        
+        Route::resource('institution/{institutionId}/pei/executive-management', GestionDirectivaController::class);
+        Route::resource('institution/{institutionId}/pei/academic-management', GestionAcademicaController::class);
+        Route::resource('institution/{institutionId}/pei/community-management', GestionComunidadController::class);
+        Route::resource('institution/{institutionId}/pei/administrative-management', GestionAdministrativaController::class);
     });
     Route::prefix('pam')->group(function () {
         // Rutas para la gestion de instituciones
@@ -80,11 +89,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
     });
     Route::prefix('pei')->group(function () {
-        Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
-        Route::get('/academic-management'             , [PEIController::class, 'academicManagement']);
-        Route::get('/community-management'             , [PEIController::class, 'communityManagement']);
-        Route::get('/executive-management'             , [PEIController::class, 'executiveManagement']);
-
+        // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
     });
 
 });
