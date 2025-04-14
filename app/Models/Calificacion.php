@@ -12,5 +12,8 @@ class Calificacion extends Model
     {
         return $this->belongsTo(GrupoCalificacion::class, 'grupo_indice', 'indice');
     }
+    public function notasCalificacion() {
+        return $this->hasMany(NotaCalificacion::class, 'indice_calificacion', 'indice');
+    }
 
 }

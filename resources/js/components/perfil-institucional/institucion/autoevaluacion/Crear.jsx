@@ -19,7 +19,7 @@ export default function AutoevaluacionCrear() {
 
             <div class="row">
                 {gruposCalificaciones.map((grupo) => (
-                    <div class="col-md-6 mb-4" key={grupo.id}>
+                    <div class="col-md-12 mb-4" key={grupo.id}>
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-primary text-white">
                                 <strong>{grupo.nombre}</strong>
@@ -46,7 +46,6 @@ export default function AutoevaluacionCrear() {
 
                                 {grupo.hijos?.length > 0 && (
                                     <div>
-                                        <h6 class="text-muted">Subgrupos</h6>
                                         {grupo.hijos.map((hijo) => (
                                             <div class="mb-3" key={hijo.id}>
                                                 <div class="fw-bold">{hijo.nombre}</div>
@@ -59,7 +58,7 @@ export default function AutoevaluacionCrear() {
                                                             >
                                                                 {cal.nombre}
                                                                 <span class="badge bg-info text-dark">
-                                                                    {cal.valor ?? 'N/A'}
+                                                                    {cal.notas_calificacion?.length}
                                                                 </span>
                                                             </li>
                                                         ))}

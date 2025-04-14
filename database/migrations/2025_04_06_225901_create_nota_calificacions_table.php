@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('nota_calificacions', function (Blueprint $table) {
             $table->id();
             $table->integer("valor")->comment("es el valor de la nota");
-            $table->string("descripcion")->comment("es la descripcion de la nota");
-            $table->string("nombre_interno")->comment("es el nombre de la nota");
+            $table->text("descripcion")->comment("es la descripcion de la nota");
             $table->string("indice_calificacion")->comment("es el nombre de la nota");
             $table->foreign('indice_calificacion')->references('indice')->on('calificacions')->onDelete('cascade');
             $table->timestamps();

@@ -36,7 +36,7 @@ class InstitutionController extends Controller
     }
     public function autoevaluacionesCrear(int $institution = null)
     {
-        $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'calificaciones'])
+        $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
         //$autoevaluaciones = Autoevaluacion::where('institution_id',$institution)->get();
