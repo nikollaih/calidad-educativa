@@ -14,7 +14,7 @@ class GestionAcademicaRequest extends FormRequest {
         return [
             'institution_id' => 'nullable|integer',
             'proceso_matricula' => 'required|string',
-            'anexo_proceso_matricula' => 'nullable|file',
+            'anexo_acto_administrativo_proceso_matricula' => 'nullable|file',
             'sistema_informacion_academica' => 'required|string',
             'mantenimiento_infraestructura' => 'required|string',
             'anexo_mantenimiento_infraestructura' => 'nullable|file',
@@ -41,7 +41,7 @@ class GestionAcademicaRequest extends FormRequest {
         return [
             'institution_id' => 'institución',
             'proceso_matricula' => 'proceso de matrícula',
-            'anexo_proceso_matricula' => 'anexo del proceso de matrícula',
+            'anexo_acto_administrativo_proceso_matricula' => 'anexo del proceso de matrícula',
             'sistema_informacion_academica' => 'sistema de información académica',
             'mantenimiento_infraestructura' => 'mantenimiento de la infraestructura',
             'anexo_mantenimiento_infraestructura' => 'anexo del mantenimiento de la infraestructura',

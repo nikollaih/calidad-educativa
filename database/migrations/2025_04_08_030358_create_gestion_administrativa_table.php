@@ -12,7 +12,7 @@ class CreateGestionAdministrativaTable extends Migration
             $table->foreignId('institution_id')->constrained('institucions');
 
             $table->text('proceso_matricula')->nullable();
-            $table->string('anexo_proceso_matricula')->nullable();
+            $table->string('anexo_acto_administrativo_proceso_matricula')->nullable();
 
             $table->text('sistema_informacion_academica')->nullable();
 
@@ -31,13 +31,15 @@ class CreateGestionAdministrativaTable extends Migration
 
             $table->text('pertenencia_personal')->nullable();
             $table->text('evaluacion_desempeno')->nullable();
+            $table->string('anexo_informe_anual')->nullable();
             $table->text('convivencia_manejo_conflictos')->nullable();
 
             $table->text('presupuesto_fse')->nullable();
             $table->string('anexo_presupuesto_fse')->nullable();
-
+            
             $table->text('contabilidad')->nullable();
             $table->text('contratacion')->nullable();
+            $table->string('anexo_manual_contratacion')->nullable();
             $table->text('control_fiscal')->nullable();
 
             $table->timestamps();

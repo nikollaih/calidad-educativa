@@ -16,6 +16,63 @@ class GestionDirectivaController extends Controller {
     public function store(GestionDirectivaRequest $request, int $institutionId) {
         $gestionDirectiva = $request->all(); 
         $gestionDirectiva['institution_id'] = $institutionId;
+        
+        
+        // anexo_gobierno_escolar
+        if ($request->hasFile('anexo_gobierno_escolar')) {
+            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
+                $request->file('anexo_gobierno_escolar'),
+                "institucion/{$institutionId}/anexo_gobierno_escolar",
+                'public'
+            );
+    
+            if ($storeAnexoGobiernoEscolar->success == false) {
+                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
+            }
+            $gestionDirectiva['anexo_gobierno_escolar'] = $storeAnexoGobiernoEscolar->data->id;
+        }
+
+        // anexo_programa_institucional_induccion
+        if ($request->hasFile('anexo_programa_institucional_induccion')) {
+            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
+                $request->file('anexo_programa_institucional_induccion'),
+                "institucion/{$institutionId}/anexo_programa_institucional_induccion",
+                'public'
+            );
+    
+            if ($storeAnexoGobiernoEscolar->success == false) {
+                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
+            }
+            $gestionDirectiva['anexo_programa_institucional_induccion'] = $storeAnexoGobiernoEscolar->data->id;
+        }
+
+        // anexo_politica_bienestar
+        if ($request->hasFile('anexo_politica_bienestar')) {
+            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
+                $request->file('anexo_politica_bienestar'),
+                "institucion/{$institutionId}/anexo_politica_bienestar",
+                'public'
+            );
+    
+            if ($storeAnexoGobiernoEscolar->success == false) {
+                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
+            }
+            $gestionDirectiva['anexo_politica_bienestar'] = $storeAnexoGobiernoEscolar->data->id;
+        }
+
+        // anexo_politica_inclusion
+        if ($request->hasFile('anexo_politica_inclusion')) {
+            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
+                $request->file('anexo_politica_inclusion'),
+                "institucion/{$institutionId}/anexo_politica_inclusion",
+                'public'
+            );
+    
+            if ($storeAnexoGobiernoEscolar->success == false) {
+                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
+            }
+            $gestionDirectiva['anexo_politica_inclusion'] = $storeAnexoGobiernoEscolar->data->id;
+        }
 
         // anexo_gobierno_escolar
         if ($request->hasFile('anexo_gobierno_escolar')) {

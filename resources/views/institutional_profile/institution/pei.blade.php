@@ -152,6 +152,17 @@
                                                                                                 name="politica_inclusion">{{ $gestion_directiva->politica_inclusion ?? old('politica_inclusion') }}</textarea>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="row">
+                                                                                    <label for="licencia_funcionamiento" class="form-label mb-0">Política de inclusión</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_directiva->anexoPoliticaInclusion))
+                                                                                            <a href="{{ $gestion_directiva->anexoPoliticaInclusion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_politica_inclusion" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -241,9 +252,9 @@
                                                                             <div class="accordion-body">
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Cultura Institucional</label>
+                                                                                        <label class="form-label">Politica de comunicación</label>
                                                                                         <textarea class="form-control" id="full-editor10" rows="3" 
-                                                                                                name="cultura">{{ $gestion_directiva->cultura ?? old('cultura') }}</textarea>
+                                                                                                name="politica_comunicacion">{{ $gestion_directiva->politica_comunicacion ?? old('politica_comunicacion') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
@@ -265,12 +276,23 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo política de bienestar</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_directiva->anexoPoliticaBienestar))
+                                                                                            <a href="{{ $gestion_directiva->anexoPoliticaBienestar->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_politica_bienestar" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Apoyo a la investigación y divulgación de buenas prácticas</label>
                                                                                         <textarea class="form-control" id="full-editor12" rows="3" 
                                                                                                 name="apoyo_investigacion">{{ $gestion_directiva->apoyo_investigacion ?? old('apoyo_investigacion') }}</textarea>
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                                 <div class="row">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Inventario de caracterización de buenas prácticas, con vigencia</label>
@@ -306,6 +328,17 @@
                                                                                         <label class="form-label">Inducción Institucional</label>
                                                                                         <textarea class="form-control" id="full-editor15" rows="3" 
                                                                                                 name="induccion_institucional">{{ $gestion_directiva->induccion_institucional ?? old('induccion_institucional') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Programa institucional de inducción (Estudiantes y padres de familia, docentes y administrativos)</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_directiva->anexoProgramaInstitucionalInduccion))
+                                                                                            <a href="{{ $gestion_directiva->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_programa_institucional_induccion" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
@@ -449,12 +482,12 @@
                                                                                 <div class="row mb-3">
                                                                                     <label class="form-label">Anexo Proceso de matrícula (Acto Administrativo)</label>
                                                                                     <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoProcesoMatricula))
-                                                                                            <a href="{{ $gestion_academica->anexoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                        @if(isset($gestion_academica->anexoActoAdministrativoProcesoMatricula))
+                                                                                            <a href="{{ $gestion_academica->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                                                                                 <i class="fas fa-eye"></i> Ver adjunto
                                                                                             </a>
                                                                                         @endif
-                                                                                        <input type="file" name="anexo_proceso_matricula" class="form-control" accept="application/pdf">
+                                                                                        <input type="file" name="anexo_acto_administrativo_proceso_matricula" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row">
@@ -701,6 +734,17 @@
                                                                                                 name="proceso_matricula">{{ $gestion_administrativa->proceso_matricula ?? old('proceso_matricula') }}</textarea>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="row">
+                                                                                    <label for="licencia_funcionamiento" class="form-label mb-0">Acto administrativo del proceso de matricula</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoActoAdministrativoProcesoMatricula))
+                                                                                            <a href="{{ $gestion_administrativa->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_acto_administrativo_proceso_matricula" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Sistema de información académica</label>
@@ -732,10 +776,32 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Política de mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoActoAdministrativoProcesoMatricula))
+                                                                                            <a href="{{ $gestion_administrativa->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_politica_mantenimiento" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Dotación, mantenimiento y uso de recursos para el aprendizaje</label>
                                                                                         <textarea class="form-control" id="administrativa-editor1" rows="3" 
                                                                                                 name="dotacion_recursos_aprendizaje">{{ $gestion_administrativa->dotacion_recursos_aprendizaje ?? old('dotacion_recursos_aprendizaje') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Política de dotación, mantenimiento y uso de recursos para el aprendizaje</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoDotacionRecursos))
+                                                                                            <a href="{{ $gestion_administrativa->anexoDotacionRecursos->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_dotacion_recursos" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
@@ -800,6 +866,17 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Programa de formación y capacitación institucional</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoProgramaFormacion))
+                                                                                            <a href="{{ $gestion_administrativa->anexoProgramaFormacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_programa_formacion" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Pertenencia del personal vinculado</label>
                                                                                         <textarea class="form-control" id="administrativa-editor1" rows="3" 
@@ -811,6 +888,17 @@
                                                                                         <label class="form-label">Evaluación del desempeño de directivos, docentes  y administrativos</label>
                                                                                         <textarea class="form-control" id="administrativa-editor1" rows="3" 
                                                                                                 name="evaluacion_desempeno">{{ $gestion_administrativa->evaluacion_desempeno ?? old('evaluacion_desempeno') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - informe anual de análisis de evaluación de desempeño</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoInformeAnual))
+                                                                                            <a href="{{ $gestion_administrativa->anexoInformeAnual->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_informe_anual" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
@@ -846,6 +934,17 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo. Acto administrativo de  Presupuesto del Fondo Anual de Servicios Educativos</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoPresupuestoFse))
+                                                                                            <a href="{{ $gestion_administrativa->anexoPresupuestoFse->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_presupuesto_fse" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Contabilidad</label>
                                                                                         <textarea class="form-control" id="administrativa-editor1" rows="3" 
@@ -860,14 +959,23 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo. Manual de contratación</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_administrativa->anexoManualContratacion))
+                                                                                            <a href="{{ $gestion_administrativa->anexoManualContratacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_manual_contratacion" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Control fiscal</label>
                                                                                         <textarea class="form-control" id="administrativa-editor1" rows="3" 
                                                                                                 name="control_fiscal">{{ $gestion_administrativa->control_fiscal ?? old('control_fiscal') }}</textarea>
                                                                                     </div>
                                                                                 </div>
-                                                                                
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -938,6 +1046,17 @@
                                                                                                 name="escuela_padres">{{ $gestion_comunidad->escuela_padres ?? old('escuela_padres') }}</textarea>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="row">
+                                                                                    <label class="form-label">Anexo, Proyecto escuela de padres</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_comunidad->anexoProyectoEscuelaPadres))
+                                                                                            <a href="{{ $gestion_comunidad->anexoProyectoEscuelaPadres->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_proyecto_escuela_padres" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
                                                                                         <label class="form-label">Oferta de servicios a la comunidad</label>
@@ -970,7 +1089,6 @@
                                                                                 </div>
                                                                                 <div class="row">
                                                                                     <label class="form-label">Anexo Programa de servicio social institucional</label>
-                                                                                    
                                                                                     <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
                                                                                         @if(isset($gestion_comunidad->anexoProgramaServicioSocial))
                                                                                             <a href="{{ $gestion_comunidad->anexoProgramaServicioSocial->url }}" target="_blank" class="btn btn-outline-info btn-sm">

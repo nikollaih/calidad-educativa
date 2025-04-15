@@ -20,7 +20,7 @@ class GestionAcademica extends Model {
     protected $fillable = [
         'institution_id',
         'proceso_matricula',
-        'anexo_proceso_matricula',
+        'anexo_acto_administrativo_proceso_matricula',
         'sistema_informacion_academica',
         'mantenimiento_infraestructura',
         'anexo_mantenimiento_infraestructura',
@@ -48,7 +48,7 @@ class GestionAcademica extends Model {
 
     
     public function anexoProcesoMatricula (){
-        return $this->belongsTo(Adjunto::class, 'anexo_proceso_matricula');
+        return $this->belongsTo(Adjunto::class, 'anexo_acto_administrativo_proceso_matricula');
     }
     
     public function anexoMantenimientoInfraestructura (){

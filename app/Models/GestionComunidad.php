@@ -12,6 +12,7 @@ class GestionComunidad extends Model {
     public  $with = [
         'anexoProgramaServicioSocial',
         'anexoPrevencionRiesgosFisicos',
+        'anexoProyectoEscuelaPadres',
     ];
 
     protected $fillable = [
@@ -23,6 +24,7 @@ class GestionComunidad extends Model {
         'oferta_servicios_comunidad',
         'programa_servicio_social',
         'anexo_programa_servicio_social',
+        'anexo_proyecto_escuela_padres',
         'prevencion_riesgos_fisicos',
         'anexo_prevencion_riesgos_fisicos',
         'prevencion_riesgos_psicosociales',
@@ -39,5 +41,9 @@ class GestionComunidad extends Model {
     
     public function anexoPrevencionRiesgosFisicos (){
         return $this->belongsTo(Adjunto::class, 'anexo_prevencion_riesgos_fisicos');
+    }
+    
+    public function anexoProyectoEscuelaPadres (){
+        return $this->belongsTo(Adjunto::class, 'anexo_proyecto_escuela_padres');
     }
 }

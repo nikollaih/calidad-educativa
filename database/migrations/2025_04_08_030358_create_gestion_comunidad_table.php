@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('oferta_servicios_comunidad');
             
             // Programa de servicio social
+            $table->string('anexo_proyecto_escuela_padres')->nullable();
             $table->text('programa_servicio_social');
             $table->string('anexo_programa_servicio_social')->nullable();
             

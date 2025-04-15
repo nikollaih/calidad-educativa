@@ -14,6 +14,9 @@ class GestionDirectiva extends Model {
         'manualConvivencia',
         'anexoAlianzasInstituciones',
         'anexoAlianzasSectorProductivo',
+        'anexoPoliticaInclusion',
+        'anexoPoliticaBienestar',
+        'anexoProgramaInstitucionalInduccion',
     ];
 
     protected $fillable = [
@@ -23,15 +26,18 @@ class GestionDirectiva extends Model {
         'principios_institucionales',
         'metas_institucionales',
         'politica_inclusion',
+        'anexo_politica_inclusion',
         'liderazgo',
         'articulacion',
         'seguimiento',
         'gobierno_escolar',
         'anexo_gobierno_escolar',
-        'cultura',
+        'politica_comunicacion',
         'anexo_cultura_institucional',
         'politica_bienestar',
-        'apoyo_investigacion',
+        'anexo_programa_institucional_induccion',
+        'anexo_politica_bienestar',
+        // 'apoyo_investigacion',
         'inventario_buenas_practicas',
         'sentido_pertenencia',
         'induccion_institucional',
@@ -70,5 +76,17 @@ class GestionDirectiva extends Model {
     
     public function anexoAlianzasSectorProductivo (){
         return $this->belongsTo(Adjunto::class, 'anexo_alianzas_sector_productivo');
+    }
+
+    public function anexoPoliticaInclusion (){
+        return $this->belongsTo(Adjunto::class, 'anexo_politica_inclusion');
+    }
+
+    public function anexoPoliticaBienestar (){
+        return $this->belongsTo(Adjunto::class, 'anexo_politica_bienestar');
+    }
+
+    public function anexoProgramaInstitucionalInduccion (){
+        return $this->belongsTo(Adjunto::class, 'anexo_programa_institucional_induccion');
     }
 }

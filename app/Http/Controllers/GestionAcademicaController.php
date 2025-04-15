@@ -18,18 +18,18 @@ class GestionAcademicaController extends Controller
         $gestionAcademica = $request->all(); 
         $gestionAcademica['institution_id'] = $institutionId;
 
-        // Valida y almacena anexo_proceso_matricula
-        if ($request->hasFile('anexo_proceso_matricula')) {
+        // Valida y almacena anexo_acto_administrativo_proceso_matricula
+        if ($request->hasFile('anexo_acto_administrativo_proceso_matricula')) {
             $storeAnexoMatricula = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_proceso_matricula'),
-                "institucion/{$institutionId}/anexo_proceso_matricula",
+                $request->file('anexo_acto_administrativo_proceso_matricula'),
+                "institucion/{$institutionId}/anexo_acto_administrativo_proceso_matricula",
                 'public'
             );
 
             if ($storeAnexoMatricula->success == false) {
                 return redirect()->back()->with('flash_error_message', $storeAnexoMatricula->msg);
             }
-            $gestionAcademica['anexo_proceso_matricula'] = $storeAnexoMatricula->data->id;
+            $gestionAcademica['anexo_acto_administrativo_proceso_matricula'] = $storeAnexoMatricula->data->id;
         }
 
         // Valida y almacena anexo_mantenimiento_infraestructura

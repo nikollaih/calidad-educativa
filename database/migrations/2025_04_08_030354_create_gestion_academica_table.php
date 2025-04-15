@@ -17,7 +17,7 @@ return new class extends Migration
             
             // Apoyo a la gestión académica
             $table->text('proceso_matricula');
-            $table->string('anexo_proceso_matricula')->nullable();
+            $table->string('anexo_acto_administrativo_proceso_matricula')->nullable();
             $table->text('sistema_informacion_academica');
             
             // Administración de la planta física y recursos
@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('anexo_programa_formacion')->nullable();
             $table->text('pertenencia_personal');
             $table->text('evaluacion_desempeno');
+            $table->string('anexo_informe_anual')->nullable();
             $table->text('convivencia_manejo_conflictos');
             
             // Apoyo financiero y contable

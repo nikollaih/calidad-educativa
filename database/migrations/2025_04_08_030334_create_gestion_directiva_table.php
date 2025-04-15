@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->text('principios_institucionales');
             $table->text('metas_institucionales');
             $table->text('politica_inclusion');
+            $table->string('anexo_politica_inclusion')->nullable();
             
             // Gestión Estratégica
             $table->text('liderazgo');
@@ -27,15 +28,17 @@ return new class extends Migration {
             $table->string('anexo_gobierno_escolar')->nullable();
             
             // Cultura Institucional
-            $table->text('cultura');
+            $table->text('politica_comunicacion');
             $table->string('anexo_cultura_institucional')->nullable();
             $table->text('politica_bienestar');
-            $table->text('apoyo_investigacion');
+            $table->string('anexo_politica_bienestar')->nullable();
+            // $table->text('apoyo_investigacion');
             $table->text('inventario_buenas_practicas');
             
             // Clima Escolar
             $table->text('sentido_pertenencia');
             $table->text('induccion_institucional');
+            $table->string('anexo_programa_institucional_induccion')->nullable();
             $table->string('manual_convivencia')->nullable();
             $table->text('actividades_extracurriculares');
             $table->text('manejo_conflictos');

@@ -9,10 +9,19 @@ class GestionAdministrativa extends Model {
 
     protected $table = 'gestion_administrativa';
 
+    public $with = [
+        'anexoActoAdministrativoProcesoMatricula',
+        'anexoPoliticaMantenimiento',
+        'anexoDotacionRecursos',
+        'anexoProgramaFormacion',
+        'anexoPresupuestoFse',
+        'anexoInformeAnual',
+        'anexoManualContratacion',
+    ];
     protected $fillable = [
         'institution_id',
         'proceso_matricula',
-        'anexo_proceso_matricula',
+        'anexo_acto_administrativo_proceso_matricula',
         'sistema_informacion_academica',
         'mantenimiento_infraestructura',
         'anexo_mantenimiento_infraestructura',
@@ -25,16 +34,46 @@ class GestionAdministrativa extends Model {
         'anexo_programa_formacion',
         'pertenencia_personal',
         'evaluacion_desempeno',
+        'anexo_informe_anual',
         'convivencia_manejo_conflictos',
         'presupuesto_fse',
         'anexo_presupuesto_fse',
         'contabilidad',
         'contratacion',
+        'anexo_manual_contratacion',
         'control_fiscal',
     ];
 
     public function institucion()
     {
         return $this->belongsTo(Institucion::class);
+    }
+    
+    public function anexoActoAdministrativoProcesoMatricula (){
+        return $this->belongsTo(Adjunto::class, 'anexo_acto_administrativo_proceso_matricula');
+    }
+    
+    public function anexoPoliticaMantenimiento (){
+        return $this->belongsTo(Adjunto::class, 'anexo_politica_mantenimiento');
+    }
+    
+    public function anexoDotacionRecursos (){
+        return $this->belongsTo(Adjunto::class, 'anexo_dotacion_recursos');
+    }
+    
+    public function anexoProgramaFormacion (){
+        return $this->belongsTo(Adjunto::class, 'anexo_programa_formacion');
+    }
+    
+    public function anexoPresupuestoFse (){
+        return $this->belongsTo(Adjunto::class, 'anexo_presupuesto_fse');
+    }
+    
+    public function anexoInformeAnual (){
+        return $this->belongsTo(Adjunto::class, 'anexo_informe_anual');
+    }
+    
+    public function anexoManualContratacion (){
+        return $this->belongsTo(Adjunto::class, 'anexo_manual_contratacion');
     }
 }

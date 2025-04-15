@@ -17,6 +17,20 @@ class GestionComunidadController extends Controller
         $gestionComunidad = $request->all(); 
         $gestionComunidad['institution_id'] = $institutionId;
 
+        // Valida y almacena anexo_proyecto_escuela_padres
+        if ($request->hasFile('anexo_proyecto_escuela_padres')) {
+            $storeAnexoServicioSocial = $this->adjuntoService->storeAdjunto(
+                $request->file('anexo_proyecto_escuela_padres'),
+                "institucion/{$institutionId}/anexo_proyecto_escuela_padres",
+                'public'
+            );
+
+            if ($storeAnexoServicioSocial->success == false) {
+                return redirect()->back()->with('flash_error_message', $storeAnexoServicioSocial->msg);
+            }
+            $gestionComunidad['anexo_proyecto_escuela_padres'] = $storeAnexoServicioSocial->data->id;
+        }
+
         // Valida y almacena anexo_programa_servicio_social
         if ($request->hasFile('anexo_programa_servicio_social')) {
             $storeAnexoServicioSocial = $this->adjuntoService->storeAdjunto(
