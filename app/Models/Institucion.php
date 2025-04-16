@@ -32,6 +32,10 @@ class Institucion extends Model
     public function sedes (){
         return $this->hasMany(Sede::class,'institution_id');
     }
+    public function autoevaluacions(){
+        return $this->hasMany(Autoevaluacion::class, 'institucion_id');
+    }
+
     public function getMorphClass() {
         return "institution";
     }

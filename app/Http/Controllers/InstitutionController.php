@@ -30,23 +30,48 @@ class InstitutionController extends Controller
 
     public function autoevaluaciones(int $institution = null)
     {
-        //$autoevaluaciones = Autoevaluacion::where('institution_id',$institution)->get();
+        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->get();
        // $roles = Role::all();
-        return view('institutional_profile.institution.autoevaluaciones.index', ['institutionId' => $institution]);
+        return view('institutional_profile.institution.autoevaluaciones.index',
+            ['institutionId' => $institution, 'autoevaluaciones' => $autoevaluaciones]);
     }
     public function autoevaluacionesCrear(int $institution = null)
     {
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
-        //$autoevaluaciones = Autoevaluacion::where('institution_id',$institution)->get();
+        $autoevaluacionesAniosDisabled = Autoevaluacion::where('institucion_id',$institution)->pluck('anio_vigencia');
         // $roles = Role::all();
         return view('institutional_profile.institution.autoevaluaciones.create',
             [
                 'institutionId' => $institution,
-                'gruposCalificaciones' => $gruposCalificaciones
+                'gruposCalificaciones' => $gruposCalificaciones,
+                'aniosDisabled' => $autoevaluacionesAniosDisabled,
             ]
         );
+    }
+    public function autoevaluacionesAlmacenar(Request $request)
+    {
+        $autoevaluacionData =  $request->input('autoevaluacion');
+        $autoevaluacionData['alias_estado'] = "PROCESO";
+        $notas = $request->input('notas');
+
+        $autoevaluacionOld = Autoevaluacion::where($autoevaluacionData)->first();
+        if($autoevaluacionOld)
+            return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacionOld->institucion_id])->with('flash_error_message', "Error! ya existe una  autoevaluación con esa vigencia");
+
+        $autoevaluacion = Autoevaluacion::create($autoevaluacionData);
+
+        if($notas){
+            $syncData = [];
+
+            foreach ($notas as $nota) {
+                $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
+            }
+            $autoevaluacion->notas()->sync($syncData);
+        }
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
+
     }
     public function create()
     {

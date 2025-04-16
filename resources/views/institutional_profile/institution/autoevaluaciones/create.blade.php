@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+    {{$aniosDisabled}}
     <div
         id="autoevaluacion-crear"
         data-institution-id="{{ $institutionId }}"
-        data-agregar-url="{{ route('institution.autoevaluaciones', ['institution' => $institutionId]) }}"
-        data-grupos-calificaciones="{{ json_encode($gruposCalificaciones) }}">
+        data-csrf-token="{{ csrf_token() }}"
+        data-agregar-url="{{ route('institution.autoevaluaciones-almacenar', ['institution' => $institutionId]) }}"
+        data-grupos-calificaciones="{{ json_encode($gruposCalificaciones) }}"
+        data-anios-disabled="{{ json_encode($aniosDisabled) }}">
     </div>
     @vite('resources/js/app.js')
 @endsection

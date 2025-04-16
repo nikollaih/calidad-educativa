@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('autoevaluacions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('institucionId')->comment('EL ID DE LA INSTITUCION');
+            $table->unsignedBigInteger('institucion_id')->comment('EL ID DE LA INSTITUCION');
+            $table->integer('anio_vigencia')->comment('AÑO DE VIGENCIA DE LA AUTOEVALUACIÓN');
             $table->string("alias_estado")->comment("ES EL ESTADO DE LA AUTOEVALUACION");
             $table->timestamps();
         });
