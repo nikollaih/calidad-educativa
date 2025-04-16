@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    {{$aniosDisabled}}
     <div
         id="autoevaluacion-crear"
         data-institution-id="{{ $institutionId }}"
