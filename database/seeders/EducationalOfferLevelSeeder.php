@@ -12,6 +12,7 @@ class EducationalOfferLevelSeeder extends Seeder
      */
     public function run(): void
     {
+        /*
         $educationalOfferLevels = [
             // Niveles principales
             [ 'name' => 'Preescolar', 'parent_id' => null, 'category' => 'nivel'],
@@ -46,5 +47,6 @@ class EducationalOfferLevelSeeder extends Seeder
                 $level // Datos a insertar/actualizar
             );
         }
+         */
     }
 }

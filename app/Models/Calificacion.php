@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Calificacion extends Model
 {
     use HasFactory;
+    public function grupo()
+    {
+        return $this->belongsTo(GrupoCalificacion::class, 'grupo_indice', 'indice');
+    }
+    public function notasCalificacion() {
+        return $this->hasMany(NotaCalificacion::class, 'indice_calificacion', 'indice');
+    }
+
 }
