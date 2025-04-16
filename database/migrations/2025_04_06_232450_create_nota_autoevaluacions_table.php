@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('nota_autoevaluacions', function (Blueprint $table) {
             $table->unsignedBigInteger('autoevaluacion_id');
             $table->unsignedBigInteger('nota_calificacion_id');
+            $table->text('evidencia')->nullable();
 
             // Clave primaria compuesta
             $table->primary(['autoevaluacion_id', 'nota_calificacion_id']);
+            $table->timestamps();
 
             // Claves foráneas
             $table->foreign('autoevaluacion_id')
