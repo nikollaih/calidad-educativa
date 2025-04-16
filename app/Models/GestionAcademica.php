@@ -10,35 +10,41 @@ class GestionAcademica extends Model {
     protected $table = 'gestion_academica';
     
     public  $with = [
-        'anexoProcesoMatricula',
-        'anexoMantenimientoInfraestructura',
-        'anexoDotacionRecursos',
-        'anexoProgramaFormacion',
-        'anexoPresupuestoFse',
+        'anexoPlanEstudios',
+        'anexoEnfoquePedagogico',
+        'anexoAnalisisJornada',
+        'anexoSistemaEvaluacion',
+        'anexosPlanesAula',
+        'anexosTemasEnsenanza',
+        'anexoInformeEstadistico',
+        'anexoAnalisisPruebasExternas',
+        'anexosPlanesMejoramiento',
     ];
 
     protected $fillable = [
         'institution_id',
-        'proceso_matricula',
-        'anexo_acto_administrativo_proceso_matricula',
-        'sistema_informacion_academica',
-        'mantenimiento_infraestructura',
-        'anexo_mantenimiento_infraestructura',
-        'dotacion_recursos_aprendizaje',
-        'anexo_dotacion_recursos',
-        'programas_seguridad',
-        'estrategias_acceso_permanencia',
-        'perfiles_asignacion',
-        'programa_formacion_capacitacion',
-        'anexo_programa_formacion',
-        'pertenencia_personal',
-        'evaluacion_desempeno',
-        'convivencia_manejo_conflictos',
-        'presupuesto_fse',
-        'anexo_presupuesto_fse',
-        'contabilidad',
-        'contratacion',
-        'control_fiscal',
+        'plan_estudios',
+        'enfoque_metodologico',
+        'estrategia_pedagogica',
+        'analisis_jornada_escolar',
+        'sistema_evaluacion',
+        'estrategias_tareas',
+        'ambientes_aprendizaje',
+        'motivacion_aprendizaje',
+        'plan_aula',
+        'evaluacion_aula',
+        'seguimiento_desempenos',
+        'uso_evaluaciones_externas',
+        'apoyo_pedagogico',
+        'anexo_plan_estudios',
+        'anexo_enfoque_pedagogico',
+        'anexo_analisis_jornada',
+        'anexo_sistema_evaluacion',
+        'anexos_planes_aula',
+        'anexos_temas_ensenanza',
+        'anexo_informe_estadistico',
+        'anexo_analisis_pruebas_externas',
+        'anexos_planes_mejoramiento',
     ];
 
     public function institucion()
@@ -46,24 +52,39 @@ class GestionAcademica extends Model {
         return $this->belongsTo(Institucion::class);
     }
 
-    
-    public function anexoProcesoMatricula (){
-        return $this->belongsTo(Adjunto::class, 'anexo_acto_administrativo_proceso_matricula');
+    public function anexoPlanEstudios (){
+        return $this->belongsTo(Adjunto::class, 'anexo_plan_estudios');
     }
     
-    public function anexoMantenimientoInfraestructura (){
-        return $this->belongsTo(Adjunto::class, 'anexo_mantenimiento_infraestructura');
+    public function anexoEnfoquePedagogico (){
+        return $this->belongsTo(Adjunto::class, 'anexo_enfoque_pedagogico');
     }
     
-    public function anexoDotacionRecursos (){
-        return $this->belongsTo(Adjunto::class, 'anexo_dotacion_recursos');
+    public function anexoAnalisisJornada (){
+        return $this->belongsTo(Adjunto::class, 'anexo_analisis_jornada');
     }
     
-    public function anexoProgramaFormacion (){
-        return $this->belongsTo(Adjunto::class, 'anexo_programa_formacion');
+    public function anexoSistemaEvaluacion (){
+        return $this->belongsTo(Adjunto::class, 'anexo_sistema_evaluacion');
     }
     
-    public function anexoPresupuestoFse (){
-        return $this->belongsTo(Adjunto::class, 'anexo_presupuesto_fse');
+    public function anexosPlanesAula (){
+        return $this->belongsTo(Adjunto::class, 'anexos_planes_aula');
+    }
+    
+    public function anexosTemasEnsenanza (){
+        return $this->belongsTo(Adjunto::class, 'anexos_temas_ensenanza');
+    }
+    
+    public function anexoInformeEstadistico (){
+        return $this->belongsTo(Adjunto::class, 'anexo_informe_estadistico');
+    }
+    
+    public function anexoAnalisisPruebasExternas (){
+        return $this->belongsTo(Adjunto::class, 'anexo_analisis_pruebas_externas');
+    }
+    
+    public function anexosPlanesMejoramiento (){
+        return $this->belongsTo(Adjunto::class, 'anexos_planes_mejoramiento');
     }
 }

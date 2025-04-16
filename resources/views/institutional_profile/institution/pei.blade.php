@@ -95,6 +95,7 @@
                                     </ul>
                                 </div>
                                 <div class="tab-content">
+
                                     <!-- Gestion directiva -->
                                     <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
                                         <div class="card-datatable table-responsive pt-0">
@@ -450,240 +451,292 @@
                                         </div>
                                     </div>
 
-                                    <!-- Gestion academica -->
+                                    <!-- Gestión Académica -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-academica" role="tabpanel">
                                         <div class="card-datatable table-responsive pt-0">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="card mb-4">
                                                         <div class="card-body">
-                                                            <form id="mainFormAcademica" method="post" action="pei/academic-management" enctype="multipart/form-data">
+                                                            <form id="mainFormGestionAcademica" method="post" action="pei/academic-management" enctype="multipart/form-data">
                                                                 @csrf
-                                                                <div class="accordion" id="academicAccordion">
-                                                                    <!-- Apoyo a la gestión académica -->
+                                                                <div class="accordion" id="gestionAcademicaAccordion">
+                                                                    
+                                                                    <!-- Diseño Pedagógico -->
                                                                     <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="academicHeadingOne">
+                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingOne">
                                                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#academicCollapseOne" aria-expanded="false" 
-                                                                                    aria-controls="academicCollapseOne">
-                                                                                <span class="fw-bold fs-4">Apoyo a la gestión académica</span>
+                                                                                    data-bs-target="#gestionAcademicaCollapseOne" aria-expanded="false" 
+                                                                                    aria-controls="gestionAcademicaCollapseOne">
+                                                                                <span class="fw-bold fs-4">Diseño Pedagógico</span>
                                                                             </button>
                                                                         </h2>
-                                                                        <div id="academicCollapseOne" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="academicHeadingOne" data-bs-parent="#academicAccordion">
+                                                                        <div id="gestionAcademicaCollapseOne" class="accordion-collapse collapse" 
+                                                                            aria-labelledby="gestionAcademicaHeadingOne" data-bs-parent="#gestionAcademicaAccordion">
                                                                             <div class="accordion-body">
+                                                                                <!-- Plan de estudios -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Proceso de matrícula</label>
-                                                                                        <textarea class="form-control" id="academic-editor1" rows="3" 
-                                                                                                name="proceso_matricula">{{ $gestion_academica->proceso_matricula ?? old('proceso_matricula') }}</textarea>
+                                                                                        <label class="form-label">Plan de estudios</label>
+                                                                                        <textarea class="form-control" id="academica-editor1" rows="3" 
+                                                                                                name="plan_estudios">{{ $gestion_academica->plan_estudios ?? old('plan_estudios') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Proceso de matrícula (Acto Administrativo)</label>
+                                                                                    <label class="form-label">Anexo - Acto administrativo de aprobación de plan de estudios</label>
                                                                                     <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoActoAdministrativoProcesoMatricula))
-                                                                                            <a href="{{ $gestion_academica->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                        @if(isset($gestion_academica->anexoPlanEstudios))
+                                                                                            <a href="{{ $gestion_academica->anexoPlanEstudios->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                                                                                 <i class="fas fa-eye"></i> Ver adjunto
                                                                                             </a>
                                                                                         @endif
-                                                                                        <input type="file" name="anexo_acto_administrativo_proceso_matricula" class="form-control" accept="application/pdf">
+                                                                                        <input type="file" name="anexo_plan_estudios" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="row">
+                                                                                <!-- <div class="row mb-3">
+                                                                                    <label class="form-label">Anexos - Planes de área (9 áreas + optativas)</label>
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Sistema de información académica</label>
-                                                                                        <textarea class="form-control" id="academic-editor2" rows="3" 
-                                                                                                name="sistema_informacion_academica">{{ $gestion_academica->sistema_informacion_academica ?? old('sistema_informacion_academica') }}</textarea>
+                                                                                        <input type="file" name="anexos_planes_area" class="form-control" multiple accept="application/pdf">
+                                                                                    </div>
+                                                                                </div> -->
+
+                                                                                <!-- Enfoque metodológico -->
+                                                                                <div class="row mb-3">
+                                                                                    <div class="col-12">
+                                                                                        <label class="form-label">Enfoque metodológico</label>
+                                                                                        <textarea class="form-control" id="academica-editor2" rows="3" 
+                                                                                                name="enfoque_metodologico">{{ $gestion_academica->enfoque_metodologico ?? old('enfoque_metodologico') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Documento de caracterización del enfoque pedagógico</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexoEnfoquePedagogico))
+                                                                                            <a href="{{ $gestion_academica->anexoEnfoquePedagogico->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_enfoque_pedagogico" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Estrategia pedagógica -->
+                                                                                <div class="row mb-3">
+                                                                                    <div class="col-12">
+                                                                                        <label class="form-label">Estrategia pedagógica</label>
+                                                                                        <textarea class="form-control" id="academica-editor3" rows="3" 
+                                                                                                name="estrategia_pedagogica">{{ $gestion_academica->estrategia_pedagogica ?? old('estrategia_pedagogica') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Análisis jornada escolar -->
+                                                                                <div class="row mb-3">
+                                                                                    <div class="col-12">
+                                                                                        <label class="form-label">Análisis y seguimiento a la jornada escolar</label>
+                                                                                        <textarea class="form-control" id="academica-editor4" rows="3" 
+                                                                                                name="analisis_jornada_escolar">{{ $gestion_academica->analisis_jornada_escolar ?? old('analisis_jornada_escolar') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - Documento de análisis</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexoAnalisisJornada))
+                                                                                            <a href="{{ $gestion_academica->anexoAnalisisJornada->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_analisis_jornada" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- SIEE -->
+                                                                                <div class="row mb-3">
+                                                                                    <div class="col-12">
+                                                                                        <label class="form-label">Sistema Institucional de Evaluación de los Estudiantes (SIEE)</label>
+                                                                                        <textarea class="form-control" id="academica-editor5" rows="3" 
+                                                                                                name="sistema_evaluacion">{{ $gestion_academica->sistema_evaluacion ?? old('sistema_evaluacion') }}</textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-3">
+                                                                                    <label class="form-label">Anexo - SIEE</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexoSistemaEvaluacion))
+                                                                                            <a href="{{ $gestion_academica->anexoSistemaEvaluacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_sistema_evaluacion" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- Administración de la planta física y de los recursos -->
+                                                                    <!-- Prácticas Pedagógicas -->
                                                                     <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="academicHeadingTwo">
+                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingTwo">
                                                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#academicCollapseTwo" aria-expanded="false" 
-                                                                                    aria-controls="academicCollapseTwo">
-                                                                                <span class="fw-bold fs-4">Administración de la planta física y de los recursos</span>
+                                                                                    data-bs-target="#gestionAcademicaCollapseTwo" aria-expanded="false" 
+                                                                                    aria-controls="gestionAcademicaCollapseTwo">
+                                                                                <span class="fw-bold fs-4">Prácticas Pedagógicas</span>
                                                                             </button>
                                                                         </h2>
-                                                                        <div id="academicCollapseTwo" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="academicHeadingTwo" data-bs-parent="#academicAccordion">
+                                                                        <div id="gestionAcademicaCollapseTwo" class="accordion-collapse collapse" 
+                                                                            aria-labelledby="gestionAcademicaHeadingTwo" data-bs-parent="#gestionAcademicaAccordion">
                                                                             <div class="accordion-body">
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa</label>
-                                                                                        <textarea class="form-control" id="academic-editor3" rows="3" 
-                                                                                                name="mantenimiento_infraestructura">{{ $gestion_academica->mantenimiento_infraestructura ?? old('mantenimiento_infraestructura') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoMantenimientoInfraestructura))
-                                                                                            <a href="{{ $gestion_academica->anexoMantenimientoInfraestructura->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_mantenimiento_infraestructura" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Dotación, mantenimiento y uso de recursos para el aprendizaje</label>
-                                                                                        <textarea class="form-control" id="academic-editor4" rows="3" 
-                                                                                                name="dotacion_recursos_aprendizaje">{{ $gestion_academica->dotacion_recursos_aprendizaje ?? old('dotacion_recursos_aprendizaje') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Dotación, mantenimiento y uso de recursos para el aprendizaje</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoDotacionRecursos))
-                                                                                            <a href="{{ $gestion_academica->anexoDotacionRecursos->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_dotacion_recursos" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Programas de seguridad</label>
-                                                                                        <textarea class="form-control" id="academic-editor5" rows="3" 
-                                                                                                name="programas_seguridad">{{ $gestion_academica->programas_seguridad ?? old('programas_seguridad') }}</textarea>
+                                                                                        <label class="form-label">Estrategias para las tareas escolares</label>
+                                                                                        <textarea class="form-control" id="academica-editor6" rows="3" 
+                                                                                                name="estrategias_tareas">{{ $gestion_academica->estrategias_tareas ?? old('estrategias_tareas') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- Talento humano -->
+                                                                    <!-- Gestión de Aula -->
                                                                     <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="academicHeadingFour">
+                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingThree">
                                                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#academicCollapseFour" aria-expanded="false" 
-                                                                                    aria-controls="academicCollapseFour">
-                                                                                <span class="fw-bold fs-4">Talento humano</span>
+                                                                                    data-bs-target="#gestionAcademicaCollapseThree" aria-expanded="false" 
+                                                                                    aria-controls="gestionAcademicaCollapseThree">
+                                                                                <span class="fw-bold fs-4">Gestión de Aula</span>
                                                                             </button>
                                                                         </h2>
-                                                                        <div id="academicCollapseFour" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="academicHeadingFour" data-bs-parent="#academicAccordion">
+                                                                        <div id="gestionAcademicaCollapseThree" class="accordion-collapse collapse" 
+                                                                            aria-labelledby="gestionAcademicaHeadingThree" data-bs-parent="#gestionAcademicaAccordion">
                                                                             <div class="accordion-body">
-                                                                                <!-- Perfiles, asignación académica y de funciones -->
+                                                                                <!-- Ambientes de aprendizaje -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Perfiles, asignación académica y de funciones</label>
-                                                                                        <textarea class="form-control" id="academic-editor7" rows="3" 
-                                                                                                name="perfiles_asignacion">{{ $gestion_academica->perfiles_asignacion ?? old('perfiles_asignacion') }}</textarea>
+                                                                                        <label class="form-label">Ambientes de aprendizaje</label>
+                                                                                        <textarea class="form-control" id="academica-editor7" rows="3" 
+                                                                                                name="ambientes_aprendizaje">{{ $gestion_academica->ambientes_aprendizaje ?? old('ambientes_aprendizaje') }}</textarea>
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                <!-- Programa de formación y capacitación institucional -->
+
+                                                                                <!-- Motivación hacia el aprendizaje -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Programa de formación y capacitación institucional</label>
-                                                                                        <textarea class="form-control" id="academic-editor8" rows="3" 
-                                                                                                name="programa_formacion_capacitacion">{{ $gestion_academica->programa_formacion_capacitacion ?? old('programa_formacion_capacitacion') }}</textarea>
+                                                                                        <label class="form-label">Motivación hacia el aprendizaje</label>
+                                                                                        <textarea class="form-control" id="academica-editor8" rows="3" 
+                                                                                                name="motivacion_aprendizaje">{{ $gestion_academica->motivacion_aprendizaje ?? old('motivacion_aprendizaje') }}</textarea>
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                <!-- Anexo Programa de formación y capacitación institucional -->
+
+                                                                                <!-- Plan de aula -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Anexo Programa de formación y capacitación institucional</label>
-                                                                                        <div class="d-flex gap-2 justify-content-between align-items-center">
-                                                                                            @if(isset($gestion_academica->anexoProgramaFormacion))
-                                                                                                <a href="{{ $gestion_academica->anexoProgramaFormacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                    <i class="fas fa-eye"></i> Ver adjunto
-                                                                                                </a>
-                                                                                            @endif
-                                                                                            <input type="file" name="anexo_programa_formacion" class="form-control" accept="application/pdf">
-                                                                                        </div>
+                                                                                        <label class="form-label">Plan de aula, opciones didácticas y temas de enseñanza obligatoria</label>
+                                                                                        <textarea class="form-control" id="academica-editor9" rows="3" 
+                                                                                                name="plan_aula">{{ $gestion_academica->plan_aula ?? old('plan_aula') }}</textarea>
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                <!-- Pertenencia del personal vinculado -->
                                                                                 <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Pertenencia del personal vinculado</label>
-                                                                                        <textarea class="form-control" id="academic-editor9" rows="3" 
-                                                                                                name="pertenencia_personal">{{ $gestion_academica->pertenencia_personal ?? old('pertenencia_personal') }}</textarea>
+                                                                                    <label class="form-label">Anexos - Planes de aula por grado y área (9 áreas + optativas)</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexosPlanesAula))
+                                                                                            <a href="{{ $gestion_academica->anexosPlanesAula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexos_planes_aula" class="form-control" multiple accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                <!-- Evaluación del desempeño -->
                                                                                 <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Evaluación del desempeño de directivos, docentes y administrativos</label>
-                                                                                        <textarea class="form-control" id="academic-editor10" rows="3" 
-                                                                                                name="evaluacion_desempeno">{{ $gestion_academica->evaluacion_desempeno ?? old('evaluacion_desempeno') }}</textarea>
+                                                                                    <label class="form-label">Anexos - Temas de enseñanza obligatoria (por proyecto)</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexosTemasEnsenanza))
+                                                                                            <a href="{{ $gestion_academica->anexosTemasEnsenanza->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexos_temas_ensenanza" class="form-control" multiple accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                <!-- Convivencia y manejo de conflictos -->
+
+                                                                                <!-- Evaluación en el aula -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Convivencia y manejo de conflictos</label>
-                                                                                        <textarea class="form-control" id="academic-editor11" rows="3" 
-                                                                                                name="convivencia_manejo_conflictos">{{ $gestion_academica->convivencia_manejo_conflictos ?? old('convivencia_manejo_conflictos') }}</textarea>
+                                                                                        <label class="form-label">Evaluación en el aula</label>
+                                                                                        <textarea class="form-control" id="academica-editor10" rows="3" 
+                                                                                                name="evaluacion_aula">{{ $gestion_academica->evaluacion_aula ?? old('evaluacion_aula') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- Apoyo financiero y contable -->
+                                                                    <!-- Seguimiento Académico -->
                                                                     <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="academicHeadingFive">
+                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingFour">
                                                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#academicCollapseFive" aria-expanded="false" 
-                                                                                    aria-controls="academicCollapseFive">
-                                                                                <span class="fw-bold fs-4">Apoyo financiero y contable</span>
+                                                                                    data-bs-target="#gestionAcademicaCollapseFour" aria-expanded="false" 
+                                                                                    aria-controls="gestionAcademicaCollapseFour">
+                                                                                <span class="fw-bold fs-4">Seguimiento Académico</span>
                                                                             </button>
                                                                         </h2>
-                                                                        <div id="academicCollapseFive" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="academicHeadingFive" data-bs-parent="#academicAccordion">
+                                                                        <div id="gestionAcademicaCollapseFour" class="accordion-collapse collapse" 
+                                                                            aria-labelledby="gestionAcademicaHeadingFour" data-bs-parent="#gestionAcademicaAccordion">
                                                                             <div class="accordion-body">
+                                                                                <!-- Seguimiento desempeños -->
                                                                                 <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Presupuesto anual del Fondo de Servicios Educativos (FSE)</label>
-                                                                                        <textarea class="form-control" id="academic-editor12" rows="3" 
-                                                                                                name="presupuesto_fse">{{ $gestion_academica->presupuesto_fse ?? old('presupuesto_fse') }}</textarea>
+                                                                                        <label class="form-label">Seguimiento a los desempeños de los estudiantes</label>
+                                                                                        <textarea class="form-control" id="academica-editor11" rows="3" 
+                                                                                                name="seguimiento_desempenos">{{ $gestion_academica->seguimiento_desempenos ?? old('seguimiento_desempenos') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Presupuesto anual del Fondo de Servicios Educativos (FSE)</label>
+                                                                                    <label class="form-label">Anexo - Informe estadístico por periodo</label>
                                                                                     <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoPresupuestoFse))
-                                                                                            <a href="{{ $gestion_academica->anexoPresupuestoFse->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                        @if(isset($gestion_academica->anexoInformeEstadistico))
+                                                                                            <a href="{{ $gestion_academica->anexoInformeEstadistico->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                                                                                 <i class="fas fa-eye"></i> Ver adjunto
                                                                                             </a>
                                                                                         @endif
-                                                                                        <input type="file" name="anexo_presupuesto_fse" class="form-control" accept="application/pdf">
+                                                                                        <input type="file" name="anexo_informe_estadistico" class="form-control" accept="application/pdf">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Uso evaluaciones externas -->
+                                                                                <div class="row mb-3">
+                                                                                    <div class="col-12">
+                                                                                        <label class="form-label">Uso pedagógico de las evaluaciones externas</label>
+                                                                                        <textarea class="form-control" id="academica-editor12" rows="3" 
+                                                                                                name="uso_evaluaciones_externas">{{ $gestion_academica->uso_evaluaciones_externas ?? old('uso_evaluaciones_externas') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Contabilidad</label>
-                                                                                        <textarea class="form-control" id="academic-editor13" rows="3" 
-                                                                                                name="contabilidad">{{ $gestion_academica->contabilidad ?? old('contabilidad') }}</textarea>
+                                                                                    <label class="form-label">Anexo - Documento de análisis de resultados de pruebas externas</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexoAnalisisPruebasExternas))
+                                                                                            <a href="{{ $gestion_academica->anexoAnalisisPruebasExternas->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexo_analisis_pruebas_externas" class="form-control" accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Contratación</label>
-                                                                                        <textarea class="form-control" id="academic-editor14" rows="3" 
-                                                                                                name="contratacion">{{ $gestion_academica->contratacion ?? old('contratacion') }}</textarea>
+                                                                                    <label class="form-label">Anexos - Planes de mejoramiento por área evaluada (5 áreas)</label>
+                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
+                                                                                        @if(isset($gestion_academica->anexosPlanesMejoramiento))
+                                                                                            <a href="{{ $gestion_academica->anexosPlanesMejoramiento->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                                                                <i class="fas fa-eye"></i> Ver adjunto
+                                                                                            </a>
+                                                                                        @endif
+                                                                                        <input type="file" name="anexos_planes_mejoramiento" class="form-control" multiple accept="application/pdf">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="row">
+
+                                                                                <!-- Apoyo pedagógico -->
+                                                                                <div class="row mb-3">
                                                                                     <div class="col-12">
-                                                                                        <label class="form-label">Control Fiscal</label>
-                                                                                        <textarea class="form-control" id="academic-editor15" rows="3" 
-                                                                                                name="control_fiscal">{{ $gestion_academica->control_fiscal ?? old('control_fiscal') }}</textarea>
+                                                                                        <label class="form-label">Apoyo pedagógico para estudiantes con dificultades de aprendizaje</label>
+                                                                                        <textarea class="form-control" id="academica-editor13" rows="3" 
+                                                                                                name="apoyo_pedagogico">{{ $gestion_academica->apoyo_pedagogico ?? old('apoyo_pedagogico') }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
