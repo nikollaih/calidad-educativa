@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- <div
+        id="ver-gestion-comunidad-crear"
+        data-institution-id="1"
+        data-csrf-token="{{ csrf_token() }}">
+    </div>
+    @vite('resources/js/app.js') -->
 @php
     $gestion_directiva = $gestion_directiva ?? null;
     $gestion_academica = $gestion_academica ?? null;
