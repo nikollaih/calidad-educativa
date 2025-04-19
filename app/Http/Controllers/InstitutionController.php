@@ -50,6 +50,22 @@ class InstitutionController extends Controller
             ]
         );
     }
+    public function autoevaluacionesEditar(int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
+        if(empty($autoevaluacionId)){
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+        }
+        $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
+            ->whereNull('padre_id')
+            ->get();
+        return view('institutional_profile.institution.autoevaluaciones.editar',
+            [
+                'gruposCalificaciones' => $gruposCalificaciones,
+                'autoevaluacion' => $autoevaluacion,
+            ]
+        );
+    }
     public function autoevaluacionesAlmacenar(Request $request)
     {
         $autoevaluacionData =  $request->input('autoevaluacion');
@@ -71,6 +87,25 @@ class InstitutionController extends Controller
             $autoevaluacion->notas()->sync($syncData);
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
+
+    }
+    public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
+        $notas = $request->input('notas');
+
+        if(!$autoevaluacion)
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+
+        if($notas){
+            $syncData = [];
+
+            foreach ($notas as $nota) {
+                $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
+            }
+            $autoevaluacion->notas()->sync($syncData);
+        }
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación actualizada correctamente");
 
     }
     public function create()

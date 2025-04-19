@@ -1774,6 +1774,34 @@ y espacios recreativos.',
                 'valor' => 4,
                 'indice_calificacion' => '3.5.3'
             ],
+
+            [
+                'descripcion' => 'La institución cuenta con algunos
+planes de acción frente a
+accidentes o desastres naturales
+solamente para algunas sedes
+o ciertos riesgos; el estado de la infraestructura física no es sujeto de monitoreo ni de evaluación.',
+                'valor' => 1,
+                'indice_calificacion' => '3.2.5'
+            ],
+            [
+                'descripcion' => 'La institución cuenta con planes
+de evacuación frente a desastres
+naturales o similares y posee un sistema de monitoreo de las condiciones mínimas de seguridad que verifica el estado de su infraestructura y alerta sobre posibles accidentes.',
+                'valor' => 2,
+                'indice_calificacion' => '3.2.5'
+            ],            [
+                'descripcion' => 'Los planes de acción relativos a desastres naturales o similares son conocidos por todos los estamentos de la institución; se realizan simulacros regularmente y en caso de peligro real se cuenta con el apoyo de la defensa civil, los bomberos y hospitales.
+Existe un sistema de monitoreo de las condiciones de seguridad que permite verificar el estado de la infraestructura y alerta sobre posibles accidentes.',
+                'valor' => 3,
+                'indice_calificacion' => '3.2.5'
+            ],            [
+                'descripcion' => 'La institución evalúa periódicamente y mejora sus planes de seguridad, de manera que la comunidad esté preparada y sepa qué hacer y a dónde
+acudir al momento de cualquier evento de riesgo.
+Además, desarrolla programas de prevención de accidentes.',
+                'valor' => 4,
+                'indice_calificacion' => '3.2.5'
+            ],
         ];
         foreach ($notasCalificaciones as $notaCalificacion) {
             NotaCalificacion::firstOrCreate(

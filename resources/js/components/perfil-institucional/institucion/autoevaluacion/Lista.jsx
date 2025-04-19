@@ -1,12 +1,6 @@
 import { h } from 'preact';
 
-export default function Hello() {
-    const container = document.getElementById('autoevaluacion');
-    const agregarUrl = container?.dataset?.agregarUrl || '#';
-    const autoevaluacionesData = container?.dataset?.autoevaluaciones;
-
-    const autoevaluaciones = autoevaluacionesData ? JSON.parse(autoevaluacionesData) : [];
-
+export default function Lista({ agregarUrl, autoevaluaciones }) {
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
@@ -52,27 +46,17 @@ export default function Hello() {
                         <td>{formatFecha(evaluacion.created_at)}</td>
                         <td>
                             <a
-                                href={`/institution/${evaluacion.institucion_id}/edit`}
-                                class="btn btn-warning btn-sm me-2"
+                                href={`/institutional_profile/institution/${evaluacion.institucion_id}/autoevaluaciones-editar`}
+                                className="btn btn-primary btn-sm me-2"
+                            >
+                                Ver detalles
+                            </a>
+                            <a
+                                href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
+                                className="btn btn-warning btn-sm me-2"
                             >
                                 Editar
                             </a>
-                            <form
-                                action={`/institution/${evaluacion.institucion_id}`}
-                                method="POST"
-                                style={{ display: 'inline' }}
-                                onSubmit={(e) => {
-                                    if (!confirm('¿Está seguro de eliminar esta institución?')) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                <input type="hidden" name="_method" value="DELETE" />
-                                <input type="hidden" name="_token" value={container?.dataset?.csrf} />
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-                            </form>
                         </td>
                     </tr>
                 ))}
