@@ -60,7 +60,9 @@ Route::middleware(['auth'])->group(function () {
         // Rutas para la gestion de instituciones
         Route::get('institution/{institution}/autoevaluaciones'             , [InstitutionController::class, 'autoevaluaciones'])->name('institution.autoevaluaciones');
         Route::get('institution/{institution}/autoevaluaciones-crear'             , [InstitutionController::class, 'autoevaluacionesCrear'])->name('institution.autoevaluaciones-crear');
-        Route::post('institution/{institution}/autoevaluaciones-almacenar'             , [InstitutionController::class, 'autoevaluacionesAlmacenar'])->name('institution.autoevaluaciones-almacenar');
+        Route::get('institution/{autoevaluacionId}/autoevaluaciones-editar'            , [InstitutionController::class, 'autoevaluacionesEditar'])->name('institution.autoevaluaciones-editar');
+        Route::post('institution/{institution}/autoevaluaciones-almacenar'        , [InstitutionController::class, 'autoevaluacionesAlmacenar'])->name('institution.autoevaluaciones-almacenar');
+        Route::post('institution/{autoevaluacionId}/autoevaluaciones-actualizar/' , [InstitutionController::class, 'autoevaluacionesAlmacenarActualizacion'])->name('institution.autoevaluaciones-actualizar');
 
         Route::resource('institution'             , InstitutionController::class);
         // Rutas para la gestion de sedes

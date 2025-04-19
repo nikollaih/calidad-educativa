@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
+/*
         \App\Models\User::factory(1)->create();
 
         // \App\Models\User::factory()->create([
@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
         // Asignar rol a un usuario por defecto
         $user = User::where('email','admin@gmail.com')->first(); // Cambiar por un usuario existente
         $user->assignRole('super_admin');
+*/
         // Seeder de los modelos educativos
         $this->call(EducationalModelSeeder::class);
         $this->call(EducationalOfferLevelSeeder::class);
