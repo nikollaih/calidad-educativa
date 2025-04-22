@@ -216,7 +216,7 @@ export default function Editar({  editarUrl = '#',
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e)}
+                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
                                                                                 ></textarea>
                                                                             </div>
                                                                         </div>
