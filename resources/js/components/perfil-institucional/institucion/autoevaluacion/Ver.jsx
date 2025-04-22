@@ -1,18 +1,13 @@
 import { h } from 'preact';
 import {useEffect, useState} from 'preact/hooks';
 
-export default function Crear({  agregarUrl = '#',
-                                 institutionId = '#',
-                                 gruposCalificaciones = [],
-                                 csrfToken = '',
-                                 aniosDisabled = []}) {
+export default function Editar({  gruposCalificaciones = [],
+                                  autoevaluacion = {}
+                        }) {
 
     const [activeTab, setActiveTab] = useState(0);
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
     const [evidencias, setEvidencias] = useState({});
-    const [aniosDisponibles, setAniosDisponibles] = useState([]);
-    const anioPorDefecto = aniosDisponibles[Math.floor(aniosDisponibles.length / 2)];
-    const [anioVigencia, setAnioVigencia] = useState(new Date().getFullYear()); // Estado para el año de vigencia
 
     const getColorClass = (valor) => {
         switch (valor) {
@@ -48,21 +43,11 @@ export default function Crear({  agregarUrl = '#',
             };
         });
     };
-    const getAnios = () => {
-        const currentYear = new Date().getFullYear();
-        const anos = [];
-        for (let i = currentYear - 5; i <= currentYear ; i++) {
-            if (!aniosDisabled.includes(i)) {
-                anos.push(i);
-            }
-        }
-        return anos;
-    };
 
     const handleEvidenciaChange = (calId, e) => {
         setEvidencias(prev => ({
             ...prev,
-            [calId]: e.target.value
+            [calId]: e
         }));
     };
 
@@ -97,33 +82,25 @@ export default function Crear({  agregarUrl = '#',
     };
 
     useEffect(() => {
-        setAniosDisponibles(getAnios);
-        setAnioVigencia(aniosDisponibles[Math.floor(aniosDisponibles.length / 2)]);
-    }, []);
+        if (autoevaluacion?.notas?.length) {
+            autoevaluacion.notas.forEach(nota => {
+                handleNotaClick(nota?.calificacion?.id,nota);
+                handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
+            });
+        }
+        console.log(autoevaluacion);
+    }, [autoevaluacion]);
+
     return (
         <div class="container mt-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Agregar Autoevaluación</h2>
+                <h2 class="mb-0">Ver Autoevaluación</h2>
             </div>
-            <form method="POST" action={agregarUrl}>
-                <input type="hidden" name="_token" value={csrfToken} />
-                <input type="hidden" name="autoevaluacion[institucion_id]" value={institutionId} />
+            <form>
 
-                <div class="mb-4">
-                    <label className="form-label" htmlFor="anio-vigencia">Año de Vigencia</label>
-                    <select
-                        id="anio-vigencia"
-                        class="form-select"
-                        name="autoevaluacion[anio_vigencia]"
-                        value={anioVigencia}
-                        onChange={(e) => setAnioVigencia(e.target.value)}
-                    >
-                        {aniosDisponibles.map((anio) => (
-                            <option key={anio} value={anio}>
-                                {anio}
-                            </option>
-                        ))}
-                    </select>
+                <div class="mb-4 d-flex row">
+                    <label className="form-label" htmlFor="anio-vigencia">Año de Vigencia: {autoevaluacion?.anio_vigencia}</label>
+                    <label className="form-label" htmlFor="estado">Estado: {autoevaluacion?.alias_estado}</label>
                 </div>
                 <div class="mb-4">
                     <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
@@ -196,15 +173,14 @@ export default function Crear({  agregarUrl = '#',
                                                                                     {cal.notas_calificacion
                                                                                         .sort((a, b) => a.valor - b.valor)
                                                                                         .map(nota => (
-                                                                                        <div
-                                                                                            key={nota.id}
-                                                                                            className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                            style={{ cursor: 'pointer' }}
-                                                                                            onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                        >
-                                                                                            {nota.valor}
-                                                                                        </div>
-                                                                                    ))}
+                                                                                            <div
+                                                                                                key={nota.id}
+                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                style={{ cursor: 'pointer' }}
+                                                                                            >
+                                                                                                {nota.valor}
+                                                                                            </div>
+                                                                                        ))}
                                                                                 </div>
                                                                             </div>
 
@@ -236,12 +212,11 @@ export default function Crear({  agregarUrl = '#',
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e)}
+                                                                                    disabled
                                                                                 ></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </li>
-
                                                                 );
                                                             })}
                                                         </ul>
@@ -279,11 +254,6 @@ export default function Crear({  agregarUrl = '#',
                         />
                     </div>
                 ))}
-
-
-                <button type="submit" className="btn btn-primary mt-4">
-                    Guardar Autoevaluación
-                </button>
             </form>
         </div>
     );

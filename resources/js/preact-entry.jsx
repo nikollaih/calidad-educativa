@@ -2,12 +2,15 @@ import { h, render } from 'preact';
 import Lista from './components/perfil-institucional/institucion/autoevaluacion/Lista.jsx';
 import Crear from './components/perfil-institucional/institucion/autoevaluacion/Crear.jsx';
 import Editar from "./components/perfil-institucional/institucion/autoevaluacion/Editar.jsx";
+import Ver from "./components/perfil-institucional/institucion/autoevaluacion/Ver.jsx";
+
 
 // Mapea los nombres a los componentes importados
 const components = {
     Lista,
     Crear,
-    Editar
+    Editar,
+    Ver
 };
 
 // Encuentra todos los elementos que tienen `data-component`
