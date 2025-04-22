@@ -66,6 +66,22 @@ class InstitutionController extends Controller
             ]
         );
     }
+    public function autoevaluacionesVer(int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
+        if(empty($autoevaluacionId)){
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+        }
+        $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
+            ->whereNull('padre_id')
+            ->get();
+        return view('institutional_profile.institution.autoevaluaciones.ver',
+            [
+                'gruposCalificaciones' => $gruposCalificaciones,
+                'autoevaluacion' => $autoevaluacion,
+            ]
+        );
+    }
     public function autoevaluacionesAlmacenar(Request $request)
     {
         $autoevaluacionData =  $request->input('autoevaluacion');

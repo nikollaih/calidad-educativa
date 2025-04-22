@@ -162,81 +162,61 @@ export default function Editar({  editarUrl = '#',
                                                             {hijo.calificaciones.map((cal) => {
                                                                 const notaSeleccionada = notasSeleccionadas[cal.id];
                                                                 return (
-                                                                    <li
-                                                                        class="list-group-item d-flex justify-content-between align-items-center gap-3"
-                                                                        key={cal.id}
-                                                                    >
-                                                                        <div class="d-flex align-items-center gap-2">
-                                                                            {cal.indice} {cal.nombre}
-                                                                        </div>
-                                                                        <div class="d-flex gap-3 ">
-                                                                            <div
-                                                                                className="d-flex gap-3 justify-content-center align-items-center"
-                                                                                style={{alignItems: 'flex-center'}}>
-                                                                                <div
-                                                                                    className="d-flex gap-2 border p-1">
-                                                                                    {cal.notas_calificacion?.length > 0 && (
-                                                                                        cal.notas_calificacion
-                                                                                            .sort((a, b) => a.valor - b.valor)
-                                                                                            .map(nota => (
-                                                                                                <div
-                                                                                                    className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                    title={nota.descripcion}
-                                                                                                    style={{
-                                                                                                        cursor: 'pointer',
-                                                                                                        height: '32px',
-                                                                                                        minWidth: '32px',
-                                                                                                        lineHeight: '20px',
-                                                                                                        padding: '6px',
-                                                                                                        display: 'flex',
-                                                                                                        alignItems: 'center',
-                                                                                                        justifyContent: 'center',
-                                                                                                        whiteSpace: 'nowrap' // Evitar el ajuste de texto
-                                                                                                    }}
-                                                                                                    onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                                >
-                                                                                                    {nota.valor}
-                                                                                                </div>
-                                                                                            ))
-                                                                                    )}
+                                                                    <li className="list-group-item">
+                                                                        <div className="row g-3">
+                                                                            {/* Nombre de calificación */}
+                                                                            <div className="col-12 col-md-3">
+                                                                                <strong>{cal.indice}</strong>
+                                                                                <div>{cal.nombre}</div>
+                                                                            </div>
+
+                                                                            {/* Notas seleccionables */}
+                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
+                                                                                <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
+                                                                                    {cal.notas_calificacion
+                                                                                        .sort((a, b) => a.valor - b.valor)
+                                                                                        .map(nota => (
+                                                                                            <div
+                                                                                                key={nota.id}
+                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                style={{ cursor: 'pointer' }}
+                                                                                                onClick={() => handleNotaClick(cal.id, nota)}
+                                                                                            >
+                                                                                                {nota.valor}
+                                                                                            </div>
+                                                                                        ))}
                                                                                 </div>
                                                                             </div>
 
 
-                                                                            <div
-                                                                                className="d-flex align-items-center gap-2"
-                                                                                style={{minWidth: '120px'}}>
+                                                                            {/* Categoría y valor */}
+                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
                                                                                 {notaSeleccionada ? (
                                                                                     <>
-                                                                                        <span
-                                                                                            className={`badge ${getColorClass(notaSeleccionada.valor)} text-white`}>
+                                                                                        <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
                                                                                             {notaSeleccionada.valor}
                                                                                         </span>
-                                                                                        <div className="text-nowrap">
-                                                                                            <small
-                                                                                                className="text-muted">Categoría:</small>
-                                                                                            <div>{getCategoria(notaSeleccionada.valor)}</div>
+                                                                                        <div>
+                                                                                            <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
                                                                                         </div>
                                                                                     </>
                                                                                 ) : (
-                                                                                    <div className="text-muted">No
-                                                                                        seleccionado</div>
+                                                                                    <div className="text-muted">No seleccionado</div>
                                                                                 )}
                                                                             </div>
 
-                                                                            {/* Textarea for evidence */}
-                                                                            <div className="d-flex flex-column ms-3">
-                                                                                <label className="form-label"
-                                                                                       htmlFor={`evidencia-${cal.id}`}>
-                                                                                    Evidencia
-                                                                                </label>
+
+                                                                            {/* Evidencia */}
+                                                                            <div className="col-12 col-md-3">
+                                                                                <label htmlFor={`evidencia-${cal.id}`}
+                                                                                       className="form-label">Evidencia</label>
                                                                                 <textarea
                                                                                     id={`evidencia-${cal.id}`}
                                                                                     className="form-control"
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
+                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e)}
                                                                                 ></textarea>
                                                                             </div>
                                                                         </div>

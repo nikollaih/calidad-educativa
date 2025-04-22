@@ -46,7 +46,7 @@ export default function Lista({ agregarUrl, autoevaluaciones }) {
                         <td>{formatFecha(evaluacion.created_at)}</td>
                         <td>
                             <a
-                                href={`/institutional_profile/institution/${evaluacion.institucion_id}/autoevaluaciones-editar`}
+                                href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-ver`}
                                 className="btn btn-primary btn-sm me-2"
                             >
                                 Ver detalles
