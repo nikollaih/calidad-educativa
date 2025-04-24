@@ -12,9 +12,6 @@ return new class extends Migration
         Schema::create('gestion_comunidad', function (Blueprint $table) {
             $table->id();
             $table->foreignId('institution_id')->constrained('institucions')->onDelete('cascade');
-            $table->unsignedBigInteger('atencion_grupos_poblacionales_id')->nullable();
-            $table->unsignedBigInteger('programa_servicio_social_id')->nullable();
-            $table->unsignedBigInteger('prevencion_riesgos_id')->nullable();
             $table->timestamps();
         });
 

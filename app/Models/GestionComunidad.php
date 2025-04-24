@@ -3,47 +3,43 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class GestionComunidad extends Model {
-
+class GestionComunidad extends Model
+{
+    /**
+     * Nombre de la tabla asociada al modelo
+     */
     protected $table = 'gestion_comunidad';
 
-    public  $with = [
-        'anexoProgramaServicioSocial',
-        'anexoPrevencionRiesgosFisicos',
-        'anexoProyectoEscuelaPadres',
+    /**
+     * Relaciones que se cargarán automáticamente
+     */
+    public $with = [
+        'institucion'
     ];
 
+    /**
+     * Atributos asignables masivamente
+     */
     protected $fillable = [
         'institution_id',
-        'atencion_grupos_vulnerabilidad',
-        'necesidades_expectativas_estudiantes',
-        'proyectos_vida',
-        'escuela_padres',
-        'oferta_servicios_comunidad',
-        'programa_servicio_social',
-        'anexo_programa_servicio_social',
-        'anexo_proyecto_escuela_padres',
-        'prevencion_riesgos_fisicos',
-        'anexo_prevencion_riesgos_fisicos',
-        'prevencion_riesgos_psicosociales',
+        'created_at',
+        'updated_at'
     ];
 
+    /**
+     * Conversiones de tipos
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
+
+    /**
+     * Relación con la institución
+     */
     public function institucion()
     {
-        return $this->belongsTo(Institucion::class);
-    }
-    
-    public function anexoProgramaServicioSocial (){
-        return $this->belongsTo(Adjunto::class, 'anexo_programa_servicio_social');
-    }
-    
-    public function anexoPrevencionRiesgosFisicos (){
-        return $this->belongsTo(Adjunto::class, 'anexo_prevencion_riesgos_fisicos');
-    }
-    
-    public function anexoProyectoEscuelaPadres (){
-        return $this->belongsTo(Adjunto::class, 'anexo_proyecto_escuela_padres');
+        return $this->belongsTo(Institucion::class, 'institution_id');
     }
 }

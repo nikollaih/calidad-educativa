@@ -4,25 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GestionAcademica extends Model
+class GadServicesComplementarios extends Model
 {
     /**
      * Nombre de la tabla asociada al modelo
      */
-    protected $table = 'gestion_academica';
+    protected $table = 'gad_services_complementarios';
 
     /**
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
-        'institucion'
+        'gestionAdministrativa'
     ];
 
     /**
      * Atributos asignables masivamente
      */
     protected $fillable = [
-        'institution_id',
+        'gestion_administrativa_id',
+        'estrategias_acceso_permanencia',
         'created_at',
         'updated_at'
     ];
@@ -36,10 +37,10 @@ class GestionAcademica extends Model
     ];
 
     /**
-     * Relación con la institución
+     * Relación con la gestión administrativa
      */
-    public function institucion()
+    public function gestionAdministrativa()
     {
-        return $this->belongsTo(Institucion::class, 'institution_id');
+        return $this->belongsTo(GestionAdministrativa::class, 'gestion_administrativa_id');
     }
 }
