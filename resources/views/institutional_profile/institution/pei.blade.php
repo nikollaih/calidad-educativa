@@ -103,355 +103,287 @@
                                 </div>
                                 <div class="tab-content">
 
-                                    <!-- Gestion directiva -->
+                                    <!-- Gestión Directiva -->
                                     <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
-                                        <div class="card-datatable table-responsive pt-0">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="card mb-4">
-                                                        <div class="card-body">
-                                                            <form id="mainForm" method="post" action="pei/executive-management" enctype="multipart/form-data">
-                                                                @csrf
-                                                                <div class="accordion" id="strategicAccordion">
-                                                                    <!-- Direccionamiento Estratégico -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingOne">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseOne" aria-expanded="false" 
-                                                                                    aria-controls="collapseOne">
-                                                                                <span class="fw-bold fs-4">Direccionamiento Estratégico</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseOne" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingOne" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Misión</label>
-                                                                                        <textarea class="form-control" id="full-editor" rows="3" 
-                                                                                                name="mision">{{ $gestion_directiva->mision ?? old('mision') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Visión</label>
-                                                                                        <textarea class="form-control" id="full-editor2" rows="3" 
-                                                                                                name="vision">{{ $gestion_directiva->vision ?? old('vision') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Principios Institucionales</label>
-                                                                                        <textarea class="form-control" id="full-editor3" rows="3" 
-                                                                                                name="principios_institucionales">{{ $gestion_directiva->principios_institucionales ?? old('principios_institucionales') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Metas Institucionales</label>
-                                                                                        <textarea class="form-control" id="full-editor4" rows="3" 
-                                                                                                name="metas_institucionales">{{ $gestion_directiva->metas_institucionales ?? old('metas_institucionales') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Política de inclusión</label>
-                                                                                        <textarea class="form-control" id="full-editor5" rows="3" 
-                                                                                                name="politica_inclusion">{{ $gestion_directiva->politica_inclusion ?? old('politica_inclusion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label for="licencia_funcionamiento" class="form-label mb-0">Política de inclusión</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoPoliticaInclusion))
-                                                                                            <a href="{{ $gestion_directiva->anexoPoliticaInclusion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_politica_inclusion" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-10 col-xl-8">
+                                                <div class="card mb-4">
+                                                    <div class="card-body p-3">
 
-                                                                    <!-- Gestión Estratégica -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingTwo">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseTwo" aria-expanded="false" 
-                                                                                    aria-controls="collapseTwo">
-                                                                                <span class="fw-bold fs-4">Gestión Estratégica</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseTwo" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingTwo" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Liderazgo y trabajo en equipo</label>
-                                                                                        <textarea class="form-control" id="full-editor6" rows="3" 
-                                                                                                name="liderazgo">{{ $gestion_directiva->liderazgo ?? old('liderazgo') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Articulación de planes, proyectos y acciones</label>
-                                                                                        <textarea class="form-control" id="full-editor7" rows="3" 
-                                                                                                name="articulacion">{{ $gestion_directiva->articulacion ?? old('articulacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Seguimiento y autoevaluación</label>
-                                                                                        <textarea class="form-control" id="full-editor8" rows="3" 
-                                                                                                name="seguimiento">{{ $gestion_directiva->seguimiento ?? old('seguimiento') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Gobierno Escolar -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingThree">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseThree" aria-expanded="false" 
-                                                                                    aria-controls="collapseThree">
-                                                                                <span class="fw-bold fs-4">Gobierno Escolar</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseThree" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingThree" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Gobierno Escolar</label>
-                                                                                        <textarea class="form-control" id="full-editor9" rows="3" 
-                                                                                                name="gobierno_escolar">{{ $gestion_directiva->gobierno_escolar ?? old('gobierno_escolar') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoGobiernoEscolar))
-                                                                                            <a href="{{ $gestion_directiva->anexoGobiernoEscolar->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_gobierno_escolar" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Cultura Institucional -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingFour">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseFour" aria-expanded="false" 
-                                                                                    aria-controls="collapseFour">
-                                                                                <span class="fw-bold fs-4">Cultura Institucional</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseFour" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingFour" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Politica de comunicación</label>
-                                                                                        <textarea class="form-control" id="full-editor10" rows="3" 
-                                                                                                name="politica_comunicacion">{{ $gestion_directiva->politica_comunicacion ?? old('politica_comunicacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Cultura Institucional (Política de comunicación)</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoCulturaInstitucional))
-                                                                                            <a href="{{ $gestion_directiva->anexoCulturaInstitucional->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_cultura_institucional" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Política de bienestar</label>
-                                                                                        <textarea class="form-control" id="full-editor11" rows="3" 
-                                                                                                name="politica_bienestar">{{ $gestion_directiva->politica_bienestar ?? old('politica_bienestar') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo política de bienestar</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoPoliticaBienestar))
-                                                                                            <a href="{{ $gestion_directiva->anexoPoliticaBienestar->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_politica_bienestar" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <!-- <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Apoyo a la investigación y divulgación de buenas prácticas</label>
-                                                                                        <textarea class="form-control" id="full-editor12" rows="3" 
-                                                                                                name="apoyo_investigacion">{{ $gestion_directiva->apoyo_investigacion ?? old('apoyo_investigacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div> -->
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Inventario de caracterización de buenas prácticas, con vigencia</label>
-                                                                                        <textarea class="form-control" id="full-editor13" rows="3" 
-                                                                                                name="inventario_buenas_practicas">{{ $gestion_directiva->inventario_buenas_practicas ?? old('inventario_buenas_practicas') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Clima Escolar -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingFive">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseFive" aria-expanded="false" 
-                                                                                    aria-controls="collapseFive">
-                                                                                <span class="fw-bold fs-4">Clima Escolar</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseFive" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingFive" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Sentido de pertenencia y participación</label>
-                                                                                        <textarea class="form-control" id="full-editor14" rows="3" 
-                                                                                                name="sentido_pertenencia">{{ $gestion_directiva->sentido_pertenencia ?? old('sentido_pertenencia') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Inducción Institucional</label>
-                                                                                        <textarea class="form-control" id="full-editor15" rows="3" 
-                                                                                                name="induccion_institucional">{{ $gestion_directiva->induccion_institucional ?? old('induccion_institucional') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Programa institucional de inducción (Estudiantes y padres de familia, docentes y administrativos)</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoProgramaInstitucionalInduccion))
-                                                                                            <a href="{{ $gestion_directiva->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_programa_institucional_induccion" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Manual de Convivencia</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->manualConvivencia))
-                                                                                            <a href="{{ $gestion_directiva->manualConvivencia->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="manual_convivencia" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Actividades extracurriculares</label>
-                                                                                        <textarea class="form-control" id="full-editor16" rows="3" 
-                                                                                                name="actividades_extracurriculares">{{ $gestion_directiva->actividades_extracurriculares ?? old('actividades_extracurriculares') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Manejo de conflictos y casos difíciles</label>
-                                                                                        <textarea class="form-control" id="full-editor17" rows="3" 
-                                                                                                name="manejo_conflictos">{{ $gestion_directiva->manejo_conflictos ?? old('manejo_conflictos') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Relaciones con el Entorno -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="headingSix">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#collapseSix" aria-expanded="false" 
-                                                                                    aria-controls="collapseSix">
-                                                                                <span class="fw-bold fs-4">Relaciones con el Entorno</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="collapseSix" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="headingSix" data-bs-parent="#strategicAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Relación con familias y acudientes</label>
-                                                                                        <textarea class="form-control" id="full-editor18" rows="3" 
-                                                                                                name="relacion_familias">{{ $gestion_directiva->relacion_familias ?? old('relacion_familias') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Seguimiento a egresados</label>
-                                                                                        <textarea class="form-control" id="full-editor19" rows="3" 
-                                                                                                name="seguimiento_egresados">{{ $gestion_directiva->seguimiento_egresados ?? old('seguimiento_egresados') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Alianzas con otras instituciones</label>
-                                                                                        <textarea class="form-control" id="full-editor20" rows="3" 
-                                                                                                name="alianzas_instituciones">{{ $gestion_directiva->alianzas_instituciones ?? old('alianzas_instituciones') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexos Alianzas con otras instituciones</label>                                                                                        
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoAlianzasInstituciones))
-                                                                                            <a href="{{ $gestion_directiva->manualConvivencia->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_alianzas_instituciones" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Alianzas con el sector productivo</label>
-                                                                                        <textarea class="form-control" id="full-editor21" rows="3" 
-                                                                                                name="alianzas_sector_productivo">{{ $gestion_directiva->alianzas_sector_productivo ?? old('alianzas_sector_productivo') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label class="form-label">Anexos Alianzas con el sector productivo</label>                                                                                        
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_directiva->anexoAlianzasSectorProductivo))
-                                                                                            <a href="{{ $gestion_directiva->manualConvivencia->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_alianzas_sector_productivo" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                        <!-- Direccionamiento Estratégico -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">DIRECCIONAMIENTO ESTRATÉGICO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Misión:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->mision ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-
-                                                                <div class="text-center mt-4">
-                                                                    <button type="submit" class="btn btn-success btn-lg">
-                                                                        <i class="bx bx-save me-1"></i> Guardar Todo
-                                                                    </button>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Visión:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->vision ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-                                                            </form>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Principios institucionales:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->principios_institucionales ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Metas institucionales:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->metas_institucionales ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Política de inclusión:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->politica_inclusion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de política:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoPoliticaInclusion))
+                                                                        <a href="{{ $gestion_directiva->anexoPoliticaInclusion->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                                         </div>
+
+                                                        <!-- Gestión Estratégica -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">GESTIÓN ESTRATÉGICA</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Liderazgo y trabajo en equipo:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->liderazgo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Articulación de planes:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->articulacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Seguimiento y autoevaluación:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->seguimiento ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Gobierno Escolar -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">GOBIERNO ESCOLAR</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Gobierno escolar:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->gobierno_escolar ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de gobierno:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoGobiernoEscolar))
+                                                                        <a href="{{ $gestion_directiva->anexoGobiernoEscolar->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Cultura Institucional -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">CULTURA INSTITUCIONAL</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Política de comunicación:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->politica_comunicacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de política:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoCulturaInstitucional))
+                                                                        <a href="{{ $gestion_directiva->anexoCulturaInstitucional->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Política de bienestar:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->politica_bienestar ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de bienestar:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoPoliticaBienestar))
+                                                                        <a href="{{ $gestion_directiva->anexoPoliticaBienestar->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Buenas prácticas:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->inventario_buenas_practicas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Clima Escolar -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">CLIMA ESCOLAR</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Sentido de pertenencia:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->sentido_pertenencia ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Inducción institucional:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->induccion_institucional ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de inducción:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoProgramaInstitucionalInduccion))
+                                                                        <a href="{{ $gestion_directiva->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Manual de convivencia:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->manualConvivencia))
+                                                                        <a href="{{ $gestion_directiva->manualConvivencia->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Actividades extracurriculares:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->actividades_extracurriculares ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Manejo de conflictos:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->manejo_conflictos ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Relaciones con el Entorno -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">RELACIONES CON EL ENTORNO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Relación con familias:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->relacion_familias ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Seguimiento a egresados:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->seguimiento_egresados ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Alianzas institucionales:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->alianzas_instituciones ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de alianzas:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoAlianzasInstituciones))
+                                                                        <a href="{{ $gestion_directiva->anexoAlianzasInstituciones->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Alianzas sector productivo:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_directiva->alianzas_sector_productivo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento sector productivo:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_directiva->anexoAlianzasSectorProductivo))
+                                                                        <a href="{{ $gestion_directiva->anexoAlianzasSectorProductivo->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -460,304 +392,239 @@
 
                                     <!-- Gestión Académica -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-academica" role="tabpanel">
-                                        <div class="card-datatable table-responsive pt-0">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="card mb-4">
-                                                        <div class="card-body">
-                                                            <form id="mainFormGestionAcademica" method="post" action="pei/academic-management" enctype="multipart/form-data">
-                                                                @csrf
-                                                                <div class="accordion" id="gestionAcademicaAccordion">
-                                                                    
-                                                                    <!-- Diseño Pedagógico -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingOne">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#gestionAcademicaCollapseOne" aria-expanded="false" 
-                                                                                    aria-controls="gestionAcademicaCollapseOne">
-                                                                                <span class="fw-bold fs-4">Diseño Pedagógico</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="gestionAcademicaCollapseOne" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="gestionAcademicaHeadingOne" data-bs-parent="#gestionAcademicaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <!-- Plan de estudios -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Plan de estudios</label>
-                                                                                        <textarea class="form-control" id="academica-editor1" rows="3" 
-                                                                                                name="plan_estudios">{{ $gestion_academica->plan_estudios ?? old('plan_estudios') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Acto administrativo de aprobación de plan de estudios</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoPlanEstudios))
-                                                                                            <a href="{{ $gestion_academica->anexoPlanEstudios->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_plan_estudios" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <!-- <div class="row mb-3">
-                                                                                    <label class="form-label">Anexos - Planes de área (9 áreas + optativas)</label>
-                                                                                    <div class="col-12">
-                                                                                        <input type="file" name="anexos_planes_area" class="form-control" multiple accept="application/pdf">
-                                                                                    </div>
-                                                                                </div> -->
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-10 col-xl-8">
+                                                <div class="card mb-4">
+                                                    <div class="card-body p-3">
 
-                                                                                <!-- Enfoque metodológico -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Enfoque metodológico</label>
-                                                                                        <textarea class="form-control" id="academica-editor2" rows="3" 
-                                                                                                name="enfoque_metodologico">{{ $gestion_academica->enfoque_metodologico ?? old('enfoque_metodologico') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Documento de caracterización del enfoque pedagógico</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoEnfoquePedagogico))
-                                                                                            <a href="{{ $gestion_academica->anexoEnfoquePedagogico->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_enfoque_pedagogico" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Estrategia pedagógica -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Estrategia pedagógica</label>
-                                                                                        <textarea class="form-control" id="academica-editor3" rows="3" 
-                                                                                                name="estrategia_pedagogica">{{ $gestion_academica->estrategia_pedagogica ?? old('estrategia_pedagogica') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Análisis jornada escolar -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Análisis y seguimiento a la jornada escolar</label>
-                                                                                        <textarea class="form-control" id="academica-editor4" rows="3" 
-                                                                                                name="analisis_jornada_escolar">{{ $gestion_academica->analisis_jornada_escolar ?? old('analisis_jornada_escolar') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Documento de análisis</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoAnalisisJornada))
-                                                                                            <a href="{{ $gestion_academica->anexoAnalisisJornada->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_analisis_jornada" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- SIEE -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Sistema Institucional de Evaluación de los Estudiantes (SIEE)</label>
-                                                                                        <textarea class="form-control" id="academica-editor5" rows="3" 
-                                                                                                name="sistema_evaluacion">{{ $gestion_academica->sistema_evaluacion ?? old('sistema_evaluacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - SIEE</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoSistemaEvaluacion))
-                                                                                            <a href="{{ $gestion_academica->anexoSistemaEvaluacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_sistema_evaluacion" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Prácticas Pedagógicas -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingTwo">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#gestionAcademicaCollapseTwo" aria-expanded="false" 
-                                                                                    aria-controls="gestionAcademicaCollapseTwo">
-                                                                                <span class="fw-bold fs-4">Prácticas Pedagógicas</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="gestionAcademicaCollapseTwo" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="gestionAcademicaHeadingTwo" data-bs-parent="#gestionAcademicaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Estrategias para las tareas escolares</label>
-                                                                                        <textarea class="form-control" id="academica-editor6" rows="3" 
-                                                                                                name="estrategias_tareas">{{ $gestion_academica->estrategias_tareas ?? old('estrategias_tareas') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Gestión de Aula -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingThree">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#gestionAcademicaCollapseThree" aria-expanded="false" 
-                                                                                    aria-controls="gestionAcademicaCollapseThree">
-                                                                                <span class="fw-bold fs-4">Gestión de Aula</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="gestionAcademicaCollapseThree" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="gestionAcademicaHeadingThree" data-bs-parent="#gestionAcademicaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <!-- Ambientes de aprendizaje -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Ambientes de aprendizaje</label>
-                                                                                        <textarea class="form-control" id="academica-editor7" rows="3" 
-                                                                                                name="ambientes_aprendizaje">{{ $gestion_academica->ambientes_aprendizaje ?? old('ambientes_aprendizaje') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Motivación hacia el aprendizaje -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Motivación hacia el aprendizaje</label>
-                                                                                        <textarea class="form-control" id="academica-editor8" rows="3" 
-                                                                                                name="motivacion_aprendizaje">{{ $gestion_academica->motivacion_aprendizaje ?? old('motivacion_aprendizaje') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Plan de aula -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Plan de aula, opciones didácticas y temas de enseñanza obligatoria</label>
-                                                                                        <textarea class="form-control" id="academica-editor9" rows="3" 
-                                                                                                name="plan_aula">{{ $gestion_academica->plan_aula ?? old('plan_aula') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexos - Planes de aula por grado y área (9 áreas + optativas)</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexosPlanesAula))
-                                                                                            <a href="{{ $gestion_academica->anexosPlanesAula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexos_planes_aula" class="form-control" multiple accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexos - Temas de enseñanza obligatoria (por proyecto)</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexosTemasEnsenanza))
-                                                                                            <a href="{{ $gestion_academica->anexosTemasEnsenanza->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexos_temas_ensenanza" class="form-control" multiple accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Evaluación en el aula -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Evaluación en el aula</label>
-                                                                                        <textarea class="form-control" id="academica-editor10" rows="3" 
-                                                                                                name="evaluacion_aula">{{ $gestion_academica->evaluacion_aula ?? old('evaluacion_aula') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Seguimiento Académico -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="gestionAcademicaHeadingFour">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#gestionAcademicaCollapseFour" aria-expanded="false" 
-                                                                                    aria-controls="gestionAcademicaCollapseFour">
-                                                                                <span class="fw-bold fs-4">Seguimiento Académico</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="gestionAcademicaCollapseFour" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="gestionAcademicaHeadingFour" data-bs-parent="#gestionAcademicaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <!-- Seguimiento desempeños -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Seguimiento a los desempeños de los estudiantes</label>
-                                                                                        <textarea class="form-control" id="academica-editor11" rows="3" 
-                                                                                                name="seguimiento_desempenos">{{ $gestion_academica->seguimiento_desempenos ?? old('seguimiento_desempenos') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Informe estadístico por periodo</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoInformeEstadistico))
-                                                                                            <a href="{{ $gestion_academica->anexoInformeEstadistico->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_informe_estadistico" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Uso evaluaciones externas -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Uso pedagógico de las evaluaciones externas</label>
-                                                                                        <textarea class="form-control" id="academica-editor12" rows="3" 
-                                                                                                name="uso_evaluaciones_externas">{{ $gestion_academica->uso_evaluaciones_externas ?? old('uso_evaluaciones_externas') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Documento de análisis de resultados de pruebas externas</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexoAnalisisPruebasExternas))
-                                                                                            <a href="{{ $gestion_academica->anexoAnalisisPruebasExternas->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_analisis_pruebas_externas" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexos - Planes de mejoramiento por área evaluada (5 áreas)</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_academica->anexosPlanesMejoramiento))
-                                                                                            <a href="{{ $gestion_academica->anexosPlanesMejoramiento->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexos_planes_mejoramiento" class="form-control" multiple accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <!-- Apoyo pedagógico -->
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Apoyo pedagógico para estudiantes con dificultades de aprendizaje</label>
-                                                                                        <textarea class="form-control" id="academica-editor13" rows="3" 
-                                                                                                name="apoyo_pedagogico">{{ $gestion_academica->apoyo_pedagogico ?? old('apoyo_pedagogico') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                        <!-- Diseño Pedagógico -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">DISEÑO PEDAGÓGICO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Plan de estudios:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->plan_estudios ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-
-                                                                <div class="text-center mt-4">
-                                                                    <button type="submit" class="btn btn-success btn-lg">
-                                                                        <i class="bx bx-save me-1"></i> Guardar Todo
-                                                                    </button>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de plan:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoPlanEstudios))
+                                                                        <a href="{{ $gestion_academica->anexoPlanEstudios->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
                                                                 </div>
-                                                            </form>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Enfoque metodológico:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->enfoque_metodologico ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de enfoque:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoEnfoquePedagogico))
+                                                                        <a href="{{ $gestion_academica->anexoEnfoquePedagogico->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Estrategia pedagógica:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->estrategia_pedagogica ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Análisis jornada escolar:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->analisis_jornada_escolar ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de análisis:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoAnalisisJornada))
+                                                                        <a href="{{ $gestion_academica->anexoAnalisisJornada->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Sistema de evaluación (SIEE):</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->sistema_evaluacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento SIEE:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoSistemaEvaluacion))
+                                                                        <a href="{{ $gestion_academica->anexoSistemaEvaluacion->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                                         </div>
+
+                                                        <!-- Prácticas Pedagógicas -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">PRÁCTICAS PEDAGÓGICAS</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Estrategias para tareas:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->estrategias_tareas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Gestión de Aula -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">GESTIÓN DE AULA</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Ambientes de aprendizaje:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->ambientes_aprendizaje ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Motivación al aprendizaje:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->motivacion_aprendizaje ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Plan de aula:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->plan_aula ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documentos de aula:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexosPlanesAula))
+                                                                        <a href="{{ $gestion_academica->anexosPlanesAula->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Temas de enseñanza:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexosTemasEnsenanza))
+                                                                        <a href="{{ $gestion_academica->anexosTemasEnsenanza->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Evaluación en el aula:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->evaluacion_aula ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Seguimiento Académico -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">SEGUIMIENTO ACADÉMICO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Seguimiento a desempeños:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->seguimiento_desempenos ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Informe estadístico:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoInformeEstadistico))
+                                                                        <a href="{{ $gestion_academica->anexoInformeEstadistico->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Uso de evaluaciones externas:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->uso_evaluaciones_externas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Análisis de pruebas externas:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexoAnalisisPruebasExternas))
+                                                                        <a href="{{ $gestion_academica->anexoAnalisisPruebasExternas->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Planes de mejoramiento:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_academica->anexosPlanesMejoramiento))
+                                                                        <a href="{{ $gestion_academica->anexosPlanesMejoramiento->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Apoyo pedagógico:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_academica->apoyo_pedagogico ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -766,289 +633,232 @@
                                     
                                     <!-- Gestion administrativa y financiera -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-administrativa" role="tabpanel">
-                                        <div class="card-datatable table-responsive pt-0">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="card mb-4">
-                                                        <div class="card-body">
-                                                            <form id="mainFormAdministrativa" method="post" action="pei/administrative-management" enctype="multipart/form-data">
-                                                                @csrf
-                                                                <div class="accordion" id="administrativaAccordion">
-                                                                    
-                                                                    <!-- Apoyo a la gestión académica -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="administrativaHeadingOne">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#administrativaCollapseOne" aria-expanded="false" 
-                                                                                    aria-controls="administrativaCollapseOne">
-                                                                                <span class="fw-bold fs-4">Apoyo a la gestión académica</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="administrativaCollapseOne" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="administrativaHeadingOne" data-bs-parent="#administrativaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Proceso de matrícula</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="proceso_matricula">{{ $gestion_administrativa->proceso_matricula ?? old('proceso_matricula') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label for="licencia_funcionamiento" class="form-label mb-0">Acto administrativo del proceso de matricula</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoActoAdministrativoProcesoMatricula))
-                                                                                            <a href="{{ $gestion_administrativa->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_acto_administrativo_proceso_matricula" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Sistema de información académica</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="sistema_informacion_academica">{{ $gestion_administrativa->sistema_informacion_academica ?? old('sistema_informacion_academica') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                    <!-- Administración de la planta física y de los recursos -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="administrativaHeadingTwo">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#administrativaCollapseTwo" aria-expanded="false" 
-                                                                                    aria-controls="administrativaCollapseTwo">
-                                                                                <span class="fw-bold fs-4">Administración de la planta física y de los recursos</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="administrativaCollapseTwo" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="administrativaHeadingTwo" data-bs-parent="#administrativaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="mantenimiento_infraestructura">{{ $gestion_administrativa->mantenimiento_infraestructura ?? old('mantenimiento_infraestructura') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Política de mantenimiento, adecuación, embellecimiento y uso de la infraestructura educativa</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoActoAdministrativoProcesoMatricula))
-                                                                                            <a href="{{ $gestion_administrativa->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_politica_mantenimiento" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Dotación, mantenimiento y uso de recursos para el aprendizaje</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="dotacion_recursos_aprendizaje">{{ $gestion_administrativa->dotacion_recursos_aprendizaje ?? old('dotacion_recursos_aprendizaje') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Política de dotación, mantenimiento y uso de recursos para el aprendizaje</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoDotacionRecursos))
-                                                                                            <a href="{{ $gestion_administrativa->anexoDotacionRecursos->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_dotacion_recursos" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Programas de seguridad</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="programas_seguridad">{{ $gestion_administrativa->programas_seguridad ?? old('programas_seguridad') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-10 col-xl-8">
+                                                <div class="card mb-4">
+                                                    <div class="card-body p-3">
 
-                                                                    <!-- Administración de los Servicios Complementarios -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="administrativaHeadingThree">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#administrativaCollapseThree" aria-expanded="false" 
-                                                                                    aria-controls="administrativaCollapseThree">
-                                                                                <span class="fw-bold fs-4">Administración de los Servicios Complementarios</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="administrativaCollapseThree" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="administrativaHeadingThree" data-bs-parent="#administrativaAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Estrategias de acceso y permanencia (PAE, transporte escolar y otros).</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="estrategias_acceso_permanencia">{{ $gestion_administrativa->estrategias_acceso_permanencia ?? old('estrategias_acceso_permanencia') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Talento humano -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="administrativaHeadingFour">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#administrativaCollapseFour" aria-expanded="false" 
-                                                                                    aria-controls="administrativaCollapseFour">
-                                                                                <span class="fw-bold fs-4">Talento humano</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="administrativaCollapseFour" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="administrativaHeadingFour" data-bs-parent="#administrativaAccordion">
-                                                                            <div class="accordion-body">
-
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Perfiles, asignación académica y de funciones</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="perfiles_asignacion">{{ $gestion_administrativa->perfiles_asignacion ?? old('perfiles_asignacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Programa de formación y capacitación institucional</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="programa_formacion_capacitacion">{{ $gestion_administrativa->programa_formacion_capacitacion ?? old('programa_formacion_capacitacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - Programa de formación y capacitación institucional</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoProgramaFormacion))
-                                                                                            <a href="{{ $gestion_administrativa->anexoProgramaFormacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_programa_formacion" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Pertenencia del personal vinculado</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="pertenencia_personal">{{ $gestion_administrativa->pertenencia_personal ?? old('pertenencia_personal') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Evaluación del desempeño de directivos, docentes  y administrativos</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="evaluacion_desempeno">{{ $gestion_administrativa->evaluacion_desempeno ?? old('evaluacion_desempeno') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo - informe anual de análisis de evaluación de desempeño</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoInformeAnual))
-                                                                                            <a href="{{ $gestion_administrativa->anexoInformeAnual->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_informe_anual" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Convivencia y manejo de conflictos</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="convivencia_manejo_conflictos">{{ $gestion_administrativa->convivencia_manejo_conflictos ?? old('convivencia_manejo_conflictos') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Apoyo financiero y contable -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="administrativaHeadingFive">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#administrativaCollapseFive" aria-expanded="false" 
-                                                                                    aria-controls="administrativaCollapseFive">
-                                                                                <span class="fw-bold fs-4">Apoyo financiero y contable</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="administrativaCollapseFive" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="administrativaHeadingFive" data-bs-parent="#administrativaAccordion">
-                                                                            <div class="accordion-body">
-
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Presupuesto anual del Fondo de Servicios Educativos (FSE)</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="presupuesto_fse">{{ $gestion_administrativa->presupuesto_fse ?? old('presupuesto_fse') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo. Acto administrativo de  Presupuesto del Fondo Anual de Servicios Educativos</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoPresupuestoFse))
-                                                                                            <a href="{{ $gestion_administrativa->anexoPresupuestoFse->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_presupuesto_fse" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Contabilidad</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="contabilidad">{{ $gestion_administrativa->contabilidad ?? old('contabilidad') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Contratación</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="contratacion">{{ $gestion_administrativa->contratacion ?? old('contratacion') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo. Manual de contratación</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_administrativa->anexoManualContratacion))
-                                                                                            <a href="{{ $gestion_administrativa->anexoManualContratacion->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_manual_contratacion" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Control fiscal</label>
-                                                                                        <textarea class="form-control" id="administrativa-editor1" rows="3" 
-                                                                                                name="control_fiscal">{{ $gestion_administrativa->control_fiscal ?? old('control_fiscal') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
+                                                        <!-- Apoyo a la gestión académica -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">APOYO A LA GESTIÓN ACADÉMICA</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Proceso de matrícula:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->proceso_matricula ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-
-                                                                <div class="text-center mt-4">
-                                                                    <button type="submit" class="btn btn-success btn-lg">
-                                                                        <i class="bx bx-save me-1"></i> Guardar Todo
-                                                                    </button>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Acto administrativo:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoActoAdministrativoProcesoMatricula))
+                                                                        <a href="{{ $gestion_administrativa->anexoActoAdministrativoProcesoMatricula->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
                                                                 </div>
-                                                            </form>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Sistema de información académica:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->sistema_informacion_academica ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
                                                         </div>
+
+                                                        <!-- Administración de la planta física -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">ADMINISTRACIÓN DE PLANTA FÍSICA</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Mantenimiento de infraestructura:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->mantenimiento_infraestructura ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Política de mantenimiento:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoPoliticaMantenimiento))
+                                                                        <a href="{{ $gestion_administrativa->anexoPoliticaMantenimiento->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Dotación de recursos:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->dotacion_recursos_aprendizaje ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Política de dotación:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoDotacionRecursos))
+                                                                        <a href="{{ $gestion_administrativa->anexoDotacionRecursos->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Programas de seguridad:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->programas_seguridad ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Servicios complementarios -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">SERVICIOS COMPLEMENTARIOS</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Estrategias de acceso:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->estrategias_acceso_permanencia ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Talento humano -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">TALENTO HUMANO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Perfiles y asignación:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->perfiles_asignacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Programa de formación:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->programa_formacion_capacitacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de formación:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoProgramaFormacion))
+                                                                        <a href="{{ $gestion_administrativa->anexoProgramaFormacion->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Pertenencia del personal:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->pertenencia_personal ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Evaluación de desempeño:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->evaluacion_desempeno ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Informe de evaluación:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoInformeAnual))
+                                                                        <a href="{{ $gestion_administrativa->anexoInformeAnual->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Convivencia y conflictos:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->convivencia_manejo_conflictos ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Apoyo financiero -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">APOYO FINANCIERO</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Presupuesto FSE:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->presupuesto_fse ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento presupuesto:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoPresupuestoFse))
+                                                                        <a href="{{ $gestion_administrativa->anexoPresupuestoFse->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Contabilidad:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->contabilidad ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Contratación:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->contratacion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Manual de contratación:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_administrativa->anexoManualContratacion))
+                                                                        <a href="{{ $gestion_administrativa->anexoManualContratacion->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Control fiscal:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_administrativa->control_fiscal ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1057,160 +867,119 @@
 
                                     <!-- Gestion de la comunidad -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-comunidad" role="tabpanel">
-                                        <div class="card-datatable table-responsive pt-0">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="card mb-4">
-                                                        <div class="card-body">
-                                                            <form id="mainFormComunidad" method="post" action="pei/community-management" enctype="multipart/form-data">
-                                                                @csrf
-                                                                <div class="accordion" id="comunidadAccordion">
-                                                                    
-                                                                    <!-- Atención educativa a grupos poblacionales -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="comunidadHeadingOne">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#comunidadCollapseOne" aria-expanded="false" 
-                                                                                    aria-controls="comunidadCollapseOne">
-                                                                                <span class="fw-bold fs-4">Atención educativa a grupos poblacionales o en situación de vulnerabilidad</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="comunidadCollapseOne" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="comunidadHeadingOne" data-bs-parent="#comunidadAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Atención educativa a grupos poblacionales o en situación de vulnerabilidad que experimentan barreras en el aprendizaje y la participación</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor1" rows="3" 
-                                                                                                name="atencion_grupos_vulnerabilidad">{{ $gestion_comunidad->atencion_grupos_vulnerabilidad ?? old('atencion_grupos_vulnerabilidad') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Necesidades y expectativas de los estudiantes</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor2" rows="3" 
-                                                                                                name="necesidades_expectativas_estudiantes">{{ $gestion_comunidad->necesidades_expectativas_estudiantes ?? old('necesidades_expectativas_estudiantes') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Proyectos de vida</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor3" rows="3" 
-                                                                                                name="proyectos_vida">{{ $gestion_comunidad->proyectos_vida ?? old('proyectos_vida') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Escuela de padres</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor4" rows="3" 
-                                                                                                name="escuela_padres">{{ $gestion_comunidad->escuela_padres ?? old('escuela_padres') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label class="form-label">Anexo, Proyecto escuela de padres</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_comunidad->anexoProyectoEscuelaPadres))
-                                                                                            <a href="{{ $gestion_comunidad->anexoProyectoEscuelaPadres->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_proyecto_escuela_padres" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Oferta de servicios a la comunidad</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor5" rows="3" 
-                                                                                                name="oferta_servicios_comunidad">{{ $gestion_comunidad->oferta_servicios_comunidad ?? old('oferta_servicios_comunidad') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-10 col-xl-8"> <!-- Contenedor más estrecho -->
+                                                <div class="card mb-4">
+                                                    <div class="card-body p-3">
 
-                                                                    <!-- Programa de servicio social -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="comunidadHeadingTwo">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#comunidadCollapseTwo" aria-expanded="false" 
-                                                                                    aria-controls="comunidadCollapseTwo">
-                                                                                <span class="fw-bold fs-4">Programa de servicio social</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="comunidadCollapseTwo" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="comunidadHeadingTwo" data-bs-parent="#comunidadAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Programa de servicio social institucional</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor6" rows="3" 
-                                                                                                name="programa_servicio_social">{{ $gestion_comunidad->programa_servicio_social ?? old('programa_servicio_social') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <label class="form-label">Anexo Programa de servicio social institucional</label>
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_comunidad->anexoProgramaServicioSocial))
-                                                                                            <a href="{{ $gestion_comunidad->anexoProgramaServicioSocial->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_programa_servicio_social" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Prevención de riesgos -->
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="comunidadHeadingThree">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                                                                    data-bs-target="#comunidadCollapseThree" aria-expanded="false" 
-                                                                                    aria-controls="comunidadCollapseThree">
-                                                                                <span class="fw-bold fs-4">Prevención de riesgos</span>
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="comunidadCollapseThree" class="accordion-collapse collapse" 
-                                                                            aria-labelledby="comunidadHeadingThree" data-bs-parent="#comunidadAccordion">
-                                                                            <div class="accordion-body">
-                                                                                <div class="row mb-3">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Prevención de riesgos físicos</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor7" rows="3" 
-                                                                                                name="prevencion_riesgos_fisicos">{{ $gestion_comunidad->prevencion_riesgos_fisicos ?? old('prevencion_riesgos_fisicos') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row mb-3">
-                                                                                    <label class="form-label">Anexo Prevención de riesgos físicos</label>
-                                                                                    
-                                                                                    <div class="col-12 d-flex gap-2 justify-content-between align-items-center">
-                                                                                        @if(isset($gestion_comunidad->anexoPrevencionRiesgosFisicos))
-                                                                                            <a href="{{ $gestion_comunidad->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                                                                <i class="fas fa-eye"></i> Ver adjunto
-                                                                                            </a>
-                                                                                        @endif
-                                                                                        <input type="file" name="anexo_prevencion_riesgos_fisicos" class="form-control" accept="application/pdf">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <label class="form-label">Prevención de riesgos psicosociales</label>
-                                                                                        <textarea class="form-control" id="comunidad-editor8" rows="3" 
-                                                                                                name="prevencion_riesgos_psicosociales">{{ $gestion_comunidad->prevencion_riesgos_psicosociales ?? old('prevencion_riesgos_psicosociales') }}</textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                        <!-- Atención educativa a grupos poblacionales -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">ATENCIÓN EDUCATIVA A GRUPOS POBLACIONALES</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Atención a grupos vulnerables:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->atencion_grupos_vulnerabilidad ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-
-                                                                <div class="text-center mt-4">
-                                                                    <button type="submit" class="btn btn-success btn-lg">
-                                                                        <i class="bx bx-save me-1"></i> Guardar Todo
-                                                                    </button>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Necesidades estudiantiles:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->necesidades_expectativas_estudiantes ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                                 </div>
-                                                            </form>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Proyectos de vida:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->proyectos_vida ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Escuela de padres:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->escuela_padres ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento escuela de padres:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_comunidad->anexoProyectoEscuelaPadres))
+                                                                        <a href="{{ $gestion_comunidad->anexoProyectoEscuelaPadres->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Servicios a la comunidad:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->oferta_servicios_comunidad ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Programa de servicio social -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">PROGRAMA DE SERVICIO SOCIAL</h5>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Programa institucional:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->programa_servicio_social ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento del programa:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_comunidad->anexoProgramaServicioSocial))
+                                                                        <a href="{{ $gestion_comunidad->anexoProgramaServicioSocial->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Prevención de riesgos -->
+                                                        <div class="mb-4 p-3 border rounded">
+                                                            <h5 class="fw-bold mb-3 text-primary">PREVENCIÓN DE RIESGOS</h5>
+                                                
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Riesgos físicos:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->prevencion_riesgos_fisicos ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Documento de riesgos físicos:</div>
+                                                                <div class="ps-2">
+                                                                    @if(isset($gestion_comunidad->anexoPrevencionRiesgosFisicos))
+                                                                        <a href="{{ $gestion_comunidad->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="text-decoration-none">
+                                                                            <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted fst-italic">No disponible</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 ps-3">
+                                                                <div class="fw-semibold mb-1">Riesgos psicosociales:</div>
+                                                                <div class="ps-2">
+                                                                    {!! $gestion_comunidad->prevencion_riesgos_psicosociales ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

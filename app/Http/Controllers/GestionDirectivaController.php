@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GestionDirectivaRequest;
 use App\Http\Services\AdjuntoService;
+use App\Models\GdClimaEscolar;
+use App\Models\GdCulturaInstitucional;
+use App\Models\GdDireccionamientoEstrategico;
+use App\Models\GdGobiernoEscolar;
+use App\Models\GdRelacionesEntorno;
 use App\Models\GestionDirectiva;
 use Illuminate\Http\Request;
 
@@ -15,142 +20,81 @@ class GestionDirectivaController extends Controller {
 
     public function store(GestionDirectivaRequest $request, int $institutionId) {
         $gestionDirectiva = $request->all(); 
-        $gestionDirectiva['institution_id'] = $institutionId;
         
         
-        // anexo_gobierno_escolar
-        if ($request->hasFile('anexo_gobierno_escolar')) {
-            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_gobierno_escolar'),
-                "institucion/{$institutionId}/anexo_gobierno_escolar",
-                'public'
-            );
-    
-            if ($storeAnexoGobiernoEscolar->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
+        // Mapeo de archivos a sus claves correspondientes y nombres de columnas en DB
+        $anexos = [
+            'anexo_politica_inclusion' => [
+                'seccion' => 'direccionamiento_estrategico',
+                'campo' => 'anexo_politica_inclusion'
+            ],
+            'anexo_gobierno_escolar' => [
+                'seccion' => 'gobierno_escolar',
+                'campo' => 'anexo_gobierno_escolar'
+            ],
+            'anexo_politica_bienestar' => [
+                'seccion' => 'cultura_institucional',
+                'campo' => 'anexo_politica_bienestar'
+            ],
+            'anexo_cultura_institucional' => [
+                'seccion' => 'cultura_institucional',
+                'campo' => 'anexo_cultura_institucional'
+            ],
+            'anexo_programa_institucional_induccion' => [
+                'seccion' => 'clima_escolar',
+                'campo' => 'anexo_programa_institucional_induccion'
+            ],
+            'manual_convivencia' => [
+                'seccion' => 'clima_escolar',
+                'campo' => 'manual_convivencia'
+            ],
+            'anexo_alianzas_instituciones' => [
+                'seccion' => 'relaciones_entorno',
+                'campo' => 'anexo_alianzas_instituciones'
+            ],
+            'anexo_alianzas_sector_productivo' => [
+                'seccion' => 'relaciones_entorno',
+                'campo' => 'anexo_alianzas_sector_productivo'
+            ],
+        ];
+        
+        // Procesar los archivos y guardar sus IDs en el array correspondiente
+        foreach ($anexos as $field => $info) {
+            if ($request->hasFile($field)) {
+                $storedFile = $this->adjuntoService->storeAdjunto(
+                    $request->file($field),
+                    "institucion/{$institutionId}/{$info['seccion']}/{$field}",
+                    'public'
+                );
+
+                if (!$storedFile->success) {
+                    return redirect()->back()->with('flash_error_message', $storedFile->msg);
+                }
+
+                $gestionDirectiva[$info['seccion']][$info['campo']] = $storedFile->data->id;
             }
-            $gestionDirectiva['anexo_gobierno_escolar'] = $storeAnexoGobiernoEscolar->data->id;
-        }
-
-        // anexo_programa_institucional_induccion
-        if ($request->hasFile('anexo_programa_institucional_induccion')) {
-            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_programa_institucional_induccion'),
-                "institucion/{$institutionId}/anexo_programa_institucional_induccion",
-                'public'
-            );
-    
-            if ($storeAnexoGobiernoEscolar->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
-            }
-            $gestionDirectiva['anexo_programa_institucional_induccion'] = $storeAnexoGobiernoEscolar->data->id;
-        }
-
-        // anexo_politica_bienestar
-        if ($request->hasFile('anexo_politica_bienestar')) {
-            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_politica_bienestar'),
-                "institucion/{$institutionId}/anexo_politica_bienestar",
-                'public'
-            );
-    
-            if ($storeAnexoGobiernoEscolar->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
-            }
-            $gestionDirectiva['anexo_politica_bienestar'] = $storeAnexoGobiernoEscolar->data->id;
-        }
-
-        // anexo_politica_inclusion
-        if ($request->hasFile('anexo_politica_inclusion')) {
-            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_politica_inclusion'),
-                "institucion/{$institutionId}/anexo_politica_inclusion",
-                'public'
-            );
-    
-            if ($storeAnexoGobiernoEscolar->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
-            }
-            $gestionDirectiva['anexo_politica_inclusion'] = $storeAnexoGobiernoEscolar->data->id;
-        }
-
-        // anexo_gobierno_escolar
-        if ($request->hasFile('anexo_gobierno_escolar')) {
-            $storeAnexoGobiernoEscolar = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_gobierno_escolar'),
-                "institucion/{$institutionId}/anexo_gobierno_escolar",
-                'public'
-            );
-    
-            if ($storeAnexoGobiernoEscolar->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoGobiernoEscolar->msg);
-            }
-            $gestionDirectiva['anexo_gobierno_escolar'] = $storeAnexoGobiernoEscolar->data->id;
-        }
-
-        // Valida y almacena anexo_cultura_institucional (si es requerido)
-        if ($request->hasFile('anexo_cultura_institucional')) {
-            $storeAnexoCultura = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_cultura_institucional'),
-                "institucion/{$institutionId}/anexo_cultura_institucional",
-                'public'
-            );
-
-            if ($storeAnexoCultura->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoCultura->msg);
-            }
-            $gestionDirectiva['anexo_cultura_institucional'] = $storeAnexoCultura->data->id;
-        }
-
-        // Valida y almacena manual_convivencia (si es requerido)
-        if ($request->hasFile('manual_convivencia')) {
-            $storeManualConvivencia = $this->adjuntoService->storeAdjunto(
-                $request->file('manual_convivencia'),
-                "institucion/{$institutionId}/manual_convivencia",
-                'public'
-            );
-
-            if ($storeManualConvivencia->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeManualConvivencia->msg);
-            }
-            $gestionDirectiva['manual_convivencia'] = $storeManualConvivencia->data->id;
-        }
-
-        // Valida y almacena anexo_alianzas_instituciones (si es requerido)
-        if ($request->hasFile('anexo_alianzas_instituciones')) {
-            $storeAnexoAlianzas = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_alianzas_instituciones'),
-                "institucion/{$institutionId}/anexo_alianzas_instituciones",
-                'public'
-            );
-
-            if ($storeAnexoAlianzas->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoAlianzas->msg);
-            }
-            $gestionDirectiva['anexo_alianzas_instituciones'] = $storeAnexoAlianzas->data->id;
-        }
-
-        // Valida y almacena anexo_alianzas_sector_productivo (si es requerido)
-        if ($request->hasFile('anexo_alianzas_sector_productivo')) {
-            $storeAnexoSector = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_alianzas_sector_productivo'),
-                "institucion/{$institutionId}/anexo_alianzas_sector_productivo",
-                'public'
-            );
-
-            if ($storeAnexoSector->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoSector->msg);
-            }
-            $gestionDirectiva['anexo_alianzas_sector_productivo'] = $storeAnexoSector->data->id;
-        }
-
-        $modelDirectiva = GestionDirectiva::where('institution_id', $institutionId)->first();
-        if ($modelDirectiva) {
-            $modelDirectiva->update($gestionDirectiva);
-        } else {
-            $modelDirectiva = GestionDirectiva::create($gestionDirectiva);
         }
         
+        // Crear la instancia principal y obtener el ID
+        $gestionDirectivaSaved = GestionDirectiva::create([
+            'institution_id' => $institutionId
+        ]);
+
+        $gestionDirectivaId = $gestionDirectivaSaved->id;
+        // Preparar los datos con el ID relacionado
+        $secciones = [
+            'direccionamiento_estrategico' => GdDireccionamientoEstrategico::class,
+            'gobierno_escolar' => GdGobiernoEscolar::class,
+            'cultura_institucional' => GdCulturaInstitucional::class,
+            'clima_escolar' => GdClimaEscolar::class,
+            'relaciones_entorno' => GdRelacionesEntorno::class,
+        ];
+
+        foreach ($secciones as $key => $model) {
+            $gestionDirectiva[$key]['gestion_directiva_id'] = $gestionDirectivaId;
+            $model::create($gestionDirectiva[$key]);
+        }
+
         return redirect()->back()->with('flash_success_message', 'Gestion directiva creada correctamente.');
     }
 

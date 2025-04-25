@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
+use App\Models\GaDisenosPedagogicos;
+use App\Models\GaGestionAulas;
+use App\Models\GaSeguimientosAcademicos;
+use App\Models\GdDireccionamientoEstrategico;
 use App\Models\GestionAcademica;
 use Illuminate\Http\Request;
 
@@ -15,143 +19,98 @@ class GestionAcademicaController extends Controller
 
     public function store(Request $request, int $institutionId) {
         $gestionAcademica = $request->all(); 
-        $gestionAcademica['institution_id'] = $institutionId;
+    
+        // Mapeo de anexos por categoría con modelo y campo correspondiente
+        $anexos = [
+            // Diseño Pedagógico
+            'anexo_plan_estudios' => [
+                'modelo' => GaDisenosPedagogicos::class,
+                'campo' => 'anexo_plan_estudios',
+                'seccion' => 'diseno_pedagogico'
+            ],
+            'anexo_enfoque_pedagogico' => [
+                'modelo' => GaDisenosPedagogicos::class,
+                'campo' => 'anexo_enfoque_pedagogico',
+                'seccion' => 'diseno_pedagogico'
+            ],
+            'anexo_analisis_jornada' => [
+                'modelo' => GaDisenosPedagogicos::class,
+                'campo' => 'anexo_analisis_jornada',
+                'seccion' => 'diseno_pedagogico'
+            ],
+            'anexo_sistema_evaluacion' => [
+                'modelo' => GaDisenosPedagogicos::class,
+                'campo' => 'anexo_sistema_evaluacion',
+                'seccion' => 'diseno_pedagogico'
+            ],
+            
+            // Gestión de Aula
+            'anexos_planes_aula' => [
+                'modelo' => GaGestionAulas::class,
+                'campo' => 'anexos_planes_aula',
+                'seccion' => 'gestion_aula'
+            ],
+            'anexos_temas_ensenanza' => [
+                'modelo' => GaGestionAulas::class,
+                'campo' => 'anexos_temas_ensenanza',
+                'seccion' => 'gestion_aula'
+            ],
+            
+            // Seguimiento Académico
+            'anexo_informe_estadistico' => [
+                'modelo' => GaSeguimientosAcademicos::class,
+                'campo' => 'anexo_informe_estadistico',
+                'seccion' => 'seguimiento_academico'
+            ],
+            'anexo_analisis_pruebas_externas' => [
+                'modelo' => GaSeguimientosAcademicos::class,
+                'campo' => 'anexo_analisis_pruebas_externas',
+                'seccion' => 'seguimiento_academico'
+            ],
+            'anexos_planes_mejoramiento' => [
+                'modelo' => GaSeguimientosAcademicos::class,
+                'campo' => 'anexos_planes_mejoramiento',
+                'seccion' => 'seguimiento_academico'
+            ],
+        ];
+        
+        // Procesar los archivos y guardar en sus modelos correspondientes
+        foreach ($anexos as $field => $info) {
+            if ($request->hasFile($field)) {
+                $storedFile = $this->adjuntoService->storeAdjunto(
+                    $request->file($field),
+                    "institucion/{$institutionId}/{$info['seccion']}/{$field}",
+                    'public'
+                );
 
-        // Valida y almacena anexo_plan_estudios
-        if ($request->hasFile('anexo_plan_estudios')) {
-            $storeAnexoMatricula = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_plan_estudios'),
-                "institucion/{$institutionId}/anexo_plan_estudios",
-                'public'
-            );
+                if (!$storedFile->success) {
+                    return redirect()->back()->with('flash_error_message', $storedFile->msg);
+                }
 
-            if ($storeAnexoMatricula->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoMatricula->msg);
+                $gestionAcademica[$info['seccion']][$info['campo']] = $storedFile->data->id;
             }
-            $gestionAcademica['anexo_plan_estudios'] = $storeAnexoMatricula->data->id;
         }
+        
+        // Crear la instancia principal y obtener el ID
+        $gestionAcademicaSaved = GestionAcademica::create([
+            'institution_id' => $institutionId
+        ]);
 
-        // Valida y almacena anexo_enfoque_pedagogico
-        if ($request->hasFile('anexo_enfoque_pedagogico')) {
-            $storeAnexoMantenimiento = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_enfoque_pedagogico'),
-                "institucion/{$institutionId}/anexo_enfoque_pedagogico",
-                'public'
-            );
+        $gestionAcademicaId = $gestionAcademicaSaved->id;
+        
+        // Preparar los datos con el ID relacionado
+        $secciones = [
+            'diseno_pedagogico' => GaDisenosPedagogicos::class,
+            'gestion_aula' => GaGestionAulas::class,
+            'seguimiento_academico' => GaSeguimientosAcademicos::class,
+        ];
 
-            if ($storeAnexoMantenimiento->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoMantenimiento->msg);
-            }
-            $gestionAcademica['anexo_enfoque_pedagogico'] = $storeAnexoMantenimiento->data->id;
+        foreach ($secciones as $key => $model) {
+            $gestionAcademica[$key]['gestion_academica_id'] = $gestionAcademicaId;
+            $model::create($gestionAcademica[$key]);
         }
-
-        // Valida y almacena anexo_analisis_jornada
-        if ($request->hasFile('anexo_analisis_jornada')) {
-            $storeAnexoDotacion = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_analisis_jornada'),
-                "institucion/{$institutionId}/anexo_analisis_jornada",
-                'public'
-            );
-
-            if ($storeAnexoDotacion->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoDotacion->msg);
-            }
-            $gestionAcademica['anexo_analisis_jornada'] = $storeAnexoDotacion->data->id;
-        }
-
-        // Valida y almacena anexo_sistema_evaluacion
-        if ($request->hasFile('anexo_sistema_evaluacion')) {
-            $storeAnexoPrograma = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_sistema_evaluacion'),
-                "institucion/{$institutionId}/anexo_sistema_evaluacion",
-                'public'
-            );
-
-            if ($storeAnexoPrograma->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPrograma->msg);
-            }
-            $gestionAcademica['anexo_sistema_evaluacion'] = $storeAnexoPrograma->data->id;
-        }
-
-        // Valida y almacena anexos_planes_aula
-        if ($request->hasFile('anexos_planes_aula')) {
-            $storeAnexoPresupuesto = $this->adjuntoService->storeAdjunto(
-                $request->file('anexos_planes_aula'),
-                "institucion/{$institutionId}/anexos_planes_aula",
-                'public'
-            );
-
-            if ($storeAnexoPresupuesto->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPresupuesto->msg);
-            }
-            $gestionAcademica['anexos_planes_aula'] = $storeAnexoPresupuesto->data->id;
-        }
-
-        // Valida y almacena anexos_temas_ensenanza
-        if ($request->hasFile('anexos_temas_ensenanza')) {
-            $storeAnexoPresupuesto = $this->adjuntoService->storeAdjunto(
-                $request->file('anexos_temas_ensenanza'),
-                "institucion/{$institutionId}/anexos_temas_ensenanza",
-                'public'
-            );
-
-            if ($storeAnexoPresupuesto->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPresupuesto->msg);
-            }
-            $gestionAcademica['anexos_temas_ensenanza'] = $storeAnexoPresupuesto->data->id;
-        }
-
-        // Valida y almacena anexo_informe_estadistico
-        if ($request->hasFile('anexo_informe_estadistico')) {
-            $storeAnexoPresupuesto = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_informe_estadistico'),
-                "institucion/{$institutionId}/anexo_informe_estadistico",
-                'public'
-            );
-
-            if ($storeAnexoPresupuesto->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPresupuesto->msg);
-            }
-            $gestionAcademica['anexo_informe_estadistico'] = $storeAnexoPresupuesto->data->id;
-        }
-
-        // Valida y almacena anexo_analisis_pruebas_externas
-        if ($request->hasFile('anexo_analisis_pruebas_externas')) {
-            $storeAnexoPresupuesto = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_analisis_pruebas_externas'),
-                "institucion/{$institutionId}/anexo_analisis_pruebas_externas",
-                'public'
-            );
-
-            if ($storeAnexoPresupuesto->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPresupuesto->msg);
-            }
-            $gestionAcademica['anexo_analisis_pruebas_externas'] = $storeAnexoPresupuesto->data->id;
-        }
-
-        // Valida y almacena anexos_planes_mejoramiento
-        if ($request->hasFile('anexos_planes_mejoramiento')) {
-            $storeAnexoPresupuesto = $this->adjuntoService->storeAdjunto(
-                $request->file('anexos_planes_mejoramiento'),
-                "institucion/{$institutionId}/anexos_planes_mejoramiento",
-                'public'
-            );
-
-            if ($storeAnexoPresupuesto->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPresupuesto->msg);
-            }
-            $gestionAcademica['anexos_planes_mejoramiento'] = $storeAnexoPresupuesto->data->id;
-        }
-
-
-        $modelAcademica = GestionAcademica::where('institution_id', $institutionId)->first();
-        if ($modelAcademica) {
-            $modelAcademica->update($gestionAcademica);
-        } else {
-            $modelAcademica = GestionAcademica::create($gestionAcademica);
-        }
-
-        return redirect()->back()->with('flash_success_message', 'Gestion academica creada correctamente.');
+    
+        return redirect()->back()->with('flash_success_message', 'Gestión académica creada correctamente.');
     }
 
     /**

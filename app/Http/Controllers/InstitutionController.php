@@ -174,28 +174,6 @@ class InstitutionController extends Controller
         return view('institutional_profile.institution.edit', ['institution' => $institucion]);
     }
 
-    public function pei(int $institucion) {
-        $institucionData = Institucion::with([
-                'gestionDirectiva',
-                'gestionAcademica',
-                'gestionComunidad',
-                'gestionAdministrativa',
-            ])
-            ->where('id', $institucion)
-            ->first();
-
-         if (!$institucionData) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
-         }
-
-        return view('institutional_profile.institution.pei', [
-            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
-            'gestion_academica' => $institucionData->gestionAcademica ?? null,
-            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
-            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
-        ]);
-    }
-
     public function update(Request $request, int $institucion)
     {
          $institucionToUpdate = Institucion::with('redesSociales')
@@ -238,4 +216,25 @@ class InstitutionController extends Controller
         return redirect()->back()->with('success', 'Institución actualizada correctamente.');
     }
 
+    public function pei(int $institucion) {
+        $institucionData = Institucion::with([
+                'gestionDirectiva',
+                'gestionAcademica',
+                'gestionComunidad',
+                'gestionAdministrativa',
+            ])
+            ->where('id', $institucion)
+            ->first();
+
+         if (!$institucionData) {
+            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+         }
+
+        return view('institutional_profile.institution.pei', [
+            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
+            'gestion_academica' => $institucionData->gestionAcademica ?? null,
+            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
+            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+        ]);
+    }
 }
