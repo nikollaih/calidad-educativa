@@ -15,7 +15,7 @@ class GaDisenosPedagogicos extends Model
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
-        'gestionAcademica',
+        // 'gestionAcademica',
         'anexoPlanEstudios',
         'anexoEnfoquePedagogico',
         'anexoAnalisisJornada',

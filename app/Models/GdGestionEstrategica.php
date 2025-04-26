@@ -9,7 +9,7 @@ class GdGestionEstrategica extends Model
     protected $table = 'gd_gestion_estrategica';
 
     public $with = [
-        'gestionDirectiva'
+        // 'gestionDirectiva'
     ];
 
     protected $fillable = [

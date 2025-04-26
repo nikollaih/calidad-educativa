@@ -9,7 +9,7 @@ class GaGestionAulas extends Model
     protected $table = 'ga_gestion_aulas';
 
     public $with = [
-        'gestionAcademica',
+        // 'gestionAcademica',
         'anexoPlanesAula',
         'anexoTemasEnsenanza'
     ];

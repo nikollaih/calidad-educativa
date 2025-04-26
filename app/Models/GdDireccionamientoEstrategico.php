@@ -9,7 +9,7 @@ class GdDireccionamientoEstrategico extends Model
     protected $table = 'gd_direccionamiento_estrategico';
 
     public $with = [
-        'gestionDirectiva',
+        // 'gestionDirectiva',
         'anexoPoliticaInclusion'
     ];
 

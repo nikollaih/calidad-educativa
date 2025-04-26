@@ -9,7 +9,7 @@ class GdClimaEscolar extends Model
     protected $table = 'gd_clima_escolar';
 
     public $with = [
-        'gestionDirectiva',
+        // 'gestionDirectiva',
         'anexoProgramaInstitucionalInduccion',
         'manualConvivencia'
     ];

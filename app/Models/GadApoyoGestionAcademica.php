@@ -10,7 +10,7 @@ class GadApoyoGestionAcademica extends Model
     protected $table = 'gad_apoyo_gestion_academica';
 
     public $with = [
-        'gestionAdministrativa',
+        // 'gestionAdministrativa',
         'anexoActoAdministrativo'
     ];
 

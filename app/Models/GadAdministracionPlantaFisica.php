@@ -10,7 +10,7 @@ class GadAdministracionPlantaFisica extends Model
     protected $table = 'gad_administracion_planta_fisica';
 
     public $with = [
-        'gestionAdministrativa',
+        // 'gestionAdministrativa',
         'anexoMantenimientoInfraestructura',
         'anexoDotacionRecursos',
     ];

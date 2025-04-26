@@ -8,7 +8,7 @@ class GaSeguimientosAcademicos extends Model
     protected $table = 'ga_seguimientos_academicos';
 
     public $with = [
-        'gestionAcademica',
+        // 'gestionAcademica',
         'anexoInformeEstadistico',
         'anexoAnalisisPruebasExternas',
         'anexoPlanesMejoramiento'

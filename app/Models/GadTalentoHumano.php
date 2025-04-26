@@ -15,7 +15,7 @@ class GadTalentoHumano extends Model
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
-        'gestionAdministrativa',
+        // 'gestionAdministrativa',
         'anexoProgramaFormacion',
         'anexoInformeAnual'
     ];

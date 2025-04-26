@@ -9,7 +9,7 @@ class GdCulturaInstitucional extends Model
     protected $table = 'gd_cultura_institucional';
 
     public $with = [
-        'gestionDirectiva',
+        // 'gestionDirectiva',
         'anexoCulturaInstitucional',
         'anexoPoliticaBienestar'
     ];

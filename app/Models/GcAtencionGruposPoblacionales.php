@@ -9,7 +9,7 @@ class GcAtencionGruposPoblacionales extends Model
     protected $table = 'gc_atencion_grupos_poblacionales';
 
     public $with = [
-        'gestionComunidad',
+        // 'gestionComunidad',
         'anexoProyectoEscuelaPadres'
     ];
 

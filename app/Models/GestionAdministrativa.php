@@ -10,7 +10,12 @@ class GestionAdministrativa extends Model {
 
     // Relaciones a cargar automáticamente
     public $with = [
-        'institucion'
+        'institucion',
+        'administracionPlantaFisica',
+        'apoyoFinancieroContable',
+        'apoyoGestionAcademica',
+        'serviciosComplementarios',
+        'talentoHumano'
     ];
 
     // Campos asignables masivamente
@@ -32,5 +37,45 @@ class GestionAdministrativa extends Model {
     public function institucion()
     {
         return $this->belongsTo(Institucion::class);
+    }
+    
+    /**
+     * Relación con GadAdministracionPlantaFisica (1 a 1)
+     */
+    public function administracionPlantaFisica()
+    {
+        return $this->hasOne(GadAdministracionPlantaFisica::class, 'gestion_administrativa_id');
+    }
+
+    /**
+     * Relación con GadApoyoFinancieroContable (1 a 1)
+     */
+    public function apoyoFinancieroContable()
+    {
+        return $this->hasOne(GadApoyoFinancieroContable::class, 'gestion_administrativa_id');
+    }
+
+    /**
+     * Relación con GadApoyoGestionAcademica (1 a 1)
+     */
+    public function apoyoGestionAcademica()
+    {
+        return $this->hasOne(GadApoyoGestionAcademica::class, 'gestion_administrativa_id');
+    }
+
+    /**
+     * Relación con GadServicesComplementarios (1 a 1)
+     */
+    public function serviciosComplementarios()
+    {
+        return $this->hasOne(GadServicesComplementarios::class, 'gestion_administrativa_id');
+    }
+
+    /**
+     * Relación con GadTalentolHumano (1 a 1)
+     */
+    public function talentoHumano()
+    {
+        return $this->hasOne(GadTalentoHumano::class, 'gestion_administrativa_id');
     }
 }

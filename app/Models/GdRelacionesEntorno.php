@@ -9,7 +9,7 @@ class GdRelacionesEntorno extends Model
     protected $table = 'gd_relaciones_entorno';
 
     public $with = [
-        'gestionDirectiva',
+        // 'gestionDirectiva',
         'anexoAlianzasInstituciones',
         'anexoAlianzasSectorProductivo'
     ];

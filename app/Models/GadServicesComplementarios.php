@@ -9,13 +9,13 @@ class GadServicesComplementarios extends Model
     /**
      * Nombre de la tabla asociada al modelo
      */
-    protected $table = 'gad_services_complementarios';
+    protected $table = 'gad_servicios_complementarios';
 
     /**
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
-        'gestionAdministrativa'
+        // 'gestionAdministrativa'
     ];
 
     /**

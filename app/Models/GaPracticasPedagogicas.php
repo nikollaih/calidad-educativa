@@ -9,7 +9,7 @@ class GaPracticasPedagogicas extends Model
     protected $table = 'ga_practicas_pedagogicas';
 
     public $with = [
-        'gestionAcademica'
+        // 'gestionAcademica'
     ];
 
     protected $fillable = [

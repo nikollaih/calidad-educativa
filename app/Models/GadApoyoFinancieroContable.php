@@ -10,7 +10,7 @@ class GadApoyoFinancieroContable extends Model
     protected $table = 'gad_apoyo_financiero_contable';
 
     public $with = [
-        'gestionAdministrativa',
+        // 'gestionAdministrativa',
         'anexoPresupuestoFse',
         'anexoManualContratacion'
     ];

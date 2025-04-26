@@ -9,7 +9,7 @@ class GcPrevencionRiesgos extends Model
     protected $table = 'gc_prevencion_riesgos';
 
     public $with = [
-        'gestionComunidad',
+        // 'gestionComunidad',
         'anexoPrevencionRiesgosFisicos'
     ];
 

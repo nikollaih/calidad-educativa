@@ -9,7 +9,7 @@ class GdGobiernoEscolar extends Model
     protected $table = 'gd_gobierno_escolar';
 
     public $with = [
-        'gestionDirectiva',
+        // 'gestionDirectiva',
         'anexoGobiernoEscolar'
     ];
 

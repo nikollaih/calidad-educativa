@@ -9,7 +9,7 @@ class GcProgramaServicioSocial extends Model
     protected $table = 'gc_programa_servicio_social';
 
     public $with = [
-        'gestionComunidad',
+        // 'gestionComunidad',
         'anexoProgramaServicioSocial'
     ];
 
