@@ -159,7 +159,7 @@
                         <label class="form-label">Equipos disponibles</label>
 
                             <!-- Sección de equipos (oculta inicialmente) -->
-                            <div class="row row-cols-1 row-cols-md-2 g-3" >
+                            <div class="row  row-cols-md-1" >
                                 @php
                                     $equipos = [
                                         'Equipo Servidor',
