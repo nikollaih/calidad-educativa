@@ -68,17 +68,57 @@ class InstitutionController extends Controller
     }
     public function autoevaluacionesVer(int $autoevaluacionId = null)
     {
-        $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
+        $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion', 'notas.calificacion.grupo','notas.calificacion.grupo.padre')
+            ->where('id', $autoevaluacionId)->first();
         if(empty($autoevaluacionId)){
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
         }
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
+
+        $formattedNotes = $autoevaluacion->notas->map(function ($nota) {
+            return [
+                'grupo_indice' => $nota->calificacion?->grupo?->indice,
+                'grupo_name' => $nota->calificacion?->grupo?->nombre,
+                'valor' => $nota->valor,
+                'base_group_indice' => $nota->calificacion?->grupo?->padre?->indice,
+                'base_group_name' => $nota->calificacion?->grupo?->padre?->nombre,
+            ];
+        });
+
+        $statistics = GrupoCalificacion::with([
+            'hijos' => function ($query) {
+                $query->select('id', 'indice', 'padre_id', 'nombre')
+                ->withCount('calificaciones');
+            }
+        ])
+            ->withCount('hijos')
+            ->whereNull('padre_id')
+            ->get()
+            ->map( function ( $baseGroup) use ($formattedNotes) {
+                $subGruposFormateados = $baseGroup->hijos->map( function ( $subGrupo)  use ($formattedNotes) {
+                    return [
+                        'nombre' => $subGrupo->nombre,
+                        'indice' => $subGrupo->indice,
+                        'promedio' => round($formattedNotes
+                            ->where('grupo_indice', $subGrupo->indice)
+                            ->sum('valor') / max( 1,$subGrupo->calificaciones_count ),2 ),
+                    ];
+                });
+                return [
+                  'nombre' => $baseGroup->nombre,
+                  'indice' => $baseGroup->indice,
+                  'promedio' => round($subGruposFormateados->sum('promedio') / max(1, $baseGroup->hijos_count ), 2),
+                  'sub_grupos' => $subGruposFormateados,
+                ];
+            });
+
         return view('institutional_profile.institution.autoevaluaciones.ver',
             [
                 'gruposCalificaciones' => $gruposCalificaciones,
                 'autoevaluacion' => $autoevaluacion,
+                'statistics' => $statistics,
             ]
         );
     }
