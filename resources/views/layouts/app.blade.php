@@ -147,24 +147,6 @@
                                         <div data-i18n="education-offer"> Autoevaluación</div>
                                     </a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{ url('pei/academic-management')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-book-open"></i>
-                                        <div data-i18n="education-offer"> Gestión académica</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="{{ url('pei/community-management')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-users"></i>
-                                        <div data-i18n="education-offer"> Gestión de la comunidad</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="{{ url('pei/executive-management')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-user-tie"></i>
-                                        <div data-i18n="education-offer"> Gestión directiva</div>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                     </ul>
