@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('institution'             , InstitutionController::class);
         Route::get('institution/{institutionId}/pei', [InstitutionController::class, 'pei'])->name('institution.pei');
+        Route::get('institution/{institutionId}/update-pei', [InstitutionController::class, 'peiManageInformation'])->name('institution.pei.update-pei');
         // Rutas para la gestion de sedes
         Route::resource('{institutionId}/sede-with-institution'             , SedeController::class);
         Route::resource('sede', SedeController::class);

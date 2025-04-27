@@ -379,7 +379,7 @@
                                     <div class="card-datatable table-responsive pt-0">
                                         <div class="card-body">
                                             <h5 class="card-header">
-                                              <center><h3>Apoyo a la gestión asd</h3></center>
+                                              <center><h3>Apoyo a la gestión</h3></center>
                                             </h5>
                                             <form method="post" action="#">
                                               <div class="row">

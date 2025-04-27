@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Autoevaluacion;
+use App\Models\GestionAcademica;
+use App\Models\GestionAdministrativa;
+use App\Models\GestionComunidad;
+use App\Models\GestionDirectiva;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use Illuminate\Http\Request;
@@ -188,6 +192,12 @@ class InstitutionController extends Controller
         $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse->data->id;
         // Crea la institucion
         $institutionCreated = Institucion::create($institutionData);
+        $createPei = ['institution_id' => $institutionCreated->id];
+        // crea las gestiones de PEI
+        GestionAcademica::create($createPei);
+        GestionComunidad::create($createPei);
+        GestionDirectiva::create($createPei);
+        GestionAdministrativa::create($createPei);
         // Sincroniza las redes sociales de la institucion
         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'],$institutionCreated);
 
@@ -212,28 +222,6 @@ class InstitutionController extends Controller
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
          }
         return view('institutional_profile.institution.edit', ['institution' => $institucion]);
-    }
-
-    public function pei(int $institucion) {
-        $institucionData = Institucion::with([
-                'gestionDirectiva',
-                'gestionAcademica',
-                'gestionComunidad',
-                'gestionAdministrativa',
-            ])
-            ->where('id', $institucion)
-            ->first();
-
-         if (!$institucionData) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
-         }
-
-        return view('institutional_profile.institution.pei', [
-            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
-            'gestion_academica' => $institucionData->gestionAcademica ?? null,
-            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
-            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
-        ]);
     }
 
     public function update(Request $request, int $institucion)
@@ -278,4 +266,44 @@ class InstitutionController extends Controller
         return redirect()->back()->with('success', 'Institución actualizada correctamente.');
     }
 
+    public function pei(int $institucion) {
+        $institucionData = Institucion::with([
+                'gestionDirectiva',
+                'gestionAcademica',
+                'gestionComunidad',
+                'gestionAdministrativa',
+            ])
+            ->where('id', $institucion)
+            ->first();
+
+         if (!$institucionData) {
+            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+         }
+
+        //  dd($institucionData->gestionDirectiva );
+        return view('institutional_profile.institution.pei', [
+            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
+            'gestion_academica' => $institucionData->gestionAcademica ?? null,
+            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
+            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+        ]);
+    }
+
+    public function peiManageInformation(int $institucion) {
+        $institucionData = Institucion::with([
+                'gestionDirectiva',
+                'gestionAcademica',
+                'gestionComunidad',
+                'gestionAdministrativa',
+            ])
+            ->where('id', $institucion)
+            ->first();
+
+        return view('institutional_profile.institution.pei.update_pei', [
+            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
+            'gestion_academica' => $institucionData->gestionAcademica ?? null,
+            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
+            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+        ]);
+    }
 }

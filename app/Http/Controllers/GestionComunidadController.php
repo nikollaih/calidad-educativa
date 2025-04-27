@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GestionComunidadRequest;
 use App\Http\Services\AdjuntoService;
+use App\Models\GcAtencionGruposPoblacionales;
+use App\Models\GcPrevencionRiesgos;
+use App\Models\GcProgramaServicioSocial;
 use App\Models\GestionComunidad;
 use Illuminate\Http\Request;
 
@@ -15,57 +18,57 @@ class GestionComunidadController extends Controller
 
     public function store(GestionComunidadRequest $request, int $institutionId) {
         $gestionComunidad = $request->all(); 
-        $gestionComunidad['institution_id'] = $institutionId;
 
-        // Valida y almacena anexo_proyecto_escuela_padres
-        if ($request->hasFile('anexo_proyecto_escuela_padres')) {
-            $storeAnexoServicioSocial = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_proyecto_escuela_padres'),
-                "institucion/{$institutionId}/anexo_proyecto_escuela_padres",
-                'public'
-            );
+        // Mapeo de archivos a sus claves correspondientes y nombres de columnas en DB
+        $anexos = [
+            'anexo_proyecto_escuela_padres' => [
+                'seccion' => 'atencion_grupos_poblacionales',
+                'campo' => 'anexo_proyecto_escuela_padres_id',
+            ],
+            'anexo_programa_servicio_social' => [
+                'seccion' => 'programa_servicio_social',
+                'campo' => 'anexo_programa_servicio_social_id',
+            ],
+            'anexo_prevencion_riesgos_fisicos' => [
+                'seccion' => 'prevencion_riesgos',
+                'campo' => 'anexo_prevencion_riesgos_fisicos_id',
+            ],
+        ];
+        
+        // Procesar los archivos y guardar sus IDs en el array correspondiente
+        foreach ($anexos as $field => $info) {
+            if ($request->hasFile($field)) {
+                $storedFile = $this->adjuntoService->storeAdjunto(
+                    $request->file($field),
+                    "institucion/{$institutionId}/{$info['seccion']}/{$field}",
+                    'public'
+                );
 
-            if ($storeAnexoServicioSocial->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoServicioSocial->msg);
+                if (!$storedFile->success) {
+                    return redirect()->back()->with('flash_error_message', $storedFile->msg);
+                }
+
+                $gestionComunidad[$info['seccion']][$info['campo']] = $storedFile->data->id;
             }
-            $gestionComunidad['anexo_proyecto_escuela_padres'] = $storeAnexoServicioSocial->data->id;
         }
 
-        // Valida y almacena anexo_programa_servicio_social
-        if ($request->hasFile('anexo_programa_servicio_social')) {
-            $storeAnexoServicioSocial = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_programa_servicio_social'),
-                "institucion/{$institutionId}/anexo_programa_servicio_social",
-                'public'
-            );
+        // Crear la instancia principal y obtener el ID
+        $gestionComunidadSaved = GestionComunidad::create([
+            'institution_id' => $institutionId
+        ]);
 
-            if ($storeAnexoServicioSocial->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoServicioSocial->msg);
-            }
-            $gestionComunidad['anexo_programa_servicio_social'] = $storeAnexoServicioSocial->data->id;
+        $gestionComunidadId = $gestionComunidadSaved->id;
+        // Preparar los datos con el ID relacionado
+        $secciones = [
+            'atencion_grupos_poblacionales' => GcAtencionGruposPoblacionales::class,
+            'programa_servicio_social' => GcProgramaServicioSocial::class,
+            'prevencion_riesgos' => GcPrevencionRiesgos::class,
+        ];
+
+        foreach ($secciones as $key => $model) {
+            $gestionComunidad[$key]['gestion_comunidad_id'] = $gestionComunidadId;
+            $model::create($gestionComunidad[$key]);
         }
-
-        // Valida y almacena anexo_prevencion_riesgos_fisicos
-        if ($request->hasFile('anexo_prevencion_riesgos_fisicos')) {
-            $storeAnexoPrevencion = $this->adjuntoService->storeAdjunto(
-                $request->file('anexo_prevencion_riesgos_fisicos'),
-                "institucion/{$institutionId}/anexo_prevencion_riesgos_fisicos",
-                'public'
-            );
-
-            if ($storeAnexoPrevencion->success == false) {
-                return redirect()->back()->with('flash_error_message', $storeAnexoPrevencion->msg);
-            }
-            $gestionComunidad['anexo_prevencion_riesgos_fisicos'] = $storeAnexoPrevencion->data->id;
-        }
-
-        $modelComunidad = GestionComunidad::where('institution_id', $institutionId)->first();
-        if ($modelComunidad) {
-            $modelComunidad->update($gestionComunidad);
-        } else {
-            $modelComunidad = GestionComunidad::create($gestionComunidad);
-        }
-        GestionComunidad::create($gestionComunidad);
 
         return redirect()->back()->with('flash_success_message', 'Gestion comunidad creada correctamente.');
     }

@@ -3,90 +3,65 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class GestionDirectiva extends Model {
-
+class GestionDirectiva extends Model
+{
     protected $table = 'gestion_directiva';
-    public  $with = [
-        'anexoGobiernoEscolar',
-        'anexoCulturaInstitucional',
-        'manualConvivencia',
-        'anexoAlianzasInstituciones',
-        'anexoAlianzasSectorProductivo',
-        'anexoPoliticaInclusion',
-        'anexoPoliticaBienestar',
-        'anexoProgramaInstitucionalInduccion',
+
+    public $with = [
+        'institucion',
+        'climaEscolar',
+        'culturaInstitucional',
+        'direccionamientoEstrategico',
+        'gestionEstrategica',
+        'gobiernoEscolar',
+        'relacionesEntorno'
     ];
 
     protected $fillable = [
         'institution_id',
-        'mision',
-        'vision',
-        'principios_institucionales',
-        'metas_institucionales',
-        'politica_inclusion',
-        'anexo_politica_inclusion',
-        'liderazgo',
-        'articulacion',
-        'seguimiento',
-        'gobierno_escolar',
-        'anexo_gobierno_escolar',
-        'politica_comunicacion',
-        'anexo_cultura_institucional',
-        'politica_bienestar',
-        'anexo_programa_institucional_induccion',
-        'anexo_politica_bienestar',
-        // 'apoyo_investigacion',
-        'inventario_buenas_practicas',
-        'sentido_pertenencia',
-        'induccion_institucional',
-        'manual_convivencia',
-        'actividades_extracurriculares',
-        'manejo_conflictos',
-        'relacion_familias',
-        'seguimiento_egresados',
-        'alianzas_instituciones',
-        'anexo_alianzas_instituciones',
-        'alianzas_sector_productivo',
-        'anexo_alianzas_sector_productivo',
+        'created_at',
+        'updated_at'
     ];
 
     public function institucion()
     {
-        return $this->belongsTo(Institucion::class);
+        return $this->belongsTo(Institucion::class, 'institution_id');
+    }
+    
+    // Relación con GdClimaEscolar (1 a 1)
+    public function climaEscolar()
+    {
+        return $this->hasOne(GdClimaEscolar::class, 'gestion_directiva_id');
     }
 
-    
-    public function anexoGobiernoEscolar (){
-        return $this->belongsTo(Adjunto::class, 'anexo_gobierno_escolar');
-    }
-    
-    public function anexoCulturaInstitucional (){
-        return $this->belongsTo(Adjunto::class, 'anexo_cultura_institucional');
-    }
-    
-    public function manualConvivencia (){
-        return $this->belongsTo(Adjunto::class, 'manual_convivencia');
-    }
-    
-    public function anexoAlianzasInstituciones (){
-        return $this->belongsTo(Adjunto::class, 'anexo_alianzas_instituciones');
-    }
-    
-    public function anexoAlianzasSectorProductivo (){
-        return $this->belongsTo(Adjunto::class, 'anexo_alianzas_sector_productivo');
+    // Relación con GdCulturalInstitutional (1 a 1)
+    public function culturaInstitucional()
+    {
+        return $this->hasOne(GdCulturaInstitucional::class, 'gestion_directiva_id');
     }
 
-    public function anexoPoliticaInclusion (){
-        return $this->belongsTo(Adjunto::class, 'anexo_politica_inclusion');
+    // Relación con GdDirectionamientoEstrategico (1 a 1)
+    public function direccionamientoEstrategico()
+    {
+        return $this->hasOne(GdDireccionamientoEstrategico::class, 'gestion_directiva_id');
     }
 
-    public function anexoPoliticaBienestar (){
-        return $this->belongsTo(Adjunto::class, 'anexo_politica_bienestar');
+    // Relación con GdGestionEstrategica (1 a 1)
+    public function gestionEstrategica()
+    {
+        return $this->hasOne(GdGestionEstrategica::class, 'gestion_directiva_id');
     }
 
-    public function anexoProgramaInstitucionalInduccion (){
-        return $this->belongsTo(Adjunto::class, 'anexo_programa_institucional_induccion');
+    // Relación con GdGobiernoEscolar (1 a 1)
+    public function gobiernoEscolar()
+    {
+        return $this->hasOne(GdGobiernoEscolar::class, 'gestion_directiva_id');
+    }
+
+    // Relación con GdRelacionesEntorno (1 a 1)
+    public function relacionesEntorno()
+    {
+        return $this->hasOne(GdRelacionesEntorno::class, 'gestion_directiva_id');
     }
 }

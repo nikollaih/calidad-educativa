@@ -36,13 +36,13 @@
                                 <td>{{$institucion->nombre_rector}}</td>
                                 <td>
                                     <a href="{{ route('institution.autoevaluaciones', $institucion->id) }}" class="btn btn-info btn-sm">Autoevaluaciones</a>
+                                    <a href="{{ route('institution.pei', $institucion->id) }}" class="btn btn-success btn-sm">PEI</a>
                                     <a href="{{ route('institution.edit', $institucion->id) }}" class="btn btn-warning btn-sm">Editar</a>
                                     <form action="{{ route('institution.destroy', $institucion->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                     </form>
-                                    <a href="{{ route('institution.pei', $institucion->id) }}" class="btn btn-success btn-sm">PEI</a>
                                 </td>
                             </tr>
                         @endforeach
