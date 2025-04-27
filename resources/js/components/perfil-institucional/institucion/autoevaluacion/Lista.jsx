@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
-export default function Lista({ agregarUrl, autoevaluaciones }) {
+
+export default function Lista({ agregarUrl, autoevaluaciones}) {
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
@@ -62,6 +63,8 @@ export default function Lista({ agregarUrl, autoevaluaciones }) {
                 ))}
                 </tbody>
             </table>
+
+
         </div>
     );
 }
