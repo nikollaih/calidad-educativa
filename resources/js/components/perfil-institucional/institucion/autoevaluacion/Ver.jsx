@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import Chart from 'chart.js/auto';
 
-export default function Editar({  gruposCalificaciones = [],
+export default function Ver({  gruposCalificaciones = [],
                                   autoevaluacion = {},
                                    statistics = []
                                }) {
@@ -140,7 +140,7 @@ export default function Editar({  gruposCalificaciones = [],
         if (statistics.length > 0 && chartRef.current) {
             updateChart(statistics[activeStatisticTab]);
         }
-    }, [activeStatisticTab, statistics]);
+    }, [activeStatisticTab, statistics, activeTab ]);
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
@@ -220,7 +220,6 @@ export default function Editar({  gruposCalificaciones = [],
                 handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
             });
         }
-        console.log(statistics);
     }, [autoevaluacion]);
 
     return (
@@ -235,32 +234,6 @@ export default function Editar({  gruposCalificaciones = [],
                         Vigencia: {autoevaluacion?.anio_vigencia}</label>
                     <label className="form-label" htmlFor="estado">Estado: {autoevaluacion?.alias_estado}</label>
                 </div>
-                <div className="mb-4">
-
-                    <ul className="nav nav-tabs border" id="statisticTabs" role="tablist">
-                        {statistics.map((statistic, index) => (
-                            <li className="nav-item" key={`tab-${statistic.indice}`}>
-                                <button
-                                    className={`nav-link ${activeStatisticTab === index ? 'active' : ''}`}
-                                    onClick={() => setActiveStatisticTab(index)}
-                                    type="button"
-                                    role="tab"
-                                >
-                                    <span>{statistic.nombre} - Promedio de la gestión {statistic.promedio}</span>
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-
-
-                    <div className="border border-top-0 rounded-bottom p-3">
-                        {/* Aquí está el Canvas del Chart */}
-                        <div style={{ height: '400px' }}>
-                            <canvas ref={chartRef} id="acquisitions"></canvas>
-                        </div>
-                    </div>
-                </div>
-
 
                 <div className="mb-4">
                     <ul className="nav nav-tabs border" id="gruposTabs" role="tablist">
@@ -275,12 +248,21 @@ export default function Editar({  gruposCalificaciones = [],
                                     <span>{grupo.indice} {grupo.nombre}</span>
                                     {grupo.hijos?.length > 0 && (
                                         <span className="badge bg-dark ms-2">
-                                            Total: {calcularPromedioGrupo(grupo)}
+                                            Promedio: {calcularPromedioGrupo(grupo)}
                                     </span>
                                     )}
                                 </button>
                             </li>
                         ))}
+                        <li className="nav-item">
+                            <button
+                                className={`nav-link ${activeTab === 'estadisticas' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('estadisticas')}
+                                type="button"
+                            >
+                                Estadísticas
+                            </button>
+                        </li>
                     </ul>
 
                     <div className="border border-top-0 rounded-bottom p-3">
@@ -404,7 +386,32 @@ export default function Editar({  gruposCalificaciones = [],
                                 )}
                             </div>
                         ))}
+                        {/* Mostrar estadísticas */}
+                        {activeTab === 'estadisticas' && (
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <div className="list-group">
+                                        {statistics.map((stat, idx) => (
+                                            <button
+                                                key={idx}
+                                                className={`list-group-item list-group-item-action ${activeStatisticTab === idx ? 'active' : ''}`}
+                                                onClick={() => setActiveStatisticTab(idx)}
+                                                type="button"
+                                            >
+                                                {stat.nombre}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="col-md-9">
+                                    <div style={{ height: '400px' }}>
+                                        <canvas ref={chartRef} id="acquisitions"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                 </div>
                 {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
                     <div key={`nota-hidden-${calId}`}>
