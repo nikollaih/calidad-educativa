@@ -149,6 +149,23 @@ class InstitutionController extends Controller
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
 
     }
+
+
+    public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
+
+        if(!$autoevaluacion)
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+
+        // De momento no hay logica para el envio a validar
+
+        $autoevaluacion->alias_estado = "VALIDACION";
+        $autoevaluacion->save();
+
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación enviada a validación correctamente");
+
+    }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
     {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
