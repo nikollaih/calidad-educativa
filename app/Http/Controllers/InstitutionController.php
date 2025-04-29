@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Autoevaluacion;
@@ -221,6 +222,7 @@ class InstitutionController extends Controller
          $institucionToDel->delete();
          return redirect()->back()->with('success', 'Institución Eliminada correctamente.');
     }
+
     public function show(int $institucion)
     {
         return redirect()->back()->with('success', 'Institución actualizada correctamente.');
@@ -240,7 +242,6 @@ class InstitutionController extends Controller
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
          }
 
-        //  dd($institucionData->gestionDirectiva );
         return view('institutional_profile.institution.pei', [
             'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
             'gestion_academica' => $institucionData->gestionAcademica ?? null,
@@ -260,10 +261,8 @@ class InstitutionController extends Controller
             ->first();
 
         return view('institutional_profile.institution.pei.update_pei', [
-            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
-            'gestion_academica' => $institucionData->gestionAcademica ?? null,
-            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
-            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+            'institucionData' => new UpdatePeiResource($institucionData),
+            'institucionId' => $institucion,
         ]);
     }
 }
