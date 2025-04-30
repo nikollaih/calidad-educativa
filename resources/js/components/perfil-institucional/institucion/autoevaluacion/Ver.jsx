@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import GraficoCircularCalificaciones from './GraficoCircularCalificaciones';
 import Chart from 'chart.js/auto';
 
 export default function Ver({  gruposCalificaciones = [],
@@ -432,7 +433,7 @@ export default function Ver({  gruposCalificaciones = [],
                                             <div className="container-fluid p-0 h-100">
                                                 <div className="row h-100">
                                                     <div className="overflow-auto h-100">
-                                                        <div className="h-100">
+                                                                                                                <div className="h-100">
                                                             <div className="card-header text-center py-3">
                                                                 <div className=" text-xs">PERFIL INSTITUCIONAL - ÁREAS DE GESTIÓN</div>
                                                             </div>
@@ -449,7 +450,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                                         </tr>
                                                                         <tr className=" text-center">
                                                                             <td></td>
-                                                                            <td colSpan="4">AÑO: {autoevaluacion?.anio_vigencia}</td>
+                                                                            <td colSpan="8">AÑO: {autoevaluacion?.anio_vigencia}</td>
                                                                         </tr>
                                                                         <tr className="text-center">
                                                                             <td className="fw-semibold">Resultado Promedio</td>
@@ -540,6 +541,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                                     </table>
                                                                 </div>
                                                             </div>
+                                                            <GraficoCircularCalificaciones statistics={statistics} />
                                                         </div>
                                                     </div>
                                                 </div>
