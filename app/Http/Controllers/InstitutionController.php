@@ -265,4 +265,20 @@ class InstitutionController extends Controller
             'institucionId' => $institucion,
         ]);
     }
+    public function updatePei(Request $request, int $institucion) {
+        dd($request, $institucion);
+        $institucionData = Institucion::with([
+                'gestionDirectiva',
+                'gestionAcademica',
+                'gestionComunidad',
+                'gestionAdministrativa',
+            ])
+            ->where('id', $institucion)
+            ->first();
+
+        return view('institutional_profile.institution.pei.update_pei', [
+            'institucionData' => new UpdatePeiResource($institucionData),
+            'institucionId' => $institucion,
+        ]);
+    }
 }
