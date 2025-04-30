@@ -80,7 +80,6 @@ class InstitutionController extends Controller
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
-
         $formattedNotes = $autoevaluacion->notas->map(function ($nota) {
             return [
                 'grupo_indice' => $nota->calificacion?->grupo?->indice,
@@ -90,6 +89,7 @@ class InstitutionController extends Controller
                 'base_group_name' => $nota->calificacion?->grupo?->padre?->nombre,
             ];
         });
+
 
         $statistics = GrupoCalificacion::with([
             'hijos' => function ($query) {
@@ -110,14 +110,27 @@ class InstitutionController extends Controller
                             ->sum('valor') / max( 1,$subGrupo->calificaciones_count ),2 ),
                     ];
                 });
+
+                // Filtrar las notas que pertenecen a los subgrupos de este grupo base
+                $notasDelGrupo = $formattedNotes->filter(function ($nota) use ($baseGroup) {
+                    return $nota['base_group_indice'] === $baseGroup->indice;
+                });
+
+                $ponderados = [
+                    'Existencia' => $notasDelGrupo->where('valor', 1)->count(),
+                    'Pertinencia' => $notasDelGrupo->where('valor', 2)->count(),
+                    'Apropiación' => $notasDelGrupo->where('valor', 3)->count(),
+                    'Mejoramiento' => $notasDelGrupo->where('valor', 4)->count(),
+                ];
+
                 return [
                   'nombre' => $baseGroup->nombre,
                   'indice' => $baseGroup->indice,
                   'promedio' => round($subGruposFormateados->sum('promedio') / max(1, $baseGroup->hijos_count ), 2),
                   'sub_grupos' => $subGruposFormateados,
+                    'ponderados' => $ponderados,
                 ];
             });
-
         return view('institutional_profile.institution.autoevaluaciones.ver',
             [
                 'gruposCalificaciones' => $gruposCalificaciones,
