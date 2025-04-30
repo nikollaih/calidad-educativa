@@ -15,7 +15,21 @@ export default function Ver({  gruposCalificaciones = [],
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
 
-    // Función para crear o actualizar el gráfico
+    // Función para calcular los totales por área
+    const calcularTotalArea = (area) => {
+        const existencia = area.ponderados.Existencia || 0;
+        const pertinencia = area.ponderados.Pertinencia || 0;
+        const apropiacion = area.ponderados.Apropiación || 0;
+        const mejoramiento = area.ponderados.Mejoramiento || 0;
+        return existencia + pertinencia + apropiacion + mejoramiento;
+    };
+
+    // Función para calcular porcentajes
+    const calcularPorcentaje = (valor, total) => {
+        if (total === 0) return "0.00";
+        return ((valor / total) * 100).toFixed(2);
+    };
+
     // Función para crear o actualizar el gráfico
     const updateChart = (statisticData) => {
         if (!statisticData) return;
@@ -401,13 +415,139 @@ export default function Ver({  gruposCalificaciones = [],
                                                 {stat.nombre}
                                             </button>
                                         ))}
+                                        <button
+                                            className={`list-group-item list-group-item-action ${activeStatisticTab === -1 ? 'active' : ''}`}
+                                            onClick={() => setActiveStatisticTab(-1)}
+                                            type="button"
+                                        >
+                                            PERFIL
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="col-md-9">
                                     <div style={{ height: '400px' }}>
-                                        <canvas ref={chartRef} id="acquisitions"></canvas>
+                                        {activeStatisticTab !== -1 ? (
+                                            <canvas ref={chartRef} id="acquisitions"></canvas>
+                                        ) : (
+                                            <div className="container-fluid p-0 h-100">
+                                                <div className="row h-100">
+                                                    <div className="overflow-auto h-100">
+                                                        <div className="h-100">
+                                                            <div className="card-header text-center py-3">
+                                                                <div className=" text-xs">PERFIL INSTITUCIONAL - ÁREAS DE GESTIÓN</div>
+                                                            </div>
+                                                            <div className="card-body p-0">
+                                                                <div className="table-responsive">
+                                                                    <table className="table table-bordered table-striped mb-0">
+                                                                        <thead>
+                                                                        <tr className="text-center align-middle ">
+                                                                            <th></th>
+                                                                            <th colSpan="2">DIRECTIVA</th>
+                                                                            <th colSpan="2">ACADÉMICA</th>
+                                                                            <th colSpan="2">ADTVA Y FINANCIERA</th>
+                                                                            <th colSpan="2">COMUNIDAD</th>
+                                                                        </tr>
+                                                                        <tr className=" text-center">
+                                                                            <td></td>
+                                                                            <td colSpan="4">AÑO: {autoevaluacion?.anio_vigencia}</td>
+                                                                        </tr>
+                                                                        <tr className="text-center">
+                                                                            <td className="fw-semibold">Resultado Promedio</td>
+                                                                            {statistics.map((area) => (
+                                                                                <td colSpan="2" className=" bg-opacity-10">{area.promedio.toFixed(2)}</td>
+                                                                            ))}
+                                                                        </tr>
+                                                                        <tr className="text-center">
+                                                                            <th></th>
+                                                                            <th>Cant.</th>
+                                                                            <th>%</th>
+                                                                            <th>Cant.</th>
+                                                                            <th>%</th>
+                                                                            <th>Cant.</th>
+                                                                            <th>%</th>
+                                                                            <th>Cant.</th>
+                                                                            <th>%</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {/* Existencia */}
+                                                                            <tr>
+                                                                                <td className="fw-semibold align-middle">Componentes en Existencia</td>
+                                                                                {statistics.map((area) => {
+                                                                                    const total = calcularTotalArea(area);
+                                                                                    return (
+                                                                                        <>
+                                                                                            <td className="text-center">{area.ponderados.Existencia || 0}</td>
+                                                                                            <td className="text-center">{calcularPorcentaje(area.ponderados.Existencia || 0, total)}%</td>
+                                                                                        </>
+                                                                                    );
+                                                                                })}
+                                                                            </tr>
+
+                                                                            {/* Pertinencia */}
+                                                                            <tr>
+                                                                                <td className="fw-semibold align-middle">Componentes en Pertinencia</td>
+                                                                                {statistics.map((area) => {
+                                                                                    const total = calcularTotalArea(area);
+                                                                                    return (
+                                                                                        <>
+                                                                                            <td className="text-center">{area.ponderados.Pertinencia || 0}</td>
+                                                                                            <td className="text-center">{calcularPorcentaje(area.ponderados.Pertinencia || 0, total)}%</td>
+                                                                                        </>
+                                                                                    );
+                                                                                })}
+                                                                            </tr>
+
+                                                                            {/* Apropiación */}
+                                                                            <tr>
+                                                                                <td className="fw-semibold align-middle">Componentes en Apropiación</td>
+                                                                                {statistics.map((area) => {
+                                                                                    const total = calcularTotalArea(area);
+                                                                                    return (
+                                                                                        <>
+                                                                                            <td className="text-center">{area.ponderados.Apropiación || 0}</td>
+                                                                                            <td className="text-center">{calcularPorcentaje(area.ponderados.Apropiación || 0, total)}%</td>
+                                                                                        </>
+                                                                                    );
+                                                                                })}
+                                                                            </tr>
+
+                                                                            {/* Mejoramiento */}
+                                                                            <tr>
+                                                                                <td className="fw-semibold align-middle">Componentes en Mejoramiento</td>
+                                                                                {statistics.map((area) => {
+                                                                                    const total = calcularTotalArea(area);
+                                                                                    return (
+                                                                                        <>
+                                                                                            <td className="text-center">{area.ponderados.Mejoramiento || 0}</td>
+                                                                                            <td className="text-center">{calcularPorcentaje(area.ponderados.Mejoramiento || 0, total)}%</td>
+                                                                                        </>
+                                                                                    );
+                                                                                })}
+                                                                            </tr>
+
+                                                                            {/* Total por áreas */}
+                                                                            <tr className="bg-light fw-bold">
+                                                                                <td className="text-end">Total</td>
+                                                                                {statistics.map((area) => (
+                                                                                    <>
+                                                                                        <td className="text-center">{calcularTotalArea(area)}</td>
+                                                                                        <td className="text-center">100%</td>
+                                                                                    </>
+                                                                                ))}
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
+
                             </div>
                         )}
                     </div>
