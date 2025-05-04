@@ -3,16 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GaGestionAulas extends Model
-{
+class GaGestionAulas extends Model implements Auditable {
+
+    use AuditingAuditable;
     protected $table = 'ga_gestion_aulas';
 
     public $with = [
+'historialesPei',
         // 'gestionAcademica',
         'anexoPlanesAula',
         'anexoTemasEnsenanza'
     ];
+    public $primaryKey = 'gestion_academica_id';
 
     protected $fillable = [
         'gestion_academica_id',
@@ -29,6 +34,10 @@ class GaGestionAulas extends Model
         return $this->belongsTo(GestionAcademica::class, 'gestion_academica_id');
     }
 
+    public function historialesPei()
+    {
+        return $this->morphMany(PeiHistorial::class, 'model');
+    }
     public function anexoPlanesAula()
     {
         return $this->belongsTo(Adjunto::class, 'anexos_planes_aula');

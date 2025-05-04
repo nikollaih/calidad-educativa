@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GestionAdministrativa extends Model {
+class GestionAdministrativa extends Model  implements Auditable {
+
+    use AuditingAuditable;
 
     protected $table = 'gestion_administrativa';
 

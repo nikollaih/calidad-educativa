@@ -33,7 +33,10 @@ class UpdatePeiResource extends JsonResource
                     ['sentido_pertenencia', 'induccion_institucional', 'actividades_extracurriculares', 'manejo_conflictos'],
                     ['manual_convivencia', 'anexo_programa_institucional_induccion']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('clima_escolar')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('clima_escolar'),
+                    'relation_name' => 'gestionDirectiva->climaEscolar'
+                ]
             ),
             'cultura_institucional' => array_merge(
                 $this->transformWithDocuments(
@@ -41,7 +44,10 @@ class UpdatePeiResource extends JsonResource
                     ['politica_comunicacion', 'politica_bienestar', 'inventario_buenas_practicas'],
                     ['anexo_cultura_institucional', 'anexo_politica_bienestar']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('cultura_institucional')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('cultura_institucional'),
+                    'relation_name' => 'gestionDirectiva->culturaInstitucional'
+                ]
             ),
             'direccionamiento_estrategico' => array_merge(
                 $this->transformWithDocuments(
@@ -49,14 +55,20 @@ class UpdatePeiResource extends JsonResource
                     ['mision', 'vision', 'principios_institucionales', 'metas_institucionales', 'politica_inclusion'],
                     ['anexo_politica_inclusion']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('direccionamiento_estrategico')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('direccionamiento_estrategico'),
+                    'relation_name' => 'gestionDirectiva->direccionamientoEstrategico'
+                ]
             ),
             'gestion_estrategica' => array_merge(
                 $this->transformSimple(
                     $this->gestionDirectiva->gestionEstrategica,
                     ['liderazgo', 'articulacion', 'seguimiento']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('gestion_estrategica')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('gestion_estrategica'),
+                    'relation_name' => 'gestionDirectiva->gestionEstrategica'
+                ]
             ),
             'gobierno_escolar' => array_merge(
                 $this->transformWithDocuments(
@@ -64,7 +76,10 @@ class UpdatePeiResource extends JsonResource
                     ['gobierno_escolar'],
                     ['anexo_gobierno_escolar']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('gobierno_escolar')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('gobierno_escolar'),
+                    'relation_name' => 'gestionDirectiva->gobiernoEscolar'
+                ]
             ),
             'relaciones_entorno' => array_merge(
                 $this->transformWithDocuments(
@@ -72,7 +87,10 @@ class UpdatePeiResource extends JsonResource
                     ['relacion_familias', 'seguimiento_egresados', 'alianzas_instituciones', 'alianzas_sector_productivo'],
                     ['anexo_alianzas_instituciones', 'anexo_alianzas_sector_productivo']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('relaciones_entorno')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('relaciones_entorno'),
+                    'relation_name' => 'gestionDirectiva->relacionesEntorno'
+                ]
             )
         ];
     }
@@ -88,14 +106,20 @@ class UpdatePeiResource extends JsonResource
                     ['ambientes_aprendizaje', 'motivacion_aprendizaje', 'plan_aula', 'evaluacion_aula'],
                     ['anexo_planes_aula', 'anexo_temas_ensenanza']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('gestion_aulas')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('gestion_aulas'),
+                    'relation_name' => 'gestionAcademica->gestionAulas'
+                ]
             ),
             'practicas_pedagogicas' => array_merge(
                 $this->transformSimple(
                     $this->gestionAcademica->practicasPedagogicas,
                     ['estrategias_tareas']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('practicas_pedagogicas')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('practicas_pedagogicas'),
+                    'relation_name' => 'gestionAcademica->practicasPedagogicas'
+                ]
             ),
             'seguimientos_academicos' => array_merge(
                 $this->transformWithDocuments(
@@ -103,7 +127,10 @@ class UpdatePeiResource extends JsonResource
                     ['seguimiento_desempenos', 'uso_evaluaciones_externas', 'apoyo_pedagogico'],
                     ['anexo_informe_estadistico', 'anexo_analisis_pruebas_externas', 'anexo_planes_mejoramiento']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('seguimientos_academicos')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('seguimientos_academicos'),
+                    'relation_name' => 'gestionAcademica->seguimientosAcademicos'
+                ]
             ),
             'disenos_pedagogicos' => array_merge(
                 $this->transformWithDocuments(
@@ -111,7 +138,10 @@ class UpdatePeiResource extends JsonResource
                     ['plan_estudios', 'enfoque_metodologico', 'estrategia_pedagogica', 'analisis_jornada_escolar', 'sistema_evaluacion'],
                     ['anexo_plan_estudios', 'anexo_enfoque_pedagogico', 'anexo_analisis_jornada', 'anexo_sistema_evaluacion']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('disenos_pedagogicos')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('disenos_pedagogicos'),
+                    'relation_name' => 'gestionAcademica->disenosPedagogicos'
+                ]
             )
         ];
     }
@@ -127,7 +157,10 @@ class UpdatePeiResource extends JsonResource
                     ['mantenimiento_infraestructura', 'dotacion_recursos_aprendizaje', 'programas_seguridad'],
                     ['anexo_mantenimiento_infraestructura', 'anexo_dotacion_recursos']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('administracion_planta_fisica')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('administracion_planta_fisica'),
+                    'relation_name' => 'gestionAdministrativa->administracionPlantaFisica'
+                ]
             ),
             'apoyo_financiero_contable' => array_merge(
                 $this->transformWithDocuments(
@@ -135,7 +168,10 @@ class UpdatePeiResource extends JsonResource
                     ['presupuesto_fse', 'contabilidad', 'contratacion', 'control_fiscal'],
                     ['anexo_presupuesto_fse', 'anexo_manual_contratacion']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('apoyo_financiero_contable')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('apoyo_financiero_contable'),
+                    'relation_name' => 'gestionAdministrativa->apoyoFinancieroContable'
+                ]
             ),
             'apoyo_gestion_academica' => array_merge(
                 $this->transformWithDocuments(
@@ -143,14 +179,20 @@ class UpdatePeiResource extends JsonResource
                     ['proceso_matricula', 'sistema_informacion_academica'],
                     ['anexo_acto_administrativo']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('apoyo_gestion_academica')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('apoyo_gestion_academica'),
+                    'relation_name' => 'gestionAdministrativa->apoyoGestionAcademica'
+                ]
             ),
             'servicios_complementarios' => array_merge(
                 $this->transformSimple(
                     $this->gestionAdministrativa->serviciosComplementarios,
                     ['estrategias_acceso_permanencia']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('servicios_complementarios')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('servicios_complementarios'),
+                    'relation_name' => 'gestionAdministrativa->serviciosComplementarios'
+                ]
             ),
             'talento_humano' => array_merge(
                 $this->transformWithDocuments(
@@ -158,7 +200,10 @@ class UpdatePeiResource extends JsonResource
                     ['perfiles_asignacion', 'programa_formacion_capacitacion', 'pertenencia_personal', 'evaluacion_desempeno', 'convivencia_manejo_conflictos'],
                     ['anexo_programa_formacion', 'anexo_informe_anual']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('talento_humano')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('talento_humano'),
+                    'relation_name' => 'gestionAdministrativa->talentoHumano'
+                ]
             )
         ];
     }
@@ -174,7 +219,10 @@ class UpdatePeiResource extends JsonResource
                     ['atencion_grupos_vulnerabilidad', 'necesidades_expectativas_estudiantes', 'proyectos_vida', 'escuela_padres', 'oferta_servicios_comunidad'],
                     ['anexo_proyecto_escuela_padres']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('atencion_grupo_poblacionales')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('atencion_grupo_poblacionales'),
+                    'relation_name' => 'atencionGrupoPoblacionales'
+                ]
             ),
             'prevencion_riesgos' => array_merge(
                 $this->transformWithDocuments(
@@ -182,7 +230,10 @@ class UpdatePeiResource extends JsonResource
                     ['prevencion_riesgos_fisicos', 'prevencion_riesgos_psicosociales'],
                     ['anexo_prevencion_riesgos_fisicos']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos'),
+                    'relation_name' => 'prevencionRiesgos'
+                ]
             ),
             'programas_servicio_social' => array_merge(
                 $this->transformWithDocuments(
@@ -190,7 +241,10 @@ class UpdatePeiResource extends JsonResource
                     ['programa_servicio_social'],
                     ['anexo_programa_servicio_social']
                 ),
-                ['nombre_gestion' => $this->obtieneNombreProceso('programas_servicio_social')]
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('programas_servicio_social'),
+                    'relation_name' => 'programasServicioSocial'
+                ]
             )
         ];
     }

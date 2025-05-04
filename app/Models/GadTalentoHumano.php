@@ -3,18 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GadTalentoHumano extends Model
-{
+class GadTalentoHumano extends Model implements Auditable {
+
+    use AuditingAuditable;
     /**
      * Nombre de la tabla asociada al modelo
      */
     protected $table = 'gad_talento_humano';
 
+    public $primaryKey = 'gestion_administrativa_id';
     /**
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
+'historialesPei',
         // 'gestionAdministrativa',
         'anexoProgramaFormacion',
         'anexoInformeAnual'
@@ -60,6 +65,10 @@ class GadTalentoHumano extends Model
         return $this->belongsTo(Adjunto::class, 'anexo_programa_formacion');
     }
 
+    public function historialesPei()
+    {
+        return $this->morphMany(PeiHistorial::class, 'model');
+    }
     /**
      * Anexo del informe anual
      */

@@ -12,7 +12,11 @@ use App\Models\GestionComunidad;
 use App\Models\GestionDirectiva;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
+use App\Models\PeiHistorial;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class InstitutionController extends Controller
 {
@@ -193,12 +197,8 @@ class InstitutionController extends Controller
         $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse->data->id;
         // Crea la institucion
         $institutionCreated = Institucion::create($institutionData);
-        $createPei = ['institution_id' => $institutionCreated->id];
         // crea las gestiones de PEI
-        GestionAcademica::create($createPei);
-        GestionComunidad::create($createPei);
-        GestionDirectiva::create($createPei);
-        GestionAdministrativa::create($createPei);
+        Institucion::createEmptyPeiFor($institutionCreated->id);
         // Sincroniza las redes sociales de la institucion
         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'],$institutionCreated);
 
@@ -305,20 +305,104 @@ class InstitutionController extends Controller
             'institucionId' => $institucion,
         ]);
     }
-    public function updatePei(Request $request, int $institucion) {
-        dd($request, $institucion);
-        $institucionData = Institucion::with([
+
+    public function updatePei(Request $request, $institutionId) {
+        DB::beginTransaction();
+
+        try {
+            // Validar los datos recibidos
+            $validated = $request->validate([
+                'tipo_codificacion' => 'required|integer',
+                'fecha' => 'required|date',
+                'observacion' => 'nullable|string|max:500',
+                'relation_name' => 'required|string',
+            ]);
+
+            $input = $request->all();
+            
+            // Obtener la institución con relaciones
+            $institucion = Institucion::with([
                 'gestionDirectiva',
-                'gestionAcademica',
+                'gestionAcademica', 
                 'gestionComunidad',
                 'gestionAdministrativa',
-            ])
-            ->where('id', $institucion)
-            ->first();
+            ])->findOrFail($institutionId);
 
-        return view('institutional_profile.institution.pei.update_pei', [
-            'institucionData' => new UpdatePeiResource($institucionData),
-            'institucionId' => $institucion,
-        ]);
+            // Definir propiedades a eliminar del input
+            $propiedadesAEliminar = [
+                'relation_name', 
+                'tipo_codificacion',
+                'fecha',
+                'observacion',
+                'institucion_id',
+                'hijo_index'
+            ];
+
+            // Filtrar datos para actualización
+            $dataToUpdate = array_diff_key($input, array_flip($propiedadesAEliminar));
+            
+            // Obtener el modelo objetivo
+            $relationPath = str_replace('->', '.', $input['relation_name']);
+            $model = data_get($institucion, $relationPath);
+            
+            if (!$model) {
+                throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
+            }
+
+            // 1. Capturar datos originales
+            $oldData = $model->getOriginal();
+            
+            // 2. Actualizar el modelo
+            $model->update($dataToUpdate);
+            
+            // 3. Obtener cambios
+            $newData = $model->getChanges();
+
+            // 4. Filtrar solo campos modificados
+            $changedFields = array_keys($newData);
+            $filteredOldData = array_intersect_key($oldData, array_flip($changedFields));
+
+            // 5. Crear registro de historial
+            $historial = PeiHistorial::create([
+                'model_id' => $model->getKey(),
+                'model_type' => get_class($model),
+                'attachment_id' => null,
+                'tipo_codificacion' => (int) $input['tipo_codificacion'],
+                'date' => Carbon::parse($input['fecha']),
+                'observation' => $input['observacion'],
+                'old_data' => $filteredOldData,
+                'new_data' => $newData,
+            ]);
+
+            // Procesar archivos subidos si es necesario
+            // if ($request->hasFile('documento')) {
+            //     $path = $request->file('documento')->store('pei_documents');
+            //     // Guardar referencia al archivo
+            // }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'PEI actualizado correctamente',
+                'changes' => count($changedFields),
+                'historial_id' => $historial->id
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error al actualizar PEI: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Error al actualizar el PEI: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

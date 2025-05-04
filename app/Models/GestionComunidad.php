@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GestionComunidad extends Model
-{
+class GestionComunidad extends Model implements Auditable {
+
+    use AuditingAuditable;
     /**
      * Nombre de la tabla asociada al modelo
      */

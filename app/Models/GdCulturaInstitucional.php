@@ -3,12 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GdCulturaInstitucional extends Model
-{
+class GdCulturaInstitucional extends Model implements Auditable {
+
+    use AuditingAuditable;
     protected $table = 'gd_cultura_institucional';
 
+    public $primaryKey = 'gestion_directiva_id';
+
     public $with = [
+'historialesPei',
         // 'gestionDirectiva',
         'anexoCulturaInstitucional',
         'anexoPoliticaBienestar'
@@ -33,6 +39,10 @@ class GdCulturaInstitucional extends Model
         return $this->belongsTo(Adjunto::class, 'anexo_cultura_institucional');
     }
 
+    public function historialesPei()
+    {
+        return $this->morphMany(PeiHistorial::class, 'model');
+    }
     public function anexoPoliticaBienestar()
     {
         return $this->belongsTo(Adjunto::class, 'anexo_politica_bienestar');
