@@ -9,7 +9,7 @@
         </div>
     @endif
 
-    <form id="vinculationForm" action="{{ route('educational-offer.make-vinculation', $allSedes->first()->id) }}" method="POST" enctype="multipart/form-data">
+    <form id="vinculationForm" action="{{ route('educational-offer.make-vinculation', $allSedes?->first()?->id ?? -1) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- Selección de sede -->

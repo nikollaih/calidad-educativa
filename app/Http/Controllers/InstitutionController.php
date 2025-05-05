@@ -31,7 +31,23 @@ class InstitutionController extends Controller
             ]
         );
     }
-
+    public function show(int $institucion)
+    {
+        $institucion = Institucion::with(
+            'licenciaFuncionamiento',
+            'redesSociales',
+            'sedes.levelSedeEducational.educationalLevel',
+            'sedes.levelSedeEducational.schedule',
+            'sedes.levelSedeEducational.schedule.anexo',
+            'sedes.educationalOffer'
+        )
+            ->where('id',$institucion)
+            ->first();
+        if (!$institucion) {
+            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+        }
+        return view('institutional_profile.institution.show', ['institution' => $institucion]);
+    }
     public function autoevaluaciones(int $institution = null)
     {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->get();
@@ -162,8 +178,6 @@ class InstitutionController extends Controller
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
 
     }
-
-
     public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null)
     {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
@@ -203,7 +217,6 @@ class InstitutionController extends Controller
        // $roles = Role::all();
         return view('institutional_profile.institution.create');
     }
-
     public function store(Request $request)
     {
 
@@ -234,10 +247,8 @@ class InstitutionController extends Controller
 
         return redirect()->back()->with('flash_success_message', 'Institución creada correctamente.');
     }
-
     public function edit(int $institucion)
     {
-
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -253,7 +264,6 @@ class InstitutionController extends Controller
          }
         return view('institutional_profile.institution.edit', ['institution' => $institucion]);
     }
-
     public function update(Request $request, int $institucion)
     {
          $institucionToUpdate = Institucion::with('redesSociales')
@@ -279,7 +289,6 @@ class InstitutionController extends Controller
 
         return redirect()->route('institution.edit',$institucion)->with('success', 'Institución actualizada correctamente.');
     }
-
     public function destroy(int $institucion)
     {
          $institucionToDel = Institucion::find($institucion);
@@ -291,11 +300,6 @@ class InstitutionController extends Controller
          $institucionToDel->delete();
          return redirect()->back()->with('success', 'Institución Eliminada correctamente.');
     }
-    public function show(int $institucion)
-    {
-        return redirect()->back()->with('success', 'Institución actualizada correctamente.');
-    }
-
     public function pei(int $institucion) {
         $institucionData = Institucion::with([
                 'gestionDirectiva',
@@ -318,7 +322,6 @@ class InstitutionController extends Controller
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
         ]);
     }
-
     public function peiManageInformation(int $institucion) {
         $institucionData = Institucion::with([
                 'gestionDirectiva',
