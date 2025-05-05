@@ -145,6 +145,28 @@ class SedeController extends Controller
 
         return view('institutional_profile.sede.edit',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels, 'availableSedes'=>$availableSedes]);
     }
+    public function show(int $institutionId = null,int $sede = null)
+    {
+        $sede = Sede::where('id',$sede)->with(
+            'administrativeAct',
+            'parentSede:id,name,dane',
+            'institution:id,nombre,dane',
+            'titularidadSede.adjunto',
+            'steamClassroom',
+            'inventories'
+        )->first();
+
+        if (empty($sede)){
+            return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
+        }
+        $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
+        $eduactionalModels = EducationalModel::get();
+
+        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
+
+        return view('institutional_profile.sede.show',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels, 'availableSedes'=>$availableSedes]);
+    }
+
 
     public function update(Request $request, int $sede = null)
     {
