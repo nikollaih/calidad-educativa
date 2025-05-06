@@ -35,7 +35,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('clima_escolar'),
-                    'relation_name' => 'gestionDirectiva->climaEscolar'
+                    'relation_name' => 'gestionDirectiva->climaEscolar',
+                    'traces' => $this->gestionDirectiva->climaEscolar?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'cultura_institucional' => array_merge(
@@ -46,7 +60,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('cultura_institucional'),
-                    'relation_name' => 'gestionDirectiva->culturaInstitucional'
+                    'relation_name' => 'gestionDirectiva->culturaInstitucional',
+                    'traces' => $this->gestionDirectiva->culturaInstitucional?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'direccionamiento_estrategico' => array_merge(
@@ -57,7 +85,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('direccionamiento_estrategico'),
-                    'relation_name' => 'gestionDirectiva->direccionamientoEstrategico'
+                    'relation_name' => 'gestionDirectiva->direccionamientoEstrategico',
+                    'traces' => $this->gestionDirectiva->direccionamientoEstrategico?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'gestion_estrategica' => array_merge(
@@ -67,7 +109,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('gestion_estrategica'),
-                    'relation_name' => 'gestionDirectiva->gestionEstrategica'
+                    'relation_name' => 'gestionDirectiva->gestionEstrategica',
+                    'traces' => $this->gestionDirectiva->gestionEstrategica?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'gobierno_escolar' => array_merge(
@@ -78,7 +134,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('gobierno_escolar'),
-                    'relation_name' => 'gestionDirectiva->gobiernoEscolar'
+                    'relation_name' => 'gestionDirectiva->gobiernoEscolar',
+                    'traces' => $this->gestionDirectiva->gobiernoEscolar?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'relaciones_entorno' => array_merge(
@@ -89,7 +159,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('relaciones_entorno'),
-                    'relation_name' => 'gestionDirectiva->relacionesEntorno'
+                    'relation_name' => 'gestionDirectiva->relacionesEntorno',
+                    'traces' => $this->gestionDirectiva->relacionesEntorno?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             )
         ];
@@ -108,7 +192,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('gestion_aulas'),
-                    'relation_name' => 'gestionAcademica->gestionAulas'
+                    'relation_name' => 'gestionAcademica->gestionAulas',
+                    'traces' => $this->gestionAcademica->gestionAulas?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'practicas_pedagogicas' => array_merge(
@@ -118,7 +216,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('practicas_pedagogicas'),
-                    'relation_name' => 'gestionAcademica->practicasPedagogicas'
+                    'relation_name' => 'gestionAcademica->practicasPedagogicas',
+                    'traces' => $this->gestionAcademica->practicasPedagogicas?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'seguimientos_academicos' => array_merge(
@@ -129,7 +241,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('seguimientos_academicos'),
-                    'relation_name' => 'gestionAcademica->seguimientosAcademicos'
+                    'relation_name' => 'gestionAcademica->seguimientosAcademicos',
+                    'traces' => $this->gestionAcademica->seguimientosAcademicos?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'disenos_pedagogicos' => array_merge(
@@ -140,7 +266,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('disenos_pedagogicos'),
-                    'relation_name' => 'gestionAcademica->disenosPedagogicos'
+                    'relation_name' => 'gestionAcademica->disenosPedagogicos',
+                    'traces' => $this->gestionAcademica->disenosPedagogicos?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             )
         ];
@@ -159,7 +299,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('administracion_planta_fisica'),
-                    'relation_name' => 'gestionAdministrativa->administracionPlantaFisica'
+                    'relation_name' => 'gestionAdministrativa->administracionPlantaFisica',
+                    'traces' => $this->gestionAdministrativa->administracionPlantaFisica?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'apoyo_financiero_contable' => array_merge(
@@ -170,7 +324,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('apoyo_financiero_contable'),
-                    'relation_name' => 'gestionAdministrativa->apoyoFinancieroContable'
+                    'relation_name' => 'gestionAdministrativa->apoyoFinancieroContable',
+                    'traces' => $this->gestionAdministrativa->apoyoFinancieroContable?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'apoyo_gestion_academica' => array_merge(
@@ -181,7 +349,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('apoyo_gestion_academica'),
-                    'relation_name' => 'gestionAdministrativa->apoyoGestionAcademica'
+                    'relation_name' => 'gestionAdministrativa->apoyoGestionAcademica',
+                    'traces' => $this->gestionAdministrativa->apoyoGestionAcademica?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'servicios_complementarios' => array_merge(
@@ -191,7 +373,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('servicios_complementarios'),
-                    'relation_name' => 'gestionAdministrativa->serviciosComplementarios'
+                    'relation_name' => 'gestionAdministrativa->serviciosComplementarios',
+                    'traces' => $this->gestionAdministrativa->serviciosComplementarios?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'talento_humano' => array_merge(
@@ -202,7 +398,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('talento_humano'),
-                    'relation_name' => 'gestionAdministrativa->talentoHumano'
+                    'relation_name' => 'gestionAdministrativa->talentoHumano',
+                    'traces' => $this->gestionAdministrativa->talentoHumano?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             )
         ];
@@ -221,7 +431,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('atencion_grupo_poblacionales'),
-                    'relation_name' => 'atencionGrupoPoblacionales'
+                    'relation_name' => 'atencionGrupoPoblacionales',
+                    'traces' => $this->gestionComunidad->atencionGrupoPoblacionales?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'prevencion_riesgos' => array_merge(
@@ -232,7 +456,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos'),
-                    'relation_name' => 'prevencionRiesgos'
+                    'relation_name' => 'prevencionRiesgos',
+                    'traces' => $this->gestionComunidad->prevencionRiesgos?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             ),
             'programas_servicio_social' => array_merge(
@@ -243,7 +481,21 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('programas_servicio_social'),
-                    'relation_name' => 'programasServicioSocial'
+                    'relation_name' => 'programasServicioSocial',
+                    'traces' => $this->gestionComunidad->programasServicioSocial?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
                 ]
             )
         ];

@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
+// Modal de editar
 const ModalAjustes = ({ 
   nombre_gestion, 
   institucionId, 
@@ -180,6 +181,203 @@ const ModalAjustes = ({
   );
 };
 
+// Modal de historial
+const ModalHistoricos = ({ 
+  traces,
+  nombre_gestion,
+  onClose
+}) => {
+  // Función para formatear la fecha
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+  
+
+  // Función para obtener el tipo de cambio
+  const getTipoCambio = (tipo) => {
+    const tipos = {
+      1: 'Inicial',
+      2: 'Resignificación',
+      3: 'Ajuste',
+      4: 'Error'
+    };
+    return tipos[tipo] || 'Desconocido';
+  };
+
+  // Función para parsear y comparar los datos
+  const parseChanges = (trace) => {
+    try {
+      // Normalizamos los datos (convertimos strings JSON a objetos si es necesario)
+      const normalizeData = (data) => {
+        if (typeof data === 'string') {
+          try {
+            return JSON.parse(data);
+          } catch (e) {
+            console.error('Error parsing JSON data:', e);
+            return {};
+          }
+        }
+        return data || {};
+      };
+  
+      const oldData = normalizeData(trace.changes.old_data);
+      const newData = normalizeData(trace.changes.new_data);
+      
+      // Eliminamos campos técnicos que no son relevantes para la comparación
+      const technicalFields = ['updated_at', 'created_at', 'id'];
+      technicalFields.forEach(field => {
+        delete oldData[field];
+        delete newData[field];
+      });
+  
+      // Objeto para almacenar los cambios detectados
+      const detectedChanges = {};
+      
+      // 1. Detectamos campos modificados o nuevos
+      Object.keys(newData).forEach(key => {
+        if (!oldData.hasOwnProperty(key) || JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
+          detectedChanges[key] = {
+            old_value: oldData[key] !== undefined ? oldData[key] : 'No existía',
+            new_value: newData[key] !== undefined ? newData[key] : 'Vacío',
+            status: oldData.hasOwnProperty(key) ? 'modified' : 'added'
+          };
+        }
+      });
+  
+      // 2. Detectamos campos eliminados (presentes en oldData pero no en newData)
+      Object.keys(oldData).forEach(key => {
+        if (!newData.hasOwnProperty(key)) {
+          detectedChanges[key] = {
+            old_value: oldData[key] !== undefined ? oldData[key] : 'Vacío',
+            new_value: 'Eliminado',
+            status: 'deleted'
+          };
+        }
+      });
+  
+      // Devolvemos un objeto con toda la información relevante
+      return {
+        model_id: trace.model_id,
+        model_type: trace.model_type,
+        date: trace.date,
+        tipo_codificacion: trace.tipo_codificacion,
+        observation: trace.observation,
+        changes: detectedChanges,
+        raw_data: {
+          old: oldData,
+          new: newData
+        }
+      };
+    } catch (error) {
+      console.error('Error processing trace:', error);
+      return {
+        error: 'Error processing changes',
+        trace_id: trace.model_id,
+        raw_data: trace
+      };
+    }
+  };
+
+  return (
+    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              <i className="fas fa-history me-2"></i>
+              HISTORIAL DE CAMBIOS - {nombre_gestion}
+            </h5>
+            <button type="button" className="btn-close" onClick={onClose} aria-label="Cerrar"></button>
+          </div>
+  
+          <div className="modal-body bg-white">
+            {traces && traces.length > 0 ? (
+              traces.map((trace, index) => {
+                const { changes: fieldChanges } = parseChanges(trace);
+  
+                return (
+                  <div className="card shadow-sm border mb-4" key={`trace-${index}`}>
+                    <div className="card-header bg-light d-flex justify-content-between align-items-center">
+                      <span className="badge bg-primary text-dark">
+                        {getTipoCambio(trace.tipo_codificacion)}
+                      </span>
+                      <small className="text-muted">
+                        <i className="far fa-clock me-1"></i>
+                        {formatDate(trace.date || trace.created_at)}
+                      </small>
+                    </div>
+  
+                    <div className="card-body">
+                    {trace.observation && (
+                      <div className="my-3 border rounded p-2">
+                        <i className="fas fa-comment me-2 text-muted"></i>
+                        {trace.observation}
+                      </div>
+                    )}
+  
+                      {Object.keys(fieldChanges).length > 0 ? (
+                        Object.entries(fieldChanges).map(([field, values]) => (
+                          <div className="mb-4" key={field}>
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                              <strong className="text-capitalize">{field.replace(/_/g, ' ')}</strong>
+                              {values.status !== 'modified' && (
+                                <span className={`badge ${
+                                  values.status === 'added' ? 'bg-success-subtle text-success' :
+                                  'bg-danger-subtle text-danger'
+                                } text-capitalize`}>
+                                  {values.status}
+                                </span>
+                              )}
+                            </div>
+  
+                            <div className="row">
+                              <div className="col-md-6 mb-2">
+                                <small className="text-muted d-block">Anterior</small>
+                                <div className="border rounded p-2 bg-light text-danger">
+                                  {values.old_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                </div>
+                              </div>
+                              <div className="col-md-6 mb-2">
+                                <small className="text-muted d-block">Nuevo</small>
+                                <div className="border rounded p-2 bg-light text-success">
+                                  {values.new_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-muted text-center">
+                          <i className="far fa-info-circle me-2"></i>
+                          No se detectaron cambios en los datos principales
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center py-5">
+                <i className="fas fa-history fa-4x text-muted mb-3"></i>
+                <h5 className="text-muted">No hay registros históricos</h5>
+                <p className="text-muted">No se han realizado cambios en esta gestión</p>
+              </div>
+            )}
+          </div>
+  
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
+              <i className="fas fa-times me-1"></i> Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  
+};
+
 export default function ActualizarPei({ 
   editarUrl = '#',
   institucionId = [],
@@ -195,9 +393,9 @@ export default function ActualizarPei({
     hijos: Object.values(value).flat().filter(item => typeof item === 'object' && item !== null)
   }));
 
-  
   const [activeTab, setActiveTab] = useState(0);
   const [currentModal, setCurrentModal] = useState(null);
+  const [historicosModal, setHistoricosModal] = useState(null);
 
   const getGestion = (valor) => {
     switch (valor) {
@@ -296,7 +494,7 @@ export default function ActualizarPei({
               {grupo.hijos?.length > 0 && (
                 <div>
                   {grupo.hijos.map((hijo, hijoIndex) => {
-                    const { documentos, nombre_gestion, ...otrosCampos } = hijo;
+                    const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
                     
                     return (
                       <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
@@ -310,9 +508,12 @@ export default function ActualizarPei({
                             >
                               <i className="fas fa-edit me-1"></i> Ajustes
                             </button>
-                            <button className="btn btn-sm btn-outline-secondary">
+                            <button 
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={() => setHistoricosModal({index, hijoIndex, nombre_gestion, traces})}
+                            >
                               <i className="fas fa-history me-1"></i> Históricos
-                            </button>
+                          </button>
                           </div>
                         </div>
                         
@@ -369,6 +570,14 @@ export default function ActualizarPei({
           documentos={currentModal.documentos}
           onClose={() => setCurrentModal(null)}
           onSave={(formData, files) => handleSave(institucionId, currentModal.gestionIndex, formData, files)}
+        />
+      )}
+       {/* Nuevo Modal de Históricos */}
+       {historicosModal && (
+        <ModalHistoricos
+          nombre_gestion={historicosModal.nombre_gestion}
+          traces={historicosModal.traces}
+          onClose={() => setHistoricosModal(null)}
         />
       )}
     </div>
