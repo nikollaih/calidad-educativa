@@ -14,6 +14,8 @@ class PeiHistorial extends Model
     use HasFactory, SoftDeletes;
 
     public $table = 'pei_historial';
+
+    public $with = ['attachment'];
     /**
      * The attributes that are mass assignable.
      *

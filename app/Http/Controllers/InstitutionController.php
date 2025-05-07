@@ -319,7 +319,7 @@ class InstitutionController extends Controller
             ]);
 
             $input = $request->all();
-            
+
             // Obtener la institución con relaciones
             $institucion = Institucion::with([
                 'gestionDirectiva',
@@ -340,7 +340,6 @@ class InstitutionController extends Controller
 
             // Filtrar datos para actualización
             $dataToUpdate = array_diff_key($input, array_flip($propiedadesAEliminar));
-            
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
@@ -348,37 +347,30 @@ class InstitutionController extends Controller
             if (!$model) {
                 throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
-
-            // 1. Capturar datos originales
+            // Capturar datos originales
             $oldData = $model->getOriginal();
-            
-            // 2. Actualizar el modelo
+            // Actualizar el modelo
             $model->update($dataToUpdate);
-            
-            // 3. Obtener cambios
-            $newData = $model->getChanges();
 
-            // 4. Filtrar solo campos modificados
+            /** Guarda traza */
+            // Obtener cambios
+            $newData = $model->getChanges();
+            // Filtrar solo campos modificados
             $changedFields = array_keys($newData);
             $filteredOldData = array_intersect_key($oldData, array_flip($changedFields));
-
-            // 5. Crear registro de historial
+            // Guarda documento de edicion
+            $guardaArchivoAdicional = $this->adjuntoService->storeAdjunto($request->file('documento_adicional'),"institucion/{$institutionId}/edicion_pei",'public');
+            // Crear registro de historial
             $historial = PeiHistorial::create([
                 'model_id' => $model->getKey(),
                 'model_type' => get_class($model),
-                'attachment_id' => null,
+                'attachment_id' => $guardaArchivoAdicional?->data?->id,
                 'tipo_codificacion' => (int) $input['tipo_codificacion'],
                 'date' => Carbon::parse($input['fecha']),
                 'observation' => $input['observacion'],
                 'old_data' => $filteredOldData,
                 'new_data' => $newData,
             ]);
-
-            // Procesar archivos subidos si es necesario
-            // if ($request->hasFile('documento')) {
-            //     $path = $request->file('documento')->store('pei_documents');
-            //     // Guardar referencia al archivo
-            // }
 
             DB::commit();
 

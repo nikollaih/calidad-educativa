@@ -31,7 +31,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionDirectiva->climaEscolar,
                     ['sentido_pertenencia', 'induccion_institucional', 'actividades_extracurriculares', 'manejo_conflictos'],
-                    ['manual_convivencia', 'anexo_programa_institucional_induccion']
+                    ['manualConvivencia', 'anexoProgramaInstitucionalInduccion']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('clima_escolar'),
@@ -45,6 +45,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -56,7 +57,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionDirectiva->culturaInstitucional,
                     ['politica_comunicacion', 'politica_bienestar', 'inventario_buenas_practicas'],
-                    ['anexo_cultura_institucional', 'anexo_politica_bienestar']
+                    ['anexoCulturaInstitucional', 'anexoPoliticaBienestar']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('cultura_institucional'),
@@ -70,6 +71,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -81,7 +83,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionDirectiva->direccionamientoEstrategico,
                     ['mision', 'vision', 'principios_institucionales', 'metas_institucionales', 'politica_inclusion'],
-                    ['anexo_politica_inclusion']
+                    ['anexoPoliticaInclusion']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('direccionamiento_estrategico'),
@@ -95,6 +97,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -119,6 +122,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -130,7 +134,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionDirectiva->gobiernoEscolar,
                     ['gobierno_escolar'],
-                    ['anexo_gobierno_escolar']
+                    ['anexoGobiernoEscolar']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('gobierno_escolar'),
@@ -144,6 +148,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -155,7 +160,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionDirectiva->relacionesEntorno,
                     ['relacion_familias', 'seguimiento_egresados', 'alianzas_instituciones', 'alianzas_sector_productivo'],
-                    ['anexo_alianzas_instituciones', 'anexo_alianzas_sector_productivo']
+                    ['anexoAlianzasInstituciones', 'anexoAlianzasSectorProductivo']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('relaciones_entorno'),
@@ -169,6 +174,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -188,7 +194,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAcademica->gestionAulas,
                     ['ambientes_aprendizaje', 'motivacion_aprendizaje', 'plan_aula', 'evaluacion_aula'],
-                    ['anexo_planes_aula', 'anexo_temas_ensenanza']
+                    ['anexoPlanesAula', 'anexoTemasEnsenanza']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('gestion_aulas'),
@@ -202,6 +208,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -226,6 +233,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -237,7 +245,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAcademica->seguimientosAcademicos,
                     ['seguimiento_desempenos', 'uso_evaluaciones_externas', 'apoyo_pedagogico'],
-                    ['anexo_informe_estadistico', 'anexo_analisis_pruebas_externas', 'anexo_planes_mejoramiento']
+                    ['anexoInformeEstadistico', 'anexoAnalisisPruebasExternas', 'anexoPlanesMejoramiento']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('seguimientos_academicos'),
@@ -251,6 +259,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -262,7 +271,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAcademica->disenosPedagogicos,
                     ['plan_estudios', 'enfoque_metodologico', 'estrategia_pedagogica', 'analisis_jornada_escolar', 'sistema_evaluacion'],
-                    ['anexo_plan_estudios', 'anexo_enfoque_pedagogico', 'anexo_analisis_jornada', 'anexo_sistema_evaluacion']
+                    ['anexoPlanEstudios', 'anexoEnfoquePedagogico', 'anexoAnalisisJornada', 'anexoSistemaEvaluacion']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('disenos_pedagogicos'),
@@ -276,6 +285,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -295,7 +305,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAdministrativa->administracionPlantaFisica,
                     ['mantenimiento_infraestructura', 'dotacion_recursos_aprendizaje', 'programas_seguridad'],
-                    ['anexo_mantenimiento_infraestructura', 'anexo_dotacion_recursos']
+                    ['anexoMantenimientoInfraestructura', 'anexoDotacionRecursos']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('administracion_planta_fisica'),
@@ -309,6 +319,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -320,7 +331,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAdministrativa->apoyoFinancieroContable,
                     ['presupuesto_fse', 'contabilidad', 'contratacion', 'control_fiscal'],
-                    ['anexo_presupuesto_fse', 'anexo_manual_contratacion']
+                    ['anexoPresupuestoFse', 'anexoManualContratacion']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('apoyo_financiero_contable'),
@@ -334,6 +345,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -345,7 +357,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAdministrativa->apoyoGestionAcademica,
                     ['proceso_matricula', 'sistema_informacion_academica'],
-                    ['anexo_acto_administrativo']
+                    ['anexoActoAdministrativo']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('apoyo_gestion_academica'),
@@ -359,6 +371,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -383,6 +396,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -394,7 +408,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionAdministrativa->talentoHumano,
                     ['perfiles_asignacion', 'programa_formacion_capacitacion', 'pertenencia_personal', 'evaluacion_desempeno', 'convivencia_manejo_conflictos'],
-                    ['anexo_programa_formacion', 'anexo_informe_anual']
+                    ['anexoProgramaFormacion', 'anexoInformeAnual']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('talento_humano'),
@@ -408,6 +422,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -427,7 +442,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionComunidad->atencionGrupoPoblacionales,
                     ['atencion_grupos_vulnerabilidad', 'necesidades_expectativas_estudiantes', 'proyectos_vida', 'escuela_padres', 'oferta_servicios_comunidad'],
-                    ['anexo_proyecto_escuela_padres']
+                    ['anexoProyectoEscuelaPadres']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('atencion_grupo_poblacionales'),
@@ -441,6 +456,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -452,7 +468,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionComunidad->prevencionRiesgos,
                     ['prevencion_riesgos_fisicos', 'prevencion_riesgos_psicosociales'],
-                    ['anexo_prevencion_riesgos_fisicos']
+                    ['anexoPrevencionRiesgosFisicos']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos'),
@@ -466,6 +482,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -477,7 +494,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionComunidad->programasServicioSocial,
                     ['programa_servicio_social'],
-                    ['anexo_programa_servicio_social']
+                    ['anexoProgramaServicioSocial']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('programas_servicio_social'),
@@ -491,6 +508,7 @@ class UpdatePeiResource extends JsonResource
                                 'new_data'          => $trace->new_data ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
                             'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
                             'date'              => $trace->date ?? 'Sin informacion',
                             'observation'       => $trace->observation ?? 'Sin informacion',
@@ -522,7 +540,7 @@ class UpdatePeiResource extends JsonResource
         $documents = [];
         foreach ($documentFields as $docField) {
             if (isset($model->{$docField})) {
-                $documents[$docField] = $model->{$docField};
+                $documents[$docField] = $model->{$docField}->only(['id', 'ruta', 'nombre_completo']);
             }
         }
 

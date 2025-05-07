@@ -8,10 +8,11 @@ const ModalAjustes = ({
   csrfToken, 
   formData, 
   setFormData, 
-  documentos,
+  documentos, 
   onClose,
   onSave
 }) => {
+  
   const [fileUploads, setFileUploads] = useState({});
 
   const handleSubmit = (e) => {
@@ -106,27 +107,69 @@ const ModalAjustes = ({
               <div className="mb-4 pt-3 border-top">
                 <h6 className="fw-bold mb-3">Documentos</h6>
                 <div className="row">
-                  {Object.entries(documentos).map(([docNombre, docValor]) => (
-                    <div className="col-md-6 mb-3" key={`edit-doc-${docNombre}`}>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-capitalize">{docNombre.replace(/_/g, ' ')}</span>
-                        <div>
-                          <span className="badge bg-primary rounded-pill me-2">{docValor}</span>
-                          <label className="btn btn-sm btn-outline-primary mb-0">
-                            <i className="fas fa-upload me-1"></i> Subir
-                            <input 
-                              type="file" 
-                              style={{display: 'none'}} 
-                              onChange={(e) => handleFileChange(docNombre, e)}
-                            />
-                          </label>
-                          {fileUploads[docNombre] && (
-                            <span className="ms-2">{fileUploads[docNombre].name}</span>
+                  {Object.entries(documentos)
+                    .filter(([key, value]) => 
+                      value && 
+                      typeof value === 'object' && 
+                      value.id && 
+                      !key.startsWith('__')
+                    )
+                    .map(([docKey, docData]) => {
+                      // Convertimos la key a snake_case si no lo está ya
+                      const snakeCaseKey = docKey
+                        .replace(/([A-Z])/g, '_$1')
+                        .toLowerCase()
+                        .replace(/^_/, '');
+                        
+                        // Creamos un nuevo objeto con la key original incluida
+                        const documentData = {
+                          ...docData,
+                          document_key: snakeCaseKey, // Añadimos la key en snake_case
+                          original_key: docKey // Conservamos la key original por si acaso
+                        };
+
+                      const { id, ruta, nombre_completo } = documentData;
+                      const nombreMostrar = docKey
+                        .replace(/([A-Z])/g, ' $1')
+                        .replace(/_/g, ' ')
+                        .trim()
+                        .toLowerCase()
+                        .replace(/\b\w/g, l => l.toUpperCase());
+                        
+                      return (
+                        <div className="col-md-6 mb-3" key={`edit-doc-${id}`}>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-capitalize">{nombreMostrar}</span>
+                            <div>
+                              <label className="btn btn-sm btn-outline-primary mb-0">
+                                <i className="fas fa-upload me-1"></i> Subir
+                                <input 
+                                  type="file" 
+                                  style={{display: 'none'}} 
+                                  onChange={(e) => handleFileChange(documentData, e)} // Pasamos el objeto completo
+                                />
+                              </label>
+                              {fileUploads[nombre_completo] && (
+                                <span className="ms-2">{fileUploads[nombre_completo].name}</span>
+                              )}
+                              {ruta && (
+                                <a 
+                                  href={`/storage/${ruta}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="btn btn-sm btn-outline-success ms-2"
+                                >
+                                  <i className="fas fa-eye me-1"></i> Ver
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                          {nombre_completo && (
+                            <small className="text-muted d-block">{nombre_completo}</small>
                           )}
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })}
                 </div>
               </div>
             )}
@@ -192,7 +235,6 @@ const ModalHistoricos = ({
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
   };
-  
 
   // Función para obtener el tipo de cambio
   const getTipoCambio = (tipo) => {
@@ -315,6 +357,19 @@ const ModalHistoricos = ({
                         {trace.observation}
                       </div>
                     )}
+                    {trace.attachment_url && (
+                      <div className="my-3 border rounded p-2">
+                        <i className="fas fa-file-signature me-2 text-muted"></i>
+                        <a 
+                          href={`/storage/${trace.attachment_url}`} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-decoration-none text-primary"
+                        >
+                          Ver documento adicional
+                        </a>
+                      </div>
+                    )}
   
                       {Object.keys(fieldChanges).length > 0 ? (
                         Object.entries(fieldChanges).map(([field, values]) => (
@@ -376,7 +431,7 @@ const ModalHistoricos = ({
     </div>
   );
   
-};
+}; 
 
 export default function ActualizarPei({ 
   editarUrl = '#',
@@ -392,6 +447,8 @@ export default function ActualizarPei({
     data: value,
     hijos: Object.values(value).flat().filter(item => typeof item === 'object' && item !== null)
   }));
+  console.log('gestionArray', gestionArray);
+  
 
   const [activeTab, setActiveTab] = useState(0);
   const [currentModal, setCurrentModal] = useState(null);
@@ -541,9 +598,20 @@ export default function ActualizarPei({
                               {Object.entries(documentos).map(([docNombre, docValor]) => (
                                 <div className="d-inline-block mx-3 mb-2" key={docNombre}>
                                   <div className="fw-semibold text-capitalize">
-                                    {docNombre.replace(/_/g, ' ')}:
+                                    {docNombre
+                                      .replace(/([A-Z])/g, ' $1')  // Inserta espacio antes de mayúsculas
+                                      .replace(/^./, str => str.toUpperCase())  // Primera letra mayúscula
+                                      .replace(/_/g, ' ')  // Reemplaza guiones bajos
+                                      .trim()}
                                   </div>
-                                  <span className="badge bg-primary rounded-pill">{docValor}</span>
+                                  <a 
+                                    href={`/storage/${docValor.ruta}`} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="badge bg-primary rounded-pill text-decoration-none"
+                                  >
+                                    Ver documento
+                                  </a>
                                 </div>
                               ))}
                             </div>
