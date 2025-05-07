@@ -94,9 +94,7 @@
                                             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">4. GESTIÓN DE LA COMUNIDAD</button>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">
-                                                5. ACTUALIZAR INFORMACIÓN
-                                            </a>
+                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">5. ACTUALIZAR INFORMACIÓN</a>
                                         </li>
                                     </ul>
                                 </div>
