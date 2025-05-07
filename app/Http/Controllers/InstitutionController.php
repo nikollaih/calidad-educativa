@@ -302,11 +302,6 @@ class InstitutionController extends Controller
          return redirect()->back()->with('success', 'Institución Eliminada correctamente.');
     }
 
-    public function show(int $institucion)
-    {
-        return redirect()->back()->with('success', 'Institución actualizada correctamente.');
-    }
-
     public function pei(int $institucion) {
         $institucionData = Institucion::with([
                 'gestionDirectiva',
@@ -361,14 +356,14 @@ class InstitutionController extends Controller
             // Obtener la institución con relaciones
             $institucion = Institucion::with([
                 'gestionDirectiva',
-                'gestionAcademica', 
+                'gestionAcademica',
                 'gestionComunidad',
                 'gestionAdministrativa',
             ])->findOrFail($institutionId);
 
             // Definir propiedades a eliminar del input
             $propiedadesAEliminar = [
-                'relation_name', 
+                'relation_name',
                 'tipo_codificacion',
                 'fecha',
                 'observacion',
@@ -381,7 +376,7 @@ class InstitutionController extends Controller
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
-            
+
             if (!$model) {
                 throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
@@ -425,7 +420,7 @@ class InstitutionController extends Controller
                 'success' => false,
                 'errors' => $e->errors()
             ], 422);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error al actualizar PEI: " . $e->getMessage());
