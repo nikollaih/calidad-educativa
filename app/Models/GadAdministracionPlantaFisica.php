@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GadAdministracionPlantaFisica extends Model
-{
+class GadAdministracionPlantaFisica extends Model implements Auditable {
+
+    use AuditingAuditable;
 
     protected $table = 'gad_administracion_planta_fisica';
 
@@ -13,8 +16,10 @@ class GadAdministracionPlantaFisica extends Model
         // 'gestionAdministrativa',
         'anexoMantenimientoInfraestructura',
         'anexoDotacionRecursos',
+        'historialesPei',
     ];
 
+    public $primaryKey = 'gestion_administrativa_id';
     protected $fillable = [
         'gestion_administrativa_id',
         'mantenimiento_infraestructura',
@@ -37,6 +42,11 @@ class GadAdministracionPlantaFisica extends Model
     public function gestionAdministrativa()
     {
         return $this->belongsTo(GestionAdministrativa::class, 'gestion_administrativa_id');
+    }
+
+    public function historialesPei()
+    {
+        return $this->morphMany(PeiHistorial::class, 'model');
     }
 
     /**

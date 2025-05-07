@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\RedSocialMorphRelacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Institucion extends Model
 {
@@ -54,5 +55,53 @@ class Institucion extends Model
 
     public function gestionAdministrativa() {
         return $this->hasOne(GestionAdministrativa::class, 'institution_id');
+    }
+
+    
+    /**
+     * Crea una estructura PEI vacía para la institución
+     */
+    public function createEmptyPei(): void
+    {
+        // Usar transacción para asegurar integridad de datos
+        DB::transaction(function () {
+            // Crear gestión directiva con sus relaciones
+            $gestionDirectiva = $this->gestionDirectiva()->create();
+            $gestionDirectiva->climaEscolar()->create();
+            $gestionDirectiva->culturaInstitucional()->create();
+            $gestionDirectiva->direccionamientoEstrategico()->create();
+            $gestionDirectiva->gestionEstrategica()->create();
+            $gestionDirectiva->gobiernoEscolar()->create();
+            $gestionDirectiva->relacionesEntorno()->create();
+
+            // Crear gestión académica con sus relaciones
+            $gestionAcademica = $this->gestionAcademica()->create();
+            $gestionAcademica->gestionAulas()->create();
+            $gestionAcademica->practicasPedagogicas()->create();
+            $gestionAcademica->seguimientosAcademicos()->create();
+            $gestionAcademica->disenosPedagogicos()->create();
+
+            // Crear gestión de comunidad con sus relaciones
+            $gestionComunidad = $this->gestionComunidad()->create();
+            $gestionComunidad->atencionGrupoPoblacionales()->create();
+            $gestionComunidad->prevencionRiesgos()->create();
+            $gestionComunidad->programasServicioSocial()->create();
+
+            // Crear gestión administrativa con sus relaciones
+            $gestionAdministrativa = $this->gestionAdministrativa()->create();
+            $gestionAdministrativa->administracionPlantaFisica()->create();
+            $gestionAdministrativa->apoyoFinancieroContable()->create();
+            $gestionAdministrativa->apoyoGestionAcademica()->create();
+            $gestionAdministrativa->serviciosComplementarios()->create();
+            $gestionAdministrativa->talentoHumano()->create();
+        });
+    }
+
+    /**
+     * Método estático para crear PEI desde ID de institución
+     */
+    public static function createEmptyPeiFor(int $institucionId): void {
+        $institution = static::findOrFail($institucionId);
+        $institution->createEmptyPei();
     }
 }

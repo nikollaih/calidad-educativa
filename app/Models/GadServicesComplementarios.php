@@ -3,18 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GadServicesComplementarios extends Model
-{
+class GadServicesComplementarios extends Model implements Auditable {
+
+    use AuditingAuditable;
     /**
      * Nombre de la tabla asociada al modelo
      */
     protected $table = 'gad_servicios_complementarios';
 
+    public $primaryKey = 'gestion_administrativa_id';
     /**
      * Relaciones que se cargarán automáticamente
      */
     public $with = [
+'historialesPei',
         // 'gestionAdministrativa'
     ];
 
@@ -28,6 +33,10 @@ class GadServicesComplementarios extends Model
         'updated_at'
     ];
 
+    public function historialesPei()
+    {
+        return $this->morphMany(PeiHistorial::class, 'model');
+    }
     /**
      * Conversiones de tipos
      */
