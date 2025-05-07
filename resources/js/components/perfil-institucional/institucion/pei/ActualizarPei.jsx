@@ -625,6 +625,17 @@ export default function ActualizarPei({
             </div>
           ))}
         </div>
+        
+        {/* Boton de volver */}
+        <div class="d-flex justify-content-end mt-4">
+  <button 
+    onClick={() => window.history.back()} 
+    class="btn btn-secondary"
+  >
+    <i class="fas fa-arrow-left me-2"></i> Volver
+  </button>
+</div>
+
       </div>
 
       {/* Modal de Ajustes */}
