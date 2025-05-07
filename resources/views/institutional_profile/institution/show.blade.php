@@ -10,35 +10,31 @@
                     @endif
         <div class="card">
             <div class="card-header">
-                <h1>Editar Institución</h1>
+                <h1>Ver Institución</h1>
             </div>
             <div class="card-body">
-                <form action="{{ route('institution.update',$institution->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
+                <form >
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)</label>
-
-                                <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" required>
+                                <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
+                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="dane" class="form-label">Código DANE</label>
-                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" required>
+                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" name="email" class="form-control" value="{{ $institution->email }}" required>
+                                <input type="email" name="email" class="form-control" value="{{ $institution->email }}" disabled>
                             </div>
                         </div>
 
@@ -46,12 +42,12 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} required>
+                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}">
+                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}" disabled>
                             </div>
 
                             <div class="mb-3">
@@ -63,18 +59,17 @@
                                         </a>
                                     @endif
                                 </div>
-                                <input type="file" name="licencia_funcionamiento" class="form-control mt-2" accept="application/pdf" >
                             </div>
 
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
-                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" required>
+                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="nombre_coordinador" class="form-label">Nombre del Coordinador/es</label>
-                                <input type="text" name="nombre_coordinadores" class="form-control" value="{{ $institution->nombre_coordinadores}}">
+                                <input type="text" name="nombre_coordinadores" class="form-control" value="{{ $institution->nombre_coordinadores}}" disabled>
                             </div>
                         </div>
                     </div>
@@ -114,7 +109,7 @@
                                             <!-- Input para la URL con el valor correcto -->
                                             <input type="url" name="redes_sociales[{{ $key }}][url]" class="form-control"
                                                    placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
-                                                   value="{{ $social['url'] ?? '' }}">
+                                                   value="{{ $social['url'] ?? '' }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -122,16 +117,6 @@
 
 
                         </div>
-                    </div>
-
-                    <!-- Botones de acción -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save "></i> Guardar
-                        </button>
-                        <a href="{{ route('institution.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </a>
                     </div>
                 </form>
             </div>

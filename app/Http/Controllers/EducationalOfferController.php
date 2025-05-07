@@ -266,7 +266,7 @@ class EducationalOfferController extends Controller
         $allSedes = Sede::select('id','name')->get();
 
         $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[
-            EducationalOfferLevelCategoryEnum::Emphasis->value, 
+            EducationalOfferLevelCategoryEnum::Emphasis->value,
             EducationalOfferLevelCategoryEnum::Agreement->value,
             EducationalOfferLevelCategoryEnum::PreSchool->value,
             EducationalOfferLevelCategoryEnum::Primary->value,
@@ -283,6 +283,32 @@ class EducationalOfferController extends Controller
             'educationalSchedules' => $educationalSchedules
         ]);
     }
+    public function vinculationShow(int $levelSedeId = null)
+    {
+        $levelSede = LevelSedeEducational::with([
+            'educationalLevel',
+            'schedule',
+            'schedule.anexo',
+            'sede:id,name,institution_id',
+            'sede.institution:id'
+        ])
+            ->where('id',$levelSedeId)
+            ->first();
+
+        if(empty($levelSedeId))
+            return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
+
+        $selectedSede = $levelSede->sede;
+        $educationalCategories = EducationalOfferLevelCategoryEnum::toArray();
+        $educationalSchedules = EducationalOfferScheduleEnum::toArray();
+        return view('institutional_profile.educational_offer.vinculate_show',
+            [
+                'levelSede' => $levelSede,
+                'selectedSede' => $selectedSede,
+                'educationalCategories' => $educationalCategories,
+                'educationalSchedules' => $educationalSchedules
+            ]);
+    }
     public function vinculationDestroy(int $levelSedeId = null)
     {
         $levelSede = LevelSedeEducational::where('id',$levelSedeId)->first();
@@ -292,7 +318,7 @@ class EducationalOfferController extends Controller
         $levelSede->schedule->delete();
         $levelSede->educationalLevel->delete();
         $levelSede->delete();
-        
+
          return redirect()->back()->with('success', 'Vinculación de oferta educativa eliminada correctamente.');
     }
     public function updateVinculation(Request $request, int $levelSede = null)
