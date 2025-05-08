@@ -1,269 +1,664 @@
 import { h } from 'preact';
-import {useEffect, useState} from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
-export default function ActualizarPei({  editarUrl = '#',
-                                  gruposCalificaciones = [],
-                                  csrfToken = '',
-                                  autoevaluacion = {}
-                        }) {
+// Modal de editar
+const ModalAjustes = ({ 
+  nombre_gestion, 
+  institucionId, 
+  csrfToken, 
+  formData, 
+  setFormData, 
+  documentos, 
+  onClose,
+  onSave
+}) => {
+  
+  const [fileUploads, setFileUploads] = useState({});
 
-    const [activeTab, setActiveTab] = useState(0);
-    const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
-    const [evidencias, setEvidencias] = useState({});
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData, fileUploads);
+  };
 
-    const getColorClass = (valor) => {
-        switch (valor) {
-            case 1: return 'bg-danger';
-            case 2: return 'bg-warning';
-            case 3: return 'bg-primary';
-            case 4: return 'bg-success';
-            default: return 'bg-secondary';
-        }
-    };
+  const handleFileChange = (fieldName, e) => {
+    setFileUploads({
+      ...fileUploads,
+      [fieldName]: e.target.files[0]
+    });
+  };
 
-    const getCategoria = (valor) => {
-        switch (valor) {
-            case 1: return 'Existencia';
-            case 2: return 'Pertinencia';
-            case 3: return 'Apropiación';
-            case 4: return 'Mejoramiento';
-            default: return 'Null';
-        }
-    };
+  const tipoCodificacionOptions = [
+    { value: 1, label: 'Inicial' },
+    { value: 2, label: 'Resignificacion' },
+    { value: 3, label: 'Ajuste' },
+    { value: 4, label: 'Error' },
+  ];
 
-    const handleNotaClick = (calId, nota) => {
-        setNotasSeleccionadas(prev => {
-            const notaActual = prev[calId];
-            if (notaActual?.id === nota.id) {
-                const newNotas = { ...prev };
-                delete newNotas[calId];
-                return newNotas;
-            }
-            return {
-                ...prev,
-                [calId]: nota
-            };
-        });
-    };
-
-    const handleEvidenciaChange = (calId, e) => {
-        setEvidencias(prev => ({
-            ...prev,
-            [calId]: e
-        }));
-    };
-
-    const calcularPromedio = (hijo) => {
-        if (!hijo.calificaciones?.length) return null;
-
-        const total = hijo.calificaciones.reduce((acc, cal) => {
-            const nota = notasSeleccionadas[cal.id]?.valor || 0;
-            return acc + nota;
-        }, 0);
-
-        const promedio = total / hijo.calificaciones.length;
-        return promedio.toFixed(2);
-    };
-    const calcularPromedioGrupo = (grupo) => {
-        if (!grupo.hijos?.length) return null;
-
-        const promedios = grupo.hijos.map(hijo => {
-            if (!hijo.calificaciones?.length) return null;
-
-            const total = hijo.calificaciones.reduce((acc, cal) => {
-                const nota = notasSeleccionadas[cal.id]?.valor || 0;
-                return acc + nota;
-            }, 0);
-            return total / hijo.calificaciones.length;
-        }).filter(p => p !== null);
-
-        if (!promedios.length) return null;
-
-        const totalPromedios = promedios.reduce((acc, val) => acc + val, 0);
-        return (totalPromedios / promedios.length).toFixed(2);
-    };
-
-    useEffect(() => {
-        if (autoevaluacion?.notas?.length) {
-            autoevaluacion.notas.forEach(nota => {
-                handleNotaClick(nota?.calificacion?.id,nota);
-                handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
-            });
-        }
-        console.log(autoevaluacion);
-    }, [autoevaluacion]);
-
-    return (
-        <div class="container mt-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Editar Autoevaluación</h2>
-            </div>
-            <form method="POST" action={editarUrl}>
-                <input type="hidden" name="_token" value={csrfToken} />
-
-                <div class="mb-4 d-flex row">
-                    <label className="form-label" htmlFor="anio-vigencia">Año de Vigencia: {autoevaluacion?.anio_vigencia}</label>
-                    <label className="form-label" htmlFor="estado">Estado: {autoevaluacion?.alias_estado}</label>
-                </div>
-                <div class="mb-4">
-                    <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
-                        {gruposCalificaciones.map((grupo, index) => (
-                            <li class="nav-item" key={`tab-${grupo.id}`}>
-                                <button
-                                    className={`nav-link ${activeTab === index ? 'active' : ''}`}
-                                    onClick={() => setActiveTab(index)}
-                                    type="button"
-                                    role="tab"
-                                >
-                                    <span>{grupo.indice} {grupo.nombre}</span>
-                                    {grupo.hijos?.length > 0 && (
-                                        <span class="badge bg-dark ms-2">
-                                            Total: {calcularPromedioGrupo(grupo)}
-                                    </span>
-                                    )}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-
-                    <div class="border border-top-0 rounded-bottom p-3">
-                        {gruposCalificaciones.map((grupo, index) => (
-                            <div
-                                key={`content-${grupo.id}`}
-                                style={{display: activeTab === index ? 'block' : 'none'}}
-                            >
-                                {grupo.calificaciones?.length > 0 && (
-                                    <>
-                                        <h6 class="text-muted">Calificaciones</h6>
-                                        <ul class="list-group mb-3">
-                                            {grupo.calificaciones.map((calificacion) => (
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center"
-                                                    key={calificacion.id}
-                                                >
-                                                    {calificacion.nombre}
-                                                    <span class="badge bg-secondary">
-                                                        {calificacion.valor ?? 'N/A'}
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </>
-                                )}
-
-                                {grupo.hijos?.length > 0 && (
-                                    <div>
-                                        {grupo.hijos.map((hijo) => (
-                                            <div class="mb-4 p-3 border rounded" key={hijo.id}>
-                                                <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
-                                                {hijo.calificaciones?.length > 0 ? (
-                                                    <>
-                                                        <ul class="list-group">
-                                                            {hijo.calificaciones.map((cal) => {
-                                                                const notaSeleccionada = notasSeleccionadas[cal.id];
-                                                                return (
-                                                                    <li className="list-group-item">
-                                                                        <div className="row g-3">
-                                                                            {/* Nombre de calificación */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <strong>{cal.indice}</strong>
-                                                                                <div>{cal.nombre}</div>
-                                                                            </div>
-
-                                                                            {/* Notas seleccionables */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
-                                                                                <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
-                                                                                    {cal.notas_calificacion
-                                                                                        .sort((a, b) => a.valor - b.valor)
-                                                                                        .map(nota => (
-                                                                                            <div
-                                                                                                key={nota.id}
-                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                style={{ cursor: 'pointer' }}
-                                                                                                onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                            >
-                                                                                                {nota.valor}
-                                                                                            </div>
-                                                                                        ))}
-                                                                                </div>
-                                                                            </div>
-
-
-                                                                            {/* Categoría y valor */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
-                                                                                {notaSeleccionada ? (
-                                                                                    <>
-                                                                                        <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
-                                                                                            {notaSeleccionada.valor}
-                                                                                        </span>
-                                                                                        <div>
-                                                                                            <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
-                                                                                        </div>
-                                                                                    </>
-                                                                                ) : (
-                                                                                    <div className="text-muted">No seleccionado</div>
-                                                                                )}
-                                                                            </div>
-
-
-                                                                            {/* Evidencia */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="form-label">Evidencia</label>
-                                                                                <textarea
-                                                                                    id={`evidencia-${cal.id}`}
-                                                                                    className="form-control"
-                                                                                    rows="1"
-                                                                                    maxLength="400"
-                                                                                    value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
-                                                                                ></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                );
-                                                            })}
-                                                        </ul>
-
-                                                        {/* Total proceso siempre visible */}
-                                                        <div class="mt-3 p-3 bg-light rounded border">
-                                                            <strong>Total proceso:</strong>{' '}
-                                                            <span class="badge bg-dark">
-                                                                {calcularPromedio(hijo)}
-                                                            </span>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <small class="text-muted">Sin calificaciones</small>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
-                    <div key={`nota-hidden-${calId}`}>
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][nota_calificacion_id]`}
-                            value={nota.id}
-                        />
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][evidencia]`}
-                            value={evidencias[calId] || ''}
-                        />
-                    </div>
-                ))}
-
-
-                <button type="submit" className="btn btn-primary mt-4">
-                    Guardar Autoevaluación
-                </button>
-            </form>
+  return (
+    <div className="modal fade show d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+    <div className="modal-dialog modal-lg modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">EDITAR {nombre_gestion}</h5>
+          <button 
+            type="button" 
+            className="btn-close" 
+            onClick={onClose}
+            aria-label="Cerrar"
+          ></button>
         </div>
-    );
+        <div className="modal-body">
+          <form onSubmit={handleSubmit}>
+            <input type="hidden" name="_token" value={csrfToken} />
+            
+            {/* Sección superior: Tipo de codificación y Fecha */}
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label text-capitalize">Tipo de codificación</label>
+                  <select
+                    className="form-select"
+                    value={formData.tipo_codificacion || ''}
+                    onChange={(e) => setFormData({...formData, tipo_codificacion: e.target.value})}
+                    required
+                  >
+                    {tipoCodificacionOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label text-capitalize">Fecha</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={formData.fecha || ''}
+                    onChange={(e) => setFormData({...formData, fecha: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+  
+            {/* Sección central: Campos del formulario en 2 columnas */}
+            <div className="row mb-4">
+              {Object.entries(formData).map(([clave, valor]) => {
+                if (['tipo_codificacion', 'fecha', 'observacion', 'relation_name'].includes(clave)) return null;
+                
+                return (
+                  <div className="col-md-6 mb-3" key={`edit-${clave}`}>
+                    <label className="form-label text-capitalize">{clave.replace(/_/g, ' ')}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={valor || ''}
+                      onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+  
+            {/* Sección de documentos */}
+            {documentos && (
+              <div className="mb-4 pt-3 border-top">
+                <h6 className="fw-bold mb-3">Documentos</h6>
+                <div className="row">
+                  {Object.entries(documentos)
+                    .filter(([key, value]) => 
+                      value && 
+                      typeof value === 'object' && 
+                      value.id && 
+                      !key.startsWith('__')
+                    )
+                    .map(([docKey, docData]) => {
+                      // Convertimos la key a snake_case si no lo está ya
+                      const snakeCaseKey = docKey
+                        .replace(/([A-Z])/g, '_$1')
+                        .toLowerCase()
+                        .replace(/^_/, '');
+                        
+                        // Creamos un nuevo objeto con la key original incluida
+                        const documentData = {
+                          ...docData,
+                          document_key: snakeCaseKey, // Añadimos la key en snake_case
+                          original_key: docKey // Conservamos la key original por si acaso
+                        };
+
+                      const { id, ruta, nombre_completo } = documentData;
+                      const nombreMostrar = docKey
+                        .replace(/([A-Z])/g, ' $1')
+                        .replace(/_/g, ' ')
+                        .trim()
+                        .toLowerCase()
+                        .replace(/\b\w/g, l => l.toUpperCase());
+                        
+                      return (
+                        <div className="col-md-6 mb-3" key={`edit-doc-${id}`}>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-capitalize">{nombreMostrar}</span>
+                            <div>
+                              <label className="btn btn-sm btn-outline-primary mb-0">
+                                <i className="fas fa-upload me-1"></i> Subir
+                                <input 
+                                  type="file" 
+                                  style={{display: 'none'}} 
+                                  onChange={(e) => handleFileChange(documentData, e)} // Pasamos el objeto completo
+                                />
+                              </label>
+                              {fileUploads[nombre_completo] && (
+                                <span className="ms-2">{fileUploads[nombre_completo].name}</span>
+                              )}
+                              {ruta && (
+                                <a 
+                                  href={`/storage/${ruta}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="btn btn-sm btn-outline-success ms-2"
+                                >
+                                  <i className="fas fa-eye me-1"></i> Ver
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                          {nombre_completo && (
+                            <small className="text-muted d-block">{nombre_completo}</small>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+  
+            {/* Sección inferior: Observación y campo de documento adicional */}
+            <div className="row mt-3">
+              <div className="col-md-12 mb-3">
+                <label className="form-label text-capitalize">Observación</label>
+                <textarea
+                  className="form-control"
+                  value={formData.observacion || ''}
+                  onChange={(e) => setFormData({...formData, observacion: e.target.value})}
+                  rows="3"
+                />
+              </div>
+              
+              {/* Campo adicional para subir documento */}
+              <div className="col-md-12 mb-3">
+                <label className="form-label text-capitalize">Documento anexo</label>
+                <div className="input-group">
+                  <input 
+                    type="file" 
+                    className="form-control"
+                    onChange={(e) => handleFileChange('documento_adicional', e)}
+                  />
+                  {fileUploads['documento_adicional'] && (
+                    <span className="input-group-text">
+                      {fileUploads['documento_adicional'].name}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="modal-footer">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={onClose}
+              >
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  );
+};
+
+// Modal de historial
+const ModalHistoricos = ({ 
+  traces,
+  nombre_gestion,
+  onClose
+}) => {
+  // Función para formatear la fecha
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  // Función para obtener el tipo de cambio
+  const getTipoCambio = (tipo) => {
+    const tipos = {
+      1: 'Inicial',
+      2: 'Resignificación',
+      3: 'Ajuste',
+      4: 'Error'
+    };
+    return tipos[tipo] || 'Desconocido';
+  };
+
+  // Función para parsear y comparar los datos
+  const parseChanges = (trace) => {
+    try {
+      // Normalizamos los datos (convertimos strings JSON a objetos si es necesario)
+      const normalizeData = (data) => {
+        if (typeof data === 'string') {
+          try {
+            return JSON.parse(data);
+          } catch (e) {
+            console.error('Error parsing JSON data:', e);
+            return {};
+          }
+        }
+        return data || {};
+      };
+  
+      const oldData = normalizeData(trace.changes.old_data);
+      const newData = normalizeData(trace.changes.new_data);
+      
+      // Eliminamos campos técnicos que no son relevantes para la comparación
+      const technicalFields = ['updated_at', 'created_at', 'id'];
+      technicalFields.forEach(field => {
+        delete oldData[field];
+        delete newData[field];
+      });
+  
+      // Objeto para almacenar los cambios detectados
+      const detectedChanges = {};
+      
+      // 1. Detectamos campos modificados o nuevos
+      Object.keys(newData).forEach(key => {
+        if (!oldData.hasOwnProperty(key) || JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
+          detectedChanges[key] = {
+            old_value: oldData[key] !== undefined ? oldData[key] : 'No existía',
+            new_value: newData[key] !== undefined ? newData[key] : 'Vacío',
+            status: oldData.hasOwnProperty(key) ? 'modified' : 'added'
+          };
+        }
+      });
+  
+      // 2. Detectamos campos eliminados (presentes en oldData pero no en newData)
+      Object.keys(oldData).forEach(key => {
+        if (!newData.hasOwnProperty(key)) {
+          detectedChanges[key] = {
+            old_value: oldData[key] !== undefined ? oldData[key] : 'Vacío',
+            new_value: 'Eliminado',
+            status: 'deleted'
+          };
+        }
+      });
+  
+      // Devolvemos un objeto con toda la información relevante
+      return {
+        model_id: trace.model_id,
+        model_type: trace.model_type,
+        date: trace.date,
+        tipo_codificacion: trace.tipo_codificacion,
+        observation: trace.observation,
+        changes: detectedChanges,
+        raw_data: {
+          old: oldData,
+          new: newData
+        }
+      };
+    } catch (error) {
+      console.error('Error processing trace:', error);
+      return {
+        error: 'Error processing changes',
+        trace_id: trace.model_id,
+        raw_data: trace
+      };
+    }
+  };
+
+  return (
+    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              <i className="fas fa-history me-2"></i>
+              HISTORIAL DE CAMBIOS - {nombre_gestion}
+            </h5>
+            <button type="button" className="btn-close" onClick={onClose} aria-label="Cerrar"></button>
+          </div>
+  
+          <div className="modal-body bg-white">
+            {traces && traces.length > 0 ? (
+              traces.map((trace, index) => {
+                const { changes: fieldChanges } = parseChanges(trace);
+  
+                return (
+                  <div className="card shadow-sm border mb-4" key={`trace-${index}`}>
+                    <div className="card-header bg-light d-flex justify-content-between align-items-center">
+                      <span className="badge bg-primary text-dark">
+                        {getTipoCambio(trace.tipo_codificacion)}
+                      </span>
+                      <small className="text-muted">
+                        <i className="far fa-clock me-1"></i>
+                        {formatDate(trace.date || trace.created_at)}
+                      </small>
+                    </div>
+  
+                    <div className="card-body">
+                    {trace.observation && (
+                      <div className="my-3 border rounded p-2">
+                        <i className="fas fa-comment me-2 text-muted"></i>
+                        {trace.observation}
+                      </div>
+                    )}
+                    {trace.attachment_url && (
+                      <div className="my-3 border rounded p-2">
+                        <i className="fas fa-file-signature me-2 text-muted"></i>
+                        <a 
+                          href={`/storage/${trace.attachment_url}`} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-decoration-none text-primary"
+                        >
+                          Ver documento adicional
+                        </a>
+                      </div>
+                    )}
+  
+                      {Object.keys(fieldChanges).length > 0 ? (
+                        Object.entries(fieldChanges).map(([field, values]) => (
+                          <div className="mb-4" key={field}>
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                              <strong className="text-capitalize">{field.replace(/_/g, ' ')}</strong>
+                              {values.status !== 'modified' && (
+                                <span className={`badge ${
+                                  values.status === 'added' ? 'bg-success-subtle text-success' :
+                                  'bg-danger-subtle text-danger'
+                                } text-capitalize`}>
+                                  {values.status}
+                                </span>
+                              )}
+                            </div>
+  
+                            <div className="row">
+                              <div className="col-md-6 mb-2">
+                                <small className="text-muted d-block">Anterior</small>
+                                <div className="border rounded p-2 bg-light text-danger">
+                                  {values.old_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                </div>
+                              </div>
+                              <div className="col-md-6 mb-2">
+                                <small className="text-muted d-block">Nuevo</small>
+                                <div className="border rounded p-2 bg-light text-success">
+                                  {values.new_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-muted text-center">
+                          <i className="far fa-info-circle me-2"></i>
+                          No se detectaron cambios en los datos principales
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center py-5">
+                <i className="fas fa-history fa-4x text-muted mb-3"></i>
+                <h5 className="text-muted">No hay registros históricos</h5>
+                <p className="text-muted">No se han realizado cambios en esta gestión</p>
+              </div>
+            )}
+          </div>
+  
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
+              <i className="fas fa-times me-1"></i> Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  
+}; 
+
+export default function ActualizarPei({ 
+  editarUrl = '#',
+  institucionId = [],
+  institucionData = {},
+  csrfToken = '',
+}) {
+  // Convertir el objeto a un array de niveles de gestión
+  const gestionArray = Object.entries(institucionData).map(([key, value]) => ({
+    id: key,
+    indice: key,
+    nombre: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+    data: value,
+    hijos: Object.values(value).flat().filter(item => typeof item === 'object' && item !== null)
+  }));
+  console.log('gestionArray', gestionArray);
+  
+
+  const [activeTab, setActiveTab] = useState(0);
+  const [currentModal, setCurrentModal] = useState(null);
+  const [historicosModal, setHistoricosModal] = useState(null);
+
+  const getGestion = (valor) => {
+    switch (valor) {
+      case 'gestion_academica': return 'GESTIÓN ACADÉMICA';
+      case 'gestion_administrativa': return 'GESTIÓN ADMINISTRATIVA Y FINANCIERA';
+      case 'gestion_comunidad': return 'GESTIÓN COMUNIDAD';
+      case 'gestion_directiva': return 'GESTIÓN DIRECTIVA';
+      default: return valor.replace(/_/g, ' ').toUpperCase();
+    }
+  };
+
+  const handleSave = async (institucionId, hijoIndex, formData, files) => {
+    try {
+      // Crear FormData para enviar tanto campos como archivos
+      const formDataToSend = new FormData();
+      
+      // Agregar campos del formulario
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
+      
+      // Agregar archivos subidos
+      Object.entries(files).forEach(([fieldName, file]) => {
+        if (file) {
+          formDataToSend.append(fieldName, file);
+        }
+      });
+      
+      // Agregar el índice de gestión e hijo si es necesario
+      formDataToSend.append('institucion_id', institucionId);
+      // Agregar el índice de gestión e hijo si es necesario
+      formDataToSend.append('hijo_index', hijoIndex);
+      
+      // Enviar datos al backend Laravel
+      const response = await fetch(`/institutional_profile/institution/${institucionId}/save-new-pei`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken, // CSRF token para protección
+          'Accept': 'application/json', // Indicamos que queremos JSON de vuelta
+        },
+        body: formDataToSend
+      });
+      
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+      
+      const data = await response.json();
+      
+      // Manejar la respuesta exitosa
+      location.reload();
+
+      console.log('Datos guardados exitosamente:', data);
+      setCurrentModal(null);
+      
+      // Aquí podrías agregar una notificación de éxito o actualizar el estado
+      // Ejemplo: mostrar un toast de éxito
+      alert('Los cambios se guardaron correctamente');
+      
+      // Opcional: recargar datos o actualizar el estado
+      // loadData(); // Si tienes una función para recargar los datos
+      
+    } catch (error) {
+      console.error('Error al guardar los cambios:', error);
+      
+      // Mostrar error al usuario
+      alert('Ocurrió un error al guardar los cambios: ' + error.message);
+    }
+  };
+
+  return (
+    <div className="container mt-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">Ajustes al PEI</h2>
+      </div>
+
+      <div className="mb-4">
+        <ul className="nav nav-tabs border" id="gruposTabs" role="tablist">
+          {gestionArray.map((grupo, index) => (
+            <li className="nav-item" key={`tab-${grupo.id}`}>
+              <button
+                className={`nav-link ${activeTab === index ? 'active' : ''}`}
+                onClick={() => setActiveTab(index)}
+                type="button"
+                role="tab"
+              >
+                <span>{getGestion(grupo.id)}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div className="border border-top-0 rounded-bottom p-3">
+          {gestionArray.map((grupo, index) => (
+            <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
+              {grupo.hijos?.length > 0 && (
+                <div>
+                  {grupo.hijos.map((hijo, hijoIndex) => {
+                    const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
+                    
+                    return (
+                      <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
+                        {/* Encabezado con botones */}
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
+                          <div>
+                            <button 
+                              className="btn btn-sm btn-outline-primary me-2"
+                              onClick={() => setCurrentModal({ gestionIndex: index, hijoIndex, formData: {...otrosCampos}, documentos, nombre_gestion })}
+                            >
+                              <i className="fas fa-edit me-1"></i> Ajustes
+                            </button>
+                            <button 
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={() => setHistoricosModal({index, hijoIndex, nombre_gestion, traces})}
+                            >
+                              <i className="fas fa-history me-1"></i> Históricos
+                          </button>
+                          </div>
+                        </div>
+                        
+                        {/* Contenido normal (vista) */}
+                        <div className="mx-auto" style={{maxWidth: '800px'}}>
+                          {Object.entries(otrosCampos)
+                          .filter(([clave]) => clave !== 'relation_name')
+                          .map(([clave, valor]) => (
+                            <div className="row mb-3" key={clave}>
+                              <div className="col-md-6 fw-semibold text-capitalize text-md-end">
+                                {clave.replace(/_/g, ' ')}:
+                              </div>
+                              <div className="col-md-6">
+                                {valor || <span className="text-muted fst-italic">No registrado</span>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {/* Documentos */}
+                        {documentos && (
+                          <div className="mt-4">
+                            <h6 className="fw-bold mb-3 text-center">Documentos</h6>
+                            <div className="text-center">
+                              {Object.entries(documentos).map(([docNombre, docValor]) => (
+                                <div className="d-inline-block mx-3 mb-2" key={docNombre}>
+                                  <div className="fw-semibold text-capitalize">
+                                    {docNombre
+                                      .replace(/([A-Z])/g, ' $1')  // Inserta espacio antes de mayúsculas
+                                      .replace(/^./, str => str.toUpperCase())  // Primera letra mayúscula
+                                      .replace(/_/g, ' ')  // Reemplaza guiones bajos
+                                      .trim()}
+                                  </div>
+                                  <a 
+                                    href={`/storage/${docValor.ruta}`} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="badge bg-primary rounded-pill text-decoration-none"
+                                  >
+                                    Ver documento
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {/* Boton de volver */}
+        <div class="d-flex justify-content-end mt-4">
+  <button 
+    onClick={() => window.history.back()} 
+    class="btn btn-secondary"
+  >
+    <i class="fas fa-arrow-left me-2"></i> Volver
+  </button>
+</div>
+
+      </div>
+
+      {/* Modal de Ajustes */}
+      {currentModal && (
+        <ModalAjustes
+          nombre_gestion={currentModal.nombre_gestion}
+          institucionId={institucionId}
+          csrfToken={csrfToken}
+          formData={currentModal.formData}
+          setFormData={(newData) => setCurrentModal({...currentModal, formData: newData})}
+          documentos={currentModal.documentos}
+          onClose={() => setCurrentModal(null)}
+          onSave={(formData, files) => handleSave(institucionId, currentModal.gestionIndex, formData, files)}
+        />
+      )}
+       {/* Nuevo Modal de Históricos */}
+       {historicosModal && (
+        <ModalHistoricos
+          nombre_gestion={historicosModal.nombre_gestion}
+          traces={historicosModal.traces}
+          onClose={() => setHistoricosModal(null)}
+        />
+      )}
+    </div>
+  );
 }

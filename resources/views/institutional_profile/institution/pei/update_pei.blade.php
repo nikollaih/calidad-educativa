@@ -6,11 +6,10 @@
     >
     </div>
     <div
-        data-component="UpdatePei"
+        data-component="ActualizarPei"
         data-csrf-token="{{ csrf_token() }}"
-        data-editar-url="{{ route('institution.autoevaluaciones-actualizar', ['autoevaluacionId' => $autoevaluacion->id]) }}"
-        data-grupos-calificaciones='{!! json_encode($gruposCalificaciones) !!}'
-        data-autoevaluacion='{!! json_encode($autoevaluacion) !!}'
-    >
-    </div>
+        data-institucion-id='{!! json_encode($institucionId) !!}'
+        data-institucion-data='{!! json_encode($institucionData) !!}'
+    ></div>
+    @vite('resources/js/app.js')
 @endsection
