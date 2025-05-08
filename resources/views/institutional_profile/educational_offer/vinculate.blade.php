@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+    <div
+        data-component="CBackButton"
+    ></div>
 <div class="container">
     @if(session('success'))
         <div class="alert alert-success">

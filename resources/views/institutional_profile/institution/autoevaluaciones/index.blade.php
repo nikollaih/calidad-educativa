@@ -2,11 +2,14 @@
 
 @section('content')
     <div
+        data-component="CBackButton"
+    >
+    </div>
+    <div
         data-component="Lista"
         data-institution-id="{{ $institutionId }}"
         data-csrf-token="{{ csrf_token() }}"
         data-autoevaluaciones='{!! json_encode($autoevaluaciones) !!}'
         data-agregar-url="{{ route('institution.autoevaluaciones-crear', ['institution' => $institutionId]) }}">
     </div>
-    @vite('resources/js/app.js')
 @endsection

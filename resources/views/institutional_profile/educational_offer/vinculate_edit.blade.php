@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    <div
+        data-component="CBackButton"
+    ></div>
 <div class="container">
     @if(session('success'))
         <div class="alert alert-success">
@@ -63,7 +66,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Descripción breve</label>
-                        <input type="text" class="form-control" 
+                        <input type="text" class="form-control"
                                name="schedule[schedule]"
                                value="{{ $levelSede->schedule->schedule }}" required>
                     </div>
