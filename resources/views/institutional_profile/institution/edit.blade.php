@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-
+    <div
+        data-component="CBackButton"
+    >
+    </div>
     <div class="container">
     @if(session('success'))
                         <div class="alert alert-success">
@@ -247,4 +250,5 @@
     </div>
 
     <!-- fin session de las sedes asociadas a la institucion -->
+
 @endsection

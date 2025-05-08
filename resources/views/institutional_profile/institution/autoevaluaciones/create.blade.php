@@ -2,6 +2,10 @@
 
 @section('content')
     <div
+        data-component="CBackButton"
+    >
+    </div>
+    <div
         data-component="Crear"
         data-institution-id="{{ $institutionId }}"
         data-csrf-token="{{ csrf_token() }}"
@@ -10,5 +14,4 @@
         data-anios-disabled='{!! json_encode($aniosDisabled) !!}'
     >
     </div>
-    @vite('resources/js/app.js')
 @endsection
