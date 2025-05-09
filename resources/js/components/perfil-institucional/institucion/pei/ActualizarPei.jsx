@@ -51,11 +51,11 @@ const ModalAjustes = ({
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="_token" value={csrfToken} />
             
-            {/* Sección superior: Tipo de codificación y Fecha */}
+            {/* Sección superior: Tipo de ajuste y Fecha */}
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label text-capitalize">Tipo de codificación</label>
+                  <label className="form-label">Tipo de ajuste</label>
                   <select
                     className="form-select"
                     value={formData.tipo_codificacion || ''}
@@ -75,6 +75,7 @@ const ModalAjustes = ({
                   <label className="form-label text-capitalize">Fecha</label>
                   <input
                     type="date"
+                    required
                     className="form-control"
                     value={formData.fecha || ''}
                     onChange={(e) => setFormData({...formData, fecha: e.target.value})}
@@ -192,6 +193,7 @@ const ModalAjustes = ({
                 <div className="input-group">
                   <input 
                     type="file" 
+                    required
                     className="form-control"
                     onChange={(e) => handleFileChange('documento_adicional', e)}
                   />
@@ -466,62 +468,65 @@ export default function ActualizarPei({
 
   const handleSave = async (institucionId, hijoIndex, formData, files) => {
     try {
-      // Crear FormData para enviar tanto campos como archivos
-      const formDataToSend = new FormData();
-      
-      // Agregar campos del formulario
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
-      
-      // Agregar archivos subidos
-      Object.entries(files).forEach(([fieldName, file]) => {
-        if (file) {
-          formDataToSend.append(fieldName, file);
+        const formDataToSend = new FormData();
+        
+        // Asegúrate de incluir todos los campos requeridos
+        formDataToSend.append('tipo_codificacion', formData.tipo_codificacion);
+        formDataToSend.append('fecha', formData.fecha); // Asegúrate que tiene formato YYYY-MM-DD
+        formDataToSend.append('observacion', formData.observacion || '');
+        formDataToSend.append('relation_name', formData.relation_name);
+        
+        // Archivo es obligatorio
+        if (!files.documento_adicional) {
+            throw new Error('El documento adicional es requerido');
         }
-      });
-      
-      // Agregar el índice de gestión e hijo si es necesario
-      formDataToSend.append('institucion_id', institucionId);
-      // Agregar el índice de gestión e hijo si es necesario
-      formDataToSend.append('hijo_index', hijoIndex);
-      
-      // Enviar datos al backend Laravel
-      const response = await fetch(`/institutional_profile/institution/${institucionId}/save-new-pei`, {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken, // CSRF token para protección
-          'Accept': 'application/json', // Indicamos que queremos JSON de vuelta
-        },
-        body: formDataToSend
-      });
-      
-      if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor');
-      }
-      
-      const data = await response.json();
-      
-      // Manejar la respuesta exitosa
-      location.reload();
+        formDataToSend.append('documento_adicional', files.documento_adicional);
+        
+        // Metadatos adicionales
+        formDataToSend.append('institucion_id', institucionId);
+        formDataToSend.append('hijo_index', hijoIndex);
 
-      console.log('Datos guardados exitosamente:', data);
-      setCurrentModal(null);
-      
-      // Aquí podrías agregar una notificación de éxito o actualizar el estado
-      // Ejemplo: mostrar un toast de éxito
-      alert('Los cambios se guardaron correctamente');
-      
-      // Opcional: recargar datos o actualizar el estado
-      // loadData(); // Si tienes una función para recargar los datos
-      
+        const response = await fetch(`/institutional_profile/institution/${institucionId}/save-new-pei`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: formDataToSend
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            // Manejo detallado de errores de validación
+            if (data.errors) {
+                const errorDetails = Object.entries(data.errors)
+                    .map(([field, errors]) => `• ${field}: ${errors.join(', ')}`)
+                    .join('\n');
+                throw new Error(`Errores de validación:\n${errorDetails}`);
+            }
+            throw new Error(data.message || 'Error en el servidor');
+        }
+
+        // Éxito
+        alert(data.message);
+        console.log('Datos validados:', data.validated_data);
+        location.reload();
+
     } catch (error) {
-      console.error('Error al guardar los cambios:', error);
-      
-      // Mostrar error al usuario
-      alert('Ocurrió un error al guardar los cambios: ' + error.message);
+        console.error('Error al guardar:', error);
+        alert(error.message);
+        
+        // Opcional: Mostrar más detalles en consola para desarrollo
+        if (process.env.NODE_ENV === 'development') {
+            console.group('Detalles del error');
+            console.error('Error completo:', error);
+            if (error.response) {
+                console.error('Respuesta del servidor:', await error.response.json());
+            }
+            console.groupEnd();
+        }
     }
-  };
+};
 
   return (
     <div className="container mt-5">

@@ -310,12 +310,14 @@ class InstitutionController extends Controller
         DB::beginTransaction();
 
         try {
+            dd($this);
             // Validar los datos recibidos
             $validated = $request->validate([
                 'tipo_codificacion' => 'required|integer',
-                'fecha' => 'required|date',
+                'fecha' => 'required',
                 'observacion' => 'nullable|string|max:500',
                 'relation_name' => 'required|string',
+                'documento_adicional' => 'required|file',
             ]);
 
             $input = $request->all();
@@ -373,12 +375,12 @@ class InstitutionController extends Controller
             ]);
 
             DB::commit();
-
             return response()->json([
                 'success' => true,
                 'message' => 'PEI actualizado correctamente',
                 'changes' => count($changedFields),
-                'historial_id' => $historial->id
+                'historial_id' => $historial->id,
+                'validated_data' => $validated // Añadimos esto
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {

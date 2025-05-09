@@ -109,7 +109,7 @@
                                                 <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
                                                 
                                                 <!-- Direccionamiento Estratégico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DIRECCIONAMIENTO ESTRATÉGICO</h5>
                                                     
                                                     <div class="row mb-3">
@@ -162,7 +162,7 @@
                                                 </div>
 
                                                 <!-- Gestión Estratégica -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GESTIÓN ESTRATÉGICA</h5>
                                                     
                                                     @php
@@ -185,7 +185,7 @@
                                                 </div>
 
                                                 <!-- Gobierno Escolar -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GOBIERNO ESCOLAR</h5>
                                                     
                                                     @php
@@ -214,7 +214,7 @@
                                                 </div>
 
                                                 <!-- Cultura Institucional -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">CULTURA INSTITUCIONAL</h5>
                                                     
                                                     @php
@@ -264,7 +264,7 @@
                                                 </div>
 
                                                 <!-- Clima Escolar -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">CLIMA ESCOLAR</h5>
                                                     
                                                     @php
@@ -315,7 +315,7 @@
                                                 </div>
 
                                                 <!-- Relaciones con el Entorno -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">RELACIONES CON EL ENTORNO</h5>
                                                     
                                                     @php
@@ -385,7 +385,7 @@
                                                 @endphp
                                                 
                                                 <!-- Diseño Pedagógico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DISEÑO PEDAGÓGICO</h5>
                                                     
                                                     @php
@@ -462,7 +462,7 @@
                                                 </div>
 
                                                 <!-- Prácticas Pedagógicas -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
                                                     
                                                     <div class="row mb-3">
@@ -474,7 +474,7 @@
                                                 </div>
 
                                                 <!-- Gestión de Aula -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GESTIÓN DE AULA</h5>
                                                     
                                                     @php
@@ -524,7 +524,7 @@
                                                 </div>
 
                                                 <!-- Seguimiento Académico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">SEGUIMIENTO ACADÉMICO</h5>
                                                     
                                                     @php
@@ -605,7 +605,7 @@
                                                 @endphp
                                                 
                                                 <!-- Apoyo a la gestión académica -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">APOYO A LA GESTIÓN ACADÉMICA</h5>
                                                     
                                                     @php
@@ -640,7 +640,7 @@
                                                 </div>
 
                                                 <!-- Administración de la planta física -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">ADMINISTRACIÓN DE PLANTA FÍSICA</h5>
                                                     
                                                     @php
@@ -689,7 +689,7 @@
                                                 </div>
 
                                                 <!-- Servicios complementarios -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">SERVICIOS COMPLEMENTARIOS</h5>
                                                     
                                                     <div class="row mb-3">
@@ -701,7 +701,7 @@
                                                 </div>
 
                                                 <!-- Talento humano -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">TALENTO HUMANO</h5>
                                                     
                                                     @php
@@ -752,7 +752,7 @@
                                                 </div>
 
                                                 <!-- Apoyo financiero -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">APOYO FINANCIERO</h5>
                                                     
                                                     @php
@@ -819,7 +819,7 @@
                                                 @endphp
                                                 
                                                 <!-- Atención educativa a grupos poblacionales -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">ATENCIÓN EDUCATIVA A GRUPOS POBLACIONALES</h5>
                                                     
                                                     @php
@@ -857,7 +857,7 @@
                                                 </div>
 
                                                 <!-- Programa de servicio social -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
                                                     
                                                     <div class="row mb-3">
@@ -882,7 +882,7 @@
                                                 </div>
 
                                                 <!-- Prevención de riesgos -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PREVENCIÓN DE RIESGOS</h5>
                                                     
                                                     @php
