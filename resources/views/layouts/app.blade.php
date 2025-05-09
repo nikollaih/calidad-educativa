@@ -44,7 +44,7 @@
         @yield('vendors_css')
         <!-- Custom CSS -->
         @yield('custom_css')
-
+        @vite('resources/js/app.js')
         <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
@@ -233,6 +233,7 @@
                                     </ul>
                                 </div>
                             @endif
+
                             @yield('content')
                         </div>
                         <footer class="content-footer footer bg-footer-theme">

@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    <div
+        data-component="CBackButton"
+    >
+    </div>
     <div class="container">
     @if(session('success'))
         <div class="alert alert-success">
@@ -207,7 +211,7 @@
                                 @endforeach
                             </div>
                         </div>
-                    </div>
+
                     <div class="m-3">
                         <div class="row">
                             <!-- Modelos educativos -->

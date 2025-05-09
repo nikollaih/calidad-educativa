@@ -13,13 +13,10 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>Editar Vinculación de Nivel Educativo</h2>
+            <h2>Ver Vinculación de Nivel Educativo</h2>
         </div>
         <div class="card-body">
-            <form action="{{ route('educational-offer.update-vinculation', $levelSede->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
+            <form>
                 <!-- Información del nivel educativo -->
                 <div class="mb-4">
                     <h4>Nivel Educativo</h4>
@@ -43,11 +40,6 @@
                             <p class="text-muted">No hay documento adjunto</p>
                         @endif
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Actualizar documento</label>
-                        <input type="file" class="form-control" name="level_attachment" accept=".pdf,.doc,.docx">
-                        <small class="text-muted">Dejar en blanco para mantener el documento actual</small>
-                    </div>
                 </div>
 
                 <!-- Horario -->
@@ -55,7 +47,7 @@
                     <h4>Horario</h4>
                     <div class="mb-3">
                         <label class="form-label">Tipo de horario</label>
-                        <select class="form-select" name="schedule[name]" required>
+                        <select class="form-select" name="schedule[name]" disabled>
                             @foreach($educationalSchedules as $key => $value)
                                 <option value="{{ $key }}" {{ $levelSede->schedule->name == $key ? 'selected' : '' }}>
                                     {{ $value }}
@@ -68,13 +60,13 @@
                         <label class="form-label">Descripción breve</label>
                         <input type="text" class="form-control"
                                name="schedule[schedule]"
-                               value="{{ $levelSede->schedule->schedule }}" required>
+                               value="{{ $levelSede->schedule->schedule }}" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Notas detalladas</label>
                         <textarea class="form-control" rows="3"
-                                  name="schedule[notes]">{{ $levelSede->schedule->notes }}</textarea>
+                                  name="schedule[notes]" disabled>{{ $levelSede->schedule->notes }}</textarea>
                     </div>
 
                     <!-- Anexo del horario -->
@@ -90,21 +82,6 @@
                             <p class="text-muted">No hay documento adjunto</p>
                         @endif
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Actualizar documento del horario</label>
-                        <input type="file" class="form-control" name="schedule_attachment" accept=".pdf,.doc,.docx">
-                        <small class="text-muted">Dejar en blanco para mantener el documento actual</small>
-                    </div>
-                </div>
-
-                <!-- Botones de acción -->
-                <div class="d-flex justify-content-end">
-                    <a href="{{ route('institution.edit', ['institution' => $selectedSede->institution->id]) }}" class="btn btn-secondary me-2">
-                        <i class="fas fa-times"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar Cambios
-                    </button>
                 </div>
             </form>
         </div>

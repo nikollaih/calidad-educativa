@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 
-export default function Lista({ agregarUrl, autoevaluaciones}) {
+export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) {
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
@@ -52,19 +52,34 @@ export default function Lista({ agregarUrl, autoevaluaciones}) {
                             >
                                 Ver detalles
                             </a>
-                            <a
-                                href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
-                                className="btn btn-warning btn-sm me-2"
-                            >
-                                Editar
-                            </a>
+
+                            {/* Mostrar Editar solo si no está en VALIDACION */}
+                            {evaluacion.alias_estado !== "VALIDACION" && (
+                                <a
+                                    href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
+                                    className="btn btn-warning btn-sm me-2"
+                                >
+                                    Editar
+                                </a>
+                            )}
+
+                            {evaluacion.alias_estado === "PROCESO" && (
+                                <form
+                                    action={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-validar`}
+                                    method="POST"
+                                    style={{ display: 'inline' }} // Para que el botón no baje de línea
+                                >
+                                    <input type="hidden" name="_token" value={csrfToken} />
+                                    <button type="submit" className="btn btn-success btn-sm">
+                                        Enviar a Validación
+                                    </button>
+                                </form>
+                            )}
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
-
-
         </div>
     );
 }

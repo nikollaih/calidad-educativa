@@ -36,7 +36,23 @@ class InstitutionController extends Controller
             ]
         );
     }
-
+    public function show(int $institucion)
+    {
+        $institucion = Institucion::with(
+            'licenciaFuncionamiento',
+            'redesSociales',
+            'sedes.levelSedeEducational.educationalLevel',
+            'sedes.levelSedeEducational.schedule',
+            'sedes.levelSedeEducational.schedule.anexo',
+            'sedes.educationalOffer'
+        )
+            ->where('id',$institucion)
+            ->first();
+        if (!$institucion) {
+            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+        }
+        return view('institutional_profile.institution.show', ['institution' => $institucion]);
+    }
     public function autoevaluaciones(int $institution = null)
     {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->get();
@@ -85,7 +101,6 @@ class InstitutionController extends Controller
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
-
         $formattedNotes = $autoevaluacion->notas->map(function ($nota) {
             return [
                 'grupo_indice' => $nota->calificacion?->grupo?->indice,
@@ -95,6 +110,7 @@ class InstitutionController extends Controller
                 'base_group_name' => $nota->calificacion?->grupo?->padre?->nombre,
             ];
         });
+
 
         $statistics = GrupoCalificacion::with([
             'hijos' => function ($query) {
@@ -115,14 +131,27 @@ class InstitutionController extends Controller
                             ->sum('valor') / max( 1,$subGrupo->calificaciones_count ),2 ),
                     ];
                 });
+
+                // Filtrar las notas que pertenecen a los subgrupos de este grupo base
+                $notasDelGrupo = $formattedNotes->filter(function ($nota) use ($baseGroup) {
+                    return $nota['base_group_indice'] === $baseGroup->indice;
+                });
+
+                $ponderados = [
+                    'Existencia' => $notasDelGrupo->where('valor', 1)->count(),
+                    'Pertinencia' => $notasDelGrupo->where('valor', 2)->count(),
+                    'Apropiación' => $notasDelGrupo->where('valor', 3)->count(),
+                    'Mejoramiento' => $notasDelGrupo->where('valor', 4)->count(),
+                ];
+
                 return [
                   'nombre' => $baseGroup->nombre,
                   'indice' => $baseGroup->indice,
                   'promedio' => round($subGruposFormateados->sum('promedio') / max(1, $baseGroup->hijos_count ), 2),
                   'sub_grupos' => $subGruposFormateados,
+                    'ponderados' => $ponderados,
                 ];
             });
-
         return view('institutional_profile.institution.autoevaluaciones.ver',
             [
                 'gruposCalificaciones' => $gruposCalificaciones,
@@ -154,6 +183,21 @@ class InstitutionController extends Controller
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
 
     }
+    public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
+
+        if(!$autoevaluacion)
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+
+        // De momento no hay logica para el envio a validar
+
+        $autoevaluacion->alias_estado = "VALIDACION";
+        $autoevaluacion->save();
+
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación enviada a validación correctamente");
+
+    }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
     {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
@@ -178,7 +222,6 @@ class InstitutionController extends Controller
        // $roles = Role::all();
         return view('institutional_profile.institution.create');
     }
-
     public function store(Request $request)
     {
 
@@ -205,10 +248,8 @@ class InstitutionController extends Controller
 
         return redirect()->back()->with('flash_success_message', 'Institución creada correctamente.');
     }
-
     public function edit(int $institucion)
     {
-
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -224,7 +265,6 @@ class InstitutionController extends Controller
          }
         return view('institutional_profile.institution.edit', ['institution' => $institucion]);
     }
-
     public function update(Request $request, int $institucion)
     {
          $institucionToUpdate = Institucion::with('redesSociales')
@@ -250,7 +290,6 @@ class InstitutionController extends Controller
 
         return redirect()->route('institution.edit',$institucion)->with('success', 'Institución actualizada correctamente.');
     }
-
     public function destroy(int $institucion)
     {
          $institucionToDel = Institucion::find($institucion);
@@ -261,11 +300,6 @@ class InstitutionController extends Controller
          $institucionToDel->redesSociales()->delete();
          $institucionToDel->delete();
          return redirect()->back()->with('success', 'Institución Eliminada correctamente.');
-    }
-
-    public function show(int $institucion)
-    {
-        return redirect()->back()->with('success', 'Institución actualizada correctamente.');
     }
 
     public function pei(int $institucion) {
@@ -289,7 +323,6 @@ class InstitutionController extends Controller
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
         ]);
     }
-
     public function peiManageInformation(int $institucion) {
         $institucionData = Institucion::with([
                 'gestionDirectiva',
@@ -325,14 +358,14 @@ class InstitutionController extends Controller
             // Obtener la institución con relaciones
             $institucion = Institucion::with([
                 'gestionDirectiva',
-                'gestionAcademica', 
+                'gestionAcademica',
                 'gestionComunidad',
                 'gestionAdministrativa',
             ])->findOrFail($institutionId);
 
             // Definir propiedades a eliminar del input
             $propiedadesAEliminar = [
-                'relation_name', 
+                'relation_name',
                 'tipo_codificacion',
                 'fecha',
                 'observacion',
@@ -345,7 +378,7 @@ class InstitutionController extends Controller
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
-            
+
             if (!$model) {
                 throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
@@ -389,7 +422,7 @@ class InstitutionController extends Controller
                 'success' => false,
                 'errors' => $e->errors()
             ], 422);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error al actualizar PEI: " . $e->getMessage());

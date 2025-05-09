@@ -2,6 +2,10 @@
 
 @section('content')
     <div
+        data-component="CBackButton"
+    >
+    </div>
+    <div
         data-component="ActualizarPei"
         data-csrf-token="{{ csrf_token() }}"
         data-institucion-id='{!! json_encode($institucionId) !!}'

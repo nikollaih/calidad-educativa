@@ -13,21 +13,17 @@
 
         <div class="card">
             <div class="card-header">
-                <h1>Editar Sede </h1>
+                <h1>Ver Sede </h1>
             </div>
             <div class="card-body">
-                <form action="{{ route('sede.update', [ 'sede' => $sede->id ] ) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $sede->institution_id }}" required>
+                <form >
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                             <div class="mb-3">
                                 <label for="tipo_sede" class="form-label">Tipo de Sede</label>
-                                <select name="tipo_sede" id="tipo_sede" class="form-control" required>
+                                <select name="tipo_sede" id="tipo_sede" class="form-control" disabled>
                                     <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                     <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                 </select>
@@ -44,17 +40,17 @@
 
                             <div class="mb-3">
                                 <label for="sede[name]" class="form-label">Nombre</label>
-                                <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" required>
+                                <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="sede[dane]" class="form-label">Código DANE</label>
-                                <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" required>
+                                <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="sede[address]" class="form-label">Dirección</label>
-                                <input type="text" name="sede[address]" class="form-control" value="{{ $sede->address }}" required>
+                                <input type="text" name="sede[address]" class="form-control" value="{{ $sede->address }}" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
@@ -63,7 +59,7 @@
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                     @endif
-                                <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  required>
+                                <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  disabled>
                                     <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
                                      <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
                                      <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
@@ -77,13 +73,6 @@
                                     <input type="text" name="titularity[name]" class="form-control">
                                 </div>
                             </div>
-
-                            <div class="row" id="anexo_certificado_container" >
-                                <div class="mb-3">
-                                    <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
-                                    <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" >
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Columna 2 -->
@@ -91,7 +80,7 @@
                             <!-- Campos existentes -->
                             <div class="mb-3">
                                 <label for="sede[zone]" class="form-label">Zona</label>
-                                <select name="sede[zone]" id="titularidad_sede" class="form-control w-full"  required>
+                                <select name="sede[zone]" id="titularidad_sede" class="form-control w-full"  disabled>
                                    <option value="RURAL" {{ $sede->zone == 'RURAL' ? 'selected' : '' }}>Rural</option>
                                    <option value="URBANA" {{ $sede->zone == 'URBANA' ? 'selected' : '' }}>Urbana</option>
                                 </select>
@@ -99,12 +88,12 @@
 
                             <div class="mb-3">
                                 <label for="sede[longitude]" class="form-label">Longitud</label>
-                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" required>
+                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
                             </div>
 
                             <div class="mb-3">
                                 <label for="sede[latitude]" class="form-label">Latitud</label>
-                                <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" required>
+                                <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
                             </div>
 
                             <div class="mb-3">
@@ -114,14 +103,13 @@
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                     @endif
-                                <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">¿Es escuela nueva?</label>
                                 <div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="{{ $sede->is_new_school }}" @if($sede->is_new_school == 1) checked @endif >
+                                        <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="{{ $sede->is_new_school }}" @if($sede->is_new_school == 1) checked @endif  disabled>
                                         <label class="form-check-label" for="sede[is_new_school]">¿Es una nueva escuela?</label>
                                     </div>
                                 </div>
@@ -132,7 +120,7 @@
                             <!-- Sección de Aulas Steam -->
                             <div id="aulas_steam_container" class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="aulas_steam_checkbox" @if($sede->steamClassroom != null) checked @endif>
+                                    <input class="form-check-input" type="checkbox" id="aulas_steam_checkbox" @if($sede->steamClassroom != null) checked @endif disabled>
                                     <label class="form-check-label" for="aulas_steam_checkbox">¿Cuenta con Aulas Steam?</label>
                                 </div>
                             </div>
@@ -143,13 +131,13 @@
                                     <!-- Campo para cantidad de aulas -->
                                     <div class="col-md-6">
                                         <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
-                                        <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" value="{{$sede?->steamClassroom?->quantity}}" placeholder="Ingrese cantidad">
+                                        <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" value="{{$sede?->steamClassroom?->quantity}}" placeholder="Ingrese cantidad" disabled>
                                     </div>
 
                                     <!-- Campo para fase -->
                                     <div class="col-md-6">
                                         <label class="form-label" for="fase_aula">Fase</label>
-                                        <select name="steam_classroom[phase]"  class="form-control w-full" required>
+                                        <select name="steam_classroom[phase]"  class="form-control w-full" disabled>
 
                                             <option value="Fase 1" {{ $sede->steamClassroom?->phase == 'Fase 1' ? 'selected' : '' }}>Fase 1</option>
                                             <option value="Fase 2" {{ $sede->steamClassroom?->phase == 'Fase 2' ? 'selected' : '' }}>Fase 2</option>
@@ -192,7 +180,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-md-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="equipos[]" id="equipo_{{ Str::slug($equipo) }}" value="{{ $equipo }}" @if($sede->inventories->firstWhere('name', Str::slug($equipo))) checked @endif >
+                                                    <input class="form-check-input" type="checkbox" name="equipos[]" id="equipo_{{ Str::slug($equipo) }}" value="{{ $equipo }}" @if($sede->inventories->firstWhere('name', Str::slug($equipo))) checked @endif  disabled>
                                                     <label class="form-check-label" for="equipo_{{ Str::slug($equipo) }}">{{ $equipo }}</label>
                                                 </div>
                                             </div>
@@ -201,8 +189,8 @@
                                                 <div id="label_fuente_{{ Str::slug($equipo) }}" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" >
                                                     <label class="form-check-label">Fuente de financiación</label>
                                                 </div>
-                                                <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
-                                                <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
+                                                <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}" disabled>
+                                                <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" disabled>
                                                     <option value="Computadores para educar"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Computadores para educar')->count() > 0 ? 'selected' : '' }}>Computadores para educar</option>
                                                     <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
                                                     <option value="Aula Steam" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Aula Steam')->count() > 0 ? 'selected' : '' }}>Aula Steam</option>
@@ -216,7 +204,7 @@
                                                 <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
                                                     <label class="form-check-label">Cantidad</label>
                                                 </div>
-                                                <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}">
+                                                <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -230,7 +218,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="modelos" class="form-label">Modelos Educativos Flexibles</label>
-                                <select name="educational_models[]" class="form-control" multiple>
+                                <select name="educational_models[]" class="form-control" multiple disabled>
                                     @foreach($eduactionalModels as $model)
                                         <option value="{{ $model->id }}" @selected($educationalOffer->educationalModels->contains('id', $model->id))>
                                             {{ $model->name }}
@@ -242,7 +230,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
-                                <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
+                                <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" disabled>
                                     <option value="0" {{ $educationalOffer->has_study_validation_auth == '0' ? 'selected' : '' }}>No</option>
                                     <option value="1" {{ $educationalOffer->has_study_validation_auth == '1' ? 'selected' : '' }}>Sí</option>
                                 </select>
@@ -259,7 +247,6 @@
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                     @endif
-                                <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
                             </div>
                         </div>
                     </div>
@@ -268,7 +255,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
+                                <select name="educational_offer[serves_juvenile_justice]" class="form-control" disabled>
                                     <option value="0" {{ $educationalOffer->serves_juvenile_justice == '0' ? 'selected' : '' }}>No</option>
                                     <option value="1" {{ $educationalOffer->serves_juvenile_justice == '1' ? 'selected' : '' }}>Sí</option>
                                 </select>
@@ -277,7 +264,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                <select name="educational_offer[national_protection_students]" class="form-control" required>
+                                <select name="educational_offer[national_protection_students]" class="form-control" disabled>
                                     <option value="0" {{ $educationalOffer->national_protection_students == '0' ? 'selected' : '' }}>No</option>
                                     <option value="1" {{ $educationalOffer->national_protection_students == '1' ? 'selected' : '' }}>Sí</option>
                                 </select>
@@ -289,22 +276,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">¿Atención a población étnica?</label>
-                                <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
+                                <select name="educational_offer[serves_ethnic_population]" class="form-control" disabled>
                                     <option value="0" {{ $educationalOffer->serves_ethnic_population == '0' ? 'selected' : '' }}>No</option>
                                     <option value="1" {{ $educationalOffer->serves_ethnic_population == '1' ? 'selected' : '' }}>Sí</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    </div>
-                    <!-- Botones de acción -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save"></i> Guardar
-                        </button>
-                        <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </a>
                     </div>
                 </form>
             </div>

@@ -2,6 +2,10 @@
 
 @section('content')
     <div
+        data-component="CBackButton"
+    >
+    </div>
+    <div
         data-component="Editar"
         data-csrf-token="{{ csrf_token() }}"
         data-editar-url="{{ route('institution.autoevaluaciones-actualizar', ['autoevaluacionId' => $autoevaluacion->id]) }}"
@@ -9,5 +13,4 @@
         data-autoevaluacion='{!! json_encode($autoevaluacion) !!}'
     >
     </div>
-    @vite('resources/js/app.js')
 @endsection
