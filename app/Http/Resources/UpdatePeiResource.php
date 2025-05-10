@@ -540,7 +540,7 @@ class UpdatePeiResource extends JsonResource
         $documents = [];
         foreach ($documentFields as $docField) {
             if (isset($model->{$docField})) {
-                $documents[$docField] = $model->{$docField}->only(['id', 'ruta', 'nombre_completo']);
+                $documents[$docField] = $model->{$docField};
             }
         }
 

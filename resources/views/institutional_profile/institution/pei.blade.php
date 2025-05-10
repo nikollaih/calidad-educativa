@@ -66,6 +66,11 @@
 </style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
+        
+    <div
+        data-component="CBackButton"
+    >
+    </div>
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
@@ -79,7 +84,7 @@
                         </h5>
                         <div class="col-md-12">
                             <div class="card text-center mb-3">
-                                <div class="card-header border-bottom">
+                                <div class="card-header ">
                                     <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                         <li class="nav-item">
                                             <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">1. GESTIÓN DIRECTIVA</button>
@@ -100,14 +105,116 @@
                                 </div>
                                 <div class="tab-content">
 
-                                   <!-- Gestión Directiva -->
+                                    <!-- Gestión Directiva -->
                                     <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
                                         <div class="card mb-4">
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
                                                 
+
+                                                <!-- Clima Escolar -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">CLIMA ESCOLAR</h5>
+                                                    
+                                                    @php
+                                                        $climaEscolar = $gestion_directiva->climaEscolar ?? null;
+                                                        $camposClima = [
+                                                            'Sentido de pertenencia' => 'sentido_pertenencia',
+                                                            'Inducción institucional' => 'induccion_institucional',
+                                                            'Actividades extracurriculares' => 'actividades_extracurriculares',
+                                                            'Manejo de conflictos' => 'manejo_conflictos'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposClima as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $climaEscolar->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documento de inducción:</div>
+                                                        <div class="col-md-6">
+                                                            @if($climaEscolar && $climaEscolar->anexoProgramaInstitucionalInduccion)
+                                                                <a href="{{ $climaEscolar->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Manual de convivencia:</div>
+                                                        <div class="col-md-6">
+                                                            @if($climaEscolar && $climaEscolar->manualConvivencia)
+                                                                <a href="{{ $climaEscolar->manualConvivencia->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Cultura Institucional -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">CULTURA INSTITUCIONAL</h5>
+                                                    
+                                                    @php
+                                                        $culturaInstitucional = $gestion_directiva->culturaInstitucional ?? null;
+                                                        $camposCultura = [
+                                                            'Política de comunicación' => 'politica_comunicacion',
+                                                            'Política de bienestar' => 'politica_bienestar',
+                                                            'Buenas prácticas' => 'inventario_buenas_practicas'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposCultura as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $culturaInstitucional->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documento de política:</div>
+                                                        <div class="col-md-6">
+                                                            @if($culturaInstitucional && $culturaInstitucional->anexoPoliticaBienestar)
+                                                                <a href="{{ $culturaInstitucional->anexoPoliticaBienestar->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documento de bienestar:</div>
+                                                        <div class="col-md-6">
+                                                            @if($culturaInstitucional && $culturaInstitucional->anexoCulturaInstitucional)
+                                                                <a href="{{ $culturaInstitucional->anexoCulturaInstitucional->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <!-- Direccionamiento Estratégico -->
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DIRECCIONAMIENTO ESTRATÉGICO</h5>
@@ -213,107 +320,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Cultura Institucional -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">CULTURA INSTITUCIONAL</h5>
-                                                    
-                                                    @php
-                                                        $culturaInstitucional = $gestion_directiva->culturaInstitucional ?? null;
-                                                        $camposCultura = [
-                                                            'Política de comunicación' => 'politica_comunicacion',
-                                                            'Política de bienestar' => 'politica_bienestar',
-                                                            'Buenas prácticas' => 'inventario_buenas_practicas'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposCultura as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $culturaInstitucional->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de política:</div>
-                                                        <div class="col-md-6">
-                                                            @if($culturaInstitucional && $culturaInstitucional->anexoPoliticaBienestar)
-                                                                <a href="{{ $culturaInstitucional->anexoPoliticaBienestar->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de bienestar:</div>
-                                                        <div class="col-md-6">
-                                                            @if($culturaInstitucional && $culturaInstitucional->anexoCulturaInstitucional)
-                                                                <a href="{{ $culturaInstitucional->anexoCulturaInstitucional->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Clima Escolar -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">CLIMA ESCOLAR</h5>
-                                                    
-                                                    @php
-                                                        $climaEscolar = $gestion_directiva->climaEscolar ?? null;
-                                                        $camposClima = [
-                                                            'Sentido de pertenencia' => 'sentido_pertenencia',
-                                                            'Inducción institucional' => 'induccion_institucional',
-                                                            'Actividades extracurriculares' => 'actividades_extracurriculares',
-                                                            'Manejo de conflictos' => 'manejo_conflictos'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposClima as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $climaEscolar->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de inducción:</div>
-                                                        <div class="col-md-6">
-                                                            @if($climaEscolar && $climaEscolar->anexoProgramaInstitucionalInduccion)
-                                                                <a href="{{ $climaEscolar->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Manual de convivencia:</div>
-                                                        <div class="col-md-6">
-                                                            @if($climaEscolar && $climaEscolar->manualConvivencia)
-                                                                <a href="{{ $climaEscolar->manualConvivencia->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                                 <!-- Relaciones con el Entorno -->
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">RELACIONES CON EL ENTORNO</h5>
@@ -375,7 +381,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN ACADÉMICA</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ACADÉMICA</h4>
                                                 
                                                 @php
                                                     $disenos = $gestion_academica->disenosPedagogicos ?? null;
@@ -383,6 +389,130 @@
                                                     $aulas = $gestion_academica->gestionAulas ?? null;
                                                     $seguimientos = $gestion_academica->seguimientosAcademicos ?? null;
                                                 @endphp
+
+                                                <!-- Gestión de Aula -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">GESTIÓN DE AULA</h5>
+                                                    
+                                                    @php
+                                                        $camposAulas = [
+                                                            'Ambientes de aprendizaje' => 'ambientes_aprendizaje',
+                                                            'Motivación al aprendizaje' => 'motivacion_aprendizaje',
+                                                            'Plan de aula' => 'plan_aula',
+                                                            'Evaluación en el aula' => 'evaluacion_aula'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposAulas as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $aulas->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documentos de aula:</div>
+                                                        <div class="col-md-6">
+                                                            @if($aulas && $aulas->anexoPlanesAula)
+                                                                <a href="{{ $aulas->anexoPlanesAula->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Temas de enseñanza:</div>
+                                                        <div class="col-md-6">
+                                                            @if($aulas && $aulas->anexoTemasEnsenanza)
+                                                                <a href="{{ $aulas->anexoTemasEnsenanza->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Prácticas Pedagógicas -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Estrategias para tareas:</div>
+                                                        <div class="col-md-6">
+                                                            {!! $practicas->estrategias_tareas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Seguimiento Académico -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">SEGUIMIENTO ACADÉMICO</h5>
+                                                    
+                                                    @php
+                                                        $camposSeguimiento = [
+                                                            'Seguimiento a desempeños' => 'seguimiento_desempenos',
+                                                            'Uso de evaluaciones externas' => 'uso_evaluaciones_externas',
+                                                            'Apoyo pedagógico' => 'apoyo_pedagogico'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposSeguimiento as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $seguimientos->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Informe estadístico:</div>
+                                                        <div class="col-md-6">
+                                                            @if($seguimientos && $seguimientos->anexoInformeEstadistico)
+                                                                <a href="{{ $seguimientos->anexoInformeEstadistico->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Análisis de pruebas externas:</div>
+                                                        <div class="col-md-6">
+                                                            @if($seguimientos && $seguimientos->anexoAnalisisPruebasExternas)
+                                                                <a href="{{ $seguimientos->anexoAnalisisPruebasExternas->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Planes de mejoramiento:</div>
+                                                        <div class="col-md-6">
+                                                            @if($seguimientos && $seguimientos->anexoPlanesMejoramiento)
+                                                                <a href="{{ $seguimientos->anexoPlanesMejoramiento->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 
                                                 <!-- Diseño Pedagógico -->
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
@@ -460,130 +590,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <!-- Prácticas Pedagógicas -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Estrategias para tareas:</div>
-                                                        <div class="col-md-6">
-                                                            {!! $practicas->estrategias_tareas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Gestión de Aula -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">GESTIÓN DE AULA</h5>
-                                                    
-                                                    @php
-                                                        $camposAulas = [
-                                                            'Ambientes de aprendizaje' => 'ambientes_aprendizaje',
-                                                            'Motivación al aprendizaje' => 'motivacion_aprendizaje',
-                                                            'Plan de aula' => 'plan_aula',
-                                                            'Evaluación en el aula' => 'evaluacion_aula'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposAulas as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $aulas->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documentos de aula:</div>
-                                                        <div class="col-md-6">
-                                                            @if($aulas && $aulas->anexoPlanesAula)
-                                                                <a href="{{ $aulas->anexoPlanesAula->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Temas de enseñanza:</div>
-                                                        <div class="col-md-6">
-                                                            @if($aulas && $aulas->anexoTemasEnsenanza)
-                                                                <a href="{{ $aulas->anexoTemasEnsenanza->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Seguimiento Académico -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">SEGUIMIENTO ACADÉMICO</h5>
-                                                    
-                                                    @php
-                                                        $camposSeguimiento = [
-                                                            'Seguimiento a desempeños' => 'seguimiento_desempenos',
-                                                            'Uso de evaluaciones externas' => 'uso_evaluaciones_externas',
-                                                            'Apoyo pedagógico' => 'apoyo_pedagogico'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposSeguimiento as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $seguimientos->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Informe estadístico:</div>
-                                                        <div class="col-md-6">
-                                                            @if($seguimientos && $seguimientos->anexoInformeEstadistico)
-                                                                <a href="{{ $seguimientos->anexoInformeEstadistico->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Análisis de pruebas externas:</div>
-                                                        <div class="col-md-6">
-                                                            @if($seguimientos && $seguimientos->anexoAnalisisPruebasExternas)
-                                                                <a href="{{ $seguimientos->anexoAnalisisPruebasExternas->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Planes de mejoramiento:</div>
-                                                        <div class="col-md-6">
-                                                            @if($seguimientos && $seguimientos->anexoPlanesMejoramiento)
-                                                                <a href="{{ $seguimientos->anexoPlanesMejoramiento->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -594,7 +600,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
                                                 
                                                 @php
                                                     $plantaFisica = $gestion_administrativa->administracionPlantaFisica ?? null;
@@ -604,41 +610,6 @@
                                                     $talento = $gestion_administrativa->talentoHumano ?? null;
                                                 @endphp
                                                 
-                                                <!-- Apoyo a la gestión académica -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">APOYO A LA GESTIÓN ACADÉMICA</h5>
-                                                    
-                                                    @php
-                                                        $camposApoyo = [
-                                                            'Proceso de matrícula' => 'proceso_matricula',
-                                                            'Sistema de información académica' => 'sistema_informacion_academica'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposApoyo as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $apoyoAcademico->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Acto administrativo:</div>
-                                                        <div class="col-md-6">
-                                                            @if($apoyoAcademico && $apoyoAcademico->anexoActoAdministrativo)
-                                                                <a href="{{ $apoyoAcademico->anexoActoAdministrativo->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                                 <!-- Administración de la planta física -->
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">ADMINISTRACIÓN DE PLANTA FÍSICA</h5>
@@ -679,6 +650,91 @@
                                                         <div class="col-md-6">
                                                             @if($plantaFisica && $plantaFisica->anexoDotacionRecursos)
                                                                 <a href="{{ $plantaFisica->anexoDotacionRecursos->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Apoyo financiero -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">APOYO FINANCIERO</h5>
+                                                    
+                                                    @php
+                                                        $camposFinanciero = [
+                                                            'Presupuesto FSE' => 'presupuesto_fse',
+                                                            'Contabilidad' => 'contabilidad',
+                                                            'Contratación' => 'contratacion',
+                                                            'Control fiscal' => 'control_fiscal'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposFinanciero as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $financiero->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documento presupuesto:</div>
+                                                        <div class="col-md-6">
+                                                            @if($financiero && $financiero->anexoPresupuestoFse)
+                                                                <a href="{{ $financiero->anexoPresupuestoFse->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Manual de contratación:</div>
+                                                        <div class="col-md-6">
+                                                            @if($financiero && $financiero->anexoManualContratacion)
+                                                                <a href="{{ $financiero->anexoManualContratacion->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Apoyo a la gestión académica -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">APOYO A LA GESTIÓN ACADÉMICA</h5>
+                                                    
+                                                    @php
+                                                        $camposApoyo = [
+                                                            'Proceso de matrícula' => 'proceso_matricula',
+                                                            'Sistema de información académica' => 'sistema_informacion_academica'
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposApoyo as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $apoyoAcademico->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- Documentos especiales -->
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Acto administrativo:</div>
+                                                        <div class="col-md-6">
+                                                            @if($apoyoAcademico && $apoyoAcademico->anexoActoAdministrativo)
+                                                                <a href="{{ $apoyoAcademico->anexoActoAdministrativo->url }}" target="_blank" class="text-decoration-none">
                                                                     <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
                                                                 </a>
                                                             @else
@@ -751,55 +807,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Apoyo financiero -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">APOYO FINANCIERO</h5>
-                                                    
-                                                    @php
-                                                        $camposFinanciero = [
-                                                            'Presupuesto FSE' => 'presupuesto_fse',
-                                                            'Contabilidad' => 'contabilidad',
-                                                            'Contratación' => 'contratacion',
-                                                            'Control fiscal' => 'control_fiscal'
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposFinanciero as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $financiero->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                    
-                                                    <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento presupuesto:</div>
-                                                        <div class="col-md-6">
-                                                            @if($financiero && $financiero->anexoPresupuestoFse)
-                                                                <a href="{{ $financiero->anexoPresupuestoFse->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Manual de contratación:</div>
-                                                        <div class="col-md-6">
-                                                            @if($financiero && $financiero->anexoManualContratacion)
-                                                                <a href="{{ $financiero->anexoManualContratacion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -810,7 +817,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN DE LA COMUNIDAD</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DE LA COMUNIDAD</h4>
                                                 
                                                 @php
                                                     $gruposPoblacionales = $gestion_comunidad->atencionGrupoPoblacionales ?? null;
@@ -855,32 +862,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <!-- Programa de servicio social -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <h5 class="fw-bold mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Programa institucional:</div>
-                                                        <div class="col-md-6">
-                                                            {!! $servicioSocial->programa_servicio_social ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento del programa:</div>
-                                                        <div class="col-md-6">
-                                                            @if($servicioSocial && $servicioSocial->anexoProgramaServicioSocial)
-                                                                <a href="{{ $servicioSocial->anexoProgramaServicioSocial->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted fst-italic">No disponible</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                                
                                                 <!-- Prevención de riesgos -->
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PREVENCIÓN DE RIESGOS</h5>
@@ -915,6 +897,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <!-- Programa de servicio social -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <h5 class="fw-bold mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Programa institucional:</div>
+                                                        <div class="col-md-6">
+                                                            {!! $servicioSocial->programa_servicio_social ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6 fw-semibold">Documento del programa:</div>
+                                                        <div class="col-md-6">
+                                                            @if($servicioSocial && $servicioSocial->anexoProgramaServicioSocial)
+                                                                <a href="{{ $servicioSocial->anexoProgramaServicioSocial->url }}" target="_blank" class="text-decoration-none">
+                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted fst-italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
