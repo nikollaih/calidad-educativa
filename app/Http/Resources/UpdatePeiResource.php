@@ -19,6 +19,7 @@ class UpdatePeiResource extends JsonResource
             'gestion_academica' => $this->transformGestionAcademica(),
             'gestion_administrativa' => $this->transformGestionAdministrativa(),
             'gestion_comunidad' => $this->transformGestionComunidad(),
+            'resena_historica' => $this->transformResenaHistorica(),
         ];
     }
 
@@ -519,6 +520,38 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
+    protected function transformResenaHistorica(): ?array {
+        if (!$this->resenaHistorica) return null;
+
+        return [
+            'resena_historica' => array_merge(
+                $this->transformSimple(
+                    $this->resenaHistorica->resenaHistorica,
+                    ['resena_historica'],
+                ),
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('resena_historica'),
+                    'relation_name' => 'resenaHistorica->resenaHistorica',
+                    'traces' => $this->resenaHistorica->resenaHistorica?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
+                ]
+            ),
+        ];
+    }
+
     protected function transformSimple($model, array $fields): ?array
     {
         if (!$model) return null;
@@ -572,6 +605,8 @@ class UpdatePeiResource extends JsonResource
             'atencion_grupo_poblacionales' => 'ATENCIÓN EDUCATIVA A GRUPOS POBLACIONALES',
             'prevencion_riesgos' => 'PREVENCIÓN DE RIESGOS',
             'programas_servicio_social' => 'PROGRAMA DE SERVICIO SOCIAL',
+            'resena_historica' => 'RESEÑA HISTORICA',
+            default => 'SIN NOMBRE DE PROCESO'
         };
     }
 }

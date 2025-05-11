@@ -329,6 +329,7 @@ class InstitutionController extends Controller
                 'gestionAcademica',
                 'gestionComunidad',
                 'gestionAdministrativa',
+                'resenaHistorica',
             ])
             ->where('id', $institucion)
             ->first();
@@ -343,7 +344,6 @@ class InstitutionController extends Controller
         DB::beginTransaction();
 
         try {
-            dd($this);
             // Validar los datos recibidos
             $validated = $request->validate([
                 'tipo_codificacion' => 'required|integer',
@@ -361,6 +361,7 @@ class InstitutionController extends Controller
                 'gestionAcademica',
                 'gestionComunidad',
                 'gestionAdministrativa',
+                'resenaHistorica',
             ])->findOrFail($institutionId);
 
             // Definir propiedades a eliminar del input
@@ -370,6 +371,7 @@ class InstitutionController extends Controller
                 'fecha',
                 'observacion',
                 'institucion_id',
+                'documento_adicional',
                 'hijo_index'
             ];
 
