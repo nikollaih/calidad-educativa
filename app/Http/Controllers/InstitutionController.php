@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\RedesSocialesService;
+use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
-use App\Models\GestionAcademica;
-use App\Models\GestionAdministrativa;
-use App\Models\GestionComunidad;
-use App\Models\GestionDirectiva;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\PeiHistorial;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -308,6 +306,7 @@ class InstitutionController extends Controller
                 'gestionAcademica',
                 'gestionComunidad',
                 'gestionAdministrativa',
+                'resenaHistorica',
             ])
             ->where('id', $institucion)
             ->first();
@@ -320,9 +319,11 @@ class InstitutionController extends Controller
             'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
             'gestion_academica' => $institucionData->gestionAcademica ?? null,
             'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
+            'resena_historica' => $institucionData->resenaHistorica ?? null,
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
         ]);
     }
+
     public function peiManageInformation(int $institucion) {
         $institucionData = Institucion::with([
                 'gestionDirectiva',
@@ -374,16 +375,51 @@ class InstitutionController extends Controller
                 'documento_adicional',
                 'hijo_index'
             ];
+            $documentos = array_filter($input, function($value, $key) {
+                // Incluir solo las claves que contienen "anexo" y excluir "documento_adicional"
+                return $key !== 'documento_adicional' && 
+                    $value instanceof \Illuminate\Http\UploadedFile;
+            }, ARRAY_FILTER_USE_BOTH);
 
             // Filtrar datos para actualización
             $dataToUpdate = array_diff_key($input, array_flip($propiedadesAEliminar));
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
+            
+            // Almacena los documentos nuevos
+            foreach ($documentos as $key => $value) {
+                $adjuntoInfo = [];
+
+                // Obtener la extensión original del archivo
+                $adjuntoInfo['extension']        = $value->getClientOriginalExtension();
+                // Obtiene el nombre del archivo
+                $adjuntoInfo['nombre']           =  pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME);
+                // Obtiene el nombre completo del archivo
+                $adjuntoInfo['nombre_completo']  =  $value->getClientOriginalName();
+                // Obtiene el tipo MIME del archivo
+                $adjuntoInfo['tipo_mime']             = $value->getClientMimeType();
+                // Obtiene el disco del archivo
+                $adjuntoInfo['disco']             = 'public';
+
+                // Generar un nombre único
+                $nombreUnico = $adjuntoInfo['nombre'] . '_' . uniqid() . '.' . $adjuntoInfo['extension'];
+
+                // Guardar archivo
+                $rutaArchivo = $value->storeAs("institucion/{$institutionId}/pei_attachments", $nombreUnico, 'public');
+
+                if ($rutaArchivo) {
+                    $adjuntoInfo['ruta'] = $rutaArchivo;
+                    $adjuntoGuardado = Adjunto::create($adjuntoInfo);
+                    $snakeKey = Str::snake($key);
+                    $dataToUpdate[$snakeKey] = $adjuntoGuardado->id;
+                }
+            }
 
             if (!$model) {
                 throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
+
             // Capturar datos originales
             $oldData = $model->getOriginal();
             // Actualizar el modelo

@@ -939,7 +939,7 @@
                                                 <h4 class="fw-bold  pb-2 mb-4">RESEÑA HISTORICA</h4>
                                                 
                                                 @php
-                                                    $resenaHistorica = $resena_historica ?? null;
+                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
                                                 @endphp
                                                 
                                                 <!-- Resena historica -->

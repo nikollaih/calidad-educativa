@@ -20,12 +20,26 @@ const ModalAjustes = ({
     onSave(formData, fileUploads);
   };
 
-  const handleFileChange = (fieldName, e) => {
+ const handleFileChange = (documentData, e) => {
+  console.log('documentData', documentData);
+  
+  if (e.target.files[0]) {
     setFileUploads({
       ...fileUploads,
-      [fieldName]: e.target.files[0]
+      // Usamos tanto la clave original como la snake_case por compatibilidad
+      [documentData.original_key]: e.target.files[0],
+      [documentData.document_key]: e.target.files[0]
     });
-  };
+  }
+};
+
+
+const handleNewFile = (fieldName, e) => {
+  setFileUploads({
+    ...fileUploads,
+    [fieldName]: e.target.files[0]
+  });
+};
 
   const tipoCodificacionOptions = [
     { value: 1, label: 'Inicial' },
@@ -109,69 +123,69 @@ const ModalAjustes = ({
               <div className="mb-4 pt-3 border-top">
                 <h6 className="fw-bold mb-3">Documentos</h6>
                 <div className="row">
-                  {Object.entries(documentos)
-                    .filter(([key, value]) => 
-                      value && 
-                      typeof value === 'object' && 
-                      value.id && 
-                      !key.startsWith('__')
-                    )
-                    .map(([docKey, docData]) => {
-                      // Convertimos la key a snake_case si no lo está ya
-                      const snakeCaseKey = docKey
+                  {Object.entries(documentos).map(([docKey, docData]) => {
+                    // Si docData es null, creamos un objeto vacío con la estructura básica
+                    const documentData = docData || {
+                      id: null,
+                      ruta: null,
+                      nombre_completo: null,
+                      document_key: docKey
                         .replace(/([A-Z])/g, '_$1')
                         .toLowerCase()
-                        .replace(/^_/, '');
-                        
-                        // Creamos un nuevo objeto con la key original incluida
-                        const documentData = {
-                          ...docData,
-                          document_key: snakeCaseKey, // Añadimos la key en snake_case
-                          original_key: docKey // Conservamos la key original por si acaso
-                        };
+                        .replace(/^_/, ''),
+                      original_key: docKey
+                    };
 
-                      const { id, ruta, nombre_completo } = documentData;
-                      const nombreMostrar = docKey
-                        .replace(/([A-Z])/g, ' $1')
-                        .replace(/_/g, ' ')
-                        .trim()
-                        .toLowerCase()
-                        .replace(/\b\w/g, l => l.toUpperCase());
-                        
-                      return (
-                        <div className="col-md-6 mb-3" key={`edit-doc-${id}`}>
-                          <div className="d-flex justify-content-between align-items-center">
-                            <span className="text-capitalize">{nombreMostrar}</span>
-                            <div>
-                              <label className="btn btn-sm btn-outline-primary mb-0">
-                                <i className="fas fa-upload me-1"></i> Subir
-                                <input 
-                                  type="file" 
-                                  style={{display: 'none'}} 
-                                  onChange={(e) => handleFileChange(documentData, e)} // Pasamos el objeto completo
-                                />
-                              </label>
-                              {fileUploads[nombre_completo] && (
-                                <span className="ms-2">{fileUploads[nombre_completo].name}</span>
-                              )}
-                              {ruta && (
-                                <a 
-                                  href={`/storage/${ruta}`} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="btn btn-sm btn-outline-success ms-2"
-                                >
-                                  <i className="fas fa-eye me-1"></i> Ver
-                                </a>
-                              )}
-                            </div>
+                    const { id, ruta, nombre_completo } = documentData;
+                    const nombreMostrar = docKey
+                      .replace(/([A-Z])/g, ' $1')
+                      .replace(/_/g, ' ')
+                      .trim()
+                      .toLowerCase()
+                      .replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    // Verificamos si hay un archivo subido recientemente para este documento
+                    const hasUploadedFile = fileUploads[documentData.document_key] || 
+                                          fileUploads[documentData.original_key];
+                    
+                    return (
+                      <div className="col-md-6 mb-3" key={`edit-doc-${id || docKey}`}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className="text-capitalize">{nombreMostrar}</span>
+                          <div>
+                            <label className="btn btn-sm btn-outline-primary mb-0">
+                              <i className="fas fa-upload me-1"></i> Subir
+                              <input 
+                                type="file" 
+                                style={{display: 'none'}} 
+                                onChange={(e) => handleFileChange(documentData, e)}
+                              />
+                            </label>
+                            
+                            {/* Mostrar nombre del archivo subido recientemente */}
+                            {hasUploadedFile && (
+                              <span className="ms-2">{hasUploadedFile.name}</span>
+                            )}
+                            
+                            {/* Mostrar botón Ver si hay ruta o archivo subido */}
+                            {(ruta || hasUploadedFile) && (
+                              <a 
+                                href={ruta ? `/storage/${ruta}` : URL.createObjectURL(hasUploadedFile)} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="btn btn-sm btn-outline-success ms-2"
+                              >
+                                <i className="fas fa-eye me-1"></i> Ver
+                              </a>
+                            )}
                           </div>
-                          {nombre_completo && (
-                            <small className="text-muted d-block">{nombre_completo}</small>
-                          )}
                         </div>
-                      );
-                    })}
+                        {nombre_completo && (
+                          <small className="text-muted d-block">{nombre_completo}</small>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -196,7 +210,7 @@ const ModalAjustes = ({
                     type="file" 
                     required
                     className="form-control"
-                    onChange={(e) => handleFileChange('documento_adicional', e)}
+                    onChange={(e) => handleNewFile('documento_adicional', e)}
                   />
                   {fileUploads['documento_adicional'] && (
                     <span className="input-group-text">
@@ -485,17 +499,14 @@ export default function ActualizarPei({
         }
       });
       
-      // Agregar el índice de gestión e hijo si es necesario
       formDataToSend.append('institucion_id', institucionId);
-      // Agregar el índice de gestión e hijo si es necesario
       formDataToSend.append('hijo_index', hijoIndex);
       
-      // Enviar datos al backend Laravel
       const response = await fetch(`/institutional_profile/institution/${institucionId}/save-new-pei`, {
         method: 'POST',
         headers: {
-          'X-CSRF-TOKEN': csrfToken, // CSRF token para protección
-          'Accept': 'application/json', // Indicamos que queremos JSON de vuelta
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json',
         },
         body: formDataToSend
       });
@@ -506,18 +517,12 @@ export default function ActualizarPei({
       
       const data = await response.json();
       
-      // Manejar la respuesta exitosa
       location.reload();
 
       console.log('Datos guardados exitosamente:', data);
       setCurrentModal(null);
       
-      // Aquí podrías agregar una notificación de éxito o actualizar el estado
-      // Ejemplo: mostrar un toast de éxito
       alert('Los cambios se guardaron correctamente');
-      
-      // Opcional: recargar datos o actualizar el estado
-      // loadData(); // Si tienes una función para recargar los datos
       
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
@@ -557,6 +562,7 @@ export default function ActualizarPei({
                   {grupo.hijos.map((hijo, hijoIndex) => {
                     const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
                     
+                    
                     return (
                       <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
                         {/* Encabezado con botones */}
@@ -595,28 +601,34 @@ export default function ActualizarPei({
                         </div>
                         
                         {/* Documentos */}
-                        {documentos && (
+                        {documentos && Object.keys(documentos).length > 0 && (
                           <div className="mt-4">
                             <h6 className="fw-bold mb-3 text-center">Documentos</h6>
                             <div className="text-center">
                               {Object.entries(documentos).map(([docNombre, docValor]) => (
-                                <div className="d-inline-block mx-3 mb-2" key={docNombre}>
-                                  <div className="fw-semibold text-capitalize">
-                                    {docNombre
-                                      .replace(/([A-Z])/g, ' $1')  // Inserta espacio antes de mayúsculas
-                                      .replace(/^./, str => str.toUpperCase())  // Primera letra mayúscula
-                                      .replace(/_/g, ' ')  // Reemplaza guiones bajos
-                                      .trim()}
+                                (
+                                  <div className="d-inline-block mx-3 mb-2" key={docNombre}>
+                                    <div className="fw-semibold text-capitalize">
+                                      {docNombre
+                                        .replace(/([A-Z])/g, ' $1')
+                                        .replace(/^./, str => str.toUpperCase())
+                                        .replace(/_/g, ' ')
+                                        .trim()}
+                                    </div>
+                                    {docValor?.ruta ? (
+                                      <a 
+                                        href={`/storage/${docValor.ruta}`} 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="badge bg-primary rounded-pill text-decoration-none"
+                                      >
+                                        Ver documento
+                                      </a>
+                                    ) : (
+                                      <span className="text-muted fst-italic">Sin información</span>
+                                    )}
                                   </div>
-                                  <a 
-                                    href={`/storage/${docValor.ruta}`} 
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="badge bg-primary rounded-pill text-decoration-none"
-                                  >
-                                    Ver documento
-                                  </a>
-                                </div>
+                                )
                               ))}
                             </div>
                           </div>
