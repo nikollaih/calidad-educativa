@@ -7,6 +7,7 @@ use App\Http\Services\AdjuntoService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Autoevaluacion;
 use App\Models\Calificacion;
+use App\Models\FactorCritico;
 use App\Models\GestionAcademica;
 use App\Models\GestionAdministrativa;
 use App\Models\GestionComunidad;
@@ -200,8 +201,63 @@ class InstitutionController extends Controller
        [
             'fortalezas' => $fortalezas,
             'oportunidadesMejora' => $oportunidadesMejora,
-            'gestiones' => $gestiones
+            'gestiones' => $gestiones,
+            'autoevaluacionId' => $autoevaluacion->id
         ]);
+    }
+    public function sincronizarFactoresCriticos(Request $request){
+        $factoresPorGrupo = $request->input('factores');
+
+        // Recolectar los registros válidos que vamos a mantener
+        $idsParaMantener = [];
+        foreach ($factoresPorGrupo as $grupoNombre => $factores) {
+            $grupo = GrupoCalificacion::where('nombre', $grupoNombre)->first();
+
+            if (!$grupo) {
+                // Si el grupo no existe, omitir
+                continue;
+            }
+
+            foreach ($factores as $factor) {
+                $descripcion = $factor['descripcion'] ?? null;
+                $valor = (int) $factor['valor'];
+                $autoevaluacionId = (int) $factor['autoevaluacion_id'];
+
+                // Buscar si ya existe uno igual
+                $factorCritico = FactorCritico::updateOrCreate(
+                    [
+                        'autoevaluacion_id' => $autoevaluacionId,
+                        'grupo_calificacion_id' => $grupo->id,
+                    ],
+                    [
+                        'descripcion' => $descripcion,
+                        'valor' => $valor,
+                    ]
+                );
+
+                $idsParaMantener[] = $factorCritico->id;
+            }
+        }
+
+        // Si se encontró al menos un autoevaluacion_id, eliminar lo demás de esa(s) evaluación(es)
+        $autoevaluacionIds = collect($factoresPorGrupo)
+            ->flatten(1)
+            ->pluck('autoevaluacion_id')
+            ->unique()
+            ->map(fn($id) => (int) $id);
+
+        if ($autoevaluacionIds->isNotEmpty()) {
+            FactorCritico::whereIn('autoevaluacion_id', $autoevaluacionIds)
+                ->whereNotIn('id', $idsParaMantener)
+                ->delete();
+
+            // Redirigir usando el primer autoevaluacion_id
+            return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionIds->first()]);
+        }
+
+        // Si no hay autoevaluaciones válidas, puedes redirigir a algún lugar alternativo o mostrar un error
+        return redirect()->back()->withErrors('No se pudo sincronizar: no se encontró ningún autoevaluacion_id válido.');
+
     }
     public function autoevaluaciones(int $institution = null)
     {

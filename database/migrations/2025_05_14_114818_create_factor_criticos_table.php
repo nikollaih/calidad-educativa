@@ -13,7 +13,10 @@ return new  class extends Migration
     {
         Schema::create('factor_criticos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('licencia_funcionamiento')->constrained('adjuntos');
+            // Claves foráneas para relacionar con autoevaluacion y grupo_calificacions
+            $table->foreignId('autoevaluacion_id')->constrained()->onDelete('cascade');
+            $table->foreignId('grupo_calificacion_id')->constrained()->onDelete('cascade');
+
             $table->text('descripcion');
             $table->integer('valor');
             $table->timestamps();

@@ -62,7 +62,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('institutional_profile')->group(function () {
         // Rutas para la gestion de fortalezas y debilidades
-        Route::get('institution/{institution}/fort_deb'             , [InstitutionController::class, 'fortalezasDebilidades'])->name('institution.fort_deb');
+        Route::get('institution/{autoevaluacionId}/fort_deb'             , [InstitutionController::class, 'fortalezasDebilidades'])->name('institution.fort_deb');
+        Route::post('institution/{autoevaluacionId}/fort_deb'             , [InstitutionController::class, 'sincronizarFactoresCriticos'])->name('institution.fort_deb-save');
 
         // Rutas para la gestion de instituciones
         Route::get('institution/{institution}/autoevaluaciones'             , [InstitutionController::class, 'autoevaluaciones'])->name('institution.autoevaluaciones');

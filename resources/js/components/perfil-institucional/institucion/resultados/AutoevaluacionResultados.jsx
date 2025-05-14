@@ -4,9 +4,14 @@ import { useEffect, useState } from "preact/hooks";
 export default function AutoevaluacionResultados({
                                                      fortalezas = {},
                                                      oportunidadesMejora = {},
-                                                     gestiones = []
+                                                     gestiones = [],
+                                                     autoevaluacionId = -1,
+                                                     csrfToken = '',
+                                                     sincronizarUrl = '#',
+
                                                  }) {
     const [gruposPorGestion, setGruposPorGestion] = useState({});
+    const [factoresCriticos, setFactoresCriticos] = useState({});
 
     useEffect(() => {
         console.log("Datos:", { oportunidadesMejora, gestiones, fortalezas });
@@ -29,6 +34,47 @@ export default function AutoevaluacionResultados({
 
         setGruposPorGestion(gruposOrganizados);
     }, [oportunidadesMejora]);
+    const agregarFactorCritico = (grupoNombre) => {
+        setFactoresCriticos(prev => {
+            const actuales = prev[grupoNombre] || [];
+            return {
+                ...prev,
+                [grupoNombre]: [...actuales, { texto: '', valor: 1 }]
+            };
+        });
+    };
+    const eliminarFactorCritico = (grupoNombre, index) => {
+        setFactoresCriticos(prev => {
+            const nuevosFactores = [...(prev[grupoNombre] || [])];
+            nuevosFactores.splice(index, 1); // Elimina el factor en la posición indicada
+            return {
+                ...prev,
+                [grupoNombre]: nuevosFactores
+            };
+        });
+    };
+
+    const actualizarFactor = (grupoNombre, index, campo, valor) => {
+        setFactoresCriticos(prev => {
+            const actualizados = [...(prev[grupoNombre] || [])];
+            actualizados[index][campo] = valor;
+            return {
+                ...prev,
+                [grupoNombre]: actualizados
+            };
+        });
+    };
+
+    const obtenerDescripcionValor = (valor) => {
+        const descripciones = {
+            1: "Poco Urgente",
+            2: "Menor Impacto",
+            3: "Tendencia Agravarse",
+            4: "Mayor Impacto",
+            5: "Muy Urgente"
+        };
+        return descripciones[valor] || "Null";
+    };
 
     // Función para encontrar las oportunidades de mejora para una gestión específica
     const getOportunidadesMejora = (gestionNombre) => {
@@ -74,9 +120,12 @@ export default function AutoevaluacionResultados({
             <table class="table table-bordered">
                 <thead class="bg-light">
                 <tr>
-                    <th class="text-center">Gestión</th>
-                    <th class="text-center">Fortalezas</th>
-                    <th class="text-center">Oportunidades de Mejoramiento</th>
+                    <th className="text-center">Gestión</th>
+                    <th className="text-center">Fortalezas</th>
+                    <th className="text-center">Oportunidades de Mejoramiento</th>
+                    <th className="text-center">Factores críticos</th>
+
+
                 </tr>
                 </thead>
                 <tbody>
@@ -110,11 +159,93 @@ export default function AutoevaluacionResultados({
                                 <span className="text-gray-500">No se encontraron oportunidades de mejora</span>
                             )}
                         </td>
+                        <td>
+                            {Object.keys(getOportunidadesMejora(gestion.nombre)).length > 0 ? (
+                                <div>
+                                    {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
+                                            calificaciones.length > 0 && (
+                                                <div key={grupoNombre} className="mb-4 border p-2 rounded">
+                                                    <strong className="block mb-1">{grupoNombre}</strong>
+
+                                                    {/* Mostrar factores críticos existentes */}
+                                                    {(factoresCriticos[grupoNombre] || []).map((factor, index) => (
+                                                        <div key={index} className="mb-2 border p-2 rounded bg-light">
+                                                            <textarea
+                                                                className="form-control mb-1"
+                                                                placeholder="Descripción del factor"
+                                                                value={factor.texto}
+                                                                onInput={(e) => actualizarFactor(grupoNombre, index, 'texto', e.target.value)}
+                                                                rows={3}
+                                                            />
+
+                                                            <select
+                                                                className="form-select mb-1"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        factor.valor === 3 ? "#f8d7da" :
+                                                                            factor.valor === 4 ? "#dc3545" :
+                                                                                factor.valor === 5 ? "#a71d2a" : "#ffffff",
+                                                                    color: factor.valor >= 4 ? "#ffffff" : "#000000"
+                                                                }}
+                                                                value={factor.valor}
+                                                                onChange={(e) => actualizarFactor(grupoNombre, index, 'valor', parseInt(e.target.value))}
+                                                            >
+                                                                <option value={1}>1 - Poco Urgente</option>
+                                                                <option value={2}>2 - Menor Impacto</option>
+                                                                <option value={3}>3 - Tendencia a Agravarse</option>
+                                                                <option value={4}>4 - Mayor Impacto</option>
+                                                                <option value={5}>5 - Muy Urgente</option>
+                                                            </select>
+
+                                                            <small className="text-muted d-block mb-1">Valoración: {obtenerDescripcionValor(factor.valor)}</small>
+
+                                                            <button
+                                                                className="btn btn-sm btn-danger"
+                                                                onClick={() => eliminarFactorCritico(grupoNombre, index)}
+                                                            >
+                                                                Eliminar
+                                                            </button>
+                                                        </div>
+                                                    ))}
+
+
+                                                    {/* Botón para agregar factor crítico */}
+                                                    <button
+                                                        className="btn btn-sm btn-primary mt-2"
+                                                        onClick={() => agregarFactorCritico(grupoNombre)}
+                                                    >
+                                                        Agregar Factor Crítico
+                                                    </button>
+                                                </div>
+                                            )
+                                    )}
+                                </div>
+                            ) : (
+                                <span className="text-gray-500">No se encontraron oportunidades de mejora</span>
+                            )}
+                        </td>
+
 
                     </tr>
                 ))}
                 </tbody>
             </table>
+            <form method="POST" action={sincronizarUrl}>
+                <input type="hidden" name="_token" value={csrfToken} />
+                {Object.entries(factoresCriticos).map(([grupoNombre, factores], grupoIndex) =>
+                    factores.map((factor, factorIndex) => (
+                        <div key={`${grupoNombre}-${factorIndex}`}>
+                            <input type="hidden" name={`factores[${grupoNombre}][${factorIndex}][descripcion]`} value={factor.texto} />
+                            <input type="hidden" name={`factores[${grupoNombre}][${factorIndex}][valor]`} value={factor.valor} />
+                            <input type="hidden" name={`factores[${grupoNombre}][${factorIndex}][autoevaluacion_id]`} value={autoevaluacionId} />
+                        </div>
+                    ))
+                )}
+                <button type="submit" className="btn btn-success mt-4">
+                    Guardar factores críticos
+                </button>
+
+            </form>
         </div>
     );
 }
