@@ -52,6 +52,12 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                             >
                                 Ver detalles
                             </a>
+                            <a
+                                href={`/institutional_profile/institution/${evaluacion.id}/fort_deb`}
+                                className="btn btn-info btn-sm me-2"
+                            >
+                                Resultados
+                            </a>
 
                             {/* Mostrar Editar solo si no está en VALIDACION */}
                             {evaluacion.alias_estado !== "VALIDACION" && (
