@@ -8,7 +8,8 @@ export default function AutoevaluacionResultados({
                                                      autoevaluacionId = -1,
                                                      csrfToken = '',
                                                      sincronizarUrl = '#',
-                                                     factoresCriticosExistentes = {}
+                                                     factoresCriticosExistentes = {},
+                                                     puedeEditar = false,
                                                  }) {
     const [gruposPorGestion, setGruposPorGestion] = useState({});
     const [factoresCriticos, setFactoresCriticos] = useState(factoresCriticosExistentes);
@@ -164,7 +165,15 @@ export default function AutoevaluacionResultados({
                                     {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
                                             calificaciones.length > 0 && (
                                                 <div key={grupoNombre} className="mb-4 border p-2 rounded">
-                                                    <strong className="block mb-1">{grupoNombre}</strong>
+                                                    <strong className="d-block mb-1">{grupoNombre}</strong>
+                                                    {puedeEditar && (
+                                                        <button
+                                                            className="btn btn-sm btn-primary mt-2 p-1"
+                                                            onClick={() => agregarFactorCritico(grupoNombre)}
+                                                        >
+                                                            Agregar Factor Crítico
+                                                        </button>
+                                                    )}
 
                                                     {/* Mostrar factores críticos existentes */}
                                                     {(factoresCriticos[grupoNombre] || []).map((factor, index) => (
@@ -179,6 +188,7 @@ export default function AutoevaluacionResultados({
 
                                                             <select
                                                                 className="form-select mb-1"
+                                                                disabled={!puedeEditar}
                                                                 style={{
                                                                     backgroundColor:
                                                                         factor.valor === 3 ? "#f8d7da" :
@@ -196,25 +206,22 @@ export default function AutoevaluacionResultados({
                                                                 <option value={5}>5 - Muy Urgente</option>
                                                             </select>
 
+
                                                             <small className="text-muted d-block mb-1">Valoración: {obtenerDescripcionValor(factor.valor)}</small>
 
-                                                            <button
-                                                                className="btn btn-sm btn-danger"
-                                                                onClick={() => eliminarFactorCritico(grupoNombre, index)}
-                                                            >
-                                                                Eliminar
-                                                            </button>
+                                                            {puedeEditar && (
+                                                                <button
+                                                                    className="btn btn-sm btn-danger"
+                                                                    onClick={() => eliminarFactorCritico(grupoNombre, index)}
+                                                                >
+                                                                    Eliminar
+                                                                </button>
+                                                            )}
+
                                                         </div>
                                                     ))}
-
-
                                                     {/* Botón para agregar factor crítico */}
-                                                    <button
-                                                        className="btn btn-sm btn-primary mt-2"
-                                                        onClick={() => agregarFactorCritico(grupoNombre)}
-                                                    >
-                                                        Agregar Factor Crítico
-                                                    </button>
+
                                                 </div>
                                             )
                                     )}
@@ -240,9 +247,12 @@ export default function AutoevaluacionResultados({
                         </div>
                     ))
                 )}
-                <button type="submit" className="btn btn-success mt-4">
-                    Guardar factores críticos
-                </button>
+                {puedeEditar && (
+                    <button type="submit" className="btn btn-success mt-4">
+                        Guardar factores críticos
+                    </button>
+                )}
+
 
             </form>
         </div>

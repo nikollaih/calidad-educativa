@@ -213,7 +213,8 @@ class InstitutionController extends Controller
             'oportunidadesMejora' => $oportunidadesMejora,
             'gestiones' => $gestiones,
             'autoevaluacionId' => $autoevaluacion->id,
-            'factoresCriticosExistentes' => $factoresCriticosFormateados
+            'factoresCriticosExistentes' => $factoresCriticosFormateados,
+            'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
         ]);
     }
     public function sincronizarFactoresCriticos(Request $request){

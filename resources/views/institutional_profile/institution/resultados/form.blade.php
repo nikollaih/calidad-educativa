@@ -14,6 +14,7 @@
         data-csrf-token="{{ csrf_token() }}"
         data-sincronizar-url="{{ route('institution.fort_deb-save', ['autoevaluacionId' => $autoevaluacionId]) }}"
         data-factores-criticos-existentes='{!! json_encode($factoresCriticosExistentes) !!}'
+        data-puede-editar="{{$puedeEditar}}"
     >
     </div>
 @endsection
