@@ -61,6 +61,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/permissions/{role}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
 
     Route::prefix('institutional_profile')->group(function () {
+        // Rutas para la gestion de fortalezas y debilidades
+        Route::get('institution/{autoevaluacionId}/fort_deb'             , [InstitutionController::class, 'fortalezasDebilidades'])->name('institution.fort_deb');
+        Route::post('institution/{autoevaluacionId}/fort_deb'             , [InstitutionController::class, 'sincronizarFactoresCriticos'])->name('institution.fort_deb-save');
+
         // Rutas para la gestion de instituciones
         Route::get('institution/{institution}/autoevaluaciones'             , [InstitutionController::class, 'autoevaluaciones'])->name('institution.autoevaluaciones');
         Route::get('institution/{institution}/autoevaluaciones-crear'             , [InstitutionController::class, 'autoevaluacionesCrear'])->name('institution.autoevaluaciones-crear');
