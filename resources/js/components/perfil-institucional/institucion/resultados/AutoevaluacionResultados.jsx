@@ -8,13 +8,12 @@ export default function AutoevaluacionResultados({
                                                      autoevaluacionId = -1,
                                                      csrfToken = '',
                                                      sincronizarUrl = '#',
-
+                                                     factoresCriticosExistentes = {}
                                                  }) {
     const [gruposPorGestion, setGruposPorGestion] = useState({});
-    const [factoresCriticos, setFactoresCriticos] = useState({});
+    const [factoresCriticos, setFactoresCriticos] = useState(factoresCriticosExistentes);
 
     useEffect(() => {
-        console.log("Datos:", { oportunidadesMejora, gestiones, fortalezas });
 
         // Organizar grupos por gestión basado en el índice
         const gruposOrganizados = {};

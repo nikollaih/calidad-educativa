@@ -59,6 +59,19 @@ class InstitutionController extends Controller
     {
         $autoevaluacion = Autoevaluacion::with('notas', 'notas.calificacion', 'notas.calificacion.grupo', 'notas.calificacion.grupo.padre')
             ->where('id', $autoevaluacionId)->first();
+        $factoresCriticosRegistrados = FactorCritico::with('grupoCalificacion')
+            ->get();
+        $factoresCriticosFormateados = [];
+
+        foreach ($factoresCriticosRegistrados as $factor) {
+            $grupoNombre = $factor->grupoCalificacion->nombre ?? 'Sin grupo';
+            $factoresCriticosFormateados[$grupoNombre][] = [
+                'texto' => $factor->descripcion,
+                'valor' => $factor->valor,
+                'autoevaluacion_id' => $factor->autoevaluacion_id,
+            ];
+        }
+
 
         if(empty($autoevaluacion)){
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
@@ -165,7 +178,6 @@ class InstitutionController extends Controller
                 if (!$oportunidadesMejora->has($nombreGrupoPadre)) {
                     $oportunidadesMejora[$nombreGrupoPadre] = collect();
                 }
-
                 // Agregar el grupo completo como oportunidad de mejora
                 $oportunidadesMejora[$nombreGrupoPadre]->push([
                     'nombre' => $grupo['nombre'],
@@ -195,14 +207,13 @@ class InstitutionController extends Controller
                 }
             }
         }
-
-
         return view('institutional_profile.institution.resultados.form',
        [
             'fortalezas' => $fortalezas,
             'oportunidadesMejora' => $oportunidadesMejora,
             'gestiones' => $gestiones,
-            'autoevaluacionId' => $autoevaluacion->id
+            'autoevaluacionId' => $autoevaluacion->id,
+            'factoresCriticosExistentes' => $factoresCriticosFormateados
         ]);
     }
     public function sincronizarFactoresCriticos(Request $request){
@@ -217,7 +228,6 @@ class InstitutionController extends Controller
                 // Si el grupo no existe, omitir
                 continue;
             }
-
             foreach ($factores as $factor) {
                 $descripcion = $factor['descripcion'] ?? null;
                 $valor = (int) $factor['valor'];
@@ -228,17 +238,16 @@ class InstitutionController extends Controller
                     [
                         'autoevaluacion_id' => $autoevaluacionId,
                         'grupo_calificacion_id' => $grupo->id,
-                    ],
-                    [
                         'descripcion' => $descripcion,
                         'valor' => $valor,
+                    ],
+                    [
                     ]
                 );
 
                 $idsParaMantener[] = $factorCritico->id;
             }
         }
-
         // Si se encontró al menos un autoevaluacion_id, eliminar lo demás de esa(s) evaluación(es)
         $autoevaluacionIds = collect($factoresPorGrupo)
             ->flatten(1)
@@ -252,7 +261,8 @@ class InstitutionController extends Controller
                 ->delete();
 
             // Redirigir usando el primer autoevaluacion_id
-            return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionIds->first()]);
+            return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionIds->first()])
+                ->with('flash_success_message', "Resultados actualizados correctamente");
         }
 
         // Si no hay autoevaluaciones válidas, puedes redirigir a algún lugar alternativo o mostrar un error

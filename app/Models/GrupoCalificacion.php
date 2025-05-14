@@ -24,5 +24,9 @@ class GrupoCalificacion extends Model
     {
         return $this->hasMany(Calificacion::class, 'grupo_indice', 'indice');
     }
+    public function factoresCriticos()
+    {
+        return $this->hasMany(FactorCritico::class, 'grupo_calificacion_id', 'id');
+    }
 
 }

@@ -15,4 +15,8 @@ class FactorCritico extends Model
         'descripcion',
         'valor',
     ];
+
+    public function grupoCalificacion() {
+        return $this->belongsTo(GrupoCalificacion::class, 'grupo_calificacion_id', 'id');
+    }
 }
