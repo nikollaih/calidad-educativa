@@ -351,7 +351,7 @@ class InstitutionController extends Controller
                 'fecha' => 'required',
                 'observacion' => 'nullable|string|max:500',
                 'relation_name' => 'required|string',
-                'documento_adicional' => 'required|file',
+                'documento_adicional' => 'file',
             ]);
 
             $input = $request->all();
@@ -431,8 +431,11 @@ class InstitutionController extends Controller
             // Filtrar solo campos modificados
             $changedFields = array_keys($newData);
             $filteredOldData = array_intersect_key($oldData, array_flip($changedFields));
+            $guardaArchivoAdicional = null;
             // Guarda documento de edicion
-            $guardaArchivoAdicional = $this->adjuntoService->storeAdjunto($request->file('documento_adicional'),"institucion/{$institutionId}/edicion_pei",'public');
+            if ($request->hasFile('documento_adicional')) {
+                $guardaArchivoAdicional = $this->adjuntoService->storeAdjunto($request->file('documento_adicional'),"institucion/{$institutionId}/edicion_pei",'public');
+            }
             // Crear registro de historial
             $historial = PeiHistorial::create([
                 'model_id' => $model->getKey(),
@@ -440,7 +443,7 @@ class InstitutionController extends Controller
                 'attachment_id' => $guardaArchivoAdicional?->data?->id,
                 'tipo_codificacion' => (int) $input['tipo_codificacion'],
                 'date' => Carbon::parse($input['fecha']),
-                'observation' => $input['observacion'],
+                'observation' => !empty($input['observacion']) ? $input['observacion'] : null,
                 'old_data' => $filteredOldData,
                 'new_data' => $newData,
             ]);

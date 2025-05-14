@@ -69,7 +69,7 @@ const handleNewFile = (fieldName, e) => {
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label">Tipo de ajuste</label>
+                  <label className="form-label">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
                   <select
                     className="form-select"
                     value={formData.tipo_codificacion || ''}
@@ -86,7 +86,7 @@ const handleNewFile = (fieldName, e) => {
               </div>
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label text-capitalize">Fecha</label>
+                  <label className="form-label text-capitalize">Fecha  <span style={{color: 'red'}}>*</span></label>
                   <input
                     type="date"
                     required
@@ -107,7 +107,7 @@ const handleNewFile = (fieldName, e) => {
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
                     <label className="form-label text-capitalize">{clave.replace(/_/g, ' ')}</label>
-                    <input
+                    <textarea
                       type="text"
                       className="form-control"
                       value={valor || ''}
@@ -204,11 +204,11 @@ const handleNewFile = (fieldName, e) => {
               
               {/* Campo adicional para subir documento */}
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Documento anexo</label>
+                <label className="form-label text-capitalize">Documento anexo  <span style={{color: 'red'}}>*</span></label>
                 <div className="input-group">
                   <input 
                     type="file" 
-                    required
+                    required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
                     className="form-control"
                     onChange={(e) => handleNewFile('documento_adicional', e)}
                   />
