@@ -154,13 +154,11 @@ export default function AutoevaluacionResultados({
                             {tieneOportunidadesMejoramiento(gestion.nombre)  ? (
                                 <div>
                                     {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
-                                            calificaciones.length > 0 ? (
+                                            calificaciones.length > 0 && (
                                                 <div key={grupoNombre} className="mb-3">
                                                     <strong className="block mb-1">{grupoNombre}:</strong>
                                                     <p className="pl-4 mb-0">{calificaciones.join(' - ')}</p>
                                                 </div>
-                                            ) : (
-                                                <span className="text-gray-500">No se encontraron oportunidades de mejora</span>
                                             )
                                     )}
                                 </div>
@@ -229,8 +227,6 @@ export default function AutoevaluacionResultados({
                                                             </div>
                                                         </div>
                                                     ))}
-                                                    {/* Botón para agregar factor crítico */}
-
                                                 </div>
                                             )
                                     )}
