@@ -178,7 +178,7 @@ export default function Editar({  editarUrl = '#',
                                                                                         .map(nota => (
                                                                                             <div
                                                                                                 key={nota.id}
-                                                                                                title={nota.descripcion}
+                                                                                                title={nota.descripcion ?? 'sin descripcion'}
                                                                                                 className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
                                                                                                 style={{ cursor: 'pointer' }}
                                                                                                 onClick={() => handleNotaClick(cal.id, nota)}
