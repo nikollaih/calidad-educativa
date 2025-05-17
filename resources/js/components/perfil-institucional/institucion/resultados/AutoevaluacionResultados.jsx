@@ -169,7 +169,7 @@ export default function AutoevaluacionResultados({
                             )}
                         </td>
                         <td>
-                            {tieneOportunidadesMejoramiento(gestion.nombre) ? (
+                            {tieneOportunidadesMejoramiento(gestion.nombre)  ? (
                                 <div>
                                     {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
                                             calificaciones.length > 0 && (
