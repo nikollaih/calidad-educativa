@@ -114,18 +114,25 @@ export default function AutoevaluacionResultados({
         return oportunidadesPorGrupo;
     };
 
+    // Función para verificar si hay oportunidades de mejoramiento
+    const tieneOportunidadesMejoramiento = (gestionNombre) => {
+        const oportunidades = getOportunidadesMejora(gestionNombre);
+        // Verificar si hay al menos un grupo con calificaciones
+        return Object.values(oportunidades).some(
+            calificaciones => calificaciones.length > 0
+        );
+    };
+
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Fortalezas y debilidades</h2>
             <table class="table table-bordered">
                 <thead class="bg-light">
                 <tr>
-                    <th className="text-center">Gestión</th>
-                    <th className="text-center">Fortalezas</th>
-                    <th className="text-center">Oportunidades de Mejoramiento</th>
-                    <th className="text-center">Factores críticos</th>
-
-
+                    <th className="text-center" style={{width: "10%"}}  >Gestión</th>
+                    <th className="text-center" style={{width: "25%"}}>Fortalezas</th>
+                    <th className="text-center" style={{width: "25%"}}>Oportunidades de Mejoramiento</th>
+                    <th className="text-center" style={{width: "40%"}}>Factores críticos</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -144,14 +151,16 @@ export default function AutoevaluacionResultados({
                             )}
                         </td>
                         <td>
-                            {Object.keys(getOportunidadesMejora(gestion.nombre)).length > 0 ? (
+                            {tieneOportunidadesMejoramiento(gestion.nombre)  ? (
                                 <div>
                                     {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
-                                            calificaciones.length > 0 && (
+                                            calificaciones.length > 0 ? (
                                                 <div key={grupoNombre} className="mb-3">
                                                     <strong className="block mb-1">{grupoNombre}:</strong>
                                                     <p className="pl-4 mb-0">{calificaciones.join(' - ')}</p>
                                                 </div>
+                                            ) : (
+                                                <span className="text-gray-500">No se encontraron oportunidades de mejora</span>
                                             )
                                     )}
                                 </div>
@@ -160,7 +169,7 @@ export default function AutoevaluacionResultados({
                             )}
                         </td>
                         <td>
-                            {Object.keys(getOportunidadesMejora(gestion.nombre)).length > 0 ? (
+                            {tieneOportunidadesMejoramiento(gestion.nombre)  ? (
                                 <div>
                                     {Object.entries(getOportunidadesMejora(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
                                             calificaciones.length > 0 && (
@@ -168,7 +177,7 @@ export default function AutoevaluacionResultados({
                                                     <strong className="d-block mb-1">{grupoNombre}</strong>
                                                     {puedeEditar && (
                                                         <button
-                                                            className="btn btn-sm btn-primary mt-2 p-1"
+                                                            className="btn btn-sm btn-primary mt-2 my-2"
                                                             onClick={() => agregarFactorCritico(grupoNombre)}
                                                         >
                                                             Agregar Factor Crítico
@@ -184,6 +193,7 @@ export default function AutoevaluacionResultados({
                                                                 value={factor.texto}
                                                                 onInput={(e) => actualizarFactor(grupoNombre, index, 'texto', e.target.value)}
                                                                 rows={3}
+                                                                disabled={!puedeEditar}
                                                             />
 
                                                             <select
@@ -207,17 +217,16 @@ export default function AutoevaluacionResultados({
                                                             </select>
 
 
-                                                            <small className="text-muted d-block mb-1">Valoración: {obtenerDescripcionValor(factor.valor)}</small>
-
-                                                            {puedeEditar && (
-                                                                <button
-                                                                    className="btn btn-sm btn-danger"
-                                                                    onClick={() => eliminarFactorCritico(grupoNombre, index)}
-                                                                >
-                                                                    Eliminar
-                                                                </button>
-                                                            )}
-
+                                                            <div className="d-flex flex-column justify-content-center">
+                                                                {puedeEditar && (
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger"
+                                                                        onClick={() => eliminarFactorCritico(grupoNombre, index)}
+                                                                    >
+                                                                        Eliminar
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     ))}
                                                     {/* Botón para agregar factor crítico */}

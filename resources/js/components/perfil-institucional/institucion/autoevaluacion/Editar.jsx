@@ -11,13 +11,7 @@ export default function Editar({  editarUrl = '#',
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
     const [evidencias, setEvidencias] = useState({});
 
-    console.log([
-        editarUrl,
-        gruposCalificaciones,
-        csrfToken,
-        autoevaluacion,
-    ]);
-    
+
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
@@ -97,7 +91,6 @@ export default function Editar({  editarUrl = '#',
                 handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
             });
         }
-        console.log(autoevaluacion);
     }, [autoevaluacion]);
 
     return (
@@ -185,6 +178,7 @@ export default function Editar({  editarUrl = '#',
                                                                                         .map(nota => (
                                                                                             <div
                                                                                                 key={nota.id}
+                                                                                                title={nota.descripcion ?? 'sin descripcion'}
                                                                                                 className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
                                                                                                 style={{ cursor: 'pointer' }}
                                                                                                 onClick={() => handleNotaClick(cal.id, nota)}
