@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Result;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
+use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Autoevaluacion;
 use App\Models\Calificacion;
@@ -24,7 +26,8 @@ class InstitutionController extends Controller
 {
     public function __construct(
         private AdjuntoService $adjuntoService,
-        private RedesSocialesService $redesSocialesService
+        private RedesSocialesService $redesSocialesService,
+        private AutoevaluacionService $autoevaluacionService,
     ){}
 
     public function index()
@@ -407,13 +410,17 @@ class InstitutionController extends Controller
         if(!$autoevaluacion)
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
 
-        // De momento no hay logica para el envio a validar
+        $resultado = $this->autoevaluacionService->tieneNotasPendientes(autoevaluacion: $autoevaluacion);
 
-        $autoevaluacion->alias_estado = "VALIDACION";
-        $autoevaluacion->save();
-
-        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación enviada a validación correctamente");
-
+        if (!$resultado->success){
+            $autoevaluacion->alias_estado = "VALIDACION";
+            $autoevaluacion->save();
+            return redirect()->route(
+                'institution.autoevaluaciones',
+                ['institution' => $autoevaluacion->institucion_id]
+            )->with('flash_success_message', 'Autoevaluación enviada a validación correctamente');
+        }
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_error_message', $resultado->msg);
     }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
     {
