@@ -57,6 +57,10 @@ class Institucion extends Model
         return $this->hasOne(GestionAdministrativa::class, 'institution_id');
     }
 
+    public function resenaHistorica() {
+        return $this->hasOne(ResenaHistorica::class, 'institution_id');
+    }
+
     
     /**
      * Crea una estructura PEI vacía para la institución
@@ -94,6 +98,10 @@ class Institucion extends Model
             $gestionAdministrativa->apoyoGestionAcademica()->create();
             $gestionAdministrativa->serviciosComplementarios()->create();
             $gestionAdministrativa->talentoHumano()->create();
+            
+            // Crear resena historica
+            $resenaHistorica = $this->resenaHistorica()->create();
+            $resenaHistorica->resenaHistorica()->create();
         });
     }
 
