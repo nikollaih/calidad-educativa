@@ -66,6 +66,11 @@
 </style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
+        
+    <div
+        data-component="CBackButton"
+    >
+    </div>
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
@@ -79,7 +84,7 @@
                         </h5>
                         <div class="col-md-12">
                             <div class="card text-center mb-3">
-                                <div class="card-header border-bottom">
+                                <div class="card-header ">
                                     <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                         <li class="nav-item">
                                             <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">1. GESTIÓN DIRECTIVA</button>
@@ -94,22 +99,25 @@
                                             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">4. GESTIÓN DE LA COMUNIDAD</button>
                                         </li>
                                         <li class="nav-item">
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-resena-historica" aria-controls="navs-tab-resena-historica" aria-selected="true">5. RESEÑA HISTORICA</button>
+                                        </li>
+                                        <li class="nav-item">
                                             <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">5. ACTUALIZAR INFORMACIÓN</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="tab-content">
 
-                                   <!-- Gestión Directiva -->
+                                    <!-- Gestión Directiva -->
                                     <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
                                         <div class="card mb-4">
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
-                                                
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
+
                                                 <!-- Direccionamiento Estratégico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DIRECCIONAMIENTO ESTRATÉGICO</h5>
                                                     
                                                     <div class="row mb-3">
@@ -162,7 +170,7 @@
                                                 </div>
 
                                                 <!-- Gestión Estratégica -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GESTIÓN ESTRATÉGICA</h5>
                                                     
                                                     @php
@@ -185,7 +193,7 @@
                                                 </div>
 
                                                 <!-- Gobierno Escolar -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GOBIERNO ESCOLAR</h5>
                                                     
                                                     @php
@@ -214,7 +222,7 @@
                                                 </div>
 
                                                 <!-- Cultura Institucional -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">CULTURA INSTITUCIONAL</h5>
                                                     
                                                     @php
@@ -264,7 +272,7 @@
                                                 </div>
 
                                                 <!-- Clima Escolar -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">CLIMA ESCOLAR</h5>
                                                     
                                                     @php
@@ -315,7 +323,7 @@
                                                 </div>
 
                                                 <!-- Relaciones con el Entorno -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">RELACIONES CON EL ENTORNO</h5>
                                                     
                                                     @php
@@ -375,7 +383,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN ACADÉMICA</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ACADÉMICA</h4>
                                                 
                                                 @php
                                                     $disenos = $gestion_academica->disenosPedagogicos ?? null;
@@ -383,9 +391,10 @@
                                                     $aulas = $gestion_academica->gestionAulas ?? null;
                                                     $seguimientos = $gestion_academica->seguimientosAcademicos ?? null;
                                                 @endphp
+
                                                 
                                                 <!-- Diseño Pedagógico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DISEÑO PEDAGÓGICO</h5>
                                                     
                                                     @php
@@ -462,7 +471,7 @@
                                                 </div>
 
                                                 <!-- Prácticas Pedagógicas -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
                                                     
                                                     <div class="row mb-3">
@@ -474,7 +483,7 @@
                                                 </div>
 
                                                 <!-- Gestión de Aula -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">GESTIÓN DE AULA</h5>
                                                     
                                                     @php
@@ -524,7 +533,7 @@
                                                 </div>
 
                                                 <!-- Seguimiento Académico -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">SEGUIMIENTO ACADÉMICO</h5>
                                                     
                                                     @php
@@ -584,6 +593,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -594,7 +604,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
                                                 
                                                 @php
                                                     $plantaFisica = $gestion_administrativa->administracionPlantaFisica ?? null;
@@ -605,7 +615,7 @@
                                                 @endphp
                                                 
                                                 <!-- Apoyo a la gestión académica -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">APOYO A LA GESTIÓN ACADÉMICA</h5>
                                                     
                                                     @php
@@ -638,9 +648,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                
                                                 <!-- Administración de la planta física -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">ADMINISTRACIÓN DE PLANTA FÍSICA</h5>
                                                     
                                                     @php
@@ -689,7 +699,7 @@
                                                 </div>
 
                                                 <!-- Servicios complementarios -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">SERVICIOS COMPLEMENTARIOS</h5>
                                                     
                                                     <div class="row mb-3">
@@ -701,7 +711,7 @@
                                                 </div>
 
                                                 <!-- Talento humano -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">TALENTO HUMANO</h5>
                                                     
                                                     @php
@@ -750,9 +760,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                
                                                 <!-- Apoyo financiero -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">APOYO FINANCIERO</h5>
                                                     
                                                     @php
@@ -800,6 +810,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -810,7 +821,7 @@
                                             <div class="card-body p-4">
                                                 
                                                 <!-- Título principal -->
-                                                <h4 class="fw-bold border-bottom pb-2 mb-4">GESTIÓN DE LA COMUNIDAD</h4>
+                                                <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DE LA COMUNIDAD</h4>
                                                 
                                                 @php
                                                     $gruposPoblacionales = $gestion_comunidad->atencionGrupoPoblacionales ?? null;
@@ -819,7 +830,7 @@
                                                 @endphp
                                                 
                                                 <!-- Atención educativa a grupos poblacionales -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">ATENCIÓN EDUCATIVA A GRUPOS POBLACIONALES</h5>
                                                     
                                                     @php
@@ -857,7 +868,7 @@
                                                 </div>
 
                                                 <!-- Programa de servicio social -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
                                                     
                                                     <div class="row mb-3">
@@ -880,9 +891,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                
                                                 <!-- Prevención de riesgos -->
-                                                <div class="mb-4">
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PREVENCIÓN DE RIESGOS</h5>
                                                     
                                                     @php
@@ -915,6 +926,44 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Resena historica -->
+                                    <div class="tab-pane fade" id="navs-tab-resena-historica" role="tabpanel">
+                                        <div class="card mb-4">
+                                            <div class="card-body p-4">
+                                                
+                                                <!-- Título principal -->
+                                                <h4 class="fw-bold  pb-2 mb-4">RESEÑA HISTORICA</h4>
+                                                
+                                                @php
+                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
+                                                @endphp
+                                                
+                                                <!-- Resena historica -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <!-- <h5 class="fw-bold mb-3">RESEÑA HISTORICA</h5> -->
+                                                    
+                                                    @php
+                                                        $camposGrupos = [
+                                                            'Reseña historica' => 'resena_historica',
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposGrupos as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $resenaHistorica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                
+
                                             </div>
                                         </div>
                                     </div>
