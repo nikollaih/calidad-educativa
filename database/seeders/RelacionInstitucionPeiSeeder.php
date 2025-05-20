@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Institucion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class RelacionInstitucionPeiSeeder extends Seeder
 {
@@ -25,47 +26,31 @@ class RelacionInstitucionPeiSeeder extends Seeder
      */
     private function verificarYCrearRelaciones(Institucion $institucion): void
     {
-        // Verificar y crear cada componente del PEI si no existe
-        // if (!$institucion->gestionDirectiva) {
-        //     $this->command->info("Creando gestión directiva para institución ID: {$institucion->id}");
-        //     $institucion->createEmptyPei();
-        //     return; // El método createEmptyPei() ya crea todas las relaciones
-        // }
-
         // Si solo queremos verificar componentes individuales sin usar createEmptyPei():
-        if (!$institucion->gestionDirectiva) {
-            $gestionDirectiva = $institucion->gestionDirectiva()->create();
-            $gestionDirectiva->climaEscolar()->create();
-            $gestionDirectiva->culturaInstitucional()->create();
-            $gestionDirectiva->direccionamientoEstrategico()->create();
-            $gestionDirectiva->gestionEstrategica()->create();
-            $gestionDirectiva->gobiernoEscolar()->create();
-            $gestionDirectiva->relacionesEntorno()->create();
-        }
-        if (!$institucion->gestionAcademica) {
-            $gestionAcademica = $institucion->gestionAcademica()->create();
-            $gestionAcademica->gestionAulas()->create();
-            $gestionAcademica->practicasPedagogicas()->create();
-            $gestionAcademica->seguimientosAcademicos()->create();
-            $gestionAcademica->disenosPedagogicos()->create();
-        }
-        if (!$institucion->gestionComunidad) {
-            $gestionComunidad = $institucion->gestionComunidad()->create();
-            $gestionComunidad->atencionGrupoPoblacionales()->create();
-            $gestionComunidad->prevencionRiesgos()->create();
-            $gestionComunidad->programasServicioSocial()->create();
-        }
-        if (!$institucion->gestionAdministrativa) {
-            $gestionAdministrativa = $institucion->gestionAdministrativa()->create();
-            $gestionAdministrativa->administracionPlantaFisica()->create();
-            $gestionAdministrativa->apoyoFinancieroContable()->create();
-            $gestionAdministrativa->apoyoGestionAcademica()->create();
-            $gestionAdministrativa->serviciosComplementarios()->create();
-            $gestionAdministrativa->talentoHumano()->create();
-        }
-        if (!$institucion->resenaHistorica) {
-            $resenaHistorica = $institucion->resenaHistorica()->create();
-            $resenaHistorica->resenaHistorica()->create();
-        }
+        DB::transaction(function () use ($institucion) {
+            // Gestion Directiva
+            $gestionDirectiva = $institucion->gestionDirectiva()->firstOrCreate();
+            collect(['climaEscolar', 'culturaInstitucional', 'direccionamientoEstrategico', 'gestionEstrategica', 'gobiernoEscolar', 'relacionesEntorno'])
+                ->each(fn ($relacion) => $gestionDirectiva->$relacion()->firstOrCreate());
+
+            // Gestion Académica
+            $gestionAcademica = $institucion->gestionAcademica()->firstOrCreate();
+            collect(['gestionAulas', 'practicasPedagogicas', 'seguimientosAcademicos', 'disenosPedagogicos'])
+                ->each(fn ($relacion) => $gestionAcademica->$relacion()->firstOrCreate());
+
+            // Gestion Comunidad
+            $gestionComunidad = $institucion->gestionComunidad()->firstOrCreate();
+            collect(['atencionGrupoPoblacionales', 'prevencionRiesgos', 'programasServicioSocial'])
+                ->each(fn ($relacion) => $gestionComunidad->$relacion()->firstOrCreate());
+
+            // Gestion Administrativa
+            $gestionAdministrativa = $institucion->gestionAdministrativa()->firstOrCreate();
+            collect(['administracionPlantaFisica', 'apoyoFinancieroContable', 'apoyoGestionAcademica', 'serviciosComplementarios', 'talentoHumano'])
+                ->each(fn ($relacion) => $gestionAdministrativa->$relacion()->firstOrCreate());
+
+            // Reseña Histórica
+            $resenaHistorica = $institucion->resenaHistorica()->firstOrCreate();
+            $resenaHistorica->resenaHistorica()->firstOrCreate();
+        });
     }
 }

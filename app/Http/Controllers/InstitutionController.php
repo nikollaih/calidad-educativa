@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Result;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
+use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
+use App\Models\Calificacion;
+use App\Models\FactorCritico;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\PeiHistorial;
@@ -20,7 +24,8 @@ class InstitutionController extends Controller
 {
     public function __construct(
         private AdjuntoService $adjuntoService,
-        private RedesSocialesService $redesSocialesService
+        private RedesSocialesService $redesSocialesService,
+        private AutoevaluacionService $autoevaluacionService,
     ){}
 
     public function index()
@@ -50,6 +55,221 @@ class InstitutionController extends Controller
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
         }
         return view('institutional_profile.institution.show', ['institution' => $institucion]);
+    }
+    public function fortalezasDebilidades(int $autoevaluacionId = null)
+    {
+        $autoevaluacion = Autoevaluacion::with('notas', 'notas.calificacion', 'notas.calificacion.grupo', 'notas.calificacion.grupo.padre')
+            ->where('id', $autoevaluacionId)->first();
+        $factoresCriticosRegistrados = FactorCritico::with('grupoCalificacion')
+            ->get();
+        $factoresCriticosFormateados = [];
+
+        foreach ($factoresCriticosRegistrados as $factor) {
+            $grupoNombre = $factor->grupoCalificacion->nombre ?? 'Sin grupo';
+            $factoresCriticosFormateados[$grupoNombre][] = [
+                'texto' => $factor->descripcion,
+                'valor' => $factor->valor,
+                'autoevaluacion_id' => $factor->autoevaluacion_id,
+            ];
+        }
+
+
+        if(empty($autoevaluacion)){
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+        }
+        $gestiones = GrupoCalificacion::whereNull('padre_id')->get();
+
+        // Obtener todas las calificaciones existentes para poder identificar las no calificadas
+        $todasCalificaciones = Calificacion::with(['grupo', 'grupo.padre'])->get();
+
+        // Mapear las notas de la autoevaluación
+        $notasFormateadas = $autoevaluacion->notas->map(function ($nota) {
+            return [
+                'id' => $nota->calificacion->id,
+                'nombre_calificacion' => $nota->calificacion->nombre,
+                'indice_calificacion' => $nota->calificacion->indice,
+                'grupo_indice' => $nota->calificacion->grupo->indice,
+                'grupo_nombre' => $nota->calificacion->grupo->nombre,
+                'padre_id' => $nota->calificacion->grupo->padre_id,
+                'padre_nombre' => $nota->calificacion->grupo->padre->nombre,
+                'padre_indice' => $nota->calificacion->grupo->padre->indice,
+                'valor' => $nota->valor
+            ];
+        });
+
+        // Identificar calificaciones no evaluadas
+        $calificacionesNoEvaluadas = collect();
+        $idsCalificacionesEvaluadas = $notasFormateadas->pluck('id')->toArray();
+
+        foreach ($todasCalificaciones as $calificacion) {
+            if (!in_array($calificacion->id, $idsCalificacionesEvaluadas)) {
+                $calificacionesNoEvaluadas->push([
+                    'id' => $calificacion->id,
+                    'nombre_calificacion' => $calificacion->nombre,
+                    'indice_calificacion' => $calificacion->indice,
+                    'grupo_indice' => $calificacion->grupo->indice,
+                    'grupo_nombre' => $calificacion->grupo->nombre,
+                    'padre_id' => $calificacion->grupo->padre_id,
+                    'padre_nombre' => $calificacion->grupo->padre->nombre,
+                    'padre_indice' => $calificacion->grupo->padre->indice,
+                    'valor' => null // No evaluadas
+                ]);
+            }
+        }
+
+        // Combinar las notas evaluadas con las no evaluadas
+        $todasLasNotas = $notasFormateadas->concat($calificacionesNoEvaluadas);
+
+        // Agrupar notas por grupo para calcular promedios
+        $gruposConNotas = $todasLasNotas->groupBy('grupo_indice');
+
+        // Obtener el total de calificaciones por grupo (para usar en el cálculo del promedio)
+        $totalCalificacionesPorGrupo = [];
+        foreach ($todasCalificaciones as $calificacion) {
+            $grupoIndice = $calificacion->grupo->indice;
+            if (!isset($totalCalificacionesPorGrupo[$grupoIndice])) {
+                $totalCalificacionesPorGrupo[$grupoIndice] = 0;
+            }
+            $totalCalificacionesPorGrupo[$grupoIndice]++;
+        }
+
+        $grupos = [];
+        foreach ($gruposConNotas as $grupoIndice => $notas) {
+            // Calcular el promedio del grupo considerando el total de calificaciones disponibles
+            $notasConValor = $notas->filter(function ($nota) {
+                return !is_null($nota['valor']);
+            });
+
+            $totalCalificaciones = isset($totalCalificacionesPorGrupo[$grupoIndice])
+                ? $totalCalificacionesPorGrupo[$grupoIndice]
+                : $notas->count();
+
+            $promedio = $notasConValor->sum('valor') / $totalCalificaciones;
+            $promedio = round($promedio, 2);
+
+            $grupos[$grupoIndice] = [
+                'indice' => $grupoIndice,
+                'nombre' => $notas->first()['grupo_nombre'],
+                'padre_nombre' => $notas->first()['padre_nombre'],
+                'padre_indice' => $notas->first()['padre_indice'],
+                'promedio' => $promedio,
+                'notas' => $notas,
+                'total_calificaciones' => $totalCalificaciones,
+                'calificaciones_evaluadas' => $notasConValor->count()
+            ];
+        }
+
+        // Identificar fortalezas (grupos con promedio > 3)
+        $fortalezas = collect();
+        foreach ($grupos as $grupo) {
+            if ($grupo['promedio'] > 3) {
+                if (!$fortalezas->has($grupo['padre_nombre'])) {
+                    $fortalezas[$grupo['padre_nombre']] = collect();
+                }
+                $fortalezas[$grupo['padre_nombre']]->push($grupo['nombre']);
+            }
+        }
+
+        // Identificar oportunidades de mejora (calificaciones con valor 1 o no calificadas)
+        $oportunidadesMejora = collect();
+        foreach ($grupos as $grupo) {
+            // Incluir grupos con promedio bajo (menor a 3) como oportunidad de mejora general
+
+                $nombreGrupoPadre = $grupo['padre_nombre'];
+                if (!$oportunidadesMejora->has($nombreGrupoPadre)) {
+                    $oportunidadesMejora[$nombreGrupoPadre] = collect();
+                }
+                // Agregar el grupo completo como oportunidad de mejora
+                $oportunidadesMejora[$nombreGrupoPadre]->push([
+                    'nombre' => $grupo['nombre'],
+                    'indice' => $grupo['indice'],
+                    'promedio' => $grupo['promedio'],
+                    'calificados' => $grupo['calificaciones_evaluadas'] . ' de ' . $grupo['total_calificaciones']
+                ]);
+
+
+            // También agregamos las calificaciones individuales con valor 1 o no calificadas
+            $calificacionesMejora = $grupo['notas']->filter(function ($nota) {
+                return $nota['valor'] === 1 || is_null($nota['valor']);
+            });
+
+            if ($calificacionesMejora->count() > 0) {
+                $nombreGrupo = $grupo['nombre'];
+                if (!$oportunidadesMejora->has('Calificaciones específicas - ' . $nombreGrupo)) {
+                    $oportunidadesMejora['Calificaciones específicas - ' . $nombreGrupo] = collect();
+                }
+
+                foreach ($calificacionesMejora as $nota) {
+                    $oportunidadesMejora['Calificaciones específicas - ' . $nombreGrupo]->push([
+                        'nombre' => $nota['nombre_calificacion'],
+                        'indice' => $nota['indice_calificacion'],
+                        'estado' => is_null($nota['valor']) ? 'No evaluada' : 'Existencia (1)'
+                    ]);
+                }
+            }
+        }
+        return view('institutional_profile.institution.resultados.form',
+       [
+            'fortalezas' => $fortalezas,
+            'oportunidadesMejora' => $oportunidadesMejora,
+            'gestiones' => $gestiones,
+            'autoevaluacionId' => $autoevaluacion->id,
+            'factoresCriticosExistentes' => $factoresCriticosFormateados,
+            'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
+        ]);
+    }
+    public function sincronizarFactoresCriticos(Request $request){
+        $factoresPorGrupo = $request->input('factores');
+
+        // Recolectar los registros válidos que vamos a mantener
+        $idsParaMantener = [];
+        foreach ($factoresPorGrupo as $grupoNombre => $factores) {
+            $grupo = GrupoCalificacion::where('nombre', $grupoNombre)->first();
+
+            if (!$grupo) {
+                // Si el grupo no existe, omitir
+                continue;
+            }
+            foreach ($factores as $factor) {
+                $descripcion = $factor['descripcion'] ?? null;
+                $valor = (int) $factor['valor'];
+                $autoevaluacionId = (int) $factor['autoevaluacion_id'];
+
+                // Buscar si ya existe uno igual
+                $factorCritico = FactorCritico::updateOrCreate(
+                    [
+                        'autoevaluacion_id' => $autoevaluacionId,
+                        'grupo_calificacion_id' => $grupo->id,
+                        'descripcion' => $descripcion,
+                        'valor' => $valor,
+                    ],
+                    [
+                    ]
+                );
+
+                $idsParaMantener[] = $factorCritico->id;
+            }
+        }
+        // Si se encontró al menos un autoevaluacion_id, eliminar lo demás de esa(s) evaluación(es)
+        $autoevaluacionIds = collect($factoresPorGrupo)
+            ->flatten(1)
+            ->pluck('autoevaluacion_id')
+            ->unique()
+            ->map(fn($id) => (int) $id);
+
+        if ($autoevaluacionIds->isNotEmpty()) {
+            FactorCritico::whereIn('autoevaluacion_id', $autoevaluacionIds)
+                ->whereNotIn('id', $idsParaMantener)
+                ->delete();
+
+            // Redirigir usando el primer autoevaluacion_id
+            return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionIds->first()])
+                ->with('flash_success_message', "Resultados actualizados correctamente");
+        }
+
+        // Si no hay autoevaluaciones válidas, puedes redirigir a algún lugar alternativo o mostrar un error
+        return redirect()->back()->withErrors('No se pudo sincronizar: no se encontró ningún autoevaluacion_id válido.');
+
     }
     public function autoevaluaciones(int $institution = null)
     {
@@ -188,13 +408,17 @@ class InstitutionController extends Controller
         if(!$autoevaluacion)
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
 
-        // De momento no hay logica para el envio a validar
+        $resultado = $this->autoevaluacionService->tieneNotasPendientes(autoevaluacion: $autoevaluacion);
 
-        $autoevaluacion->alias_estado = "VALIDACION";
-        $autoevaluacion->save();
-
-        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación enviada a validación correctamente");
-
+        if (!$resultado->success){
+            $autoevaluacion->alias_estado = "VALIDACION";
+            $autoevaluacion->save();
+            return redirect()->route(
+                'institution.autoevaluaciones',
+                ['institution' => $autoevaluacion->institucion_id]
+            )->with('flash_success_message', 'Autoevaluación enviada a validación correctamente');
+        }
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_error_message', $resultado->msg);
     }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
     {
