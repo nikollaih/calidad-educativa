@@ -341,7 +341,7 @@ class InstitutionController extends Controller
         ]);
     }
 
-    public function updatePei(Request $request, $institutionId) {
+    public function updatePei(Request $request, int $institutionId) {
         DB::beginTransaction();
 
         try {
