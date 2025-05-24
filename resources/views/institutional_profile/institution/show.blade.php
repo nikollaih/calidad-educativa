@@ -12,7 +12,7 @@
                     @endif
         <div class="card">
             <div class="card-header">
-                <h1>Ver Institución</h1>
+                <h1>Ver institución</h1>
             </div>
             <div class="card-body">
                 <form >
@@ -132,7 +132,6 @@
             <h1 class="card-header">Sedes</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('sede-with-institution.create',$institution->id) }}" class="btn btn-primary mb-3">Crear Sede</a>
                     <table class="table">
                         <thead>
                         <tr>
@@ -157,11 +156,6 @@
                                 <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
                                 <td>
                                     <a href="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                    <a href="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('sede.destroy', ['sede' => $sede->id]) }}" method="POST" style="display:inline;">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -181,7 +175,6 @@
             <h1 class="card-header">Ofertas educativas de esta institución</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('educational-offer.vinculate', $institution->id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
                     <table class="table">
                         <thead>
                         <tr>
@@ -216,11 +209,6 @@
                                         <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
                                         <td>
                                             <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                            <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                            <form action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta vinculación?')">Eliminar</button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
