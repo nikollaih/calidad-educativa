@@ -240,7 +240,7 @@ export default function Ver({  gruposCalificaciones = [],
     return (
         <div class="container mt-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Ver Autoevaluación</h2>
+                <h2 class="mb-0">Ver autoevaluación</h2>
             </div>
             <form>
 
