@@ -13,7 +13,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>Editar Vinculación de Nivel Educativo</h2>
+            <h2>Editar vinculación de nivel educativo</h2>
         </div>
         <div class="card-body">
             <form action="{{ route('educational-offer.update-vinculation', $levelSede->id) }}" method="POST" enctype="multipart/form-data">
@@ -22,7 +22,7 @@
 
                 <!-- Información del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Nivel Educativo</h4>
+                    <h4>Nivel educativo</h4>
                     <p class="mb-0"><strong>Nombre:</strong> {{ $levelSede->educationalLevel->name }}</p>
                     <p class="mb-0"><strong>Categoría:</strong> {{ $educationalCategories[$levelSede->educationalLevel->category] ?? $levelSede->educationalLevel->category }}</p>
                     <p class="mb-0"><strong>Sede:</strong> {{ $selectedSede->name }}</p>

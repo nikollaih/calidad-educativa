@@ -19,7 +19,7 @@
             <form>
                 <!-- Información del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Nivel Educativo</h4>
+                    <h4>Nivel educativo</h4>
                     <p class="mb-0"><strong>Nombre:</strong> {{ $levelSede->educationalLevel->name }}</p>
                     <p class="mb-0"><strong>Categoría:</strong> {{ $educationalCategories[$levelSede->educationalLevel->category] ?? $levelSede->educationalLevel->category }}</p>
                     <p class="mb-0"><strong>Sede:</strong> {{ $selectedSede->name }}</p>
