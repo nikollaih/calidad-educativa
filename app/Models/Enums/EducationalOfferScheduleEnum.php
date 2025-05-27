@@ -6,11 +6,11 @@ namespace App\Models\Enums;
  * Nombres de los modulos
  */
 enum EducationalOfferScheduleEnum: string {
-    case Morning           = 'mañana';
-    case Afternoon         = 'tarde';
-    case Night             = 'noche';
-    case Unique            = 'única';
-    case AdultEducation    = 'educación adultos';
+    case Morning           = 'Mañana';
+    case Afternoon         = 'Tarde';
+    case Night             = 'Noche';
+    case Unique            = 'Única';
+    case AdultEducation    = 'Educación adultos';
 
 
     public static function toArray(): array
@@ -20,7 +20,7 @@ enum EducationalOfferScheduleEnum: string {
             array_map(fn($case) => $case->value, self::cases())
         );
     }
-  public static function getValueByCase(string $case): string
+  public static function getValueByCase(string $case): ?string
     {
        foreach (self::cases() as $enumCase) {
             if ($enumCase->name === $case) {

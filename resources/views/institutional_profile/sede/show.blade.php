@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <div
-        data-component="CBackButton"
-    ></div>
+
     <div class="container">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-
+        <div
+            data-component="CBackButton"
+        ></div>
         <div class="card">
             <div class="card-header">
-                <h1>Ver Sede </h1>
+                <h1>Ver sede </h1>
             </div>
             <div class="card-body">
                 <form >
@@ -22,7 +22,7 @@
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                             <div class="mb-3">
-                                <label for="tipo_sede" class="form-label">Tipo de Sede</label>
+                                <label for="tipo_sede" class="form-label">Tipo de sede</label>
                                 <select name="tipo_sede" id="tipo_sede" class="form-control" disabled>
                                     <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                     <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
@@ -53,7 +53,7 @@
                                 <input type="text" name="sede[address]" class="form-control" value="{{ $sede->address }}" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
+                                <label for="titularidad_sede" class="form-label">Titularidad de la sede</label>
                                     @if($sede?->titularidadSede?->adjunto?->url)
                                         <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver anexo
