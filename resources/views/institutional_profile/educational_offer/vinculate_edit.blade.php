@@ -30,7 +30,7 @@
 
                 <!-- Anexo del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Anexo del Nivel Educativo</h4>
+                    <h4>Anexo del nivel educativo</h4>
                     <div class="mb-3">
                         <label class="form-label">Documento actual</label>
                         @if($levelSede->educationalLevel->document_id)

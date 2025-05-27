@@ -3,10 +3,10 @@
 @section('content')
 <div class="col-md-12">
     <div class="card">
-        <h1 class="card-header">Edicion Rol</h1>
+        <h1 class="card-header">Edición del rol</h1>
         <div class="card-body">
             <div class="col-md-12">
-                <a href="{{ route('roles.create') }}" class="btn btn-primary">Crear Rol</a>
+                <a href="{{ route('roles.create') }}" class="btn btn-primary">Crear rol</a>
                 <table class="table mt-3">
                     <thead>
                         <tr>

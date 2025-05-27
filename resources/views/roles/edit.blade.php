@@ -3,12 +3,12 @@
 @section('content')
 <div class="col-md-12">
     <div class="card">
-        <h1 class="card-header">Edicion Rol</h1>
+        <h1 class="card-header">Edición del rol</h1>
         <div class="card-body">
             <div class="col-md-12">
                 <form action="{{ route('roles.update', $role->id) }}" method="POST">
                     @csrf @method('PATCH')
-                    
+
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre del Rol</label>
                         <input type="text" name="name" class="form-control" value="{{ $role->name }}" required>

@@ -61,7 +61,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre_coordinador" class="form-label">Nombre del Coordinador/es</label>
+                                <label for="nombre_coordinador" class="form-label">Nombre del(los) Coordinador/es</label>
                                 <input type="text" name="nombre_coordinadores" class="form-control">
                             </div>
                         </div>

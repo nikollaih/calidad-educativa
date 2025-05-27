@@ -13,7 +13,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>Ver Vinculación de Nivel Educativo</h2>
+            <h2>Ver vinculación de nivel educativo</h2>
         </div>
         <div class="card-body">
             <form>
@@ -27,7 +27,7 @@
 
                 <!-- Anexo del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Anexo del Nivel Educativo</h4>
+                    <h4>Anexo del nivel educativo</h4>
                     <div class="mb-3">
                         <label class="form-label">Documento actual</label>
                         @if($levelSede->educationalLevel->document_id)
