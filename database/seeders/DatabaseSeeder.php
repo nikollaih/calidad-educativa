@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         //$this->call(EducationalOfferLevelSeeder::class);
         //$this->call(GrupoCalificacionSeeder::class);
         $this->call(CalificacionSeeder::class);
-        //$this->call(NotaCalificacionSeeder::class);
+        $this->call(NotaCalificacionSeeder::class);
         //$this->call(RelacionInstitucionPeiSeeder::class);
     }
 }
