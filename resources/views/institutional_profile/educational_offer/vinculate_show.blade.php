@@ -13,13 +13,13 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>Ver Vinculación de Nivel Educativo</h2>
+            <h2>Ver vinculación de nivel educativo</h2>
         </div>
         <div class="card-body">
             <form>
                 <!-- Información del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Nivel Educativo</h4>
+                    <h4>Nivel educativo</h4>
                     <p class="mb-0"><strong>Nombre:</strong> {{ $levelSede->educationalLevel->name }}</p>
                     <p class="mb-0"><strong>Categoría:</strong> {{ $educationalCategories[$levelSede->educationalLevel->category] ?? $levelSede->educationalLevel->category }}</p>
                     <p class="mb-0"><strong>Sede:</strong> {{ $selectedSede->name }}</p>
@@ -27,7 +27,7 @@
 
                 <!-- Anexo del nivel educativo -->
                 <div class="mb-4">
-                    <h4>Anexo del Nivel Educativo</h4>
+                    <h4>Anexo del nivel educativo</h4>
                     <div class="mb-3">
                         <label class="form-label">Documento actual</label>
                         @if($levelSede->educationalLevel->document_id)

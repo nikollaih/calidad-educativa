@@ -28,7 +28,7 @@
 
         <!-- Contenedor para niveles educativos -->
         <div class="mb-4">
-            <label class="form-label fw-bold">Niveles Educativos <span class="text-danger fw-bold">*</span></label>
+            <label class="form-label fw-bold">Niveles educativos <span class="text-danger fw-bold">*</span></label>
             <div id="educational-levels-container" class="card p-3">
                 <!-- Sección para Preescolar -->
                 <div class="mb-3">
@@ -44,7 +44,7 @@
                             </label>
                             @if($preescolar->document_id)
                                 <a href="{{ $preescolar->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                    <i class="fas fa-eye"></i> Ver Anexo
+                                    <i class="fas fa-eye"></i> Ver anexo
                                 </a>
                             @endif
                         </div>
@@ -76,7 +76,7 @@
                             </label>
                             @if($primaria->document_id)
                                 <a href="{{ $primaria->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                    <i class="fas fa-eye"></i> Ver Anexo
+                                    <i class="fas fa-eye"></i> Ver anexo
                                 </a>
                             @endif
                         </div>
@@ -140,7 +140,7 @@
                             </label>
                             @if($emphasis->document_id)
                                 <a href="{{ $emphasis->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                    <i class="fas fa-eye"></i> Ver Anexo
+                                    <i class="fas fa-eye"></i> Ver anexo
                                 </a>
                             @endif
                         </div>
@@ -172,7 +172,7 @@
                             </label>
                             @if($agreement->document_id)
                                 <a href="{{ $agreement->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                    <i class="fas fa-eye"></i> Ver Anexo
+                                    <i class="fas fa-eye"></i> Ver anexo
                                 </a>
                             @endif
                         </div>
@@ -199,7 +199,7 @@
         </div>
 
         <!-- Botón para guardar -->
-        <button type="submit" class="btn btn-primary w-100">Guardar Vinculación</button>
+        <button type="submit" class="btn btn-primary w-100">Guardar vinculación</button>
     </form>
 </div>
 

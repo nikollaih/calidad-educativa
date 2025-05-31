@@ -57,11 +57,11 @@ class DatabaseSeeder extends Seeder
         // $user->assignRole('super_admin');
 
         // Seeder de los modelos educativos
-        $this->call(EducationalModelSeeder::class);
-        $this->call(EducationalOfferLevelSeeder::class);
-        $this->call(GrupoCalificacionSeeder::class);
+        //$this->call(EducationalModelSeeder::class);
+        //$this->call(EducationalOfferLevelSeeder::class);
+        //$this->call(GrupoCalificacionSeeder::class);
         $this->call(CalificacionSeeder::class);
         $this->call(NotaCalificacionSeeder::class);
-        $this->call(RelacionInstitucionPeiSeeder::class);
+        //$this->call(RelacionInstitucionPeiSeeder::class);
     }
 }

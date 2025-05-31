@@ -103,7 +103,7 @@ export default function Crear({  agregarUrl = '#',
     return (
         <div class="container mt-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Agregar Autoevaluación</h2>
+                <h2 class="mb-0">Agregar autoevaluación</h2>
             </div>
             <form method="POST" action={agregarUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />

@@ -613,7 +613,7 @@
                                             <td colspan="2"></td>
                                         </tr>
                                         <tr>
-                                          <th colspan="6">2.3 <strong>Gestion del aula</strong></th>
+                                          <th colspan="6">2.3 <strong>Gestión del aula</strong></th>
                                         </tr>
                                         <tr>
                                             <td>2.3.1</td>

@@ -108,7 +108,6 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">¿Es escuela nueva? (Opcional)</label>
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="1">
@@ -148,31 +147,31 @@
                                 </div>
                             </div>
                         </div>
-                        <label class="form-label">Equipos disponibles</label>
+                        <label class="form-label">Equipos disponibles.</label>
                             <!-- Sección de equipos (oculta inicialmente) -->
                             <div class="row row-cols-md-1 " >
                                 @php
                                     $equipos = [
-                                        'Equipo Servidor',
-                                        'Computadores de escritorio para uso académico en buen estado',
-                                        'Computadores portátiles para uso académico en buen estado',
-                                        'Tabletas para uso académico en buen estado',
-                                        'Pantallas interactivas en buen estado',
-                                        'Computadores de escritorio para uso administrativo en buen estado',
-                                        'Computadores portátiles para uso administrativo en buen estado',
-                                        'Routers',
-                                        'Switch de red',
+                                        'Equipo Servidor.',
+                                        'Computadores de escritorio para uso académico en buen estado.',
+                                        'Computadores portátiles para uso académico en buen estado.',
+                                        'Tabletas para uso académico en buen estado.',
+                                        'Pantallas interactivas en buen estado.',
+                                        'Computadores de escritorio para uso administrativo en buen estado.',
+                                        'Computadores portátiles para uso administrativo en buen estado.',
+                                        'Routers.',
+                                        'Switch de red.',
                                         'Access Point',
-                                        'Proyectores / Videobeam',
-                                        'Kit de robótica',
-                                        'Kit STEM',
-                                        'Arduinos',
-                                        'Microbit',
-                                        'UPS',
-                                        'Brazo robótico',
-                                        'Impresora 3D',
-                                        'Televisores',
-                                        'Cabinas de sonido',
+                                        'Proyectores / Videobeam.',
+                                        'Kit de robótica.',
+                                        'Kit STEM.',
+                                        'Arduinos.',
+                                        'Microbit.',
+                                        'UPS.',
+                                        'Brazo robótico.',
+                                        'Impresora 3D.',
+                                        'Televisores.',
+                                        'Cabinas de sonido.',
                                     ];
                                 @endphp
                                 @foreach ($equipos as $key => $equipo)
@@ -187,7 +186,7 @@
                                             <!-- Campos adyacentes para financiación y cantidad -->
                                             <div class="col-md-5">
                                                 <div id="label_fuente_{{ Str::slug($equipo) }}" style="display: none;">
-                                                    <label class="form-check-label">Fuente de financiación</label>
+                                                    <label class="form-check-label">Fuente de financiación.</label>
                                                 </div>
                                                 <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
                                                 <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
@@ -202,7 +201,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: none;">
-                                                    <label class="form-check-label">Cantidad</label>
+                                                    <label class="form-check-label">Cantidad.</label>
                                                 </div>
                                                 <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
                                             </div>
@@ -217,7 +216,7 @@
                             <!-- Modelos educativos -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="modelos" class="form-label">Modelos Educativos Flexibles</label>
+                                    <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
                                     <select name="educational_models[]" class="form-control" multiple >
                                         @foreach($eduactionalModels as $model)
                                             <option value="{{ $model->id }}">{{ $model->name }}</option>
