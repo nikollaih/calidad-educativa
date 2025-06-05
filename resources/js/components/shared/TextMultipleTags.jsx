@@ -60,7 +60,7 @@ const TextMultipleTags = ({
                     type="text"
                     class="border-0 flex-grow-1"
                     style="min-width: 150px; outline: none;"
-                    placeholder="Escribe y presiona Enter o coma"
+                    placeholder="Escribe y presiona enter o coma"
                     value={inputValue}
                     onInput={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
