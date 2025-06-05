@@ -1,16 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+    <div
+        data-component="CBackButton"
+    ></div>
 
-    <div class="container">
+    <div class="container pt-3">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-        <div
-            data-component="CBackButton"
-        ></div>
+
         <div class="card">
             <div class="card-header">
                 <h1>Ver sede </h1>
@@ -37,16 +38,16 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                            <div class="mb-3">
+                                <label for="sede[longitude]" class="form-label">Longitud</label>
+                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
+                            </div>
                             <div class="mb-3">
                                 <label for="sede[name]" class="form-label">Nombre</label>
                                 <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" disabled>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="sede[dane]" class="form-label">Código DANE</label>
-                                <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" disabled>
-                            </div>
+
 
                             <div class="mb-3">
                                 <label for="sede[address]" class="form-label">Dirección</label>
@@ -86,14 +87,15 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="sede[longitude]" class="form-label">Longitud</label>
-                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
-                            </div>
+
 
                             <div class="mb-3">
                                 <label for="sede[latitude]" class="form-label">Latitud</label>
                                 <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sede[dane]" class="form-label">Código DANE</label>
+                                <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" disabled>
                             </div>
 
                             <div class="mb-3">

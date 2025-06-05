@@ -1,10 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <div
-        data-component="CBackButton"
-    ></div>
-    <div class="container">
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
+            <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
+            <form  action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container pt-3">
     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -68,17 +79,17 @@
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
                                 <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" disabled>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="nombre_coordinador" class="form-label">Nombre del Coordinador/es</label>
-                                <input type="text" name="nombre_coordinadores" class="form-control" value="{{ $institution->nombre_coordinadores}}" disabled>
-                            </div>
+                            <div
+                                data-component="TextMultipleTags"
+                                data-initial-value="{{$institution->nombre_coordinadores}}"
+                                data-is-editable="{{false}}"
+                            >
                         </div>
                     </div>
-
                     <!-- Redes Sociales -->
                     <div class="mb-3">
                         <label class="form-label">Redes Sociales</label>
+                        @if ($institution?->redesSociales->count() > 0 )
                         <div id="redes-sociales-container" class="row">
                             @php
                                 $redes = [
@@ -96,6 +107,7 @@
                                     // Buscar la red social correspondiente en la base de datos
                                     $social = collect($institution?->redesSociales ?? [])->firstWhere('nombre', $red['nombre']);
                                 @endphp
+                                @if ( $social)
                                 <div class="col-md-6 mb-3">
                                     <div class="card">
                                         <div class="card-body">
@@ -115,10 +127,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
 
 
                         </div>
+                        @else
+                        <div class="text-center">
+                            No hay redes sociales registradas
+                        </div>
+                        @endif
+
+                    </div>
                     </div>
                 </form>
             </div>
@@ -221,6 +241,4 @@
     </div>
     </div>
 
-
-    <!-- fin session de las sedes asociadas a la institucion -->
 @endsection
