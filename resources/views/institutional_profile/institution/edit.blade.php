@@ -40,9 +40,10 @@
                                 <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
+                                <label for="dane" class="form-label">Código DANE</label>
+                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" required>
                             </div>
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo Electrónico</label>
                                 <input type="email" name="email" class="form-control" value="{{ $institution->email }}" required>
@@ -68,16 +69,13 @@
                                 <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} required>
                             </div>
                             <div class="mb-3">
-                                <label for="dane" class="form-label">Código DANE</label>
-                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" required>
+                                <label for="nit" class="form-label">NIT</label>
+                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="pagina_web" class="form-label">Página Web</label>
                                 <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}">
                             </div>
-
-
-
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>

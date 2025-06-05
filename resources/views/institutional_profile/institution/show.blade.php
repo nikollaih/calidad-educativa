@@ -34,12 +34,6 @@
                                 <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)</label>
                                 <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" disabled>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" disabled>
-                            </div>
-
                             <div class="mb-3">
                                 <label for="dane" class="form-label">Código DANE</label>
                                 <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" disabled>
@@ -49,20 +43,6 @@
                                 <label for="email" class="form-label">Correo Electrónico</label>
                                 <input type="email" name="email" class="form-control" value="{{ $institution->email }}" disabled>
                             </div>
-                        </div>
-
-                        <!-- Columna 2 -->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}" disabled>
-                            </div>
-
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento</label>
@@ -73,6 +53,26 @@
                                     @endif
                                 </div>
                             </div>
+
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
+                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nit" class="form-label">NIT</label>
+                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pagina_web" class="form-label">Página Web</label>
+                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}" disabled>
+                            </div>
+
+
 
 
                             <div class="mb-3">
