@@ -21,30 +21,17 @@
                             <th>DANE</th>
                             <th>EMAIL</th>
                             <th>NOMBRE DEL RECTOR</th>
-                            <th>ACCIONES</th>
-
                         </tr>
                         </thead>
                         <tbody>
 
                         @foreach ($paginate as $institucion)
                             <tr>
-                                <td>{{$institucion->nombre}}</td>
+                                <td><a href="{{ route('institution.show', $institucion->id) }}">{{$institucion->nombre}}</a></td>
                                 <td>{{$institucion->nit}}</td>
                                 <td>{{$institucion->dane}}</td>
                                 <td>{{$institucion->email}}</td>
                                 <td>{{$institucion->nombre_rector}}</td>
-                                <td>
-                                    <a href="{{ route('institution.show', $institucion->id) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                    <a href="{{ route('institution.edit', $institucion->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <a href="{{ route('institution.autoevaluaciones', $institucion->id) }}" class="btn btn-info btn-sm">Autoevaluaciones</a>
-                                    <a href="{{ route('institution.pei', $institucion->id) }}" class="btn btn-success btn-sm">PEI</a>
-                                    <form action="{{ route('institution.destroy', $institucion->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
-                                    </form>
-                                </td>
                             </tr>
                         @endforeach
                         </tbody>

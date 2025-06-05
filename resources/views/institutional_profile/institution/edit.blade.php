@@ -1,11 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <div
-        data-component="CBackButton"
-    >
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
+            <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
+            <form class="" action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+            </form>
+        </div>
     </div>
-    <div class="container">
+
+
+
+    <div class="container pt-3">
     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -28,12 +39,6 @@
 
                                 <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" required>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
-                            </div>
-
                             <div class="mb-3">
                                 <label for="dane" class="form-label">Código DANE</label>
                                 <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" required>
@@ -42,19 +47,6 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo Electrónico</label>
                                 <input type="email" name="email" class="form-control" value="{{ $institution->email }}" required>
-                            </div>
-                        </div>
-
-                        <!-- Columna 2 -->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}">
                             </div>
 
                             <div class="mb-3">
@@ -68,17 +60,32 @@
                                 </div>
                                 <input type="file" name="licencia_funcionamiento" class="form-control mt-2" accept="application/pdf" >
                             </div>
+                        </div>
 
+                        <!-- Columna 2 -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
+                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nit" class="form-label">NIT</label>
+                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pagina_web" class="form-label">Página Web</label>
+                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}">
+                            </div>
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
                                 <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" required>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="nombre_coordinador" class="form-label">Nombre del Coordinador/es</label>
-                                <input type="text" name="nombre_coordinadores" class="form-control" value="{{ $institution->nombre_coordinadores}}">
-                            </div>
+                            <div
+                                data-component="TextMultipleTags"
+                                data-initial-value="{{$institution->nombre_coordinadores}}"
+                                data-is-editable="{{true}}"
+                            >
                         </div>
                     </div>
 
@@ -140,9 +147,8 @@
             </div>
         </div>
     </div>
-
     <!-- seccion de las sedes asociadas a la institucion -->
-    <div class="container pt-3">
+    <div class=" pt-3">
     <div class="col-md-12">
         <div class="card">
             <h1 class="card-header">Sedes</h1>
@@ -191,7 +197,7 @@
 
     <!-- fin session de las sedes asociadas a la institucion -->
     <!-- seccion de las ofertas educativas vinculadas -->
-    <div class="container pt-3">
+    <div class=" pt-3">
     <div class="col-md-12">
         <div class="card">
             <h1 class="card-header">Ofertas educativas de esta institución</h1>

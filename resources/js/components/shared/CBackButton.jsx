@@ -1,6 +1,10 @@
 // src/ui/CBackButton.jsx
 import { h } from 'preact';
-const CBackButton = ({ to = -1, label = 'Volver' }) => {
+const CBackButton = ({
+                         to = -1,
+                         label = 'Volver',
+                         isContainer = true
+}) => {
     const handleClick = () => {
         if (typeof to === 'number') {
             window.history.go(to);
@@ -10,7 +14,7 @@ const CBackButton = ({ to = -1, label = 'Volver' }) => {
     };
 
     return (
-        <div class="container pt-3">
+        <div class={isContainer ? 'container' : ' '}>
             <button
                 type="button"
                 className="btn btn-outline-primary d-flex align-items-center gap-2"
