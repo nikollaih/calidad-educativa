@@ -16,12 +16,33 @@
             <div class="card-header">
                 <h1>Crear Sede </h1>
             </div>
+            <ul class="nav nav-tabs" id="sedeTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                        Información general
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">
+                        Inventario tecnologico
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
+                        Modelos educativos
+                    </button>
+                </li>
+                <!-- Agrega más pestañas si es necesario -->
+            </ul>
+
             <div class="card-body">
                 <form action="{{ route('sede.store', [ 'institutionId' => $institutionId ] ) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $institutionId }}" required>
-                    <div class="row">
+                    <div class="tab-content mt-3" id="sedeTabsContent">
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
                             <!-- Campos existentes -->
@@ -84,37 +105,37 @@
                         <!-- Columna 2 -->
                         <div class="col-md-6">
                             <!-- Campos existentes -->
-                            <div class="mb-3">
-                                <label for="sede[zone]" class="form-label">Zona</label>
-                                <select name="sede[zone]" id="titularidad_sede" class="form-control w-full" required>
-                                    <option value="RURAL">Rural</option>
-                                    <option value="URBANA">Urbana</option>
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label for="sede[zone]" class="form-label">Zona</label>
+                            <select name="sede[zone]" id="titularidad_sede" class="form-control w-full" required>
+                                <option value="RURAL">Rural</option>
+                                <option value="URBANA">Urbana</option>
+                            </select>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="sede[longitude]" class="form-label">Longitud</label>
-                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="sede[longitude]" class="form-label">Longitud</label>
+                            <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="sede[latitude]" class="form-label">Latitud</label>
-                                <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="sede[latitude]" class="form-label">Latitud</label>
+                            <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
-                                <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
-                            </div>
+                        <div class="mb-3">
+                            <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
+                            <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
+                        </div>
 
-                            <div class="mb-3">
-                                <div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="1">
-                                        <label class="form-check-label" for="sede[is_new_school]">¿Tiene Implementado modelo Escuela Nueva?</label>
-                                    </div>
+                        <div class="mb-3">
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="1">
+                                    <label class="form-check-label" for="sede[is_new_school]">¿Tiene Implementado modelo Escuela Nueva?</label>
                                 </div>
                             </div>
+                        </div>
 
                         </div>
                         <div>
@@ -147,138 +168,144 @@
                                 </div>
                             </div>
                         </div>
-                        <label class="form-label">Equipos disponibles.</label>
-                            <!-- Sección de equipos (oculta inicialmente) -->
-                            <div class="row row-cols-md-1 " >
-                                @php
-                                    $equipos = [
-                                        'Equipo Servidor.',
-                                        'Computadores de escritorio para uso académico en buen estado.',
-                                        'Computadores portátiles para uso académico en buen estado.',
-                                        'Tabletas para uso académico en buen estado.',
-                                        'Pantallas interactivas en buen estado.',
-                                        'Computadores de escritorio para uso administrativo en buen estado.',
-                                        'Computadores portátiles para uso administrativo en buen estado.',
-                                        'Routers.',
-                                        'Switch de red.',
-                                        'Access Point',
-                                        'Proyectores / Videobeam.',
-                                        'Kit de robótica.',
-                                        'Kit STEM.',
-                                        'Arduinos.',
-                                        'Microbit.',
-                                        'UPS.',
-                                        'Brazo robótico.',
-                                        'Impresora 3D.',
-                                        'Televisores.',
-                                        'Cabinas de sonido.',
-                                    ];
-                                @endphp
-                                @foreach ($equipos as $key => $equipo)
-                                    <div class="mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-3">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="equipos[]" id="equipo_{{ Str::slug($equipo) }}" value="{{ $equipo }}">
-                                                    <label class="form-check-label" for="equipo_{{ Str::slug($equipo) }}">{{ $equipo }}</label>
+                    </div>
+                        </div>
+                        <div class="tab-pane fade" id="inventario" role="tabpanel">
+                            <div class="row">
+                                <label class="form-label">Equipos disponibles.</label>
+                                <!-- Sección de equipos (oculta inicialmente) -->
+                                <div class="row row-cols-md-1 " >
+                                    @php
+                                        $equipos = [
+                                            'Equipo Servidor.',
+                                            'Computadores de escritorio para uso académico en buen estado.',
+                                            'Computadores portátiles para uso académico en buen estado.',
+                                            'Tabletas para uso académico en buen estado.',
+                                            'Pantallas interactivas en buen estado.',
+                                            'Computadores de escritorio para uso administrativo en buen estado.',
+                                            'Computadores portátiles para uso administrativo en buen estado.',
+                                            'Routers.',
+                                            'Switch de red.',
+                                            'Access Point',
+                                            'Proyectores / Videobeam.',
+                                            'Kit de robótica.',
+                                            'Kit STEM.',
+                                            'Arduinos.',
+                                            'Microbit.',
+                                            'UPS.',
+                                            'Brazo robótico.',
+                                            'Impresora 3D.',
+                                            'Televisores.',
+                                            'Cabinas de sonido.',
+                                        ];
+                                    @endphp
+                                    @foreach ($equipos as $key => $equipo)
+                                        <div class="mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="equipos[]" id="equipo_{{ Str::slug($equipo) }}" value="{{ $equipo }}">
+                                                        <label class="form-check-label" for="equipo_{{ Str::slug($equipo) }}">{{ $equipo }}</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!-- Campos adyacentes para financiación y cantidad -->
-                                            <div class="col-md-5">
-                                                <div id="label_fuente_{{ Str::slug($equipo) }}" style="display: none;">
-                                                    <label class="form-check-label">Fuente de financiación.</label>
+                                                <!-- Campos adyacentes para financiación y cantidad -->
+                                                <div class="col-md-5">
+                                                    <div id="label_fuente_{{ Str::slug($equipo) }}" style="display: none;">
+                                                        <label class="form-check-label">Fuente de financiación.</label>
+                                                    </div>
+                                                    <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
+                                                    <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
+                                                        <option value="Computadores para educar">Computadores para educar</option>
+                                                        <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
+                                                        <option value="Aula Steam">Aula Steam</option>
+                                                        <option value="Obras por impuestos">Obras por impuestos</option>
+                                                        <option value="Recursos propios">Recursos propios</option>
+                                                        <option value="Donación entidad estatal">Donación entidad estatal</option>
+                                                        <option value="Donación entidad privada">Donación entidad privada</option>
+                                                    </select>
                                                 </div>
-                                                <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
-                                                <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
-                                                    <option value="Computadores para educar">Computadores para educar</option>
-                                                    <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
-                                                    <option value="Aula Steam">Aula Steam</option>
-                                                    <option value="Obras por impuestos">Obras por impuestos</option>
-                                                    <option value="Recursos propios">Recursos propios</option>
-                                                    <option value="Donación entidad estatal">Donación entidad estatal</option>
-                                                    <option value="Donación entidad privada">Donación entidad privada</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: none;">
-                                                    <label class="form-check-label">Cantidad.</label>
+                                                <div class="col-md-4">
+                                                    <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: none;">
+                                                        <label class="form-check-label">Cantidad.</label>
+                                                    </div>
+                                                    <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
                                                 </div>
-                                                <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
                                             </div>
                                         </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade"  id="modelos" role="tabpanel">
+                            <div class="m-3">
+                                <div class="row">
+                                    <!-- Modelos educativos -->
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
+                                            <select name="educational_models[]" class="form-control" multiple >
+                                                @foreach($eduactionalModels as $model)
+                                                    <option value="{{ $model->id }}">{{ $model->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-                    <div class="m-3">
-                        <div class="row">
-                            <!-- Modelos educativos -->
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
-                                    <select name="educational_models[]" class="form-control" multiple >
-                                        @foreach($eduactionalModels as $model)
-                                            <option value="{{ $model->id }}">{{ $model->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
-                                    <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
-                                        <option value="0">No</option>
-                                        <option value="1">Sí</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row" id="anexo_resolucion_container" style="display: none;">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
-                                    <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                    <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
-                                        <option value="0">No</option>
-                                        <option value="1">Sí</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                    <select name="educational_offer[national_protection_students]" class="form-control" required>
-                                        <option value="0">No</option>
-                                        <option value="1">Sí</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">¿Atención a población étnica?</label>
-                                        <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
-                                            <option value="0">No</option>
-                                            <option value="1">Sí</option>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
+                                            <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
+                                                <option value="0">No</option>
+                                                <option value="1">Sí</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
+                                <div class="row" id="anexo_resolucion_container" style="display: none;">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
+                                            <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
+                                            <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
+                                                <option value="0">No</option>
+                                                <option value="1">Sí</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
+                                            <select name="educational_offer[national_protection_students]" class="form-control" required>
+                                                <option value="0">No</option>
+                                                <option value="1">Sí</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">¿Atención a población étnica?</label>
+                                                <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Sí</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn btn-success me-2">
