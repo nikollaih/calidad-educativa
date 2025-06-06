@@ -127,7 +127,7 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '1.5'
             ],
             [
-                'nombre' => 'Manejo de conflictos y casos díficiles',
+                'nombre' => 'Manejo de conflictos y casos difíciles',
                 'indice' => '1.5.8',
                 'grupo_indice' => '1.5'
             ],
@@ -173,7 +173,7 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '2.1'
             ],
             [
-                'nombre' => 'Sistema los estudiantes (SIEE)',
+                'nombre' => 'Sistema institucional de Evaluación de los Estudiantes (SIEE)',
                 'indice' => '2.1.5',
                 'grupo_indice' => '2.1'
             ],
@@ -253,7 +253,7 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '3.2'
             ],
             [
-                'nombre' => 'Estrategias de acceso y permanencia (PAE, transporte escolar y otros).',
+                'nombre' => 'Estrategias de acceso y permanencia (Programa de Alimentación Escolar (PAE), transporte escolar y otros).',
                 'indice' => '3.3.1',
                 'grupo_indice' => '3.3'
             ],
@@ -357,9 +357,16 @@ class CalificacionSeeder extends Seeder
 
         ];
             foreach ($calificaciones as $calificacion) {
-            Calificacion::firstOrCreate(
-                $calificacion, // Condición para buscar
-                $calificacion // Datos a insertar/actualizar
+            Calificacion::UpdateOrCreate(
+               // Condición para buscar
+                [
+                    'indice' => $calificacion['indice'],
+                    'grupo_indice' => $calificacion['grupo_indice'],
+                ],
+                // Datos a insertar/actualizar
+                [
+                    'nombre' => $calificacion['nombre'],
+                ]
             );
         }
     }

@@ -12,7 +12,7 @@
             </div>
         @endif
             <div class="card-header">
-                <h1>Crear Oferta Educativa</h1>
+                <h1>Crear oferta educativa</h1>
             </div>
             <div class="card-body">
                 <form action="{{ route('educational-offer.store') }}" method="POST" enctype="multipart/form-data">
@@ -22,7 +22,7 @@
                         <!-- Modelos educativos -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="modelos" class="form-label">Modelos Educativos</label>
+                                <label for="modelos" class="form-label">Modelos educativos</label>
                                 <select name="educational_models[]" class="form-control" multiple required>
                                     @foreach($eduactionalModels as $model)
                                         <option value="{{ $model->id }}">{{ $model->name }}</option>

@@ -499,7 +499,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-12">
-                                                        <label for="form" class="form-label">Contratacion</label>
+                                                        <label for="form" class="form-label">Contratación</label>
                                                         <textarea class="form-control" id="full-editor49" rows="4" type="text" name="descripcion"></textarea>
                                                     </div>
                                                 </div>

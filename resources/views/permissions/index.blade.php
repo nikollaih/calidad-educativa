@@ -6,8 +6,8 @@
         <h1 class="card-header">Permisos</h1>
         <div class="card-body">
             <div class="col-md-12">
-                <a href="{{ route('permissions.create') }}" class="btn btn-primary mb-3">Crear Permiso</a>
-                
+                <a href="{{ route('permissions.create') }}" class="btn btn-primary mb-3">Crear permiso</a>
+
                 @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}

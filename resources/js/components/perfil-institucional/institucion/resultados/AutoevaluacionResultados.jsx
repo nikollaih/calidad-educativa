@@ -67,11 +67,11 @@ export default function AutoevaluacionResultados({
 
     const obtenerDescripcionValor = (valor) => {
         const descripciones = {
-            1: "Poco Urgente",
-            2: "Menor Impacto",
-            3: "Tendencia Agravarse",
-            4: "Mayor Impacto",
-            5: "Muy Urgente"
+            1: "Poco urgente",
+            2: "Menor impacto",
+            3: "Tendencia agravarse",
+            4: "Mayor impacto",
+            5: "Muy urgente"
         };
         return descripciones[valor] || "Null";
     };

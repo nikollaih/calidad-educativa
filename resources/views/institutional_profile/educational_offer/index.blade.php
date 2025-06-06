@@ -15,7 +15,7 @@
             <h1 class="card-header">Ofertas educativas</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('educational-offer.create') }}" class="btn btn-primary mb-3">Crear Oferta educativa</a>
+                    <a href="{{ route('educational-offer.create') }}" class="btn btn-primary mb-3">Crear oferta educativa</a>
                     <table class="table">
                         <thead>
                         <tr>
