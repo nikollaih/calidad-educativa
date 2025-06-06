@@ -212,11 +212,11 @@ const handleNewFile = (fieldName, e) => {
                     className="form-control"
                     onChange={(e) => handleNewFile('documento_adicional', e)}
                   />
-                  {fileUploads['documento_adicional'] && (
+                  {/* {fileUploads['documento_adicional'] && (
                     <span className="input-group-text">
                       {fileUploads['documento_adicional'].name}
                     </span>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -456,6 +456,15 @@ export default function ActualizarPei({
   institucionData = {},
   csrfToken = '',
 }) {
+  // Definir el orden deseado de las gestiones
+  const ordenGestiones = [
+    'resena_historica',
+    'gestion_directiva',
+    'gestion_academica',
+    'gestion_administrativa',
+    'gestion_comunidad'
+  ];
+
   // Convertir el objeto a un array de niveles de gestión
   const gestionArray = Object.entries(institucionData).map(([key, value]) => ({
     id: key,
@@ -464,7 +473,20 @@ export default function ActualizarPei({
     data: value,
     hijos: Object.values(value).flat().filter(item => typeof item === 'object' && item !== null)
   }));
-  console.log('gestionArray', gestionArray);
+
+  // Ordenar el array según el orden definido
+  const gestionArrayOrdenado = gestionArray.sort((a, b) => {
+    const indexA = ordenGestiones.indexOf(a.id);
+    const indexB = ordenGestiones.indexOf(b.id);
+    
+    // Si un elemento no está en el array de orden, lo colocamos al final
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
+
+  console.log('gestionArrayOrdenado', gestionArrayOrdenado);
   
 
   const [activeTab, setActiveTab] = useState(0);
@@ -481,6 +503,7 @@ export default function ActualizarPei({
       default: return valor.replace(/_/g, ' ').toUpperCase();
     }
   };
+  
 
     const handleSave = async (institucionId, hijoIndex, formData, files) => {
     try {

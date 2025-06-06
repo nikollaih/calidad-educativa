@@ -545,6 +545,7 @@ class InstitutionController extends Controller
             'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
             'resena_historica' => $institucionData->resenaHistorica ?? null,
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+            'institucionId' => $institucion,
         ]);
     }
 
