@@ -91,10 +91,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/educational-offer/vinculation/{levelSede}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
         Route::resource('educational-offer'             , EducationalOfferController::class);
 
-        Route::resource('institution/{institutionId}/pei/executive-management', GestionDirectivaController::class);
-        Route::resource('institution/{institutionId}/pei/academic-management', GestionAcademicaController::class);
-        Route::resource('institution/{institutionId}/pei/community-management', GestionComunidadController::class);
-        Route::resource('institution/{institutionId}/pei/administrative-management', GestionAdministrativaController::class);
+        // Route::resource('institution/{institutionId}/pei/executive-management', GestionDirectivaController::class);
+        // Route::resource('institution/{institutionId}/pei/academic-management', GestionAcademicaController::class);
+        // Route::resource('institution/{institutionId}/pei/community-management', GestionComunidadController::class);
+        // Route::resource('institution/{institutionId}/pei/administrative-management', GestionAdministrativaController::class);
     });
     Route::prefix('pam')->group(function () {
         // Rutas para la gestion de instituciones
