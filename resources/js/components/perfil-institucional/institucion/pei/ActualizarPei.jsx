@@ -473,11 +473,11 @@ export default function ActualizarPei({
 
   const getGestion = (valor) => {
     switch (valor) {
+      case 'resena_historica': return 'RESEÑA HISTORICA';
       case 'gestion_academica': return 'GESTIÓN ACADÉMICA';
       case 'gestion_administrativa': return 'GESTIÓN ADMINISTRATIVA Y FINANCIERA';
       case 'gestion_comunidad': return 'GESTIÓN COMUNIDAD';
       case 'gestion_directiva': return 'GESTIÓN DIRECTIVA';
-      case 'resena_historica': return 'RESEÑA HISTORICA';
       default: return valor.replace(/_/g, ' ').toUpperCase();
     }
   };
@@ -566,8 +566,12 @@ export default function ActualizarPei({
                     return (
                       <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
                         {/* Encabezado con botones */}
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
+                        <div className="d-flex justify-content-between  mb-3">
+                          {nombre_gestion === 'RESEÑA HISTORICA' ? (
+                            <h5 className="fw-bold mb-0"></h5>
+                          ) : (
+                            <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
+                          )}
                           <div>
                             <button 
                               className="btn btn-sm btn-outline-primary me-2"
@@ -585,15 +589,15 @@ export default function ActualizarPei({
                         </div>
                         
                         {/* Contenido normal (vista) */}
-                        <div className="mx-auto" style={{maxWidth: '800px'}}>
+                        <div>
                           {Object.entries(otrosCampos)
                           .filter(([clave]) => clave !== 'relation_name')
                           .map(([clave, valor]) => (
-                            <div className="row mb-3" key={clave}>
-                              <div className="col-md-6 fw-semibold text-capitalize text-md-end">
+                            <div className="mb-3" key={clave}>
+                              <div className="col-md-6 fw-semibold text-capitalize">
                                 {clave.replace(/_/g, ' ')}:
                               </div>
-                              <div className="col-md-6">
+                              <div className="text-break">
                                 {valor || <span className="text-muted fst-italic">No registrado</span>}
                               </div>
                             </div>
@@ -603,8 +607,8 @@ export default function ActualizarPei({
                         {/* Documentos */}
                         {documentos && Object.keys(documentos).length > 0 && (
                           <div className="mt-4">
-                            <h6 className="fw-bold mb-3 text-center">Documentos</h6>
-                            <div className="text-center">
+                            <h6 className="fw-bold mb-3">Documentos</h6>
+                            <div>
                               {Object.entries(documentos).map(([docNombre, docValor]) => (
                                 (
                                   <div className="d-inline-block mx-3 mb-2" key={docNombre}>
