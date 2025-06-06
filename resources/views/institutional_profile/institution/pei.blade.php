@@ -78,38 +78,75 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-header">
-                            <center>
+                            <!-- <center>
                                 <h2>PROYECTO EDUCATIVO INSTITUCIONAL (PEI)</h2>
-                            </center>
+                            </center> -->
                         </h5>
                         <div class="col-md-12">
                             <div class="card text-center mb-3">
                                 <div class="card-header ">
                                     <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">1. GESTIÓN DIRECTIVA</button>
+                                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-resena-historica" aria-controls="navs-tab-resena-historica" aria-selected="true">RESEÑA HISTORICA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-academica" aria-controls="navs-tab-gestion-academica" aria-selected="true">2. GESTIÓN ACADEMICA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">GESTIÓN DIRECTIVA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-administrativa" aria-controls="navs-tab-gestion-administrativa" aria-selected="true">3. GESTIÓN ADMINISTRATIVA Y FINANCIERA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-academica" aria-controls="navs-tab-gestion-academica" aria-selected="true">GESTIÓN ACADEMICA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">4. GESTIÓN DE LA COMUNIDAD</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-administrativa" aria-controls="navs-tab-gestion-administrativa" aria-selected="true">GESTIÓN ADMINISTRATIVA Y FINANCIERA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-resena-historica" aria-controls="navs-tab-resena-historica" aria-selected="true">5. RESEÑA HISTORICA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">GESTIÓN DE LA COMUNIDAD</button>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">5. ACTUALIZAR INFORMACIÓN</a>
+                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">ACTUALIZAR</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="tab-content">
 
+                                    <!-- Resena historica -->
+                                    <div class="tab-pane fade show active" id="navs-tab-resena-historica" role="tabpanel">
+                                        <div class="card mb-4">
+                                            <div class="card-body p-4">
+                                                
+                                                <!-- Título principal -->
+                                                <!-- <h4 class="fw-bold  pb-2 mb-4">RESEÑA HISTORICA</h4> -->
+                                                
+                                                @php
+                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
+                                                @endphp
+                                                
+                                                <!-- Resena historica -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    <!-- <h5 class="fw-bold mb-3">RESEÑA HISTORICA</h5> -->
+                                                    
+                                                    @php
+                                                        $camposGrupos = [
+                                                            'Reseña historica' => 'resena_historica',
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposGrupos as $titulo => $campo)
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="col-md-6">
+                                                                {!! $resenaHistorica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                
+
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Gestión Directiva -->
-                                    <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
+                                    <div class="tab-pane fade" id="navs-tab-gestion-directiva" role="tabpanel">
                                         <div class="card mb-4">
                                             <div class="card-body p-4">
                                                 
@@ -926,43 +963,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Resena historica -->
-                                    <div class="tab-pane fade" id="navs-tab-resena-historica" role="tabpanel">
-                                        <div class="card mb-4">
-                                            <div class="card-body p-4">
-                                                
-                                                <!-- Título principal -->
-                                                <h4 class="fw-bold  pb-2 mb-4">RESEÑA HISTORICA</h4>
-                                                
-                                                @php
-                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
-                                                @endphp
-                                                
-                                                <!-- Resena historica -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <!-- <h5 class="fw-bold mb-3">RESEÑA HISTORICA</h5> -->
-                                                    
-                                                    @php
-                                                        $camposGrupos = [
-                                                            'Reseña historica' => 'resena_historica',
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposGrupos as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $resenaHistorica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                
 
                                             </div>
                                         </div>
