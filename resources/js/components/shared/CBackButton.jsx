@@ -9,7 +9,7 @@ const CBackButton = ({
         if (typeof to === 'number') {
             window.history.go(to);
         } else {
-            window.history.go(to);
+            window.location.href = to;
         }
     };
 

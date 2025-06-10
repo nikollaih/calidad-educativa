@@ -37,6 +37,14 @@
                                 <label for="licencia_funcionamiento" class="form-label">Licencia de Funcionamiento</label>
                                 <input type="file" name="licencia_funcionamiento" class="form-control" accept="application/pdf" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="modelos" class="form-label">Municipio</label>
+                                <select name="municipio_id" class="form-control" >
+                                    @foreach($municipios as $municipio)
+                                        <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Columna 2 -->
@@ -53,7 +61,6 @@
                                 <label for="pagina_web" class="form-label">Página Web</label>
                                 <input type="url" name="web_url" class="form-control">
                             </div>
-
 
 
                             <div class="mb-3">
