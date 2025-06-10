@@ -60,6 +60,15 @@
                                 </div>
                                 <input type="file" name="licencia_funcionamiento" class="form-control mt-2" accept="application/pdf" >
                             </div>
+                            <div class="mb-3">
+                                <label for="sede_principal_id" class="form-label">Municipio</label>
+                                <select name="municipio_id" id="sede_principal_id" class="form-control">
+                                    <option value="">Seleccione un municipio</option>
+                                    @foreach ($municipios as $municipio)
+                                        <option value="{{ $municipio->id }}" @selected($institution?->municipio_id== $municipio->id )>{{ $municipio->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Columna 2 -->
@@ -198,61 +207,6 @@
     <!-- fin session de las sedes asociadas a la institucion -->
     <!-- seccion de las ofertas educativas vinculadas -->
     <div class=" pt-3">
-    <div class="col-md-12">
-        <div class="card">
-            <h1 class="card-header">Ofertas educativas de esta institución</h1>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <a href="{{ route('educational-offer.vinculate', $institution->id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>NIVELES EDUCATIVOS</th>
-                            <th>JORNADA</th>
-                            <th>NOMBRE SEDE</th>
-                            <th>TIPO DE SEDE</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($institution->sedes as $sede)
-                                @foreach ($sede->levelSedeEducational as $levelSede)
-                                    <tr>
-                                        <td>
-                                            {{ $levelSede->educationalLevel->name }}
-                                            @if($levelSede->educationalLevel->document_id)
-                                                <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                    <i class="fas fa-eye"></i> Ver Anexo
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{ $levelSede->schedule->schedule }}
-                                            @if($levelSede->schedule->document_id)
-                                                <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                    <i class="fas fa-eye"></i> Ver Anexo
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>{{ $sede->name }}</td>
-                                        <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
-                                        <td>
-                                            <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                            <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                            <form action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta vinculación?')">Eliminar</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 
     <!-- fin session de las sedes asociadas a la institucion -->

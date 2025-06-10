@@ -20,6 +20,7 @@ class Institucion extends Model
         'nit',
         'dane',
         'email',
+        'municipio_id',
         'telefono',
         'web_url',
         'nombre_rector',
@@ -40,7 +41,7 @@ class Institucion extends Model
     public function getMorphClass() {
         return "institution";
     }
-    
+
     public function gestionDirectiva() {
         return $this->hasOne(GestionDirectiva::class, 'institution_id');
     }
@@ -61,7 +62,7 @@ class Institucion extends Model
         return $this->hasOne(ResenaHistorica::class, 'institution_id');
     }
 
-    
+
     /**
      * Crea una estructura PEI vacía para la institución
      */
@@ -98,7 +99,7 @@ class Institucion extends Model
             $gestionAdministrativa->apoyoGestionAcademica()->create();
             $gestionAdministrativa->serviciosComplementarios()->create();
             $gestionAdministrativa->talentoHumano()->create();
-            
+
             // Crear resena historica
             $resenaHistorica = $this->resenaHistorica()->create();
             $resenaHistorica->resenaHistorica()->create();

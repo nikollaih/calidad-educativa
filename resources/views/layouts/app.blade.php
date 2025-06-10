@@ -100,6 +100,12 @@
                                         <div data-i18n="Permisos"> Permisos</div>
                                     </a>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('municipios')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-map"></i>
+                                        <div data-i18n="Municipios"> Municipios</div>
+                                    </a>
+                                </li>
                             </ul>
 
                         </li>
