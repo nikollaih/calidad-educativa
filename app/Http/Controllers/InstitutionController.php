@@ -29,9 +29,13 @@ class InstitutionController extends Controller
         private AutoevaluacionService $autoevaluacionService,
     ){}
 
-    public function index()
+    public function index(Request $request)
     {
+        $municipioId = request()->query('municipio_id');
         $paginate = Institucion::with('licenciaFuncionamiento','redesSociales')
+            ->when($municipioId, function ($query, $municipioId) {
+                $query->where('municipio_id', $municipioId);
+            })
             ->paginate('10');
         return view(
             'institutional_profile.institution.index',
