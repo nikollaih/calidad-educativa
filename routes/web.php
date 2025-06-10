@@ -2,6 +2,7 @@
 
 use \App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Municipio;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
@@ -29,7 +30,8 @@ use \App\Http\Controllers\SedeController;
 Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $municipios = Municipio::get();
+    return view('dashboard', ['municipios' => $municipios]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
