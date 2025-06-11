@@ -110,6 +110,18 @@
                                         <div data-i18n="Municipios"> Municipios</div>
                                     </a>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-gears"></i>
+                                        <div data-i18n="Ajustes de la página"> Ajustes de la página"</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-lightbulb"></i>
+                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógico</div>
+                                    </a>
+                                </li>
                             </ul>
 
                         </li>
