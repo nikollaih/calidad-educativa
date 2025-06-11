@@ -23,8 +23,39 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
-    protected function transformGestionDirectiva(): ?array
-    {
+    protected function transformResenaHistorica(): ?array {
+        if (!$this->resenaHistorica) return null;
+
+        return [
+            'resena_historica' => array_merge(
+                $this->transformSimple(
+                    $this->resenaHistorica->resenaHistorica,
+                    ['resena_historica'],
+                ),
+                [
+                    'nombre_gestion' => $this->obtieneNombreProceso('resena_historica'),
+                    'relation_name' => 'resenaHistorica->resenaHistorica',
+                    'traces' => $this->resenaHistorica->resenaHistorica?->historialesPei->map(function ($trace) {
+                        return [
+                            'model_id'          => $trace->model_id ?? 'Sin informacion',
+                            'model_type'        => $trace->model_type ?? 'Sin informacion',
+                            'changes'           => [
+                                'old_data'          => $trace->old_data ?? 'Sin informacion',
+                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                            ],
+                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
+                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
+                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
+                            'date'              => $trace->date ?? 'Sin informacion',
+                            'observation'       => $trace->observation ?? 'Sin informacion',
+                        ];
+                    })
+                ]
+            ),
+        ];
+    }
+
+    protected function transformGestionDirectiva(): ?array {
         if (!$this->gestionDirectiva) return null;
 
         return [
@@ -186,8 +217,7 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
-    protected function transformGestionAcademica(): ?array
-    {
+    protected function transformGestionAcademica(): ?array {
         if (!$this->gestionAcademica) return null;
 
         return [
@@ -297,8 +327,7 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
-    protected function transformGestionAdministrativa(): ?array
-    {
+    protected function transformGestionAdministrativa(): ?array {
         if (!$this->gestionAdministrativa) return null;
 
         return [
@@ -434,8 +463,7 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
-    protected function transformGestionComunidad(): ?array
-    {
+    protected function transformGestionComunidad(): ?array {
         if (!$this->gestionComunidad) return null;
 
         return [
@@ -520,40 +548,7 @@ class UpdatePeiResource extends JsonResource
         ];
     }
 
-    protected function transformResenaHistorica(): ?array {
-        if (!$this->resenaHistorica) return null;
-
-        return [
-            'resena_historica' => array_merge(
-                $this->transformSimple(
-                    $this->resenaHistorica->resenaHistorica,
-                    ['resena_historica'],
-                ),
-                [
-                    'nombre_gestion' => $this->obtieneNombreProceso('resena_historica'),
-                    'relation_name' => 'resenaHistorica->resenaHistorica',
-                    'traces' => $this->resenaHistorica->resenaHistorica?->historialesPei->map(function ($trace) {
-                        return [
-                            'model_id'          => $trace->model_id ?? 'Sin informacion',
-                            'model_type'        => $trace->model_type ?? 'Sin informacion',
-                            'changes'           => [
-                                'old_data'          => $trace->old_data ?? 'Sin informacion',
-                                'new_data'          => $trace->new_data ?? 'Sin informacion',
-                            ],
-                            'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
-                            'attachment_url'    => $trace->attachment?->ruta ?? 'Sin ruta',
-                            'tipo_codificacion' => $trace->tipo_codificacion ?? 'Sin informacion',
-                            'date'              => $trace->date ?? 'Sin informacion',
-                            'observation'       => $trace->observation ?? 'Sin informacion',
-                        ];
-                    })
-                ]
-            ),
-        ];
-    }
-
-    protected function transformSimple($model, array $fields): ?array
-    {
+    protected function transformSimple($model, array $fields): ?array {
         if (!$model) return null;
 
         $result = [];
@@ -564,8 +559,7 @@ class UpdatePeiResource extends JsonResource
         return $result;
     }
 
-    protected function transformWithDocuments($model, array $fields, array $documentFields): ?array
-    {
+    protected function transformWithDocuments($model, array $fields, array $documentFields): ?array {
         if (!$model) return null;
 
         $result = $this->transformSimple($model, $fields);
@@ -582,8 +576,7 @@ class UpdatePeiResource extends JsonResource
         return $result;
     }
 
-    protected function obtieneNombreProceso(string $nombre)
-    {
+    protected function obtieneNombreProceso(string $nombre) {
         return match ($nombre) {
             'clima_escolar' => 'CLIMA ESCOLAR',
             'cultura_institucional' => 'CULTURA INSTITUCIONAL',
