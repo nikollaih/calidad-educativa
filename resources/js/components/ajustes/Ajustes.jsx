@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-export default function Ajustes({ agregarUrl, municipios, csrfToken = '' }) {
+export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
     const [faviconFile, setFaviconFile] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
 
-    const [faviconPrevieUrl, setFaviconPreviewUrl] = useState('http://localhost:8000/assets/img/favicon/favicon.ico');
-    const [logoPrevieUrl, setLogoPreviewUrl] = useState('http://localhost:8000/imagenes/educacion_menu-nobg.png');
+    const [faviconPrevieUrl, setFaviconPreviewUrl] = useState(faviconUrl);
+    const [logoPrevieUrl, setLogoPreviewUrl] = useState(logoUrl);
 
 
     const handleFaviconUpload = (event) => {
