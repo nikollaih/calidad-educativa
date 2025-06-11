@@ -16,6 +16,7 @@ use App\Http\Controllers\GestionDirectivaController;
 use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PEIController;
 use \App\Http\Controllers\SedeController;
+use App\Http\Controllers\AjustesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas relacionadas a municipios
     Route::resource('municipios', MunicipioController::class);
+    // Rutas relacionadas a ajustes
+    Route::resource('ajustes', AjustesController::class);
 
 });
 
