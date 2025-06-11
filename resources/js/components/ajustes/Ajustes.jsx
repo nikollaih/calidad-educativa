@@ -28,7 +28,6 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
     };
 
     const handleSaveChanges = () => {
-        // Aquí puedes implementar la lógica para guardar los cambios
         console.log('Guardando cambios...', { faviconFile, logoFile });
     };
 
@@ -208,37 +207,6 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
                     </div>
                 </div>
             </div>
-
-            {/* Estilos inline para mantener la apariencia */}
-            <style>{`
-                .bg-gradient {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                }
-
-                .card {
-                    transition: all 0.3s ease;
-                }
-
-                .card:hover {
-                    transform: translateY(-2px);
-                }
-
-                .btn {
-                    transition: all 0.3s ease;
-                }
-
-                .btn:hover {
-                    transform: translateY(-1px);
-                }
-
-                .border {
-                    border-color: #e9ecef !important;
-                }
-
-                .shadow-sm {
-                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-                }
-            `}</style>
         </div>
     );
 }
