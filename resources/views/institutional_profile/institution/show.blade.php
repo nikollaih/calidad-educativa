@@ -5,7 +5,7 @@
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">
             <a href="#" class="btn btn-primary btn-sm">Detalles</a>
-            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
+            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
             <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
 
         </div>

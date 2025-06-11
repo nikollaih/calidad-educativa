@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { addLineBreaks } from '@utils/string.js';
 import GraficoCircularCalificaciones from './GraficoCircularCalificaciones';
 import Chart from 'chart.js/auto';
 
@@ -333,7 +334,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                                                         .sort((a, b) => a.valor - b.valor)
                                                                                         .map(nota => (
                                                                                             <div
-                                                                                                title={nota.descripcion ?? 'sin descripcion'}
+                                                                                                title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
                                                                                                 key={nota.id}
                                                                                                 className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
                                                                                                 style={{cursor: 'pointer'}}

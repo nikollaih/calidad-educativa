@@ -1,5 +1,7 @@
 import { h } from 'preact';
 import {useEffect, useState} from 'preact/hooks';
+import { addLineBreaks } from '@utils/string.js';
+
 
 export default function Editar({  editarUrl = '#',
                                   gruposCalificaciones = [],
@@ -178,7 +180,7 @@ export default function Editar({  editarUrl = '#',
                                                                                         .map(nota => (
                                                                                             <div
                                                                                                 key={nota.id}
-                                                                                                title={nota.descripcion ?? 'sin descripcion'}
+                                                                                                title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
                                                                                                 className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
                                                                                                 style={{ cursor: 'pointer' }}
                                                                                                 onClick={() => handleNotaClick(cal.id, nota)}
