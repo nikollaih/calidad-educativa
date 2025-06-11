@@ -4,14 +4,10 @@
     <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">
-            <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+            <a href="#" class="btn btn-primary btn-sm">Detalles</a>
             <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
             <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <form  action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
-            </form>
+
         </div>
     </div>
 
@@ -52,6 +48,15 @@
                                         </a>
                                     @endif
                                 </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sede_principal_id" class="form-label">Municipio</label>
+                                <select name="municipio_id" id="sede_principal_id" class="form-control" disabled>
+                                    <option value="">Seleccione un municipio</option>
+                                    @foreach ($municipios as $municipio)
+                                        <option value="{{ $municipio->id }}" @selected($institution?->municipio_id== $municipio->id )>{{ $municipio->nombre }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>
@@ -142,7 +147,20 @@
                     </div>
                 </form>
             </div>
+            <div class="py-3 d-flex justify-content-center">
+                <div class="d-flex gap-2">
+                    <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+                    <form action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                    </form>
+                </div>
+            </div>
         </div>
+
+
+
     </div>
 
     <!-- seccion de las sedes asociadas a la institucion -->
@@ -187,58 +205,5 @@
     </div>
     </div>
 
-    <!-- fin session de las sedes asociadas a la institucion -->
-    <!-- seccion de las ofertas educativas vinculadas -->
-    <div class="container pt-3">
-    <div class="col-md-12">
-        <div class="card">
-            <h1 class="card-header">Ofertas educativas de esta institución</h1>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>NIVELES EDUCATIVOS</th>
-                            <th>JORNADA</th>
-                            <th>NOMBRE SEDE</th>
-                            <th>TIPO DE SEDE</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($institution->sedes as $sede)
-                                @foreach ($sede->levelSedeEducational as $levelSede)
-                                    <tr>
-                                        <td>
-                                            {{ $levelSede->educationalLevel->name }}
-                                            @if($levelSede->educationalLevel->document_id)
-                                                <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                    <i class="fas fa-eye"></i> Ver Anexo
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{ $levelSede->schedule->schedule }}
-                                            @if($levelSede->schedule->document_id)
-                                                <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                    <i class="fas fa-eye"></i> Ver Anexo
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>{{ $sede->name }}</td>
-                                        <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
-                                        <td>
-                                            <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
 
 @endsection
