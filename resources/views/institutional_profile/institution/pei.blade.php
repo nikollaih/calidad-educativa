@@ -66,52 +66,91 @@
 </style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
-        
-    <div
-        data-component="CBackButton"
-    >
-    </div>
+
+    <!-- <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.edit', $institucionId) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
+            <a href="{{ route('institution.pei', $institucionId) }}" class="btn btn-outline-success  btn-sm active">PEI</a>
+            <form  action="{{ route('institution.destroy', $institucionId) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+            </form>
+        </div>
+    </div> -->
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
-                    <div class="card-body">
+                    <div class="card-body ">
                         <h5 class="card-header">
-                            <center>
+                            <!-- <center>
                                 <h2>PROYECTO EDUCATIVO INSTITUCIONAL (PEI)</h2>
-                            </center>
+                            </center> -->
                         </h5>
                         <div class="col-md-12">
                             <div class="card text-center mb-3">
                                 <div class="card-header ">
                                     <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">1. GESTIÓN DIRECTIVA</button>
+                                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-resena-historica" aria-controls="navs-tab-resena-historica" aria-selected="true">RESEÑA HISTORICA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-academica" aria-controls="navs-tab-gestion-academica" aria-selected="true">2. GESTIÓN ACADEMICA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-directiva" aria-controls="navs-tab-gestion-directiva" aria-selected="true">GESTIÓN DIRECTIVA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-administrativa" aria-controls="navs-tab-gestion-administrativa" aria-selected="true">3. GESTIÓN ADMINISTRATIVA Y FINANCIERA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-academica" aria-controls="navs-tab-gestion-academica" aria-selected="true">GESTIÓN ACADEMICA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">4. GESTIÓN DE LA COMUNIDAD</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-administrativa" aria-controls="navs-tab-gestion-administrativa" aria-selected="true">GESTIÓN ADMINISTRATIVA Y FINANCIERA</button>
                                         </li>
                                         <li class="nav-item">
-                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-resena-historica" aria-controls="navs-tab-resena-historica" aria-selected="true">5. RESEÑA HISTORICA</button>
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-tab-gestion-comunidad" aria-controls="navs-tab-gestion-comunidad" aria-selected="true">GESTIÓN DE LA COMUNIDAD</button>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">5. ACTUALIZAR INFORMACIÓN</a>
+                                            <a href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}" class="nav-link">ACTUALIZAR</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="tab-content">
 
-                                    <!-- Gestión Directiva -->
-                                    <div class="tab-pane fade show active" id="navs-tab-gestion-directiva" role="tabpanel">
+                                    <!-- Resena historica -->
+                                    <div class="tab-pane fade show active" id="navs-tab-resena-historica" role="tabpanel">
                                         <div class="card mb-4">
-                                            <div class="card-body p-4">
+                                            <div class="card-body ">
+                                                
+                                                @php
+                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
+                                                @endphp
+                                                
+                                                <!-- Resena historica -->
+                                                <div class="mb-4 border rounded p-3 shadow-sm">
+                                                    @php
+                                                        $camposGrupos = [
+                                                            'Reseña historica' => 'resena_historica',
+                                                        ];
+                                                    @endphp
+                                                    
+                                                    @foreach($camposGrupos as $titulo => $campo)
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
+                                                                {!! $resenaHistorica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Gestión Directiva -->
+                                    <div class="tab-pane fade" id="navs-tab-gestion-directiva" role="tabpanel">
+                                        <div class="card mb-4">
+                                            <div class="card-body ">
                                                 
                                                 <!-- Título principal -->
                                                 <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DIRECTIVA</h4>
@@ -120,47 +159,47 @@
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">DIRECCIONAMIENTO ESTRATÉGICO</h5>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Misión:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Misión:</div>
+                                                        <div class="text-break">
                                                             {!! $gestion_directiva->direccionamientoEstrategico->mision ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Visión:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Visión:</div>
+                                                        <div class="text-break">
                                                             {!! $gestion_directiva->direccionamientoEstrategico->vision ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Principios institucionales:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Principios institucionales:</div>
+                                                        <div class="text-break">
                                                             {!! $gestion_directiva->direccionamientoEstrategico->principios_institucionales ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Metas institucionales:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Metas institucionales:</div>
+                                                        <div class="text-break">
                                                             {!! $gestion_directiva->direccionamientoEstrategico->metas_institucionales ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Política de inclusión:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Política de inclusión:</div>
+                                                        <div class="text-break">
                                                             {!! $gestion_directiva->direccionamientoEstrategico->politica_inclusion ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de política:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de política:</div>
+                                                        <div class="text-break">
                                                             @if(isset($gestion_directiva->direccionamientoEstrategico->anexoPoliticaInclusion))
-                                                                <a href="{{ $gestion_directiva->direccionamientoEstrategico->anexoPoliticaInclusion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $gestion_directiva->direccionamientoEstrategico->anexoPoliticaInclusion->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -183,9 +222,9 @@
                                                     @endphp
                                                     
                                                     @foreach($camposEstrategica as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $gestionEstrategica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
@@ -200,19 +239,19 @@
                                                         $gobiernoEscolar = $gestion_directiva->gobiernoEscolar ?? null;
                                                     @endphp
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Gobierno escolar:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Gobierno escolar:</div>
+                                                        <div class="text-break">
                                                             {!! $gobiernoEscolar->gobierno_escolar ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Manual de Funciones Gobierno Escolar:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Manual de Funciones Gobierno Escolar:</div>
+                                                        <div class="text-break">
                                                             @if($gobiernoEscolar && $gobiernoEscolar->anexoGobiernoEscolar)
-                                                                <a href="{{ $gobiernoEscolar->anexoGobiernoEscolar->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $gobiernoEscolar->anexoGobiernoEscolar->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -235,21 +274,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposCultura as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $culturaInstitucional->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de política:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de política:</div>
+                                                        <div class="text-break">
                                                             @if($culturaInstitucional && $culturaInstitucional->anexoPoliticaBienestar)
-                                                                <a href="{{ $culturaInstitucional->anexoPoliticaBienestar->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $culturaInstitucional->anexoPoliticaBienestar->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -257,12 +296,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de bienestar:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de bienestar:</div>
+                                                        <div class="text-break">
                                                             @if($culturaInstitucional && $culturaInstitucional->anexoCulturaInstitucional)
-                                                                <a href="{{ $culturaInstitucional->anexoCulturaInstitucional->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $culturaInstitucional->anexoCulturaInstitucional->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -286,21 +325,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposClima as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $climaEscolar->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de inducción:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de inducción:</div>
+                                                        <div class="text-break">
                                                             @if($climaEscolar && $climaEscolar->anexoProgramaInstitucionalInduccion)
-                                                                <a href="{{ $climaEscolar->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $climaEscolar->anexoProgramaInstitucionalInduccion->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -308,12 +347,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Manual de convivencia:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Manual de convivencia:</div>
+                                                        <div class="text-break">
                                                             @if($climaEscolar && $climaEscolar->manualConvivencia)
-                                                                <a href="{{ $climaEscolar->manualConvivencia->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $climaEscolar->manualConvivencia->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -337,21 +376,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposRelaciones as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $relacionesEntorno->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de alianzas:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de alianzas:</div>
+                                                        <div class="text-break">
                                                             @if($relacionesEntorno && $relacionesEntorno->anexoAlianzasInstituciones)
-                                                                <a href="{{ $relacionesEntorno->anexoAlianzasInstituciones->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $relacionesEntorno->anexoAlianzasInstituciones->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -359,12 +398,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento sector productivo:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento sector productivo:</div>
+                                                        <div class="text-break">
                                                             @if($relacionesEntorno && $relacionesEntorno->anexoAlianzasSectorProductivo)
-                                                                <a href="{{ $relacionesEntorno->anexoAlianzasSectorProductivo->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $relacionesEntorno->anexoAlianzasSectorProductivo->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -380,7 +419,7 @@
                                     <!-- Gestión Académica -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-academica" role="tabpanel">
                                         <div class="card mb-4">
-                                            <div class="card-body p-4">
+                                            <div class="card-body ">
                                                 
                                                 <!-- Título principal -->
                                                 <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ACADÉMICA</h4>
@@ -408,21 +447,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposDisenos as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $disenos->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de plan:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de plan:</div>
+                                                        <div class="text-break">
                                                             @if($disenos && $disenos->anexoPlanEstudios)
-                                                                <a href="{{ $disenos->anexoPlanEstudios->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $disenos->anexoPlanEstudios->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -430,12 +469,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de enfoque:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de enfoque:</div>
+                                                        <div class="text-break">
                                                             @if($disenos && $disenos->anexoEnfoquePedagogico)
-                                                                <a href="{{ $disenos->anexoEnfoquePedagogico->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $disenos->anexoEnfoquePedagogico->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -443,12 +482,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de análisis:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de análisis:</div>
+                                                        <div class="text-break">
                                                             @if($disenos && $disenos->anexoAnalisisJornada)
-                                                                <a href="{{ $disenos->anexoAnalisisJornada->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $disenos->anexoAnalisisJornada->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -456,12 +495,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento SIEE:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento SIEE:</div>
+                                                        <div class="text-break">
                                                             @if($disenos && $disenos->anexoSistemaEvaluacion)
-                                                                <a href="{{ $disenos->anexoSistemaEvaluacion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $disenos->anexoSistemaEvaluacion->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -474,9 +513,9 @@
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Estrategias para tareas:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Estrategias para tareas:</div>
+                                                        <div class="text-break">
                                                             {!! $practicas->estrategias_tareas ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
@@ -496,21 +535,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposAulas as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $aulas->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documentos de aula:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documentos de aula:</div>
+                                                        <div class="text-break">
                                                             @if($aulas && $aulas->anexoPlanesAula)
-                                                                <a href="{{ $aulas->anexoPlanesAula->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                <a href="{{ $aulas->anexoPlanesAula->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documentos
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -518,12 +557,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Temas de enseñanza:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Temas de enseñanza:</div>
+                                                        <div class="text-break">
                                                             @if($aulas && $aulas->anexoTemasEnsenanza)
-                                                                <a href="{{ $aulas->anexoTemasEnsenanza->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                <a href="{{ $aulas->anexoTemasEnsenanza->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documentos
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -545,21 +584,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposSeguimiento as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $seguimientos->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Informe estadístico:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Informe estadístico:</div>
+                                                        <div class="text-break">
                                                             @if($seguimientos && $seguimientos->anexoInformeEstadistico)
-                                                                <a href="{{ $seguimientos->anexoInformeEstadistico->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $seguimientos->anexoInformeEstadistico->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -567,12 +606,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Análisis de pruebas externas:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Análisis de pruebas externas:</div>
+                                                        <div class="text-break">
                                                             @if($seguimientos && $seguimientos->anexoAnalisisPruebasExternas)
-                                                                <a href="{{ $seguimientos->anexoAnalisisPruebasExternas->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $seguimientos->anexoAnalisisPruebasExternas->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -580,12 +619,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Planes de mejoramiento:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Planes de mejoramiento:</div>
+                                                        <div class="text-break">
                                                             @if($seguimientos && $seguimientos->anexoPlanesMejoramiento)
-                                                                <a href="{{ $seguimientos->anexoPlanesMejoramiento->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documentos
+                                                                <a href="{{ $seguimientos->anexoPlanesMejoramiento->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documentos
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -601,7 +640,7 @@
                                     <!-- Gestión Administrativa y Financiera -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-administrativa" role="tabpanel">
                                         <div class="card mb-4">
-                                            <div class="card-body p-4">
+                                            <div class="card-body ">
                                                 
                                                 <!-- Título principal -->
                                                 <h4 class="fw-bold  pb-2 mb-4">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
@@ -626,21 +665,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposApoyo as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $apoyoAcademico->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Acto administrativo:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Acto administrativo:</div>
+                                                        <div class="text-break">
                                                             @if($apoyoAcademico && $apoyoAcademico->anexoActoAdministrativo)
-                                                                <a href="{{ $apoyoAcademico->anexoActoAdministrativo->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $apoyoAcademico->anexoActoAdministrativo->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -662,21 +701,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposPlanta as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $plantaFisica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Política de mantenimiento:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Política de mantenimiento:</div>
+                                                        <div class="text-break">
                                                             @if($plantaFisica && $plantaFisica->anexoMantenimientoInfraestructura)
-                                                                <a href="{{ $plantaFisica->anexoMantenimientoInfraestructura->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $plantaFisica->anexoMantenimientoInfraestructura->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -684,12 +723,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Política de dotación:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Política de dotación:</div>
+                                                        <div class="text-break">
                                                             @if($plantaFisica && $plantaFisica->anexoDotacionRecursos)
-                                                                <a href="{{ $plantaFisica->anexoDotacionRecursos->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $plantaFisica->anexoDotacionRecursos->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -702,9 +741,9 @@
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">SERVICIOS COMPLEMENTARIOS</h5>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Estrategias de acceso:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Estrategias de acceso:</div>
+                                                        <div class="text-break">
                                                             {!! $servicios->estrategias_acceso_permanencia ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
@@ -725,21 +764,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposTalento as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $talento->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento de formación:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento de formación:</div>
+                                                        <div class="text-break">
                                                             @if($talento && $talento->anexoProgramaFormacion)
-                                                                <a href="{{ $talento->anexoProgramaFormacion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $talento->anexoProgramaFormacion->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -747,12 +786,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Informe de evaluación:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Informe de evaluación:</div>
+                                                        <div class="text-break">
                                                             @if($talento && $talento->anexoInformeAnual)
-                                                                <a href="{{ $talento->anexoInformeAnual->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $talento->anexoInformeAnual->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -775,21 +814,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposFinanciero as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $financiero->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento presupuesto:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento presupuesto:</div>
+                                                        <div class="text-break">
                                                             @if($financiero && $financiero->anexoPresupuestoFse)
-                                                                <a href="{{ $financiero->anexoPresupuestoFse->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $financiero->anexoPresupuestoFse->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -797,12 +836,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Manual de contratación:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Manual de contratación:</div>
+                                                        <div class="text-break">
                                                             @if($financiero && $financiero->anexoManualContratacion)
-                                                                <a href="{{ $financiero->anexoManualContratacion->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $financiero->anexoManualContratacion->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -818,7 +857,7 @@
                                     <!-- Gestión de la Comunidad -->
                                     <div class="tab-pane fade" id="navs-tab-gestion-comunidad" role="tabpanel">
                                         <div class="card mb-4">
-                                            <div class="card-body p-4">
+                                            <div class="card-body ">
                                                 
                                                 <!-- Título principal -->
                                                 <h4 class="fw-bold  pb-2 mb-4">GESTIÓN DE LA COMUNIDAD</h4>
@@ -844,21 +883,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposGrupos as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $gruposPoblacionales->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Proyecto escuela de padres:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Proyecto escuela de padres:</div>
+                                                        <div class="text-break">
                                                             @if($gruposPoblacionales && $gruposPoblacionales->anexoProyectoEscuelaPadres)
-                                                                <a href="{{ $gruposPoblacionales->anexoProyectoEscuelaPadres->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $gruposPoblacionales->anexoProyectoEscuelaPadres->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -871,19 +910,19 @@
                                                 <div class="mb-4 border rounded p-3 shadow-sm">
                                                     <h5 class="fw-bold mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Programa institucional:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Programa institucional:</div>
+                                                        <div class="text-break">
                                                             {!! $servicioSocial->programa_servicio_social ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento del programa:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento del programa:</div>
+                                                        <div class="text-break">
                                                             @if($servicioSocial && $servicioSocial->anexoProgramaServicioSocial)
-                                                                <a href="{{ $servicioSocial->anexoProgramaServicioSocial->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $servicioSocial->anexoProgramaServicioSocial->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -904,21 +943,21 @@
                                                     @endphp
                                                     
                                                     @foreach($camposPrevencion as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
+                                                        <div class="mb-3 text-start">
+                                                            <div class="fw-semibold">{{ $titulo }}:</div>
+                                                            <div class="text-break">
                                                                 {!! $prevencion->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     
                                                     <!-- Documentos especiales -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-6 fw-semibold">Documento prevención:</div>
-                                                        <div class="col-md-6">
+                                                    <div class="mb-3 text-start">
+                                                        <div class="fw-semibold">Documento prevención:</div>
+                                                        <div class="text-break">
                                                             @if($prevencion && $prevencion->anexoPrevencionRiesgosFisicos)
-                                                                <a href="{{ $prevencion->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="text-decoration-none">
-                                                                    <i class="fas fa-file-pdf text-danger me-1"></i>Ver documento
+                                                                <a href="{{ $prevencion->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="badge bg-primary rounded-pill text-decoration-none">
+                                                                    Ver documento
                                                                 </a>
                                                             @else
                                                                 <span class="text-muted fst-italic">No disponible</span>
@@ -926,43 +965,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Resena historica -->
-                                    <div class="tab-pane fade" id="navs-tab-resena-historica" role="tabpanel">
-                                        <div class="card mb-4">
-                                            <div class="card-body p-4">
-                                                
-                                                <!-- Título principal -->
-                                                <h4 class="fw-bold  pb-2 mb-4">RESEÑA HISTORICA</h4>
-                                                
-                                                @php
-                                                    $resenaHistorica = $resena_historica->resenahistorica ?? null;
-                                                @endphp
-                                                
-                                                <!-- Resena historica -->
-                                                <div class="mb-4 border rounded p-3 shadow-sm">
-                                                    <!-- <h5 class="fw-bold mb-3">RESEÑA HISTORICA</h5> -->
-                                                    
-                                                    @php
-                                                        $camposGrupos = [
-                                                            'Reseña historica' => 'resena_historica',
-                                                        ];
-                                                    @endphp
-                                                    
-                                                    @foreach($camposGrupos as $titulo => $campo)
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-6 fw-semibold">{{ $titulo }}:</div>
-                                                            <div class="col-md-6">
-                                                                {!! $resenaHistorica->$campo ?? '<span class="text-muted fst-italic">No registrado</span>' !!}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                
 
                                             </div>
                                         </div>
