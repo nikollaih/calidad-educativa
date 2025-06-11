@@ -275,7 +275,7 @@ export default function Ver({  gruposCalificaciones = [],
                                 onClick={() => setActiveTab('estadisticas')}
                                 type="button"
                             >
-                                Estadísticas
+                                Análisis
                             </button>
                         </li>
                     </ul>
