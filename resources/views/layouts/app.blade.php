@@ -109,6 +109,12 @@
                                 <div data-i18n="Instituciones"> Instituciones</div>
                             </a>
                         </li>
+                        <li class="menu-item">
+                            <a href="{{ url('pam/index')}}" class="menu-link">
+                                <i class="menu-icon fa-solid fa-university"></i>
+                                <div data-i18n="PAM"> PAM</div>
+                            </a>
+                        </li>
                     </ul>
                 </aside>
                 <div class="layout-page">

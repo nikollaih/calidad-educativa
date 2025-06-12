@@ -98,10 +98,17 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('pam')->group(function () {
         // Rutas para la gestion de instituciones
-        Route::get('/index'             , [PAMController::class, 'index']);
-        Route::get('/matriz'             , [PAMController::class, 'matriz']);
-        Route::get('/forms_ie_pestanas'             , [PAMController::class, 'forms_ie_pestanas']);
-        Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
+        Route::get('/index'             , [PAMController::class, 'index'])->name('pam.index');
+        Route::get('/pammockup1', function () {
+            return view('pam.index_mochups1');
+        })->name('pammockup1');
+
+        Route::get('/pammockup2', function () {
+            return view('pam.index_mochups2');
+        })->name('pammockup2');
+        // Route::get('/matriz'             , [PAMController::class, 'matriz']);
+        // Route::get('/forms_ie_pestanas'             , [PAMController::class, 'forms_ie_pestanas']);
+        // Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
