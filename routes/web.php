@@ -1,6 +1,8 @@
 <?php
 
+use \App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Municipio;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
@@ -28,7 +30,8 @@ use \App\Http\Controllers\SedeController;
 Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $municipios = Municipio::get();
+    return view('dashboard', ['municipios' => $municipios]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -91,10 +94,11 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/educational-offer/vinculation/{levelSede}', [EducationalOfferController::class, 'updateVinculation'])->name('educational-offer.update-vinculation');
         Route::resource('educational-offer'             , EducationalOfferController::class);
 
-        Route::resource('institution/{institutionId}/pei/executive-management', GestionDirectivaController::class);
+        /*Route::resource('institution/{institutionId}/pei/executive-management', GestionDirectivaController::class);
         Route::resource('institution/{institutionId}/pei/academic-management', GestionAcademicaController::class);
         Route::resource('institution/{institutionId}/pei/community-management', GestionComunidadController::class);
         Route::resource('institution/{institutionId}/pei/administrative-management', GestionAdministrativaController::class);
+        */
     });
     Route::prefix('pam')->group(function () {
         // Rutas para la gestion de instituciones
@@ -113,6 +117,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
     });
+
+    // Rutas relacionadas a municipios
+    Route::resource('municipios', MunicipioController::class);
 
 });
 
