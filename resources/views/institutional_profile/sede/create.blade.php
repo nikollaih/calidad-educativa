@@ -138,39 +138,40 @@
                         </div>
 
                         </div>
-                        <div>
-                            <!-- Sección de Aulas Steam -->
-                            <div id="aulas_steam_container" class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="aulas_steam_checkbox">
-                                    <label class="form-check-label" for="aulas_steam_checkbox">¿Cuenta con Aulas Steam?</label>
-                                </div>
-                            </div>
 
-                            <!-- Campos adicionales ocultos -->
-                            <div id="aulas_steam_fields" style="display: none;">
-                                <div class="row">
-                                    <!-- Campo para cantidad de aulas -->
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
-                                        <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" placeholder="Ingrese cantidad">
-                                    </div>
-
-                                    <!-- Campo para fase -->
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="fase_aula">Fase</label>
-                                        <select name="steam_classroom[phase]"  class="form-control w-full" required>
-                                            <option value="Fase 1">Fase 1</option>
-                                            <option value="Fase 2">Fase 2</option>
-                                            <option value="Fase 3">Fase 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                         </div>
                         <div class="tab-pane fade" id="inventario" role="tabpanel">
+                            <div>
+                                <!-- Sección de Aulas Steam -->
+                                <div id="aulas_steam_container" class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="aulas_steam_checkbox">
+                                        <label class="form-check-label" for="aulas_steam_checkbox">¿Cuenta con Aulas Steam?</label>
+                                    </div>
+                                </div>
+
+                                <!-- Campos adicionales ocultos -->
+                                <div id="aulas_steam_fields" style="display: none;">
+                                    <div class="row">
+                                        <!-- Campo para cantidad de aulas -->
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
+                                            <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" placeholder="Ingrese cantidad">
+                                        </div>
+
+                                        <!-- Campo para fase -->
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="fase_aula">Fase</label>
+                                            <select name="steam_classroom[phase]"  class="form-control w-full" required>
+                                                <option value="Fase 1">Fase 1</option>
+                                                <option value="Fase 2">Fase 2</option>
+                                                <option value="Fase 3">Fase 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <label class="form-label">Equipos disponibles.</label>
                                 <!-- Sección de equipos (oculta inicialmente) -->

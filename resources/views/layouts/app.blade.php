@@ -104,12 +104,6 @@
                                         <div data-i18n="Permisos"> Permisos</div>
                                     </a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{ url('municipios')}}" class="menu-link">
-                                        <i class="menu-icon fas fa-map"></i>
-                                        <div data-i18n="Municipios"> Municipios</div>
-                                    </a>
-                                </li>
                             </ul>
 
                         </li>
@@ -147,6 +141,33 @@
                                         <div data-i18n="Instituciones">Instituciones</div>
                                     </a>
                                 @endif
+                            </ul>
+
+                        </li>
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon fas fa-wrench"></i>
+                                <div data-i18n="Paŕametros">Paŕametros</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('municipios')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-map"></i>
+                                        <div data-i18n="Municipios"> Municipios</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-gears"></i>
+                                        <div data-i18n="Ajustes de la página"> Ajustes de la página"</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-lightbulb"></i>
+                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógico</div>
+                                    </a>
+                                </li>
                             </ul>
 
                         </li>
