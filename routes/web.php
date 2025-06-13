@@ -114,7 +114,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas relacionadas a municipios
     Route::resource('municipios', MunicipioController::class);
+
     // Rutas relacionadas a ajustes
+    Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
 
 });

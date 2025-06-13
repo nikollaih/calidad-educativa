@@ -5,7 +5,7 @@
         <!-- Logo -->
         <div class="app-brand justify-content-center">
             <a href="{{ url('login')}}" class="app-brand-link gap-2">
-            <img src="{{ asset('imagenes/educacion.png')}}" alt="Secretaria de Educación" width="100%">
+            <img src="{{ asset('imagenes/educacion_menu-nobg.png')}}" alt="Secretaria de Educación" width="100%">
             </a>
         </div>
         <form method="POST" action="{{ route('login') }}">

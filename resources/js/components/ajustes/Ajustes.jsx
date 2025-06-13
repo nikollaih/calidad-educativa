@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
+export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualizarImagenesUrl = '' }) {
+
     const [faviconFile, setFaviconFile] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
 
@@ -82,14 +83,6 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
                                                 </p>
                                             </div>
 
-                                            {/* Input de archivo oculto */}
-                                            <input
-                                                type="file"
-                                                id="faviconUpload"
-                                                accept=".ico,.png"
-                                                onChange={handleFaviconUpload}
-                                                style={{ display: 'none' }}
-                                            />
 
                                             {/* Botón de subida */}
                                             <div className="d-grid">
@@ -150,14 +143,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
                                                 </p>
                                             </div>
 
-                                            {/* Input de archivo oculto */}
-                                            <input
-                                                type="file"
-                                                id="logoUpload"
-                                                accept=".png,.svg,.jpg,.jpeg"
-                                                onChange={handleLogoUpload}
-                                                style={{ display: 'none' }}
-                                            />
+
 
                                             {/* Botón de subida */}
                                             <div className="d-grid">
@@ -190,18 +176,39 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '' }) {
                                     </div>
                                 </div>
 
-                                {/* Botones de Acción */}
-                                <div className="mt-4 pt-3 border-top">
-                                    <div className="d-flex justify-content-end gap-2">
-                                        <button
-                                            className="btn btn-success rounded-pill px-4"
-                                            onClick={handleSaveChanges}
-                                        >
-                                            <i className="fas fa-save me-2"></i>
-                                            Guardar Cambios
-                                        </button>
+                                <form method="POST" action={actualizarImagenesUrl}  enctype="multipart/form-data">>
+                                    <input type="hidden" name="_token" value={csrfToken} />
+                                    {/* Input de archivo oculto */}
+                                    <input
+                                        name="logo"
+                                        type="file"
+                                        id="logoUpload"
+                                        accept=".png,.svg,.jpg,.jpeg"
+                                        onChange={handleLogoUpload}
+                                        style={{ display: 'none' }}
+                                    />
+                                    {/* Input de archivo oculto */}
+                                    <input
+                                        name="favicon"
+                                        type="file"
+                                        id="faviconUpload"
+                                        accept=".ico,.png"
+                                        onChange={handleFaviconUpload}
+                                        style={{ display: 'none' }}
+                                    />
+                                    {/* Botones de Acción */}
+                                    <div className="mt-4 pt-3 border-top">
+                                        <div className="d-flex justify-content-end gap-2">
+                                            <button
+                                                className="btn btn-success rounded-pill px-4"
+                                                onClick={handleSaveChanges}
+                                            >
+                                                <i className="fas fa-save me-2"></i>
+                                                Guardar Cambios
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
