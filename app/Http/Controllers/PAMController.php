@@ -6,7 +6,7 @@ class PAMController extends Controller
 {
     public function index()
     {
-        return view('pam.index');
+        return view('pam.index_mochups');
     }
     public function matriz()
     {
