@@ -2,17 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\AdjuntoService;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class AjustesController extends Controller
 {
+    public function __construct(
+        private AdjuntoService $adjuntoService,
+    ){}
 
     public function index()
     {
         $roles = Role::with('permissions')->paginate(10);
         return view('ajustes.index', compact('roles'));
+    }
+    public function actualizarImagenesSistema(Request $request)
+    {
+        $msg = '';
+        if($request->hasFile('favicon')){
+            // Intenta almacenar el Adjunto
+            $storeFaviconResponse = $this->adjuntoService
+                ->storeFavicon($request->file('favicon'));
+
+            if ($storeFaviconResponse->success == false){
+                return redirect()->route('ajustes.index')->with('flash_error_message', $storeFaviconResponse->msg);
+            } else {
+                $msg = $storeFaviconResponse->msg . '. ';
+            }
+        }
+        if($request->hasFile('logo')){
+            // Intenta almacenar el Adjunto
+            $storeLogoResponse = $this->adjuntoService
+                ->storeLogo($request->file('logo'));
+
+            if ($storeLogoResponse->success == false){
+                return redirect()->route('ajustes.index')->with('flash_error_message', $storeLogoResponse->msg);
+            } else {
+                $msg = $storeLogoResponse->msg . '. ';
+            }
+        }
+        return redirect()->route('ajustes.index')->with('flash_success_message', $msg);
+
     }
 
     public function create()
