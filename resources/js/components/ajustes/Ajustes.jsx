@@ -176,7 +176,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualiza
                                     </div>
                                 </div>
 
-                                <form method="POST" action={actualizarImagenesUrl}  enctype="multipart/form-data">>
+                                <form method="POST" action={actualizarImagenesUrl}  enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value={csrfToken} />
                                     {/* Input de archivo oculto */}
                                     <input
