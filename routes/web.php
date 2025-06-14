@@ -14,6 +14,7 @@ use App\Http\Controllers\GestionAdministrativaController;
 use App\Http\Controllers\GestionComunidadController;
 use App\Http\Controllers\GestionDirectivaController;
 use App\Http\Controllers\PAMController;
+use App\Http\Controllers\PMI\PMIController;
 use App\Http\Controllers\PEIController;
 use \App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
@@ -118,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
+    Route::resource('pmi', PMIController::class);
 
 });
 
