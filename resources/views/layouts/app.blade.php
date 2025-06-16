@@ -163,7 +163,7 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                    <a href="{{ url('modelos-educacionales')}}" class="menu-link">
                                         <i class="menu-icon fas fa-lightbulb"></i>
                                         <div data-i18n="Modelos pedagógicos"> Modelos pedagógico</div>
                                     </a>
