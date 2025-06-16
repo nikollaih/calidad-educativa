@@ -112,6 +112,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pammockup2', function () {
             return view('pam.index_mochups2');
         })->name('pammockup2');
+
+        Route::get('/pammockup3', function () {
+            return view('pam.index_mochups3');
+        })->name('pammockup3');
+
+        Route::get('/pammockup4', function () {
+            return view('pam.index_mochups4');
+        })->name('pammockup4');
+
         // Route::get('/matriz'             , [PAMController::class, 'matriz']);
         // Route::get('/forms_ie_pestanas'             , [PAMController::class, 'forms_ie_pestanas']);
         // Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
