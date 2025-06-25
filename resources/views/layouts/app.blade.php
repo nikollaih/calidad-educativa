@@ -173,7 +173,7 @@
                         </li>
                         <li class="menu-item">
                             <a href="{{ url('pam/index')}}" class="menu-link">
-                                <i class="menu-icon fa-solid fa-university"></i>
+                                <i class="menu-icon fa-solid fa-table"></i>
                                 <div data-i18n="PAM"> PAM</div>
                             </a>
                         </li>
