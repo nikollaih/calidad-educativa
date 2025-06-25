@@ -54,6 +54,9 @@
     </head>
 
     <body>
+    @php
+        $municipios = session('municipios');
+    @endphp
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -93,6 +96,7 @@
                                         <i class="menu-icon fa-solid fa-cogs"></i>
                                         <div data-i18n="Roles"> Roles</div>
                                     </a>
+
                                 </li>
                                 <li class="menu-item">
                                     <a href="{{ url('permissions')}}" class="menu-link">
@@ -104,9 +108,73 @@
 
                         </li>
                         <li class="menu-item">
-                            <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
-                                <i class="menu-icon fa-solid fa-university"></i>
-                                <div data-i18n="Instituciones"> Instituciones</div>
+
+                                @if ($municipios)
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <i class="menu-icon fa-solid fa-university"></i>
+                                    <div data-i18n="Instituciones">Instituciones</div>
+                                </a>
+                                <ul class="menu-sub">
+                                    <ul>
+                                        <li class="menu-item">
+                                            <a href="{{ url('institutional_profile/institution')}}"
+                                               class="menu-link"
+                                            >
+                                                <i class="menu-icon fas fa-globe-americas"></i>
+                                                <div data-i18n="Todos"> Todos</div>
+                                            </a>
+                                        </li>
+                                        @foreach ($municipios as $municipio)
+                                            <li class="menu-item">
+                                                <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id)}}"
+                                                   class="menu-link"
+                                                >
+                                                    <i class="menu-icon fas fa-map-marker-alt"></i>
+                                                    <div data-i18n="{{$municipio->nombre}}"> {{$municipio->nombre}}</div>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-university"></i>
+                                        <div data-i18n="Instituciones">Instituciones</div>
+                                    </a>
+                                @endif
+                            </ul>
+
+                        </li>
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon fas fa-wrench"></i>
+                                <div data-i18n="Paŕametros">Paŕametros</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('municipios')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-map"></i>
+                                        <div data-i18n="Municipios"> Municipios</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                        <i class="menu-icon fa-solid fa-gears"></i>
+                                        <div data-i18n="Ajustes de la página"> Ajustes de la página"</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('modelos-educacionales')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-lightbulb"></i>
+                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógico</div>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ url('pam/index')}}" class="menu-link">
+                                <i class="menu-icon fa-solid fa-table"></i>
+                                <div data-i18n="PAM"> PAM</div>
                             </a>
                         </li>
                     </ul>

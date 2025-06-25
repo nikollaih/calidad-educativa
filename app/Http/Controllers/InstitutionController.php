@@ -13,6 +13,7 @@ use App\Models\Calificacion;
 use App\Models\FactorCritico;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
+use App\Models\Municipio;
 use App\Models\PeiHistorial;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -28,9 +29,13 @@ class InstitutionController extends Controller
         private AutoevaluacionService $autoevaluacionService,
     ){}
 
-    public function index()
+    public function index(Request $request)
     {
+        $municipioId = request()->query('municipio_id');
         $paginate = Institucion::with('licenciaFuncionamiento','redesSociales')
+            ->when($municipioId, function ($query, $municipioId) {
+                $query->where('municipio_id', $municipioId);
+            })
             ->paginate('10');
         return view(
             'institutional_profile.institution.index',
@@ -41,6 +46,7 @@ class InstitutionController extends Controller
     }
     public function show(int $institucion)
     {
+        $municipios = Municipio::get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -54,7 +60,7 @@ class InstitutionController extends Controller
         if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
         }
-        return view('institutional_profile.institution.show', ['institution' => $institucion]);
+        return view('institutional_profile.institution.show', ['institution' => $institucion, 'municipios' => $municipios]);
     }
     public function fortalezasDebilidades(int $autoevaluacionId = null)
     {
@@ -441,8 +447,9 @@ class InstitutionController extends Controller
     }
     public function create()
     {
+        $municipios = Municipio::get();
        // $roles = Role::all();
-        return view('institutional_profile.institution.create');
+        return view('institutional_profile.institution.create', ['municipios' => $municipios]);
     }
     public function store(Request $request)
     {
@@ -472,6 +479,7 @@ class InstitutionController extends Controller
     }
     public function edit(int $institucion)
     {
+        $municipios = Municipio::get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -485,7 +493,7 @@ class InstitutionController extends Controller
          if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
          }
-        return view('institutional_profile.institution.edit', ['institution' => $institucion]);
+        return view('institutional_profile.institution.edit', ['institution' => $institucion , 'municipios' => $municipios]);
     }
     public function update(Request $request, int $institucion)
     {
@@ -545,6 +553,7 @@ class InstitutionController extends Controller
             'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
             'resena_historica' => $institucionData->resenaHistorica ?? null,
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
+            'institucionId' => $institucion,
         ]);
     }
 
@@ -601,7 +610,7 @@ class InstitutionController extends Controller
             ];
             $documentos = array_filter($input, function($value, $key) {
                 // Incluir solo las claves que contienen "anexo" y excluir "documento_adicional"
-                return $key !== 'documento_adicional' && 
+                return $key !== 'documento_adicional' &&
                     $value instanceof \Illuminate\Http\UploadedFile;
             }, ARRAY_FILTER_USE_BOTH);
 
@@ -610,7 +619,7 @@ class InstitutionController extends Controller
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
-            
+
             // Almacena los documentos nuevos
             foreach ($documentos as $key => $value) {
                 $adjuntoInfo = [];

@@ -15,118 +15,148 @@
             <div class="card-header">
                 <h1>Editar Sede </h1>
             </div>
-            <div class="card-body">
+            <ul class="nav nav-tabs" id="sedeTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                        Información general
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">
+                        Inventario tecnologico
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
+                        Modelos educativos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ofertas-tab" data-bs-toggle="tab" data-bs-target="#ofertas" type="button" role="tab">
+                       Ofertas educativas
+                    </button>
+                </li>
+                <!-- Agrega más pestañas si es necesario -->
+            </ul>
+
+            <div class="card-body ">
                 <form action="{{ route('sede.update', [ 'sede' => $sede->id ] ) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $sede->institution_id }}" required>
-                    <div class="row">
-                        <!-- Columna 1 -->
-                        <div class="col-md-6">
-                            <!-- Campos existentes -->
-                            <div class="mb-3">
-                                <label for="tipo_sede" class="form-label">Tipo de Sede</label>
-                                <select name="tipo_sede" id="tipo_sede" class="form-control" required>
-                                    <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
-                                    <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
-                                </select>
-                            </div>
-                            <div class="mb-3" id="sede_principal_container" style="display: none;">
-                                <label for="sede_principal_id" class="form-label">Sede Principal</label>
-                                <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
-                                    <option value="">Seleccione una sede principal</option>
-                                    @foreach ($availableSedes as $sede_principal)
-                                        <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="tab-content mt-3" id="sedeTabsContent">
+                    <div class="tab-pane fade show active" id="info" role="tabpanel">
+                        <div class="row">
+                            <!-- Columna 1 -->
+                            <div class="col-md-6">
+                                <!-- Campos existentes -->
+                                <div class="mb-3">
+                                    <label for="tipo_sede" class="form-label">Tipo de Sede</label>
+                                    <select name="tipo_sede" id="tipo_sede" class="form-control" required>
+                                        <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
+                                        <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="sede_principal_container" style="display: none;">
+                                    <label for="sede_principal_id" class="form-label">Sede Principal</label>
+                                    <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
+                                        <option value="">Seleccione una sede principal</option>
+                                        @foreach ($availableSedes as $sede_principal)
+                                            <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="sede[name]" class="form-label">Nombre</label>
-                                <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" required>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="sede[name]" class="form-label">Nombre</label>
+                                    <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="sede[dane]" class="form-label">Código DANE</label>
-                                <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" required>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="sede[dane]" class="form-label">Código DANE</label>
+                                    <input type="text" name="sede[dane]" class="form-control" value="{{ $sede->dane }}" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="sede[address]" class="form-label">Dirección</label>
-                                <input type="text" name="sede[address]" class="form-control" value="{{ $sede->address }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
+                                <div class="mb-3">
+                                    <label for="sede[address]" class="form-label">Dirección</label>
+                                    <input type="text" name="sede[address]" class="form-control" value="{{ $sede->address }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
                                     @if($sede?->titularidadSede?->adjunto?->url)
                                         <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                     @endif
-                                <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  required>
-                                    <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
-                                     <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
-                                     <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
-                                     <option value="Otro" @selected($sede?->titularidadSede?->titularity_type == 'Otro')>Otro</option>
-                                     <option value="En arriendo" @selected($sede?->titularidadSede?->titularity_type == 'En arriendo')>En arriendo</option>
-                                </select>
-                            </div>
-                            <div class="row" id="otro_titularidad_container" style="display: none;">
-                                <div class="mb-3">
-                                    <label for="otro_titularidad" class="form-label">Especifique</label>
-                                    <input type="text" name="titularity[name]" class="form-control">
+                                    <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  required>
+                                        <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
+                                        <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
+                                        <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
+                                        <option value="Otro" @selected($sede?->titularidadSede?->titularity_type == 'Otro')>Otro</option>
+                                        <option value="En arriendo" @selected($sede?->titularidadSede?->titularity_type == 'En arriendo')>En arriendo</option>
+                                    </select>
+                                </div>
+                                <div class="row" id="otro_titularidad_container" style="display: none;">
+                                    <div class="mb-3">
+                                        <label for="otro_titularidad" class="form-label">Especifique</label>
+                                        <input type="text" name="titularity[name]" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="row" id="anexo_certificado_container" >
+                                    <div class="mb-3">
+                                        <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
+                                        <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" >
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row" id="anexo_certificado_container" >
+                            <!-- Columna 2 -->
+                            <div class="col-md-6">
+                                <!-- Campos existentes -->
                                 <div class="mb-3">
-                                    <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
-                                    <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" >
+                                    <label for="sede[zone]" class="form-label">Zona</label>
+                                    <select name="sede[zone]" id="titularidad_sede" class="form-control w-full"  required>
+                                        <option value="RURAL" {{ $sede->zone == 'RURAL' ? 'selected' : '' }}>Rural</option>
+                                        <option value="URBANA" {{ $sede->zone == 'URBANA' ? 'selected' : '' }}>Urbana</option>
+                                    </select>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Columna 2 -->
-                        <div class="col-md-6">
-                            <!-- Campos existentes -->
-                            <div class="mb-3">
-                                <label for="sede[zone]" class="form-label">Zona</label>
-                                <select name="sede[zone]" id="titularidad_sede" class="form-control w-full"  required>
-                                   <option value="RURAL" {{ $sede->zone == 'RURAL' ? 'selected' : '' }}>Rural</option>
-                                   <option value="URBANA" {{ $sede->zone == 'URBANA' ? 'selected' : '' }}>Urbana</option>
-                                </select>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="sede[longitude]" class="form-label">Longitud</label>
+                                    <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="sede[longitude]" class="form-label">Longitud</label>
-                                <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" required>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="sede[latitude]" class="form-label">Latitud</label>
+                                    <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="sede[latitude]" class="form-label">Latitud</label>
-                                <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" required>
-                            </div>
-
-                            <div class="mb-3">
+                                <div class="mb-3">
                                     <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
                                     @if($sede?->administrativeAct?->url)
                                         <a href="{{ $sede?->administrativeAct?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                     @endif
-                                <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
-                            </div>
+                                    <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
+                                </div>
 
-                            <div class="mb-3">
-                                <div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="{{ $sede->is_new_school }}" @if($sede->is_new_school == 1) checked @endif >
-                                        <label class="form-check-label" for="sede[is_new_school]">¿Tiene Implementado modelo Escuela Nueva?</label>
+                                <div class="mb-3">
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="sede[is_new_school]" id="sede[is_new_school]" value="{{ $sede->is_new_school }}" @if($sede->is_new_school == 1) checked @endif >
+                                            <label class="form-check-label" for="sede[is_new_school]">¿Tiene Implementado modelo Escuela Nueva?</label>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
                         </div>
+                    </div>
+                    <div class="tab-pane fade" id="inventario" role="tabpanel">
                         <div>
                             <!-- Sección de Aulas Steam -->
                             <div id="aulas_steam_container" class="mb-3">
@@ -158,7 +188,8 @@
                                 </div>
                             </div>
                         </div>
-                        <label class="form-label">Equipos disponibles</label>
+                        <div class="row">
+                            <label class="form-label">Equipos disponibles</label>
 
                             <!-- Sección de equipos (oculta inicialmente) -->
                             <div class="row  row-cols-md-1" >
@@ -222,79 +253,133 @@
                                 @endforeach
                             </div>
                         </div>
+
+
                     </div>
-                    <div class="m-3">
-                    <div class="row">
-                        <!-- Modelos educativos -->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
-                                <select name="educational_models[]" class="form-control" multiple>
-                                    @foreach($eduactionalModels as $model)
-                                        <option value="{{ $model->id }}" @selected($educationalOffer->educationalModels->contains('id', $model->id))>
-                                            {{ $model->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                    <div class="tab-pane fade"  id="modelos" role="tabpanel">
+                        <div class="row">
+                            <!-- Modelos educativos -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
+                                    <select name="educational_models[]" class="form-control" multiple>
+                                        @foreach($eduactionalModels as $model)
+                                            <option value="{{ $model->id }}" @selected($educationalOffer->educationalModels->contains('id', $model->id))>
+                                                {{ $model->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
+                                    <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
+                                        <option value="0" {{ $educationalOffer->has_study_validation_auth == '0' ? 'selected' : '' }}>No</option>
+                                        <option value="1" {{ $educationalOffer->has_study_validation_auth == '1' ? 'selected' : '' }}>Sí</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" id="anexo_resolucion_container" style="display: {{ $educationalOffer->validationAuthorizationAdjunto != null ? 'block' : 'none' }};">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
+                                        @if($educationalOffer->validationAuthorizationAdjunto?->url)
+                                            <a href="{{ $educationalOffer->validationAuthorizationAdjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-eye"></i> Ver anexo
+                                            </a>
+                                        @endif
+                                        <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
+                                        <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
+                                            <option value="0" {{ $educationalOffer->serves_juvenile_justice == '0' ? 'selected' : '' }}>No</option>
+                                            <option value="1" {{ $educationalOffer->serves_juvenile_justice == '1' ? 'selected' : '' }}>Sí</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
+                                        <select name="educational_offer[national_protection_students]" class="form-control" required>
+                                            <option value="0" {{ $educationalOffer->national_protection_students == '0' ? 'selected' : '' }}>No</option>
+                                            <option value="1" {{ $educationalOffer->national_protection_students == '1' ? 'selected' : '' }}>Sí</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">¿Atención a población étnica?</label>
+                                        <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
+                                            <option value="0" {{ $educationalOffer->serves_ethnic_population == '0' ? 'selected' : '' }}>No</option>
+                                            <option value="1" {{ $educationalOffer->serves_ethnic_population == '1' ? 'selected' : '' }}>Sí</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
-                                <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
-                                    <option value="0" {{ $educationalOffer->has_study_validation_auth == '0' ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $educationalOffer->has_study_validation_auth == '1' ? 'selected' : '' }}>Sí</option>
-                                </select>
+
+                    </div>
+                    <div class="tab-pane fade"  id="ofertas" role="tabpanel">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <a href="{{ route('educational-offer.vinculate', $sede->institution_id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>NIVELES EDUCATIVOS</th>
+                                        <th>JORNADA</th>
+                                        <th>NOMBRE SEDE</th>
+                                        <th>TIPO DE SEDE</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($sede->levelSedeEducational as $levelSede)
+                                            <tr>
+                                                <td>
+                                                    {{ $levelSede->educationalLevel->name }}
+                                                    @if($levelSede->educationalLevel->document_id)
+                                                        <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                            <i class="fas fa-eye"></i> Ver Anexo
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $levelSede->schedule->schedule }}
+                                                    @if($levelSede->schedule->document_id)
+                                                        <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                            <i class="fas fa-eye"></i> Ver Anexo
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $sede->name }}</td>
+                                                <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                                <td>
+                                                    <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
+                                                    <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
+                                                    <form action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta vinculación?')">Eliminar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row" id="anexo_resolucion_container" style="display: {{ $educationalOffer->validationAuthorizationAdjunto != null ? 'block' : 'none' }};">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
-                                    @if($educationalOffer->validationAuthorizationAdjunto?->url)
-                                        <a href="{{ $educationalOffer->validationAuthorizationAdjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                            <i class="fas fa-eye"></i> Ver anexo
-                                        </a>
-                                    @endif
-                                <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
-                                    <option value="0" {{ $educationalOffer->serves_juvenile_justice == '0' ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $educationalOffer->serves_juvenile_justice == '1' ? 'selected' : '' }}>Sí</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                <select name="educational_offer[national_protection_students]" class="form-control" required>
-                                    <option value="0" {{ $educationalOffer->national_protection_students == '0' ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $educationalOffer->national_protection_students == '1' ? 'selected' : '' }}>Sí</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">¿Atención a población étnica?</label>
-                                <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
-                                    <option value="0" {{ $educationalOffer->serves_ethnic_population == '0' ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $educationalOffer->serves_ethnic_population == '1' ? 'selected' : '' }}>Sí</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                     </div>
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end">

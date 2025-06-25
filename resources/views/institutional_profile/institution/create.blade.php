@@ -22,10 +22,7 @@
                                 <input type="text" name="nombre" class="form-control" required>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" required>
-                            </div>
+
 
                             <div class="mb-3">
                                 <label for="dane" class="form-label">Código DANE</label>
@@ -36,6 +33,18 @@
                                 <label for="email" class="form-label">Correo Electrónico</label>
                                 <input type="email" name="email" class="form-control" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="licencia_funcionamiento" class="form-label">Licencia de Funcionamiento</label>
+                                <input type="file" name="licencia_funcionamiento" class="form-control" accept="application/pdf" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modelos" class="form-label">Municipio</label>
+                                <select name="municipio_id" class="form-control" >
+                                    @foreach($municipios as $municipio)
+                                        <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Columna 2 -->
@@ -44,26 +53,24 @@
                                 <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
                                 <input type="text" name="telefono" class="form-control" required>
                             </div>
-
+                            <div class="mb-3">
+                                <label for="nit" class="form-label">NIT</label>
+                                <input type="text" name="nit" class="form-control" required>
+                            </div>
                             <div class="mb-3">
                                 <label for="pagina_web" class="form-label">Página Web</label>
                                 <input type="url" name="web_url" class="form-control">
                             </div>
 
-                            <div class="mb-3">
-                                <label for="licencia_funcionamiento" class="form-label">Licencia de Funcionamiento</label>
-                                <input type="file" name="licencia_funcionamiento" class="form-control" accept="application/pdf" required>
-                            </div>
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
                                 <input type="text" name="nombre_rector" class="form-control" required>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="nombre_coordinador" class="form-label">Nombre del(los) Coordinador/es</label>
-                                <input type="text" name="nombre_coordinadores" class="form-control">
-                            </div>
+                            <div
+                                data-component="TextMultipleTags"
+                            >
                         </div>
                     </div>
 
