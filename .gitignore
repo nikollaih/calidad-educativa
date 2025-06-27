@@ -9,6 +9,7 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+vite.config.js
 Homestead.json
 Homestead.yaml
 auth.json

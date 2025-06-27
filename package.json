@@ -18,6 +18,7 @@
     },
     "dependencies": {
         "chart.js": "^4.4.9",
-        "preact": "^10.26.5"
+        "preact": "^10.26.5",
+        "sweetalert2": "^11.22.1"
     }
 }

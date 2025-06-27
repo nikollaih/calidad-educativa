@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Pam extends Model
-{
+class Pam extends Model {
     use HasFactory, SoftDeletes;
 
     /**
@@ -39,20 +38,10 @@ class Pam extends Model
         'deleted_at' => 'datetime'
     ];
 
-    // Relacion con sedes
-    public function sedes() {
-        return $this->belongsToMany(Sede::class, 'pam_has_sedes');
-    }
-
-    public function componentes() {
-        return $this->belongsToMany(PamComponente::class, 'pam_has_componentes')
-                    ->using(PamHasComponente::class)
-                    ->withPivot([
-                        'id',
-                        'user_id',
-                        'fecha_inicio',
-                        'fecha_final'
-                    ])
-                    ->withTimestamps();
+    /**
+     * Relación con las filas del PAM (one-to-many)
+     */
+    public function rows() {
+        return $this->hasMany(PamRow::class, 'pam_id');
     }
 }

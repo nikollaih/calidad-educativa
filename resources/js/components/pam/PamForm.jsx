@@ -1,631 +1,431 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+  // Function to save all data
+import Swal from 'sweetalert2';
 
-const ComponentManagement = () => {
-  const [components, setComponents] = useState([]);
+const PamForm = ({ 
+  csrfToken = '',
+}) => {
+  const [formData, setFormData] = useState({
+    componente: null,
+    proceso: null,
+    subproceso: null,
+    meta_plan_desarrollo: null,
+    objetivo: null,
+    meta: null,
+    indicador: null,
+    accion: null,
+    responsable: null,
+    recursos: null,
+    fechas: null
+  });
 
-  // Helper function for immutable nested updates
-  const updateNested = (obj, path, value) => {
-    if (path.length === 0) {
-      return value;
-    }
-
-    const [key, ...restPath] = path;
-
-    if (Array.isArray(obj)) {
-      // If the current step is an array index
-      return obj.map((item, idx) =>
-        idx === parseInt(key) ? updateNested(item, restPath, value) : item
-      );
-    } else if (typeof obj === 'object' && obj !== null) {
-      // If the current step is an object key
-      return {
-        ...obj,
-        [key]: updateNested(obj[key], restPath, value),
-      };
-    }
-    return obj; // Return original if not an object or array (e.g., a primitive value)
+  // Helper function for updating form data
+  const updateField = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  // Function to update a field using the new updateNested helper
-  const updateField = (path, field, value) => {
-    setComponents((prev) => {
-      // Create a path that includes the field to update
-      const fullPath = [...path, field];
-      return updateNested(prev, fullPath, value);
-    });
-  };
-
-  // Función para agregar un nuevo componente
+  // Function to add a component
   const addComponente = () => {
+    if (formData.componente) return;
+    
     const newComponent = {
       id: `componente-${Date.now()}`,
       descripcion: '',
-      procesos: [],
     };
-    setComponents((prev) => [...prev, newComponent]);
+    updateField('componente', newComponent);
   };
 
-  // Función para agregar un proceso a un componente
-  const addProceso = (componenteIndex) => {
+  // Function to add a process
+  const addProceso = () => {
+    if (!formData.componente || formData.proceso) return;
+    
     const newProceso = {
       id: `proceso-${Date.now()}`,
       descripcion: '',
-      subprocesos: [],
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: [...newComponents[componenteIndex].procesos, newProceso],
-      };
-      return newComponents;
-    });
+    updateField('proceso', newProceso);
   };
 
-  // Función para agregar un subproceso a un proceso
-  const addSubproceso = (componenteIndex, procesoIndex) => {
+  // Function to add a subprocess
+  const addSubproceso = () => {
+    if (!formData.proceso || formData.subproceso) return;
+    
     const newSubproceso = {
       id: `subproceso-${Date.now()}`,
       descripcion: '',
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: [...updatedProcesos[procesoIndex].subprocesos, newSubproceso],
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('subproceso', newSubproceso);
   };
 
-  // Función para agregar meta del plan de desarrollo a un subproceso
-  const addMetaPlan = (componenteIndex, procesoIndex, subprocesoIndex) => {
+  // Function to add development plan goal
+  const addMetaPlan = () => {
+    if (!formData.subproceso || formData.meta_plan_desarrollo) return;
+    
     const newMetaPlan = {
       id: `meta-plan-${Date.now()}`,
       descripcion: '',
-      objetivos: [],
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: newMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('meta_plan_desarrollo', newMetaPlan);
   };
 
-  // Función para agregar objetivo a una meta del plan
-  const addObjetivo = (componenteIndex, procesoIndex, subprocesoIndex) => {
+  // Function to add objective
+  const addObjetivo = () => {
+    if (!formData.meta_plan_desarrollo || formData.objetivo) return;
+    
     const newObjetivo = {
       id: `objetivo-${Date.now()}`,
       descripcion: '',
-      meta: null,
     };
-
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-        objetivos: [
-          ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo.objetivos,
-          newObjetivo,
-        ],
-      };
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('objetivo', newObjetivo);
   };
 
-  // Función para agregar meta a un objetivo
-  const addMeta = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add goal
+  const addMeta = () => {
+    if (!formData.objetivo || formData.meta) return;
+    
     const newMeta = {
       id: `meta-${Date.now()}`,
       descripcion: '',
-      indicador: null,
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: newMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('meta', newMeta);
   };
 
-  // Función para agregar indicador a una meta
-  const addIndicador = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add indicator
+  const addIndicador = () => {
+    if (!formData.meta || formData.indicador) return;
+    
     const newIndicador = {
       id: `indicador-${Date.now()}`,
       descripcion: '',
-      accion: null,
     };
-
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      const updatedMeta = {
-        ...updatedObjetivos[objetivoIndex].meta,
-        indicador: newIndicador,
-      };
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: updatedMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('indicador', newIndicador);
   };
 
-  // Función para agregar acción a un indicador
-  const addAccion = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add action
+  const addAccion = () => {
+    if (!formData.indicador || formData.accion) return;
+    
     const newAccion = {
       id: `accion-${Date.now()}`,
       descripcion: '',
-      responsable: null,
     };
-
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      const updatedMeta = {
-        ...updatedObjetivos[objetivoIndex].meta,
-      };
-      const updatedIndicador = {
-        ...updatedMeta.indicador,
-        accion: newAccion,
-      };
-      updatedMeta.indicador = updatedIndicador;
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: updatedMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('accion', newAccion);
   };
 
-  // Función para agregar responsable a una acción
-  const addResponsable = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add responsible
+  const addResponsable = () => {
+    if (!formData.accion || formData.responsable) return;
+    
     const newResponsable = {
       id: `responsable-${Date.now()}`,
       descripcion: '',
-      recursos: null,
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      const updatedMeta = {
-        ...updatedObjetivos[objetivoIndex].meta,
-      };
-      const updatedIndicador = {
-        ...updatedMeta.indicador,
-      };
-      const updatedAccion = {
-        ...updatedIndicador.accion,
-        responsable: newResponsable,
-      };
-      updatedIndicador.accion = updatedAccion;
-      updatedMeta.indicador = updatedIndicador;
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: updatedMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('responsable', newResponsable);
   };
 
-  // Función para agregar recursos a un responsable
-  const addRecursos = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add resources
+  const addRecursos = () => {
+    if (!formData.responsable || formData.recursos) return;
+    
     const newRecursos = {
       id: `recursos-${Date.now()}`,
       descripcion: '',
-      fechas: null,
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      const updatedMeta = {
-        ...updatedObjetivos[objetivoIndex].meta,
-      };
-      const updatedIndicador = {
-        ...updatedMeta.indicador,
-      };
-      const updatedAccion = {
-        ...updatedIndicador.accion,
-      };
-      const updatedResponsable = {
-        ...updatedAccion.responsable,
-        recursos: newRecursos,
-      };
-      updatedAccion.responsable = updatedResponsable;
-      updatedIndicador.accion = updatedIndicador;
-      updatedMeta.indicador = updatedIndicador;
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: updatedMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('recursos', newRecursos);
   };
 
-  // Función para agregar fechas a recursos
-  const addFechas = (componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Function to add dates
+  const addFechas = () => {
+    if (!formData.recursos || formData.fechas) return;
+    
     const newFechas = {
       id: `fechas-${Date.now()}`,
-      descripcion: '',
+      fecha_inicio: '',
+      fecha_final: ''
     };
-    setComponents((prev) => {
-      const newComponents = [...prev];
-      const updatedProcesos = [...newComponents[componenteIndex].procesos];
-      const updatedSubprocesos = [...updatedProcesos[procesoIndex].subprocesos];
-      const updatedMetaPlan = {
-        ...updatedSubprocesos[subprocesoIndex].meta_plan_desarrollo,
-      };
-      const updatedObjetivos = [...updatedMetaPlan.objetivos];
-      const updatedMeta = {
-        ...updatedObjetivos[objetivoIndex].meta,
-      };
-      const updatedIndicador = {
-        ...updatedMeta.indicador,
-      };
-      const updatedAccion = {
-        ...updatedIndicador.accion,
-      };
-      const updatedResponsable = {
-        ...updatedAccion.responsable,
-      };
-      const updatedRecursos = {
-        ...updatedResponsable.recursos,
-        fechas: newFechas,
-      };
-      updatedResponsable.recursos = updatedRecursos;
-      updatedAccion.responsable = updatedAccion;
-      updatedIndicador.accion = updatedIndicador;
-      updatedMeta.indicador = updatedMeta;
-      updatedObjetivos[objetivoIndex] = {
-        ...updatedObjetivos[objetivoIndex],
-        meta: updatedMeta,
-      };
-      updatedMetaPlan.objetivos = updatedObjetivos;
-      updatedSubprocesos[subprocesoIndex] = {
-        ...updatedSubprocesos[subprocesoIndex],
-        meta_plan_desarrollo: updatedMetaPlan,
-      };
-      updatedProcesos[procesoIndex] = {
-        ...updatedProcesos[procesoIndex],
-        subprocesos: updatedSubprocesos,
-      };
-      newComponents[componenteIndex] = {
-        ...newComponents[componenteIndex],
-        procesos: updatedProcesos,
-      };
-      return newComponents;
-    });
+    updateField('fechas', newFechas);
   };
 
-  // Función para eliminar un elemento
-  const removeElement = (path) => {
+  // Function to remove an element and all its children
+  const removeElement = (field) => {
     if (!confirm('¿Estás seguro de que deseas eliminar este elemento y todos sus elementos hijos?')) {
       return;
     }
 
-    setComponents((prev) => {
-      const newComponents = JSON.parse(JSON.stringify(prev)); // Deep copy to ensure immutability
-      let current = newComponents;
-      let parent = null;
-      let lastIndex = path[path.length - 1];
+    // Create a list of fields to remove (all fields that come after the selected one)
+    const fieldOrder = [
+      'componente', 'proceso', 'subproceso', 'meta_plan_desarrollo', 
+      'objetivo', 'meta', 'indicador', 'accion', 'responsable', 'recursos', 'fechas'
+    ];
+    const fieldIndex = fieldOrder.indexOf(field);
+    
+    if (fieldIndex === -1) return;
+    
+    const fieldsToReset = fieldOrder.slice(fieldIndex);
+    
+    setFormData(prev => {
+      const newData = {...prev};
+      fieldsToReset.forEach(f => {
+        newData[f] = null;
+      });
+      return newData;
+    });
+  };
 
-      for (let i = 0; i < path.length - 1; i++) {
-        parent = current;
-        current = current[path[i]];
-      }
+  const saveAll = async () => {
+    // Lista de campos requeridos
+    const requiredFields = {
+      componente: 'Componente',
+      proceso: 'Proceso',
+      subproceso: 'Subproceso',
+      meta_plan_desarrollo: 'Meta del Plan de Desarrollo',
+      objetivo: 'Objetivo Estratégico',
+      meta: 'Meta',
+      indicador: 'Indicador',
+      accion: 'Acción',
+      recursos: 'Recursos',
+      fecha_inicio: 'Fecha de Inicio',
+      fecha_final: 'Fecha Final'
+    };
 
-      if (Array.isArray(current)) {
-        current.splice(lastIndex, 1);
-      } else if (parent && lastIndex in parent) {
-        // If it's a direct property, set it to null or delete
-        if (typeof parent === 'object' && parent !== null) {
-          if (Array.isArray(parent)) {
-            parent.splice(lastIndex, 1);
-          } else {
-            delete parent[lastIndex]; // or parent[lastIndex] = null; depending on desired structure
-          }
+    // Validar campos requeridos
+    const missingFields = [];
+    
+    Object.entries(requiredFields).forEach(([field, name]) => {
+      if (field === 'fecha_inicio' || field === 'fecha_final') {
+        if (!formData.fechas?.[field]) {
+          missingFields.push(`• ${name}`);
         }
+      } else if (!formData[field]?.descripcion) {
+        missingFields.push(`• ${name}`);
       }
-      return newComponents;
     });
-  };
 
-  // --- Data Formatting Function ---
-  const formatDataForSave = (data) => {
-    const formattedData = [];
+    // Mostrar error si faltan campos
+    if (missingFields.length > 0) {
+      await Swal.fire({
+        title: 'Campos obligatorios faltantes',
+        html: missingFields.join('<br>'),
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
 
-    data.forEach(componente => {
-      // Componente
-      formattedData.push({
-        type: 'componente',
-        id: componente.id,
-        descripcion: componente.descripcion,
+    // Validación específica de fechas
+    if (new Date(formData.fechas.fecha_final) < new Date(formData.fechas.fecha_inicio)) {
+      await Swal.fire({
+        title: 'Error en fechas',
+        text: 'La fecha final no puede ser anterior a la fecha de inicio',
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    // Mostrar diálogo de confirmación
+    const confirmResult = await Swal.fire({
+      title: '¿Guardar registro?',
+      text: '¿Estás seguro de que deseas guardar este registro PAM?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, guardar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (!confirmResult.isConfirmed) {
+      return;
+    }
+
+    // Mostrar carga mientras se envía
+    const loadingSwal = Swal.fire({
+      title: 'Guardando...',
+      html: 'Por favor espera mientras guardamos tu información',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    try {
+      // Preparar datos para enviar
+      const dataToSend = {
+        pam_id: null, // Ajustar según necesidad
+        user_id: null, // Ajustar según necesidad
+        proceso: formData.proceso.descripcion,
+        subproceso: formData.subproceso.descripcion,
+        meta_plan_desarrollo: formData.meta_plan_desarrollo.descripcion,
+        objetivo_estrategico: formData.objetivo.descripcion,
+        meta: formData.meta.descripcion,
+        indicador: formData.indicador.descripcion,
+        accion: formData.accion.descripcion,
+        recursos: formData.recursos.descripcion,
+        fecha_inicio: formData.fechas.fecha_inicio,
+        fecha_final: formData.fechas.fecha_final
+      };
+
+      const response = await fetch(`/pam/pam-row-store`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json, text/html', // Aceptamos ambos tipos
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend),
+        redirect: 'manual' // Importante para manejar redirecciones manualmente
       });
 
-      componente.procesos.forEach(proceso => {
-        // Proceso
-        formattedData.push({
-          type: 'proceso',
-          id: proceso.id,
-          descripcion: proceso.descripcion,
-          parentId: componente.id, // Reference to parent componente
-        });
+      // Cerrar el loader
+      await loadingSwal.close();
 
-        proceso.subprocesos.forEach(subproceso => {
-          // Subproceso
-          formattedData.push({
-            type: 'subproceso',
-            id: subproceso.id,
-            descripcion: subproceso.descripcion,
-            parentId: proceso.id, // Reference to parent proceso
-          });
+      // Verificar el tipo de contenido de la respuesta
+      const contentType = response.headers.get('content-type');
+      const isJson = contentType && contentType.includes('application/json');
 
-          if (subproceso.meta_plan_desarrollo) {
-            const metaPlan = subproceso.meta_plan_desarrollo;
-            // Meta del Plan de Desarrollo
-            formattedData.push({
-              type: 'metaPlan',
-              id: metaPlan.id,
-              descripcion: metaPlan.descripcion,
-              parentId: subproceso.id, // Reference to parent subproceso
-            });
+      // Si es una redirección (código 302)
+      if (response.status === 302 || response.redirected) {
+        const redirectUrl = response.headers.get('Location') || window.location.href;
+        window.location.href = redirectUrl;
+        return;
+      }
 
-            metaPlan.objetivos.forEach(objetivo => {
-              // Objetivo Estratégico
-              formattedData.push({
-                type: 'objetivo',
-                id: objetivo.id,
-                descripcion: objetivo.descripcion,
-                parentId: metaPlan.id, // Reference to parent metaPlan
-              });
+      // Si es JSON
+      if (isJson) {
+        const responseData = await response.json();
 
-              if (objetivo.meta) {
-                const meta = objetivo.meta;
-                // Meta (specific to Objetivo)
-                formattedData.push({
-                  type: 'meta',
-                  id: meta.id,
-                  descripcion: meta.descripcion,
-                  parentId: objetivo.id, // Reference to parent objetivo
-                });
-
-                if (meta.indicador) {
-                  const indicador = meta.indicador;
-                  // Indicador
-                  formattedData.push({
-                    type: 'indicador',
-                    id: indicador.id,
-                    descripcion: indicador.descripcion,
-                    parentId: meta.id, // Reference to parent meta
-                  });
-
-                  if (indicador.accion) {
-                    const accion = indicador.accion;
-                    // Acción
-                    formattedData.push({
-                      type: 'accion',
-                      id: accion.id,
-                      descripcion: accion.descripcion,
-                      parentId: indicador.id, // Reference to parent indicador
-                    });
-
-                    if (accion.responsable) {
-                      const responsable = accion.responsable;
-                      // Responsable
-                      formattedData.push({
-                        type: 'responsable',
-                        id: responsable.id,
-                        descripcion: responsable.descripcion,
-                        parentId: accion.id, // Reference to parent accion
-                      });
-
-                      if (responsable.recursos) {
-                        const recursos = responsable.recursos;
-                        // Recursos
-                        formattedData.push({
-                          type: 'recursos',
-                          id: recursos.id,
-                          descripcion: recursos.descripcion,
-                          parentId: responsable.id, // Reference to parent responsable
-                        });
-
-                        if (recursos.fechas) {
-                          const fechas = recursos.fechas;
-                          // Fechas
-                          formattedData.push({
-                            type: 'fechas',
-                            id: fechas.id,
-                            descripcion: fechas.descripcion,
-                            parentId: recursos.id, // Reference to parent recursos
-                          });
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            });
+        if (!response.ok) {
+          let errorMessage = 'Error al guardar los datos';
+          if (responseData.errors) {
+            errorMessage = Object.values(responseData.errors)
+              .flat()
+              .map(msg => `• ${msg}`)
+              .join('<br>');
+          } else if (responseData.message) {
+            errorMessage = responseData.message;
           }
+
+          await Swal.fire({
+            title: 'Error',
+            html: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#3085d6',
+          });
+          return;
+        }
+
+        // Éxito - mostrar mensaje y resetear formulario
+        await Swal.fire({
+          title: '¡Éxito!',
+          text: responseData.message || 'Los datos se guardaron correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#3085d6',
         });
+
+        // Resetear el formulario
+        setFormData({
+          componente: null,
+          proceso: null,
+          subproceso: null,
+          meta_plan_desarrollo: null,
+          objetivo: null,
+          meta: null,
+          indicador: null,
+          accion: null,
+          responsable: null,
+          recursos: null,
+          fechas: null
+        });
+      } else {
+        // Si no es JSON, asumimos que es HTML (redirección u otra respuesta)
+        window.location.reload();
+      }
+
+    } catch (error) {
+      await loadingSwal.close();
+      console.error('Error al guardar:', error);
+      
+      await Swal.fire({
+        title: 'Error',
+        text: error.message.includes('<!DOCTYPE html>') 
+          ? 'Error en el formato de respuesta del servidor' 
+          : `Error al conectar con el servidor: ${error.message}`,
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#3085d6',
       });
-    });
-
-    return formattedData;
+    }
   };
 
-
-  // Función para guardar todo
-  const saveAll = () => {
-    const dataToSave = formatDataForSave(components);
-    console.log('Data to save:', dataToSave);
-    alert('Datos guardados (ver consola)');
-  };
-
-  // Componente para renderizar fechas
-  const renderFechas = (fechas, path) => {
-    if (!fechas) return null;
+  // Actualiza la función renderFechas para mostrar los campos de fecha
+  const renderFechas = () => {
+    if (!formData.fechas) return null;
+    
     return (
       <div className="card mb-3 border-secondary" style={{ width: '100%' }}>
         <div className="card-header bg-secondary bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Fechas</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'fechas'])}
+            onClick={() => removeElement('fechas')}
           >
             Eliminar Fechas
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
-            <label className="form-label fw-bold">Descripción:</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={fechas.descripcion}
-              onInput={(e) => updateField([...path], 'fechas', { ...fechas, descripcion: e.target.value })}
-            />
+          
+          {/* Campos de fecha */}
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label fw-bold">Fecha de Inicio:</label>
+              <input
+                type="date"
+                className="form-control"
+                value={formData.fechas.fecha_inicio}
+                onChange={(e) => updateField('fechas', { 
+                  ...formData.fechas, 
+                  fecha_inicio: e.target.value 
+                })}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label fw-bold">Fecha Final:</label>
+              <input
+                type="date"
+                className="form-control"
+                value={formData.fechas.fecha_final}
+                onChange={(e) => updateField('fechas', { 
+                  ...formData.fechas, 
+                  fecha_final: e.target.value 
+                })}
+                min={formData.fechas.fecha_inicio} // Fecha mínima = fecha inicio
+              />
+            </div>
           </div>
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar recursos
-  const renderRecursos = (recursos, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
-    if (!recursos) return null;
+  // Component to render resources
+  const renderRecursos = () => {
+    if (!formData.recursos) return null;
     return (
       <div className="card mb-3 border-info" style={{ width: '100%' }}>
         <div className="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Recursos</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'recursos'])}
+            onClick={() => removeElement('recursos')}
           >
             Eliminar Recursos
           </button>
@@ -636,36 +436,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={recursos.descripcion}
-              onInput={(e) => updateField([...path], 'recursos', { ...recursos, descripcion: e.target.value })}
+              value={formData.recursos.descripcion}
+              onInput={(e) => updateField('recursos', { ...formData.recursos, descripcion: e.target.value })}
             />
           </div>
-          {recursos.descripcion && !recursos.fechas && (
+          {formData.recursos.descripcion && !formData.fechas && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addFechas(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addFechas}
               >
                 Agregar Fechas
               </button>
             </div>
           )}
-          {renderFechas(recursos.fechas, [...path, 'recursos'])}
+          {renderFechas()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar responsable
-  const renderResponsable = (responsable, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
-    if (!responsable) return null;
+  // Component to render responsible
+  const renderResponsable = () => {
+    if (!formData.responsable) return null;
     return (
       <div className="card mb-3 border-dark" style={{ width: '100%' }}>
         <div className="card-header bg-dark bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Responsable</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'responsable'])}
+            onClick={() => removeElement('responsable')}
           >
             Eliminar Responsable
           </button>
@@ -676,36 +476,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={responsable.descripcion}
-              onInput={(e) => updateField([...path], 'responsable', { ...responsable, descripcion: e.target.value })}
+              value={formData.responsable.descripcion}
+              onInput={(e) => updateField('responsable', { ...formData.responsable, descripcion: e.target.value })}
             />
           </div>
-          {responsable.descripcion && !responsable.recursos && (
+          {formData.responsable.descripcion && !formData.recursos && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addRecursos(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addRecursos}
               >
                 Agregar Recursos
               </button>
             </div>
           )}
-          {renderRecursos(responsable.recursos, [...path, 'responsable'], componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+          {renderRecursos()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar acción
-  const renderAccion = (accion, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
-    if (!accion) return null;
+  // Component to render action
+  const renderAccion = () => {
+    if (!formData.accion) return null;
     return (
       <div className="card mb-3 border-warning" style={{ width: '100%' }}>
         <div className="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Acción</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'accion'])}
+            onClick={() => removeElement('accion')}
           >
             Eliminar Acción
           </button>
@@ -716,36 +516,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={accion.descripcion}
-              onInput={(e) => updateField([...path], 'accion', { ...accion, descripcion: e.target.value })}
+              value={formData.accion.descripcion}
+              onInput={(e) => updateField('accion', { ...formData.accion, descripcion: e.target.value })}
             />
           </div>
-          {accion.descripcion && !accion.responsable && (
+          {formData.accion.descripcion && !formData.responsable && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addResponsable(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addResponsable}
               >
                 Agregar Responsable
               </button>
             </div>
           )}
-          {renderResponsable(accion.responsable, [...path, 'accion'], componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+          {renderResponsable()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar indicador
-  const renderIndicador = (indicador, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
-    if (!indicador) return null;
+  // Component to render indicator
+  const renderIndicador = () => {
+    if (!formData.indicador) return null;
     return (
       <div className="card mb-3 border-success" style={{ width: '100%' }}>
         <div className="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Indicador</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'indicador'])}
+            onClick={() => removeElement('indicador')}
           >
             Eliminar Indicador
           </button>
@@ -756,36 +556,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={indicador.descripcion}
-              onInput={(e) => updateField([...path], 'indicador', { ...indicador, descripcion: e.target.value })}
+              value={formData.indicador.descripcion}
+              onInput={(e) => updateField('indicador', { ...formData.indicador, descripcion: e.target.value })}
             />
           </div>
-          {indicador.descripcion && !indicador.accion && (
+          {formData.indicador.descripcion && !formData.accion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addAccion(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addAccion}
               >
                 Agregar Acción
               </button>
             </div>
           )}
-          {renderAccion(indicador.accion, [...path, 'indicador'], componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+          {renderAccion()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar meta
-  const renderMeta = (meta, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
-    if (!meta) return null;
+  // Component to render goal
+  const renderMeta = () => {
+    if (!formData.meta) return null;
     return (
       <div className="card mb-3 border-primary" style={{ width: '100%' }}>
         <div className="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Meta</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'meta'])}
+            onClick={() => removeElement('meta')}
           >
             Eliminar Meta
           </button>
@@ -796,35 +596,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={meta.descripcion}
-              onInput={(e) => updateField([...path], 'meta', { ...meta, descripcion: e.target.value })}
+              value={formData.meta.descripcion}
+              onInput={(e) => updateField('meta', { ...formData.meta, descripcion: e.target.value })}
             />
           </div>
-          {meta.descripcion && !meta.indicador && (
+          {formData.meta.descripcion && !formData.indicador && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addIndicador(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addIndicador}
               >
                 Agregar Indicador
               </button>
             </div>
           )}
-          {renderIndicador(meta.indicador, [...path, 'meta'], componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+          {renderIndicador()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar objetivo
-  const renderObjetivo = (objetivo, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex) => {
+  // Component to render objective
+  const renderObjetivo = () => {
+    if (!formData.objetivo) return null;
     return (
       <div className="card mb-3 border-danger" style={{ width: '100%' }}>
         <div className="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Objetivo Estratégico</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement(path)}
+            onClick={() => removeElement('objetivo')}
           >
             Eliminar Objetivo
           </button>
@@ -835,36 +636,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={objetivo.descripcion}
-              onInput={(e) => updateField(path, 'descripcion', e.target.value)}
+              value={formData.objetivo.descripcion}
+              onInput={(e) => updateField('objetivo', { ...formData.objetivo, descripcion: e.target.value })}
             />
           </div>
-          {objetivo.descripcion && !objetivo.meta && (
+          {formData.objetivo.descripcion && !formData.meta && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addMeta(componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+                onClick={addMeta}
               >
                 Agregar Meta
               </button>
             </div>
           )}
-          {renderMeta(objetivo.meta, path, componenteIndex, procesoIndex, subprocesoIndex, objetivoIndex)}
+          {renderMeta()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar meta del plan
-  const renderMetaPlan = (metaPlan, path, componenteIndex, procesoIndex, subprocesoIndex) => {
-    if (!metaPlan) return null;
+  // Component to render development plan goal
+  const renderMetaPlan = () => {
+    if (!formData.meta_plan_desarrollo) return null;
     return (
       <div className="card mb-3 border-info" style={{ width: '100%' }}>
         <div className="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Meta del Plan de Desarrollo</h5>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([...path, 'meta_plan_desarrollo'])}
+            onClick={() => removeElement('meta_plan_desarrollo')}
           >
             Eliminar Meta del Plan
           </button>
@@ -875,46 +676,38 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={metaPlan.descripcion}
-              onInput={(e) => updateField([...path], 'meta_plan_desarrollo', { ...metaPlan, descripcion: e.target.value })}
+              value={formData.meta_plan_desarrollo.descripcion}
+              onInput={(e) => updateField('meta_plan_desarrollo', { ...formData.meta_plan_desarrollo, descripcion: e.target.value })}
             />
           </div>
-          {metaPlan.descripcion && (
+          {formData.meta_plan_desarrollo.descripcion && !formData.objetivo && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addObjetivo(componenteIndex, procesoIndex, subprocesoIndex)}
+                onClick={addObjetivo}
               >
                 Agregar Objetivo Estratégico
               </button>
             </div>
           )}
           <div className="ms-4">
-            {metaPlan.objetivos?.map((objetivo, i) =>
-              renderObjetivo(
-                objetivo,
-                [...path, 'meta_plan_desarrollo', 'objetivos', i],
-                componenteIndex,
-                procesoIndex,
-                subprocesoIndex,
-                i
-              )
-            )}
+            {renderObjetivo()}
           </div>
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar subproceso
-  const renderSubproceso = (subproceso, path, componenteIndex, procesoIndex) => {
+  // Component to render subprocess
+  const renderSubproceso = () => {
+    if (!formData.subproceso) return null;
     return (
       <div className="card mb-3 border-success" style={{ width: '100%' }}>
         <div className="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Subproceso</h5>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement(path)}
+            onClick={() => removeElement('subproceso')}
           >
             Eliminar Subproceso
           </button>
@@ -925,35 +718,36 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={subproceso.descripcion}
-              onInput={(e) => updateField(path, 'descripcion', e.target.value)}
+              value={formData.subproceso.descripcion}
+              onInput={(e) => updateField('subproceso', { ...formData.subproceso, descripcion: e.target.value })}
             />
           </div>
-          {subproceso.descripcion && !subproceso.meta_plan_desarrollo && (
+          {formData.subproceso.descripcion && !formData.meta_plan_desarrollo && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addMetaPlan(componenteIndex, procesoIndex, path[path.length - 1])}
+                onClick={addMetaPlan}
               >
                 Agregar Meta del Plan
               </button>
             </div>
           )}
-          {renderMetaPlan(subproceso.meta_plan_desarrollo, path, componenteIndex, procesoIndex, path[path.length - 1])}
+          {renderMetaPlan()}
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar proceso
-  const renderProceso = (proceso, path, componenteIndex) => {
+  // Component to render process
+  const renderProceso = () => {
+    if (!formData.proceso) return null;
     return (
       <div className="card mb-3 border-primary" style={{ width: '100%' }}>
         <div className="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
           <h4 className="mb-0">Proceso</h4>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement(path)}
+            onClick={() => removeElement('proceso')}
           >
             Eliminar Proceso
           </button>
@@ -964,39 +758,38 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={proceso.descripcion}
-              onInput={(e) => updateField(path, 'descripcion', e.target.value)}
+              value={formData.proceso.descripcion}
+              onInput={(e) => updateField('proceso', { ...formData.proceso, descripcion: e.target.value })}
             />
           </div>
-          {proceso.descripcion && (
+          {formData.proceso.descripcion && !formData.subproceso && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addSubproceso(componenteIndex, path[path.length - 1])}
+                onClick={addSubproceso}
               >
                 Agregar Subproceso
               </button>
             </div>
           )}
           <div className="ms-4">
-            {proceso.subprocesos?.map((subproceso, i) =>
-              renderSubproceso(subproceso, [...path, 'subprocesos', i], componenteIndex, path[path.length - 1])
-            )}
+            {renderSubproceso()}
           </div>
         </div>
       </div>
     );
   };
 
-  // Componente para renderizar componente
-  const renderComponente = (componente, index) => {
+  // Component to render component
+  const renderComponente = () => {
+    if (!formData.componente) return null;
     return (
       <div className="card mb-3" style={{ width: '100%' }}>
         <div className="card-header bg-light d-flex justify-content-between align-items-center">
           <h3 className="mb-0">Componente</h3>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement([index])}
+            onClick={() => removeElement('componente')}
           >
             Eliminar Componente
           </button>
@@ -1007,24 +800,22 @@ const ComponentManagement = () => {
             <textarea
               className="form-control"
               rows="3"
-              value={componente.descripcion}
-              onInput={(e) => updateField([index], 'descripcion', e.target.value)}
+              value={formData.componente.descripcion}
+              onInput={(e) => updateField('componente', { ...formData.componente, descripcion: e.target.value })}
             />
           </div>
-          {componente.descripcion && (
+          {formData.componente.descripcion && !formData.proceso && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={() => addProceso(index)}
+                onClick={addProceso}
               >
                 Agregar Proceso
               </button>
             </div>
           )}
-          <div className="ms-4">
-            {componente.procesos?.map((proceso, i) =>
-              renderProceso(proceso, [index, 'procesos', i], index)
-            )}
+          <div>
+            {renderProceso()}
           </div>
         </div>
       </div>
@@ -1039,16 +830,18 @@ const ComponentManagement = () => {
           <p className="mb-0 text-muted">Complete cada descripción para habilitar el siguiente nivel</p>
         </div>
         <div className="card-body">
-          <button
-            type="button"
-            className="btn btn-success mb-4"
-            onClick={addComponente}
-          >
-            <i className="bi bi-plus-circle"></i> Agregar componente
-          </button>
+          {!formData.componente && (
+            <button
+              type="button"
+              className="btn btn-success mb-4"
+              onClick={addComponente}
+            >
+              <i className="bi bi-plus-circle"></i> Agregar componente
+            </button>
+          )}
 
           <div id="componentes-container">
-            {components.map((componente, i) => renderComponente(componente, i))}
+            {renderComponente()}
           </div>
 
           <div className="mt-4 pt-3 border-top">
@@ -1056,6 +849,7 @@ const ComponentManagement = () => {
               type="button"
               className="btn btn-primary"
               onClick={saveAll}
+              disabled={!formData.componente}
             >
               <i className="bi bi-save"></i> Guardar Plan Completo
             </button>
@@ -1066,4 +860,4 @@ const ComponentManagement = () => {
   );
 };
 
-export default ComponentManagement;
+export default PamForm;

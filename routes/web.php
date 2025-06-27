@@ -13,7 +13,7 @@ use App\Http\Controllers\GestionAcademicaController;
 use App\Http\Controllers\GestionAdministrativaController;
 use App\Http\Controllers\GestionComunidadController;
 use App\Http\Controllers\GestionDirectivaController;
-use App\Http\Controllers\PAMController;
+use App\Http\Controllers\PamController;
 use App\Http\Controllers\PMI\PMIController;
 use App\Http\Controllers\PEIController;
 use App\Http\Controllers\SedeController;
@@ -105,7 +105,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('pam')->group(function () {
         // Rutas para la gestion de instituciones
-        Route::get('/index', [PAMController::class, 'index'])->name('pam.index');
+        Route::get('/index', [PamController::class, 'index'])->name('pam.index');
+        Route::post('/pam-row-store', [PamController::class, 'store'])->name('pam.store');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
