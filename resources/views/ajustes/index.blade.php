@@ -2,7 +2,7 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
+        data-component="CNavigationButton"
         data-to="{{asset("/dashboard")}}"
     >
     </div>

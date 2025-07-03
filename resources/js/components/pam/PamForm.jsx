@@ -1,11 +1,10 @@
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
-  // Function to save all data
+import { useState, useEffect } from 'preact/hooks';
+import { route } from 'preact-router';
 import Swal from 'sweetalert2';
 
-const PamForm = ({ 
-  csrfToken = '',
-}) => {
+const PamForm = ({ id, csrfToken = '' }) => {
+  
   const [formData, setFormData] = useState({
     componente: null,
     proceso: null,
@@ -19,6 +18,82 @@ const PamForm = ({
     recursos: null,
     fechas: null
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [originalData, setOriginalData] = useState(null);
+
+  // Cargar datos cuando el componente se monta o el ID cambia
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Si no hay ID o es 'new', es un nuevo registro
+        if (!id || isNaN(id)) {
+          setIsEditing(false);
+          setIsLoading(false);
+          return;
+        }
+
+        // Es un registro existente, cargar los datos
+        const response = await fetch(`/pam/get-pam/${id}`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP! Estado: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const data = result.data;
+          setIsEditing(true);
+          setOriginalData(data);
+
+          console.log(data);
+          
+          // Mapear los datos del backend al formato del frontend
+          setFormData({
+            componente: data.componente ? { id: 'componente-1', descripcion: data.componente } : null,
+            proceso: data.proceso ? { id: 'proceso-1', descripcion: data.proceso } : null,
+            subproceso: data.subproceso ? { id: 'subproceso-1', descripcion: data.subproceso } : null,
+            meta_plan_desarrollo: data.meta_plan_desarrollo ? { id: 'meta-plan-1', descripcion: data.meta_plan_desarrollo } : null,
+            objetivo: data.objetivo_estrategico ? { id: 'objetivo-1', descripcion: data.objetivo_estrategico } : null,
+            meta: data.meta ? { id: 'meta-1', descripcion: data.meta } : null,
+            indicador: data.indicador ? { id: 'indicador-1', descripcion: data.indicador } : null,
+            accion: data.accion ? { id: 'accion-1', descripcion: data.accion } : null,
+            responsable: data.responsable ? { id: 'responsable-1', descripcion: data.responsable } : 'asd',
+            recursos: data.recursos ? { id: 'recursos-1', descripcion: data.recursos } : null,
+            fechas: (data.fecha_inicio || data.fecha_final) ? { 
+              id: 'fechas-1', 
+              fecha_inicio: data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '', 
+              fecha_final: data.fecha_final ? data.fecha_final.split(' ')[0] : '' 
+            } : null
+          });
+        } else {
+          throw new Error(result.message || 'Formato de datos inesperado');
+        }
+      } catch (err) {
+        console.error('Error al cargar datos:', err);
+        Swal.fire({
+          title: 'Error',
+          text: `No se pudo cargar el registro: ${err.message}`,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          route('/pam'); // Redirigir al listado si hay error
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   // Helper function for updating form data
   const updateField = (field, value) => {
@@ -28,135 +103,79 @@ const PamForm = ({
     }));
   };
 
-  // Function to add a component
+  // Funciones para agregar elementos (igual que antes)
   const addComponente = () => {
     if (formData.componente) return;
-    
-    const newComponent = {
-      id: `componente-${Date.now()}`,
-      descripcion: '',
-    };
+    const newComponent = { id: `componente-${Date.now()}`, descripcion: '' };
     updateField('componente', newComponent);
   };
 
-  // Function to add a process
   const addProceso = () => {
     if (!formData.componente || formData.proceso) return;
-    
-    const newProceso = {
-      id: `proceso-${Date.now()}`,
-      descripcion: '',
-    };
+    const newProceso = { id: `proceso-${Date.now()}`, descripcion: '' };
     updateField('proceso', newProceso);
   };
 
-  // Function to add a subprocess
   const addSubproceso = () => {
     if (!formData.proceso || formData.subproceso) return;
-    
-    const newSubproceso = {
-      id: `subproceso-${Date.now()}`,
-      descripcion: '',
-    };
+    const newSubproceso = { id: `subproceso-${Date.now()}`, descripcion: '' };
     updateField('subproceso', newSubproceso);
   };
 
-  // Function to add development plan goal
   const addMetaPlan = () => {
     if (!formData.subproceso || formData.meta_plan_desarrollo) return;
-    
-    const newMetaPlan = {
-      id: `meta-plan-${Date.now()}`,
-      descripcion: '',
-    };
+    const newMetaPlan = { id: `meta-plan-${Date.now()}`, descripcion: '' };
     updateField('meta_plan_desarrollo', newMetaPlan);
   };
 
-  // Function to add objective
   const addObjetivo = () => {
     if (!formData.meta_plan_desarrollo || formData.objetivo) return;
-    
-    const newObjetivo = {
-      id: `objetivo-${Date.now()}`,
-      descripcion: '',
-    };
+    const newObjetivo = { id: `objetivo-${Date.now()}`, descripcion: '' };
     updateField('objetivo', newObjetivo);
   };
 
-  // Function to add goal
   const addMeta = () => {
     if (!formData.objetivo || formData.meta) return;
-    
-    const newMeta = {
-      id: `meta-${Date.now()}`,
-      descripcion: '',
-    };
+    const newMeta = { id: `meta-${Date.now()}`, descripcion: '' };
     updateField('meta', newMeta);
   };
 
-  // Function to add indicator
   const addIndicador = () => {
     if (!formData.meta || formData.indicador) return;
-    
-    const newIndicador = {
-      id: `indicador-${Date.now()}`,
-      descripcion: '',
-    };
+    const newIndicador = { id: `indicador-${Date.now()}`, descripcion: '' };
     updateField('indicador', newIndicador);
   };
 
-  // Function to add action
   const addAccion = () => {
     if (!formData.indicador || formData.accion) return;
-    
-    const newAccion = {
-      id: `accion-${Date.now()}`,
-      descripcion: '',
-    };
+    const newAccion = { id: `accion-${Date.now()}`, descripcion: '' };
     updateField('accion', newAccion);
   };
 
-  // Function to add responsible
   const addResponsable = () => {
     if (!formData.accion || formData.responsable) return;
-    
-    const newResponsable = {
-      id: `responsable-${Date.now()}`,
-      descripcion: '',
-    };
+    const newResponsable = { id: `responsable-${Date.now()}`, descripcion: '' };
     updateField('responsable', newResponsable);
   };
 
-  // Function to add resources
   const addRecursos = () => {
     if (!formData.responsable || formData.recursos) return;
-    
-    const newRecursos = {
-      id: `recursos-${Date.now()}`,
-      descripcion: '',
-    };
+    const newRecursos = { id: `recursos-${Date.now()}`, descripcion: '' };
     updateField('recursos', newRecursos);
   };
 
-  // Function to add dates
   const addFechas = () => {
     if (!formData.recursos || formData.fechas) return;
-    
-    const newFechas = {
-      id: `fechas-${Date.now()}`,
-      fecha_inicio: '',
-      fecha_final: ''
-    };
+    const newFechas = { id: `fechas-${Date.now()}`, fecha_inicio: '', fecha_final: '' };
     updateField('fechas', newFechas);
   };
 
-  // Function to remove an element and all its children
+  // Función para eliminar elementos y sus dependencias
   const removeElement = (field) => {
     if (!confirm('¿Estás seguro de que deseas eliminar este elemento y todos sus elementos hijos?')) {
       return;
     }
 
-    // Create a list of fields to remove (all fields that come after the selected one)
     const fieldOrder = [
       'componente', 'proceso', 'subproceso', 'meta_plan_desarrollo', 
       'objetivo', 'meta', 'indicador', 'accion', 'responsable', 'recursos', 'fechas'
@@ -176,8 +195,9 @@ const PamForm = ({
     });
   };
 
+  // Función para guardar los datos (actualizada para manejar edición)
   const saveAll = async () => {
-    // Lista de campos requeridos
+    // Validación de campos requeridos
     const requiredFields = {
       componente: 'Componente',
       proceso: 'Proceso',
@@ -192,9 +212,7 @@ const PamForm = ({
       fecha_final: 'Fecha Final'
     };
 
-    // Validar campos requeridos
     const missingFields = [];
-    
     Object.entries(requiredFields).forEach(([field, name]) => {
       if (field === 'fecha_inicio' || field === 'fecha_final') {
         if (!formData.fechas?.[field]) {
@@ -205,61 +223,50 @@ const PamForm = ({
       }
     });
 
-    // Mostrar error si faltan campos
     if (missingFields.length > 0) {
       await Swal.fire({
         title: 'Campos obligatorios faltantes',
         html: missingFields.join('<br>'),
         icon: 'error',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Entendido'
       });
       return;
     }
 
-    // Validación específica de fechas
+    // Validación de fechas
     if (new Date(formData.fechas.fecha_final) < new Date(formData.fechas.fecha_inicio)) {
       await Swal.fire({
         title: 'Error en fechas',
         text: 'La fecha final no puede ser anterior a la fecha de inicio',
         icon: 'error',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Entendido'
       });
       return;
     }
 
-    // Mostrar diálogo de confirmación
     const confirmResult = await Swal.fire({
-      title: '¿Guardar registro?',
-      text: '¿Estás seguro de que deseas guardar este registro PAM?',
+      title: isEditing ? '¿Actualizar registro?' : '¿Crear nuevo registro?',
+      text: isEditing ? '¿Estás seguro de actualizar este registro PAM?' : '¿Estás seguro de crear este nuevo registro PAM?',
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, guardar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: isEditing ? 'Sí, actualizar' : 'Sí, crear',
+      cancelButtonText: 'Cancelar'
     });
 
-    if (!confirmResult.isConfirmed) {
-      return;
-    }
+    if (!confirmResult.isConfirmed) return;
 
-    // Mostrar carga mientras se envía
     const loadingSwal = Swal.fire({
-      title: 'Guardando...',
-      html: 'Por favor espera mientras guardamos tu información',
+      title: isEditing ? 'Actualizando...' : 'Creando...',
+      html: 'Por favor espera mientras procesamos tu solicitud',
       allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
+      didOpen: () => Swal.showLoading()
     });
 
     try {
       // Preparar datos para enviar
       const dataToSend = {
-        pam_id: null, // Ajustar según necesidad
-        user_id: null, // Ajustar según necesidad
+        id: isEditing ? id : null,
+        componente: formData.componente.descripcion,
         proceso: formData.proceso.descripcion,
         subproceso: formData.subproceso.descripcion,
         meta_plan_desarrollo: formData.meta_plan_desarrollo.descripcion,
@@ -267,105 +274,72 @@ const PamForm = ({
         meta: formData.meta.descripcion,
         indicador: formData.indicador.descripcion,
         accion: formData.accion.descripcion,
+        responsable: formData.responsable?.descripcion || '',
         recursos: formData.recursos.descripcion,
         fecha_inicio: formData.fechas.fecha_inicio,
         fecha_final: formData.fechas.fecha_final
       };
 
-      const response = await fetch(`/pam/pam-row-store`, {
-        method: 'POST',
+      // Determinar la URL y método según si es edición o creación
+      const url = isEditing ? `/pam/update-pam/${id}` : '/pam/pam-row-store';
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'X-CSRF-TOKEN': csrfToken,
-          'Accept': 'application/json, text/html', // Aceptamos ambos tipos
+          'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(dataToSend),
-        redirect: 'manual' // Importante para manejar redirecciones manualmente
+        body: JSON.stringify(dataToSend)
       });
 
-      // Cerrar el loader
       await loadingSwal.close();
 
-      // Verificar el tipo de contenido de la respuesta
-      const contentType = response.headers.get('content-type');
-      const isJson = contentType && contentType.includes('application/json');
-
-      // Si es una redirección (código 302)
-      if (response.status === 302 || response.redirected) {
-        const redirectUrl = response.headers.get('Location') || window.location.href;
-        window.location.href = redirectUrl;
+      // Manejar la respuesta
+      if (response.redirected) {
+        window.location.href = response.url;
         return;
       }
 
-      // Si es JSON
-      if (isJson) {
-        const responseData = await response.json();
+      const responseData = await response.json();
 
-        if (!response.ok) {
-          let errorMessage = 'Error al guardar los datos';
-          if (responseData.errors) {
-            errorMessage = Object.values(responseData.errors)
-              .flat()
-              .map(msg => `• ${msg}`)
-              .join('<br>');
-          } else if (responseData.message) {
-            errorMessage = responseData.message;
-          }
-
-          await Swal.fire({
-            title: 'Error',
-            html: errorMessage,
-            icon: 'error',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#3085d6',
-          });
-          return;
+      if (!response.ok) {
+        let errorMessage = 'Error al guardar los datos';
+        if (responseData.errors) {
+          errorMessage = Object.values(responseData.errors).flat().join('<br>• ');
+        } else if (responseData.message) {
+          errorMessage = responseData.message;
         }
 
-        // Éxito - mostrar mensaje y resetear formulario
-        await Swal.fire({
-          title: '¡Éxito!',
-          text: responseData.message || 'Los datos se guardaron correctamente',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-          confirmButtonColor: '#3085d6',
-        });
+        throw new Error(errorMessage);
+      }
 
-        // Resetear el formulario
-        setFormData({
-          componente: null,
-          proceso: null,
-          subproceso: null,
-          meta_plan_desarrollo: null,
-          objetivo: null,
-          meta: null,
-          indicador: null,
-          accion: null,
-          responsable: null,
-          recursos: null,
-          fechas: null
-        });
-      } else {
-        // Si no es JSON, asumimos que es HTML (redirección u otra respuesta)
-        window.location.reload();
+      // Éxito - mostrar mensaje
+      await Swal.fire({
+        title: '¡Éxito!',
+        text: isEditing ? 'Registro actualizado correctamente' : 'Registro creado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+
+      // Si es nuevo registro, redirigir a la edición
+      if (!isEditing && responseData.id) {
+        route(`/pam/pam-form/${responseData.id}`);
       }
 
     } catch (error) {
-      await loadingSwal.close();
       console.error('Error al guardar:', error);
-      
-      await Swal.fire({
+      Swal.fire({
         title: 'Error',
-        text: error.message.includes('<!DOCTYPE html>') 
-          ? 'Error en el formato de respuesta del servidor' 
-          : `Error al conectar con el servidor: ${error.message}`,
+        html: error.message,
         icon: 'error',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Entendido'
       });
     }
   };
 
+  
   // Actualiza la función renderFechas para mostrar los campos de fecha
   const renderFechas = () => {
     if (!formData.fechas) return null;
@@ -822,12 +796,27 @@ const PamForm = ({
     );
   };
 
+  if (isLoading) {
+    return (
+      <div className="container py-4 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-2">Cargando datos del registro...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container py-4">
       <div className="card shadow">
         <div className="card-header bg-white">
-          <h1 className="h3 mb-0">Plan de apoyo al mejoramiento (PAM)</h1>
-          <p className="mb-0 text-muted">Complete cada descripción para habilitar el siguiente nivel</p>
+          <h1 className="h3 mb-0">
+            {isEditing ? `Editar PAM #${id}` : 'Nuevo Plan de apoyo al mejoramiento (PAM)'}
+          </h1>
+          <p className="mb-0 text-muted">
+            {isEditing ? 'Modifique los campos necesarios' : 'Complete cada descripción para habilitar el siguiente nivel'}
+          </p>
         </div>
         <div className="card-body">
           {!formData.componente && (
@@ -847,11 +836,19 @@ const PamForm = ({
           <div className="mt-4 pt-3 border-top">
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary me-2"
               onClick={saveAll}
               disabled={!formData.componente}
             >
-              <i className="bi bi-save"></i> Guardar Plan Completo
+              <i className="bi bi-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}
+            </button>
+            
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => route('/pam')}
+            >
+              <i className="bi bi-arrow-left"></i> Volver al listado
             </button>
           </div>
         </div>

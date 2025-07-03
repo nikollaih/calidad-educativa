@@ -47,6 +47,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('pam_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->text('componente');
             $table->text('proceso');
             $table->text('subproceso');
             $table->text('meta_plan_desarrollo');

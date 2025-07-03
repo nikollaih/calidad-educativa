@@ -104,8 +104,22 @@ Route::middleware(['auth'])->group(function () {
         */
     });
     Route::prefix('pam')->group(function () {
-        // Rutas para la gestion de instituciones
+        // Vistas ------------------
+        // Visualiza formulario para crear filas del pam
+        // Visualiza el index del pam
+        Route::get('/pam-form', [PamController::class, 'create'])->name('pam.create');
+        Route::get('/pam-form/{id}', [PamController::class, 'show'])->name('pam.show');
         Route::get('/index', [PamController::class, 'index'])->name('pam.index');
+
+        // Rutas para API/AJAX
+        // Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
+
+        Route::get('/get-pam', [PamController::class, 'all'])->name('pam.all');
+        // Ruta para obtener un registro específico
+        Route::get('/get-pam/{id}', [PamController::class, 'edit'])->name('pam.edit');
+        // Ruta para actualizar un registro específico
+        Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
+        Route::delete('/{id}', [PamController::class, 'destroy'])->name('pam.destroy');
         Route::post('/pam-row-store', [PamController::class, 'store'])->name('pam.store');
     });
     Route::prefix('pei')->group(function () {

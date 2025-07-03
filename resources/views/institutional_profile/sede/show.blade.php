@@ -2,7 +2,7 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
+        data-component="CNavigationButton"
     ></div>
 
     <div class="container pt-3">

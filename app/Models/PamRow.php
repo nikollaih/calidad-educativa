@@ -24,6 +24,7 @@ class PamRow extends Model {
     protected $fillable = [
         'pam_id',
         'user_id',
+        'componente',
         'proceso',
         'subproceso',
         'meta_plan_desarrollo',
@@ -44,6 +45,7 @@ class PamRow extends Model {
     protected $casts = [
         'pam_id' => 'integer',
         'user_id' => 'integer',
+        'componente' => 'string',
         'proceso' => 'string',
         'subproceso' => 'string',
         'meta_plan_desarrollo' => 'string',

@@ -4,11 +4,11 @@ import preact from '@preact/preset-vite';
 import path from 'path';
 
 export default defineConfig({
-    // server: {
-    //     cors: {
-    //     origin: 'https://calidad-educativa.dev', // Allow requests from your app's origin
-    //     },
-    // },
+    server: {
+        cors: {
+        origin: 'https://calidad-educativa.dev', // Allow requests from your app's origin
+        },
+    },
     plugins: [
         laravel({
             input: [

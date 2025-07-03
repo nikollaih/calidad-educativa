@@ -25,6 +25,7 @@ class StorePamRowRequest extends FormRequest
         return [
             'pam_id' => 'nullable|integer|exists:pams,id',
             'user_id' => 'nullable|integer|exists:users,id',
+            'componente' => 'required|string|max:255',
             'proceso' => 'required|string|max:255',
             'subproceso' => 'required|string|max:255',
             'meta_plan_desarrollo' => 'required|string|max:255',
@@ -48,6 +49,7 @@ class StorePamRowRequest extends FormRequest
         return [
             'pam_id.exists' => 'El PAM seleccionado no existe en nuestros registros',
             'user_id.exists' => 'El usuario seleccionado no existe',
+            'componente.required' => 'El campo componente es obligatorio',
             'proceso.required' => 'El campo proceso es obligatorio',
             'subproceso.required' => 'El campo subproceso es obligatorio',
             'meta_plan_desarrollo.required' => 'La meta del plan de desarrollo es obligatoria',
@@ -74,6 +76,7 @@ class StorePamRowRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'componente' => 'Componente',
             'proceso' => 'Proceso',
             'subproceso' => 'Subproceso',
             'meta_plan_desarrollo' => 'Meta del Plan de Desarrollo',
