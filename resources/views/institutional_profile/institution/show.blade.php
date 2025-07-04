@@ -118,8 +118,15 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
-                                                <strong>{{ $red['nombre'] }}</strong>
+                                                @if(!empty($social['url']))
+                                                    <a href="{{ $social['url'] }}" target="_blank" class="text-decoration-none">
+                                                        <strong>{{ $red['nombre'] }}</strong>
+                                                    </a>
+                                                @else
+                                                    <strong>{{ $red['nombre'] }}</strong>
+                                                @endif
                                             </div>
+
                                             <label class="form-label mt-2">URL</label>
 
                                             <!-- Input oculto para el nombre de la red social -->

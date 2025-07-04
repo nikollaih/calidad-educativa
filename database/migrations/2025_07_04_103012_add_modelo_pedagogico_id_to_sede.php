@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('institucions', function (Blueprint $table) {
+        Schema::table('sedes', function (Blueprint $table) {
             $table->unsignedBigInteger('modelo_pedagogico_id')->nullable();
 
             // Crear la foreign key constraint
