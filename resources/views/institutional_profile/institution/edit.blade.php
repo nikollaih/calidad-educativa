@@ -4,13 +4,10 @@
     <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">
-            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
+            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
             <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <form class="" action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
-            </form>
+            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
+            <a href="{{ route('pmi.index') }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
         </div>
     </div>
 
@@ -148,8 +145,8 @@
                         <button type="submit" class="btn btn-success me-2">
                             <i class="fas fa-save "></i> Guardar
                         </button>
-                        <a href="{{ route('institution.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
+                        <a href="{{ route('institution.show', $institution->id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cerrar edición
                         </a>
                     </div>
                 </form>

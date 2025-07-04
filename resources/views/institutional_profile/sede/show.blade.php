@@ -253,8 +253,8 @@
                                 <div class="mb-3">
                                     <label for="modelos" class="form-label">Modelos Educativos Flexibles</label>
                                     <select name="educational_models[]" class="form-control" multiple disabled>
-                                        @foreach($eduactionalModels as $model)
-                                            <option value="{{ $model->id }}" @selected($educationalOffer->educationalModels->contains('id', $model->id))>
+                                        @foreach($educationalOffer->educationalModels as $model)
+                                            <option value="{{ $model->id }}">
                                                 {{ $model->name }}
                                             </option>
                                         @endforeach

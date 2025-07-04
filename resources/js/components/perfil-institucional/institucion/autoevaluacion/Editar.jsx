@@ -117,7 +117,7 @@ export default function Editar({  editarUrl = '#',
                                     type="button"
                                     role="tab"
                                 >
-                                    <span>{grupo.indice} {grupo.nombre}</span>
+                                    <span>{grupo.nombre}</span>
                                     {grupo.hijos?.length > 0 && (
                                         <span class="badge bg-dark ms-2">
                                             Total: {calcularPromedioGrupo(grupo)}

@@ -61,7 +61,7 @@ export default function Ver({  gruposCalificaciones = [],
             data: {
                 labels: labels,
                 datasets: [{
-                    label: `${statisticData.nombre} - Promedio de ${statisticData.promedio}`,
+                    label: `${statisticData.nombre} - PROM de ${statisticData.promedio}`,
                     data: data,
                     backgroundColor: backgroundColors,
                     borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
@@ -122,7 +122,7 @@ export default function Ver({  gruposCalificaciones = [],
                                 } else {
                                     leyenda = 'Existencia';
                                 }
-                                return `Promedio: ${promedio} - ${leyenda}`;
+                                return `PROM: ${promedio} - ${leyenda}`;
                             }
                         }
                     },
@@ -261,7 +261,7 @@ export default function Ver({  gruposCalificaciones = [],
                                     type="button"
                                     role="tab"
                                 >
-                                    <span>{grupo.indice} {grupo.nombre}</span>
+                                    <span>{grupo.nombre}</span>
                                     {grupo.hijos?.length > 0 && (
                                         <span className="badge bg-dark ms-2">
                                             Promedio: {calcularPromedioGrupo(grupo)}
@@ -276,7 +276,7 @@ export default function Ver({  gruposCalificaciones = [],
                                 onClick={() => setActiveTab('estadisticas')}
                                 type="button"
                             >
-                                Análisis
+                                ANÁLISIS
                             </button>
                         </li>
                     </ul>
