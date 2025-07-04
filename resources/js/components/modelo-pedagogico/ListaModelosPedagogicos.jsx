@@ -1,30 +1,30 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
+export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos, csrfToken = '' }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
-    const [currentMunicipio, setCurrentMunicipio] = useState(null);
-    const [name, setNombre] = useState('');
+    const [modeloActual, setModeloActual] = useState(null);
+    const [nombre, setNombre] = useState('');
 
     const handleAgregarClick = () => {
         setModalMode('agregar');
         setNombre('');
-        setCurrentMunicipio(null);
+        setModeloActual(null);
         setShowModal(true);
     };
 
     const handleEditarClick = (modeloEducacional) => {
         setModalMode('editar');
-        setNombre(modeloEducacional.name);
-        setCurrentMunicipio(modeloEducacional);
+        setNombre(modeloEducacional.nombre);
+        setModeloActual(modeloEducacional);
         setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
         setNombre('');
-        setCurrentMunicipio(null);
+        setModeloActual(null);
     };
 
     const handleSubmit = (e) => {
@@ -43,18 +43,18 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
 
             const nombreInput = document.createElement('input');
             nombreInput.type = 'hidden';
-            nombreInput.name = 'name';
-            nombreInput.value = name;
+            nombreInput.name = 'nombre';
+            nombreInput.value = nombre;
 
             form.appendChild(tokenInput);
             form.appendChild(nombreInput);
             document.body.appendChild(form);
             form.submit();
         } else {
-            // Editar modeloEducacional existente
+            // Editar modeloPedagogico existente
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = `/modelos-educacionales/${currentMunicipio.id}`;
+            form.action = `/modelos-pedagogicos/${modeloActual.id}`;
 
             const tokenInput = document.createElement('input');
             tokenInput.type = 'hidden';
@@ -68,8 +68,8 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
 
             const nombreInput = document.createElement('input');
             nombreInput.type = 'hidden';
-            nombreInput.name = 'name';
-            nombreInput.value = name;
+            nombreInput.name = 'nombre';
+            nombreInput.value = nombre;
 
             form.appendChild(tokenInput);
             form.appendChild(methodInput);
@@ -81,9 +81,9 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Modelos flexibles</h2>
+            <h2 class="mb-4">Modelos pedagógicos</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar modelo flexible
+                Agregar modelo pedagógico
             </button>
 
             <table class="table">
@@ -94,22 +94,22 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                 </tr>
                 </thead>
                 <tbody>
-                {modelosEducacionales.map((modeloEducacional) => (
-                    <tr key={modeloEducacional.id}>
-                        <td>{modeloEducacional.name}</td>
+                {modelosPedagogicos.map((modeloPedagogico) => (
+                    <tr key={modeloPedagogico.id}>
+                        <td>{modeloPedagogico.nombre}</td>
                         <td>
                             <button
-                                onClick={() => handleEditarClick(modeloEducacional)}
+                                onClick={() => handleEditarClick(modeloPedagogico)}
                                 className="btn btn-warning btn-sm me-2"
                             >
                                 Editar
                             </button>
                             <form
-                                action={`/modelos-educacionales/${modeloEducacional.id}`}
+                                action={`/modelos-pedagogicos/${modeloPedagogico.id}`}
                                 method="POST"
                                 style={{display: 'inline'}}
                                 onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este modeloEducacional?')) {
+                                    if (!confirm('¿Estás seguro de que quieres eliminar este modelo pedagógico?')) {
                                         e.preventDefault();
                                     }
                                 }}
@@ -133,7 +133,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    {modalMode === 'agregar' ? 'Agregar modeloEducacional' : 'Editar modeloEducacional'}
+                                    {modalMode === 'agregar' ? 'Agregar modelo pedagógico' : 'Editar modelo pedagógico'}
                                 </h5>
                                 <button
                                     type="button"
@@ -145,13 +145,13 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                             <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">
-                                            Nombre del modelo educacional
+                                            Nombre del modelo pedagógico
                                         </label>
                                         <input
                                             type="text"
                                             class="form-control"
-                                            id="name"
-                                            value={name}
+                                            id="nombre"
+                                            value={nombre}
                                             onInput={(e) => setNombre(e.target.value)}
                                             required
                                             autoFocus
@@ -169,7 +169,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                     <button
                                         type="submit"
                                         class="btn btn-primary"
-                                        disabled={!name.trim()}
+                                        disabled={!nombre.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
                                     </button>
