@@ -66,6 +66,15 @@
 </style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CNavigationButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-primary btn-sm">Detalles</a>
+            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
+            <a href="#" class="btn btn-success  btn-sm">PEI</a>
+            <a href="{{ route('pmi.index') }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
+        </div>
+    </div>
 
     <!-- <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CNavigationButton" data-is-container="{{false}}"></div>

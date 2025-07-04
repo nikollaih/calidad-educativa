@@ -312,7 +312,7 @@ const PamIndex = () => {
         <div className="text-muted small">
           Mostrando {rows.length} registros
         </div>
-        <button 
+        {/* <button 
           className="btn btn-success"
           onClick={saveChanges}
           disabled={isLoading}
@@ -328,7 +328,7 @@ const PamIndex = () => {
               Guardar Cambios
             </>
           )}
-        </button>
+        </button> */}
       </div>
     </div>
   );
