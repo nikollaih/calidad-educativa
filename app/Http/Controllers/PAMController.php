@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePamRowRequest;
 use App\Models\PamRow;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PamController extends Controller {
@@ -39,7 +41,7 @@ class PamController extends Controller {
 
     public function all() {
         try {
-            $rows = PamRow::all();
+            $rows = PamRow::with('responsable')->get();
             
             return response()->json([
                 'success' => true,
@@ -62,7 +64,7 @@ class PamController extends Controller {
         try {
             $pamRow = PamRow::create([
                 'pam_id'               => $request->input('pam_id'),
-                'user_id'              => $request->input('user_id', auth()->id()),
+                'user_id'              => $request->input('user_id') ?? auth()->id(),
                 'componente'           => $request->input('componente'),
                 'proceso'              => $request->input('proceso'),
                 'subproceso'           => $request->input('subproceso'),
@@ -137,24 +139,8 @@ class PamController extends Controller {
                 ], 404);
             }
 
-            // Validar los datos de entrada
-            $validatedData = $request->validate([
-                'componente' => 'required|string|max:255',
-                'proceso' => 'required|string|max:255',
-                'subproceso' => 'nullable|string|max:255',
-                'meta_plan_desarrollo' => 'nullable|string|max:500',
-                'objetivo_estrategico' => 'nullable|string|max:1000',
-                'meta' => 'nullable|string|max:1000',
-                'indicador' => 'nullable|string|max:1000',
-                'accion' => 'nullable|string|max:1000',
-                'responsable' => 'nullable|string|max:255',
-                'recursos' => 'nullable|string|max:255',
-                'fecha_inicio' => 'nullable|date',
-                'fecha_final' => 'nullable|date|after_or_equal:fecha_inicio'
-            ]);
-
             // Actualizar el registro
-            $pam->update($validatedData);
+            $pam->update($request->all());
 
             // Retornar respuesta exitosa
             return response()->json([
@@ -171,6 +157,7 @@ class PamController extends Controller {
                     'indicador' => $pam->indicador,
                     'accion' => $pam->accion,
                     'responsable' => $pam->responsable,
+                    'user_id' => $pam->user_id,
                     'recursos' => $pam->recursos,
                     'fecha_inicio' => $pam->fecha_inicio,
                     'fecha_final' => $pam->fecha_final,
@@ -242,9 +229,10 @@ class PamController extends Controller {
                     'indicador' => $pam->indicador,
                     'accion' => $pam->accion,
                     'responsable' => $pam->responsable,
+                    'user_id' => $pam->user_id,
                     'recursos' => $pam->recursos,
-                    'fecha_inicio' => $pam->fecha_inicio,
-                    'fecha_final' => $pam->fecha_final,
+                    'fecha_inicio' => Carbon::parse($pam->fecha_inicio)->format('Y-m-d'),
+                    'fecha_final' => Carbon::parse($pam->fecha_final)->format('Y-m-d'),
                     'created_at' => $pam->created_at,
                     'updated_at' => $pam->updated_at
                 ]

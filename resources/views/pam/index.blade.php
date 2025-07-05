@@ -8,6 +8,11 @@
             data-to="pam-form"
             data-icon="fas fa-plus"
         ></div>
+        <div data-component="CNavigationButton"
+            data-label="Exportar tabla" 
+            data-to="pam-form"
+            data-icon="fas fa-plus"
+        ></div>
     </div>
     
     <div

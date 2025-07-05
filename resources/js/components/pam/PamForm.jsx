@@ -1,10 +1,9 @@
-import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import React, { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 import Swal from 'sweetalert2';
 
 const PamForm = ({ id, csrfToken = '' }) => {
-  
   const [formData, setFormData] = useState({
     componente: null,
     proceso: null,
@@ -21,21 +20,25 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState(null);
+  // NEW STATE: To store the list of users for the dropdown
+  const [users, setUsers] = useState([]);
+  const [isUsersLoading, setIsUsersLoading] = useState(false);
+
 
   // Cargar datos cuando el componente se monta o el ID cambia
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        
-        // Si no hay ID o es 'new', es un nuevo registro
+
+        // If no ID or it's 'new', it's a new record
         if (!id || isNaN(id)) {
           setIsEditing(false);
           setIsLoading(false);
           return;
         }
 
-        // Es un registro existente, cargar los datos
+        // It's an existing record, load the data
         const response = await fetch(`/pam/get-pam/${id}`, {
           headers: {
             'Accept': 'application/json',
@@ -54,9 +57,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           setIsEditing(true);
           setOriginalData(data);
 
-          console.log(data);
-          
-          // Mapear los datos del backend al formato del frontend
+          // Map backend data to frontend format
           setFormData({
             componente: data.componente ? { id: 'componente-1', descripcion: data.componente } : null,
             proceso: data.proceso ? { id: 'proceso-1', descripcion: data.proceso } : null,
@@ -66,12 +67,15 @@ const PamForm = ({ id, csrfToken = '' }) => {
             meta: data.meta ? { id: 'meta-1', descripcion: data.meta } : null,
             indicador: data.indicador ? { id: 'indicador-1', descripcion: data.indicador } : null,
             accion: data.accion ? { id: 'accion-1', descripcion: data.accion } : null,
-            responsable: data.responsable ? { id: 'responsable-1', descripcion: data.responsable } : 'asd',
+            // Adjust responsible to match the new selector's value format (e.g., the user's ID)
+            // You might need to adjust 'id' based on what your /usuarios/get returns
+            responsable: data.responsable ? { id: data.user_id || 'responsable-1', descripcion: data.responsable } : null, // Assuming user_id exists
+            responsable_id: data.responsable ? { id: data.user_id || 'responsable-1', descripcion: data.responsable } : null, // Assuming user_id exists
             recursos: data.recursos ? { id: 'recursos-1', descripcion: data.recursos } : null,
-            fechas: (data.fecha_inicio || data.fecha_final) ? { 
-              id: 'fechas-1', 
-              fecha_inicio: data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '', 
-              fecha_final: data.fecha_final ? data.fecha_final.split(' ')[0] : '' 
+            fechas: (data.fecha_inicio || data.fecha_final) ? {
+              id: 'fechas-1',
+              fecha_inicio: data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '',
+              fecha_final: data.fecha_final ? data.fecha_final.split(' ')[0] : ''
             } : null
           });
         } else {
@@ -85,7 +89,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           icon: 'error',
           confirmButtonText: 'OK'
         }).then(() => {
-          route('/pam'); // Redirigir al listado si hay error
+          route('/pam'); // Redirect to the list if there's an error
         });
       } finally {
         setIsLoading(false);
@@ -95,6 +99,44 @@ const PamForm = ({ id, csrfToken = '' }) => {
     fetchData();
   }, [id]);
 
+  // NEW useEffect: Fetch users when the component mounts
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsUsersLoading(true);
+      try {
+        const response = await fetch('/get-usuarios', {
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching users: ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (data.success && Array.isArray(data.data)) {
+          setUsers(data.data);
+        } else {
+          console.error("Unexpected response format for users:", data);
+          setUsers([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los usuarios para el responsable.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      } finally {
+        setIsUsersLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []); // Empty dependency array means this runs once on mount
+
+
   // Helper function for updating form data
   const updateField = (field, value) => {
     setFormData(prev => ({
@@ -103,7 +145,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
     }));
   };
 
-  // Funciones para agregar elementos (igual que antes)
+  // Functions to add elements (same as before)
   const addComponente = () => {
     if (formData.componente) return;
     const newComponent = { id: `componente-${Date.now()}`, descripcion: '' };
@@ -153,9 +195,9 @@ const PamForm = ({ id, csrfToken = '' }) => {
   };
 
   const addResponsable = () => {
+    // No need to set a default id/descripcion here, let the dropdown handle it
     if (!formData.accion || formData.responsable) return;
-    const newResponsable = { id: `responsable-${Date.now()}`, descripcion: '' };
-    updateField('responsable', newResponsable);
+    updateField('responsable', { id: '', descripcion: '' }); // Initialize with empty values
   };
 
   const addRecursos = () => {
@@ -170,24 +212,25 @@ const PamForm = ({ id, csrfToken = '' }) => {
     updateField('fechas', newFechas);
   };
 
-  // Función para eliminar elementos y sus dependencias
+  // Function to remove elements and their dependencies
   const removeElement = (field) => {
     if (!confirm('¿Estás seguro de que deseas eliminar este elemento y todos sus elementos hijos?')) {
       return;
     }
 
     const fieldOrder = [
-      'componente', 'proceso', 'subproceso', 'meta_plan_desarrollo', 
+      'componente', 'proceso', 'subproceso', 'meta_plan_desarrollo',
       'objetivo', 'meta', 'indicador', 'accion', 'responsable', 'recursos', 'fechas'
     ];
     const fieldIndex = fieldOrder.indexOf(field);
-    
+
     if (fieldIndex === -1) return;
-    
+
     const fieldsToReset = fieldOrder.slice(fieldIndex);
-    
+
     setFormData(prev => {
-      const newData = {...prev};
+      const newData = { ...prev
+      };
       fieldsToReset.forEach(f => {
         newData[f] = null;
       });
@@ -195,9 +238,9 @@ const PamForm = ({ id, csrfToken = '' }) => {
     });
   };
 
-  // Función para guardar los datos (actualizada para manejar edición)
+  // Function to save data (updated to handle editing)
   const saveAll = async () => {
-    // Validación de campos requeridos
+    // Validation of required fields
     const requiredFields = {
       componente: 'Componente',
       proceso: 'Proceso',
@@ -207,6 +250,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
       meta: 'Meta',
       indicador: 'Indicador',
       accion: 'Acción',
+      responsable_id: 'Responsable',
+      // user_id: 'Id del responsable',
       recursos: 'Recursos',
       fecha_inicio: 'Fecha de Inicio',
       fecha_final: 'Fecha Final'
@@ -217,6 +262,11 @@ const PamForm = ({ id, csrfToken = '' }) => {
       if (field === 'fecha_inicio' || field === 'fecha_final') {
         if (!formData.fechas?.[field]) {
           missingFields.push(`• ${name}`);
+        }
+      } else if (field === 'responsable') {
+        // For responsible, check if both id and description are present
+        if (!formData.responsable?.id || !formData.responsable?.descripcion) {
+            missingFields.push(`• ${name}`);
         }
       } else if (!formData[field]?.descripcion) {
         missingFields.push(`• ${name}`);
@@ -233,7 +283,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
       return;
     }
 
-    // Validación de fechas
+    // Date validation
     if (new Date(formData.fechas.fecha_final) < new Date(formData.fechas.fecha_inicio)) {
       await Swal.fire({
         title: 'Error en fechas',
@@ -263,7 +313,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
     });
 
     try {
-      // Preparar datos para enviar
+      // Prepare data to send
       const dataToSend = {
         id: isEditing ? id : null,
         componente: formData.componente.descripcion,
@@ -274,13 +324,17 @@ const PamForm = ({ id, csrfToken = '' }) => {
         meta: formData.meta.descripcion,
         indicador: formData.indicador.descripcion,
         accion: formData.accion.descripcion,
-        responsable: formData.responsable?.descripcion || '',
+        // Send the ID of the selected user for responsible
+        user_id: formData.responsable?.id ?? formData.user_id,
+        responsable: formData.responsable.descripcion, // Keep sending description if needed on backend
         recursos: formData.recursos.descripcion,
         fecha_inicio: formData.fechas.fecha_inicio,
         fecha_final: formData.fechas.fecha_final
       };
+      console.log('dataToSend', dataToSend);
+      
 
-      // Determinar la URL y método según si es edición o creación
+      // Determine URL and method based on whether it's editing or creating
       const url = isEditing ? `/pam/update-pam/${id}` : '/pam/pam-row-store';
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -296,12 +350,6 @@ const PamForm = ({ id, csrfToken = '' }) => {
 
       await loadingSwal.close();
 
-      // Manejar la respuesta
-      if (response.redirected) {
-        window.location.href = response.url;
-        return;
-      }
-
       const responseData = await response.json();
 
       if (!response.ok) {
@@ -315,7 +363,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
         throw new Error(errorMessage);
       }
 
-      // Éxito - mostrar mensaje
+      // Success - show message
       await Swal.fire({
         title: '¡Éxito!',
         text: isEditing ? 'Registro actualizado correctamente' : 'Registro creado correctamente',
@@ -323,10 +371,20 @@ const PamForm = ({ id, csrfToken = '' }) => {
         confirmButtonText: 'Aceptar'
       });
 
-      // Si es nuevo registro, redirigir a la edición
-      if (!isEditing && responseData.id) {
-        route(`/pam/pam-form/${responseData.id}`);
-      }
+      // Reset form data after successful save/update
+      setFormData({
+        componente: null,
+        proceso: null,
+        subproceso: null,
+        meta_plan_desarrollo: null,
+        objetivo: null,
+        meta: null,
+        indicador: null,
+        accion: null,
+        responsable: null,
+        recursos: null,
+        fechas: null
+      });
 
     } catch (error) {
       console.error('Error al guardar:', error);
@@ -339,14 +397,14 @@ const PamForm = ({ id, csrfToken = '' }) => {
     }
   };
 
-  
+
   // Actualiza la función renderFechas para mostrar los campos de fecha
   const renderFechas = () => {
     if (!formData.fechas) return null;
-    
+
     return (
-      <div className="card mb-3 border-secondary" style={{ width: '100%' }}>
-        <div className="card-header bg-secondary bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Fechas</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -356,37 +414,37 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          
+
           {/* Campos de fecha */}
           <div className="row">
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 ">
               <label className="form-label fw-bold">Fecha de Inicio:</label>
               <input
                 type="date"
                 className="form-control"
                 value={formData.fechas.fecha_inicio}
-                onChange={(e) => updateField('fechas', { 
-                  ...formData.fechas, 
-                  fecha_inicio: e.target.value 
+                onChange={(e) => updateField('fechas', {
+                  ...formData.fechas,
+                  fecha_inicio: e.target.value
                 })}
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 ">
               <label className="form-label fw-bold">Fecha Final:</label>
               <input
                 type="date"
                 className="form-control"
                 value={formData.fechas.fecha_final}
-                onChange={(e) => updateField('fechas', { 
-                  ...formData.fechas, 
-                  fecha_final: e.target.value 
+                onChange={(e) => updateField('fechas', {
+                  ...formData.fechas,
+                  fecha_final: e.target.value
                 })}
                 min={formData.fechas.fecha_inicio} // Fecha mínima = fecha inicio
               />
             </div>
           </div>
         </div>
-      </div>
+        </div>
     );
   };
 
@@ -394,8 +452,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderRecursos = () => {
     if (!formData.recursos) return null;
     return (
-      <div className="card mb-3 border-info" style={{ width: '100%' }}>
-        <div className="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Recursos</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -405,7 +463,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -424,18 +482,19 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderFechas()}
         </div>
+          {renderFechas()}
       </div>
     );
   };
 
-  // Component to render responsible
+  // NEW renderResponsable function with a selector
   const renderResponsable = () => {
     if (!formData.responsable) return null;
+
     return (
-      <div className="card mb-3 border-dark" style={{ width: '100%' }}>
-        <div className="card-header bg-dark bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Responsable</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -445,16 +504,35 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
-            <label className="form-label fw-bold">Descripción:</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={formData.responsable.descripcion}
-              onInput={(e) => updateField('responsable', { ...formData.responsable, descripcion: e.target.value })}
-            />
+          <div>
+            <label className="form-label fw-bold">Seleccionar Responsable:</label>
+            {isUsersLoading ? (
+              <p>Cargando usuarios...</p>
+            ) : (
+              <select
+                className="form-control"
+                value={formData.responsable.id || ''} // Use the ID for the select's value
+                onChange={(e) => {
+                  const selectedUserId = e.target.value;
+                  const selectedUser = users.find(user => user.id === parseInt(selectedUserId));
+                  updateField('responsable', {
+                    id: selectedUserId,
+                    descripcion: selectedUser ? selectedUser.name : '' // Assuming 'name' is the display field
+                  });
+                }}
+                required
+              >
+                <option value="">Seleccione un responsable</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name} {/* Assuming user object has 'id' and 'name' properties */}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-          {formData.responsable.descripcion && !formData.recursos && (
+          {/* Only enable adding resources if a responsible is selected */}
+          {formData.responsable?.id && !formData.recursos && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
@@ -464,8 +542,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderRecursos()}
         </div>
+          {renderRecursos()}
       </div>
     );
   };
@@ -474,8 +552,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderAccion = () => {
     if (!formData.accion) return null;
     return (
-      <div className="card mb-3 border-warning" style={{ width: '100%' }}>
-        <div className="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Acción</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -485,7 +563,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -504,8 +582,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderResponsable()}
         </div>
+          {renderResponsable()}
       </div>
     );
   };
@@ -514,8 +592,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderIndicador = () => {
     if (!formData.indicador) return null;
     return (
-      <div className="card mb-3 border-success" style={{ width: '100%' }}>
-        <div className="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Indicador</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -525,7 +603,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -544,8 +622,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderAccion()}
         </div>
+          {renderAccion()}
       </div>
     );
   };
@@ -554,8 +632,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderMeta = () => {
     if (!formData.meta) return null;
     return (
-      <div className="card mb-3 border-primary" style={{ width: '100%' }}>
-        <div className="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Meta</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -565,7 +643,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -584,8 +662,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderIndicador()}
         </div>
+          {renderIndicador()}
       </div>
     );
   };
@@ -594,8 +672,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderObjetivo = () => {
     if (!formData.objetivo) return null;
     return (
-      <div className="card mb-3 border-danger" style={{ width: '100%' }}>
-        <div className="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Objetivo Estratégico</h6>
           <button
             className="btn btn-danger btn-sm"
@@ -605,7 +683,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -624,8 +702,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderMeta()}
         </div>
+          {renderMeta()}
       </div>
     );
   };
@@ -634,8 +712,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderMetaPlan = () => {
     if (!formData.meta_plan_desarrollo) return null;
     return (
-      <div className="card mb-3 border-info" style={{ width: '100%' }}>
-        <div className="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card  border-info" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Meta del Plan de Desarrollo</h5>
           <button
             className="btn btn-danger btn-sm"
@@ -645,7 +723,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -664,10 +742,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          <div className="ms-4">
-            {renderObjetivo()}
-          </div>
         </div>
+            {renderObjetivo()}
       </div>
     );
   };
@@ -676,8 +752,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderSubproceso = () => {
     if (!formData.subproceso) return null;
     return (
-      <div className="card mb-3 border-success" style={{ width: '100%' }}>
-        <div className="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Subproceso</h5>
           <button
             className="btn btn-danger btn-sm"
@@ -687,7 +763,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -706,8 +782,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          {renderMetaPlan()}
         </div>
+            {renderMetaPlan()}
       </div>
     );
   };
@@ -716,8 +792,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderProceso = () => {
     if (!formData.proceso) return null;
     return (
-      <div className="card mb-3 border-primary" style={{ width: '100%' }}>
-        <div className="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
+      <div className="card" style={{ width: '100%' }}>
+        <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h4 className="mb-0">Proceso</h4>
           <button
             className="btn btn-danger btn-sm"
@@ -727,7 +803,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -746,10 +822,8 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          <div className="ms-4">
-            {renderSubproceso()}
-          </div>
         </div>
+            {renderSubproceso()}
       </div>
     );
   };
@@ -758,7 +832,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const renderComponente = () => {
     if (!formData.componente) return null;
     return (
-      <div className="card mb-3" style={{ width: '100%' }}>
+      <div className="card" style={{ width: '100%' }}>
         <div className="card-header bg-light d-flex justify-content-between align-items-center">
           <h3 className="mb-0">Componente</h3>
           <button
@@ -769,7 +843,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </button>
         </div>
         <div className="card-body">
-          <div className="mb-3">
+          <div>
             <label className="form-label fw-bold">Descripción:</label>
             <textarea
               className="form-control"
@@ -788,21 +862,19 @@ const PamForm = ({ id, csrfToken = '' }) => {
               </button>
             </div>
           )}
-          <div>
-            {renderProceso()}
-          </div>
         </div>
+            {renderProceso()}
       </div>
     );
   };
 
-  if (isLoading) {
+  if (isLoading || isUsersLoading) { // Check both loading states
     return (
       <div className="container py-4 text-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
-        <p className="mt-2">Cargando datos del registro...</p>
+        <p className="mt-2">Cargando datos del registro y usuarios...</p>
       </div>
     );
   }
@@ -842,7 +914,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
             >
               <i className="bi bi-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}
             </button>
-            
+
             <button
               type="button"
               className="btn btn-secondary"

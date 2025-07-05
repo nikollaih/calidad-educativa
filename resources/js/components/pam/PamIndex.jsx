@@ -277,7 +277,7 @@ const PamIndex = () => {
                     <td className="py-3">{row.meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.indicador || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.accion || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.responsable || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.responsable?.name || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.recursos || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaInicio || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
