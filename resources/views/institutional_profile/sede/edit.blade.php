@@ -67,6 +67,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="mb-3" id="is_sede_principal_container" style="display: block;">
+                                    <label  class="form-label">Modelo pedagógico</label>
+                                    <select name="sede[modelo_pedagogico_id]" class="form-control" required>
+                                        <option value="">Seleccione una un modelo pedagógico</option>
+                                        @foreach ($modelosPedagogicos as $modeloPedagogico)
+                                            <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="sede[name]" class="form-label">Nombre</label>
@@ -406,18 +415,25 @@
             const equiposContainer = document.getElementById('equipos_container');
             const tipoSedeSelect = document.getElementById('tipo_sede');
             const sedePrincipalContainer = document.getElementById('sede_principal_container');
+            const isSedePrincipalContainer = document.getElementById('is_sede_principal_container');
 
             tipoSedeSelect.addEventListener('change', function () {
                 if (this.value === 'Adscrita a una principal') {
                     sedePrincipalContainer.style.display = 'block';
+                    isSedePrincipalContainer.style.display = 'none';
                 } else {
                     sedePrincipalContainer.style.display = 'none';
+                    isSedePrincipalContainer.style.display = 'block';
                 }
             });
 
             // Ejecutar al cargar la página para manejar el estado inicial
             if (tipoSedeSelect.value === 'Adscrita a una principal') {
                 sedePrincipalContainer.style.display = 'block';
+                isSedePrincipalContainer.style.display = 'none';
+            } else{
+                sedePrincipalContainer.style.display = 'none';
+                isSedePrincipalContainer.style.display = 'block';
             }
             const equiposCheckboxes = document.querySelectorAll('input[name="equipos[]"]');
             equiposCheckboxes.forEach(checkbox => {

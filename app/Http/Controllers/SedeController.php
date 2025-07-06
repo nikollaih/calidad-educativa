@@ -7,6 +7,7 @@ use App\Http\Services\InventoryService;
 use App\Http\Services\SedesService;
 use App\Http\Services\SteamClassroomService;
 use App\Http\Services\TitularitySedesService;
+use App\Models\ModeloPedagogico;
 use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -37,8 +38,17 @@ class SedeController extends Controller
     public function create(int $institutionId = null)
     {
         $eduactionalModels = EducationalModel::get();
+        $modelosPedagogicos = ModeloPedagogico::get();
         $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
-        return view('institutional_profile.sede.create',['institutionId' => $institutionId, 'availableSedes' => $availableSedes, 'eduactionalModels' => $eduactionalModels ]);
+        return view(
+            'institutional_profile.sede.create',
+            [
+                'institutionId' => $institutionId,
+                'availableSedes' => $availableSedes,
+                'eduactionalModels' => $eduactionalModels,
+                'modelosPedagogicos' => $modelosPedagogicos,
+            ]
+        );
     }
 
     public function store(Request $request)
@@ -140,10 +150,18 @@ class SedeController extends Controller
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
         $eduactionalModels = EducationalModel::get();
+        $modelosPedagogicos = ModeloPedagogico::get();
 
         $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
 
-        return view('institutional_profile.sede.edit',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels, 'availableSedes'=>$availableSedes]);
+        return view('institutional_profile.sede.edit',
+            [
+                'sede' => $sede,
+                'educationalOffer' => $educationalOffer,
+                'eduactionalModels' => $eduactionalModels,
+                'modelosPedagogicos' => $modelosPedagogicos,
+                'availableSedes'=>$availableSedes
+            ]);
     }
     public function show(int $institutionId = null,int $sede = null)
     {
@@ -161,10 +179,17 @@ class SedeController extends Controller
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
         $eduactionalModels = EducationalModel::get();
-
+        $modelosPedagogicos = ModeloPedagogico::get();
         $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
 
-        return view('institutional_profile.sede.show',['sede' => $sede, 'educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels, 'availableSedes'=>$availableSedes]);
+        return view('institutional_profile.sede.show',
+            [
+                'sede' => $sede,
+                'modelosPedagogicos' => $modelosPedagogicos,
+                'educationalOffer' => $educationalOffer,
+                'eduactionalModels' => $eduactionalModels,
+                'availableSedes'=>$availableSedes
+            ]);
     }
 
 
