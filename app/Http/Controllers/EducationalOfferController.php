@@ -212,7 +212,8 @@ class EducationalOfferController extends Controller
                 // Crear el horario
                 $scheduleData = [
                     'name' => $scheduleInfo['name'],
-                    'schedule' => $scheduleInfo['schedule'],
+                    'hora_inicio' => $scheduleInfo['hora_inicio'],
+                    'hora_fin' => $scheduleInfo['hora_fin'],
                     'notes' => $scheduleInfo['notes'] ?? null
                 ];
 
@@ -330,8 +331,9 @@ class EducationalOfferController extends Controller
             // Actualizar el horario
             $schedule = $levelSedeToUpdate->schedule;
             $schedule->name = $request->input('schedule.name');
-            $schedule->schedule = $request->input('schedule.schedule');
             $schedule->notes = $request->input('schedule.notes');
+            $schedule->hora_inicio = $request->input('schedule.hora_inicio');
+            $schedule->hora_fin = $request->input('schedule.hora_fin');
 
             // Manejar el documento del horario si se subió uno nuevo
             if ($request->hasFile('schedule_attachment')) {
@@ -363,13 +365,13 @@ class EducationalOfferController extends Controller
             }
             DB::commit();
 
-            return redirect()->route('institution.edit', ['institution' => $levelSede->sede->institution_id])
-                ->with('success', 'Vinculación de oferta educativa actualizada correctamente.');
+            return redirect()->route('institution.edit', ['institution' => $levelSedeToUpdate->sede->institution_id])
+                ->with('flash_success_message', 'Vinculación de oferta educativa actualizada correctamente.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()
-                ->with('error', 'Error al actualizar la vinculación: ' . $e->getMessage())
+                ->with('flash_error_message', 'Error al actualizar la vinculación: ' . $e->getMessage())
                 ->withInput();
         }
     }

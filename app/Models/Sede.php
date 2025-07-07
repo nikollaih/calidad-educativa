@@ -62,6 +62,4 @@ class Sede extends Model
     protected $casts = [
         'is_new_school'      => 'boolean',
     ];
-
-
 }

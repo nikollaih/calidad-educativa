@@ -218,8 +218,9 @@
         </div>
         <div class="schedule-info-group">
             <input type="hidden" class="schedule-name">
-            <input type="hidden" class="schedule-value">
             <input type="hidden" class="schedule-notes">
+            <input type="hidden" class="schedule-hora_inicio">
+            <input type="hidden" class="schedule-hora_fin">
         </div>
 
         <!-- Selección de horario -->
@@ -233,9 +234,19 @@
         </div>
 
         <!-- Campo de texto para describir el horario -->
-        <div class="mb-3">
-            <label class="form-label fw-bold">Descripción breve del horario <span class="text-danger fw-bold">*</span></label>
-            <input type="text" class="form-control schedule-description" placeholder="Ej: Horario matutino de 8 AM a 12 PM" required>
+           <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Hora de Inicio</label>
+                    <input type="time" class="form-control schedule-hora_inicio-input" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Hora de Final</label>
+                    <input type="time" class="form-control schedule-hora_fin-input"  required>
+                </div>
+            </div>
         </div>
 
         <!-- Área de texto para descripción detallada -->
@@ -369,13 +380,15 @@ function updateSchedules() {
         levelInfoGroup.querySelector('.custom-category').name = `level_schedules[${index}][level_info][category]`;
 
         scheduleInfoGroup.querySelector('.schedule-name').name = `level_schedules[${index}][schedule][name]`;
-        scheduleInfoGroup.querySelector('.schedule-value').name = `level_schedules[${index}][schedule][schedule]`;
+        scheduleInfoGroup.querySelector('.schedule-hora_fin').name = `level_schedules[${index}][schedule][hora_fin]`;
+        scheduleInfoGroup.querySelector('.schedule-hora_inicio').name = `level_schedules[${index}][schedule][hora_inicio]`;
         scheduleInfoGroup.querySelector('.schedule-notes').name = `level_schedules[${index}][schedule][notes]`;
 
         // Agregar eventos para actualizar los campos ocultos
         const scheduleSelect = scheduleCard.querySelector('.schedule-select');
-        const scheduleDescription = scheduleCard.querySelector('.schedule-description');
         const scheduleNotes = scheduleCard.querySelector('.schedule-notes-input');
+        const scheduleHoraInicio = scheduleCard.querySelector('.schedule-hora_inicio-input');
+        const scheduleHoraFin = scheduleCard.querySelector('.schedule-hora_fin-input');
 
         // Seleccionar el primer valor por defecto y actualizar el campo oculto
         scheduleSelect.value = scheduleSelect.options[0].value;
@@ -385,12 +398,17 @@ function updateSchedules() {
             scheduleCard.querySelector('.schedule-name').value = this.value;
         });
 
-        scheduleDescription.addEventListener('input', function() {
-            scheduleCard.querySelector('.schedule-value').value = this.value;
-        });
 
         scheduleNotes.addEventListener('input', function() {
             scheduleCard.querySelector('.schedule-notes').value = this.value;
+        });
+
+        scheduleHoraInicio.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-hora_inicio').value = this.value;
+        });
+
+        scheduleHoraFin.addEventListener('input', function() {
+            scheduleCard.querySelector('.schedule-hora_fin').value = this.value;
         });
 
         // Agregar al contenedor

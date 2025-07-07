@@ -19,6 +19,8 @@ class EducationalOfferSchedule extends Model
         'document_id',
         'sede_offer_id',
         'notes',
+        'hora_inicio',
+        'hora_fin',
     ];
     public function anexo (){
         return $this->belongsTo(Adjunto::class,'document_id');
