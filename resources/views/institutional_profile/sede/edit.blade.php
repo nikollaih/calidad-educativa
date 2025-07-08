@@ -164,6 +164,15 @@
                             </div>
 
                         </div>
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="inventario" role="tabpanel">
                         <div>
@@ -338,7 +347,10 @@
                         </div>
 
                     </div>
-                    <div class="tab-pane fade"  id="ofertas" role="tabpanel">
+                    </div>
+
+                </form>
+                <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                         <div class="card-body">
                             <div class="col-md-12">
                                 <a href="{{ route('educational-offer.vinculate', $sede->institution_id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
@@ -388,18 +400,6 @@
                             </div>
                         </div>
                     </div>
-
-                    </div>
-                    <!-- Botones de acción -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save"></i> Guardar
-                        </button>
-                        <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

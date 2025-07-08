@@ -300,7 +300,8 @@ class SedeController extends Controller
         if(empty($sedeToDel)){
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
         }
+        $institutionId = $sedeToDel->institution_id;
         $sedeToDel->delete();
-        return redirect()->back()->with('success', 'Sede eliminada correctamente.');
+        return redirect()->route('institution.show',['institution'=>$institutionId])->with('success', 'Sede eliminada correctamente.');
     }
 }
