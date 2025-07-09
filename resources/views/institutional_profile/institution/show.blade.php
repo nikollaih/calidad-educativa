@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">
-            <a href="#" class="btn btn-primary btn-sm">Detalles</a>
+            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
             <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
             <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
             <a href="{{ route('pmi.index') }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
@@ -118,8 +118,15 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
-                                                <strong>{{ $red['nombre'] }}</strong>
+                                                @if(!empty($social['url']))
+                                                    <a href="{{ $social['url'] }}" target="_blank" class="text-decoration-none">
+                                                        <strong>{{ $red['nombre'] }}</strong>
+                                                    </a>
+                                                @else
+                                                    <strong>{{ $red['nombre'] }}</strong>
+                                                @endif
                                             </div>
+
                                             <label class="form-label mt-2">URL</label>
 
                                             <!-- Input oculto para el nombre de la red social -->

@@ -43,7 +43,7 @@ const TextMultipleTags = ({
             <label for={name} class="form-label">Nombre del Coordinador/es</label>
             <div class="form-control d-flex flex-wrap gap-2 p-2" style="min-height: 58px;">
                 {tags.map((tag, index) => (
-                    <span class="badge bg-primary d-flex align-items-center">
+                    <span class="border p-2 rounded  d-flex align-items-center">
                         {tag}
                         {( isEditable &&
                         <button

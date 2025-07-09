@@ -9,16 +9,12 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use \App\Http\Controllers\InstitutionController;
 use \App\Http\Controllers\EducationalOfferController;
-use App\Http\Controllers\GestionAcademicaController;
-use App\Http\Controllers\GestionAdministrativaController;
-use App\Http\Controllers\GestionComunidadController;
-use App\Http\Controllers\GestionDirectivaController;
-use App\Http\Controllers\PamController;
+use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PMI\PMIController;
-use App\Http\Controllers\PEIController;
 use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ModeloEducacionalController;
+use App\Http\Controllers\ModeloPedagogicoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -131,6 +127,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('municipios', MunicipioController::class);
     // Rutas relacionadas a modelos educacionales
     Route::resource('modelos-educacionales', ModeloEducacionalController::class);
+    // Rutas relacionadas a modelos pedagogicos
+    Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);

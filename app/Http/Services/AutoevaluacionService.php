@@ -14,7 +14,17 @@ class AutoevaluacionService {
 
             $tieneNotasPendientes  = $cantidadTotalNotas - $cantidadTotalNotasCalificadas != 0;
             if( $tieneNotasPendientes) {
-               return  Result::success('Actualmente tienes '. $cantidadTotalNotas - $cantidadTotalNotasCalificadas . ' notas pendientes por calificar.');
+                // Obtener los IDs de las notas ya calificadas
+                $notasCalificadasIds = $autoevaluacion->notas()->pluck('id');
+
+                // Obtener la primera nota que no está calificada
+                $primeraNotaSinCalificar = Calificacion::whereNotIn('id', $notasCalificadasIds)
+                    ->orderBy('id')
+                    ->first();
+
+               return  Result::success('Actualmente tienes '. $primeraNotaSinCalificar->indice . ' ' . $primeraNotaSinCalificar->nombre .
+                   ' y otras '
+                   . $cantidadTotalNotas - ($cantidadTotalNotasCalificadas + 1) . ' notas pendientes por calificar.');
             }
             return Result::error(msg:' No tienes notas pendientes por calificar.');
     }

@@ -165,7 +165,13 @@
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-educacionales')}}" class="menu-link">
                                         <i class="menu-icon fas fa-lightbulb"></i>
-                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógico</div>
+                                        <div data-i18n="Modelos flexibles"> Modelos flexibles</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('modelos-pedagogicos')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-chalkboard-teacher"></i>
+                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógicos</div>
                                     </a>
                                 </li>
                             </ul>

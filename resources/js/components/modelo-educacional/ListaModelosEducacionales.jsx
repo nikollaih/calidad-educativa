@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-export default function ListaMunicipios({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
+export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
     const [currentMunicipio, setCurrentMunicipio] = useState(null);
@@ -81,9 +81,9 @@ export default function ListaMunicipios({ agregarUrl, modelosEducacionales, csrf
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Modelos Educacionales</h2>
+            <h2 class="mb-4">Modelos flexibles</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar modelo educacional
+                Agregar modelo flexible
             </button>
 
             <table class="table">

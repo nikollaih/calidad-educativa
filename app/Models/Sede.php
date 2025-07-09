@@ -25,6 +25,7 @@ class Sede extends Model
         'institution_id',
         'administrative_act',
         'parent_sede_id',
+        'modelo_pedagogico_id'
     ];
 
     // Relaciones
@@ -61,6 +62,4 @@ class Sede extends Model
     protected $casts = [
         'is_new_school'      => 'boolean',
     ];
-
-
 }

@@ -75,7 +75,31 @@ export default function AutoevaluacionResultados({
         };
         return descripciones[valor] || "Null";
     };
+    // Función para obtener las fortalezas de una gestión específica
+    const getFortalezas = (gestionNombre) => {
+        const fortalezasPorGrupo = {};
 
+        // Verificar si hay fortalezas para esta gestión
+        if (fortalezas[gestionNombre] && fortalezas[gestionNombre].length > 0) {
+            fortalezas[gestionNombre].forEach(grupo => {
+                if (!fortalezasPorGrupo[grupo.nombre]) {
+                    fortalezasPorGrupo[grupo.nombre] = [];
+                }
+
+                // Si el grupo tiene calificaciones específicas, agregarlas
+                if (grupo.calificaciones && grupo.calificaciones.length > 0) {
+                    grupo.calificaciones.forEach(calificacion => {
+                        fortalezasPorGrupo[grupo.nombre].push(calificacion.nombre);
+                    });
+                } else {
+                    // Si no tiene calificaciones específicas, mostrar como grupo general
+                    fortalezasPorGrupo[grupo.nombre].push(`Promedio: ${grupo.promedio}`);
+                }
+            });
+        }
+
+        return fortalezasPorGrupo;
+    };
     // Función para encontrar las oportunidades de mejora para una gestión específica
     const getOportunidadesMejora = (gestionNombre) => {
         const oportunidadesPorGrupo = {};
@@ -113,7 +137,13 @@ export default function AutoevaluacionResultados({
 
         return oportunidadesPorGrupo;
     };
-
+    // Función para verificar si hay fortalezas
+    const tieneFortalezas = (gestionNombre) => {
+        const fortalezasData = getFortalezas(gestionNombre);
+        return Object.values(fortalezasData).some(
+            calificaciones => calificaciones.length > 0
+        );
+    };
     // Función para verificar si hay oportunidades de mejoramiento
     const tieneOportunidadesMejoramiento = (gestionNombre) => {
         const oportunidades = getOportunidadesMejora(gestionNombre);
@@ -140,12 +170,17 @@ export default function AutoevaluacionResultados({
                     <tr key={gestion.id}>
                         <td class="align-middle font-medium">{gestion.nombre}</td>
                         <td>
-                            {fortalezas[gestion.nombre] && fortalezas[gestion.nombre].length > 0 ? (
-                                <ul class="list-disc pl-5 mb-0">
-                                    {fortalezas[gestion.nombre].map((fortaleza, index) => (
-                                        <li key={index} class="mb-1">{fortaleza}</li>
-                                    ))}
-                                </ul>
+                            {tieneFortalezas(gestion.nombre) ? (
+                                <div>
+                                    {Object.entries(getFortalezas(gestion.nombre)).map(([grupoNombre, calificaciones]) =>
+                                            calificaciones.length > 0 && (
+                                                <div key={grupoNombre} className="mb-3">
+                                                    <strong className="block mb-1">{grupoNombre}:</strong>
+                                                    <p className="pl-4 mb-0">{calificaciones.join(' - ')}</p>
+                                                </div>
+                                            )
+                                    )}
+                                </div>
                             ) : (
                                 <span class="text-gray-500">No se encontraron fortalezas</span>
                             )}

@@ -165,16 +165,68 @@ class InstitutionController extends Controller
             ];
         }
 
-        // Identificar fortalezas (grupos con promedio > 3)
         $fortalezas = collect();
         foreach ($grupos as $grupo) {
             if ($grupo['promedio'] > 3) {
-                if (!$fortalezas->has($grupo['padre_nombre'])) {
-                    $fortalezas[$grupo['padre_nombre']] = collect();
+                $nombreGrupoPadre = $grupo['padre_nombre'];
+                if (!$fortalezas->has($nombreGrupoPadre)) {
+                    $fortalezas[$nombreGrupoPadre] = collect();
                 }
-                $fortalezas[$grupo['padre_nombre']]->push($grupo['nombre']);
+
+                // Agregar el grupo como fortaleza
+                $fortalezas[$nombreGrupoPadre]->push([
+                    'nombre' => $grupo['nombre'],
+                    'indice' => $grupo['indice'],
+                    'promedio' => $grupo['promedio'],
+                    'calificados' => $grupo['calificaciones_evaluadas'] . ' de ' . $grupo['total_calificaciones'],
+                    'calificaciones' => collect() // Agregar siempre la clave calificaciones
+                ]);
+            }
+
+            // También agregamos las calificaciones individuales con valores altos (4 o 5)
+            $calificacionesFortaleza = $grupo['notas']->filter(function ($nota) {
+                return $nota['valor'] >= 4;
+            });
+
+            if ($calificacionesFortaleza->count() > 0) {
+                $nombreGrupoPadre = $grupo['padre_nombre'];
+                $nombreGrupo = $grupo['nombre'];
+
+                if (!$fortalezas->has($nombreGrupoPadre)) {
+                    $fortalezas[$nombreGrupoPadre] = collect();
+                }
+
+                // Buscar si el subgrupo ya existe
+                $indiceSubgrupo = $fortalezas[$nombreGrupoPadre]->search(function ($item) use ($nombreGrupo) {
+                    return $item['nombre'] === $nombreGrupo;
+                });
+
+                // Si no existe, crearlo
+                if ($indiceSubgrupo === false) {
+                    $fortalezas[$nombreGrupoPadre]->push([
+                        'nombre' => $nombreGrupo,
+                        'calificaciones' => collect()
+                    ]);
+                    $indiceSubgrupo = $fortalezas[$nombreGrupoPadre]->count() - 1;
+                } else {
+                    // Si existe pero no tiene calificaciones, crearlas
+                    if (!isset($fortalezas[$nombreGrupoPadre][$indiceSubgrupo]['calificaciones'])) {
+                        $fortalezas[$nombreGrupoPadre][$indiceSubgrupo]['calificaciones'] = collect();
+                    }
+                }
+
+                // Agregar las calificaciones
+                foreach ($calificacionesFortaleza as $nota) {
+                    $estado = $nota['valor'] == 4 ? 'Funcional (4)' : 'Óptimo (5)';
+                    $fortalezas[$nombreGrupoPadre][$indiceSubgrupo]['calificaciones']->push([
+                        'nombre' => $nota['nombre_calificacion'],
+                        'indice' => $nota['indice_calificacion'],
+                        'estado' => $estado
+                    ]);
+                }
             }
         }
+
 
         // Identificar oportunidades de mejora (calificaciones con valor 1 o no calificadas)
         $oportunidadesMejora = collect();
@@ -196,7 +248,7 @@ class InstitutionController extends Controller
 
             // También agregamos las calificaciones individuales con valor 1 o no calificadas
             $calificacionesMejora = $grupo['notas']->filter(function ($nota) {
-                return $nota['valor'] === 1 || is_null($nota['valor']);
+                return $nota['valor'] <= 3 || is_null($nota['valor']);
             });
 
             if ($calificacionesMejora->count() > 0) {

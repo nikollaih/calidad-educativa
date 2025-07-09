@@ -67,6 +67,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="mb-3" id="is_sede_principal_container" style="display: block;">
+                                    <label  class="form-label">Modelo pedagógico</label>
+                                    <select name="sede[modelo_pedagogico_id]" class="form-control" required>
+                                        <option value="">Seleccione una un modelo pedagógico</option>
+                                        @foreach ($modelosPedagogicos as $modeloPedagogico)
+                                            <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="sede[name]" class="form-label">Nombre</label>
@@ -154,6 +163,15 @@
 
                             </div>
 
+                        </div>
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="inventario" role="tabpanel">
@@ -329,7 +347,10 @@
                         </div>
 
                     </div>
-                    <div class="tab-pane fade"  id="ofertas" role="tabpanel">
+                    </div>
+
+                </form>
+                <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                         <div class="card-body">
                             <div class="col-md-12">
                                 <a href="{{ route('educational-offer.vinculate', $sede->institution_id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
@@ -379,18 +400,6 @@
                             </div>
                         </div>
                     </div>
-
-                    </div>
-                    <!-- Botones de acción -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save"></i> Guardar
-                        </button>
-                        <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -406,18 +415,25 @@
             const equiposContainer = document.getElementById('equipos_container');
             const tipoSedeSelect = document.getElementById('tipo_sede');
             const sedePrincipalContainer = document.getElementById('sede_principal_container');
+            const isSedePrincipalContainer = document.getElementById('is_sede_principal_container');
 
             tipoSedeSelect.addEventListener('change', function () {
                 if (this.value === 'Adscrita a una principal') {
                     sedePrincipalContainer.style.display = 'block';
+                    isSedePrincipalContainer.style.display = 'none';
                 } else {
                     sedePrincipalContainer.style.display = 'none';
+                    isSedePrincipalContainer.style.display = 'block';
                 }
             });
 
             // Ejecutar al cargar la página para manejar el estado inicial
             if (tipoSedeSelect.value === 'Adscrita a una principal') {
                 sedePrincipalContainer.style.display = 'block';
+                isSedePrincipalContainer.style.display = 'none';
+            } else{
+                sedePrincipalContainer.style.display = 'none';
+                isSedePrincipalContainer.style.display = 'block';
             }
             const equiposCheckboxes = document.querySelectorAll('input[name="equipos[]"]');
             equiposCheckboxes.forEach(checkbox => {

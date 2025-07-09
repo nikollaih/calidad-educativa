@@ -1,5 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-plantilla
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.show', 2) }}" class="btn btn-outline-primary btn-sm">Detalles</a>
+            <a href="{{ route('institution.autoevaluaciones', 2) }}" class="btn btn-outline-info btn-sm">Autoevaluacion</a>
+            <a href="{{ route('institution.pei', 2) }}" class="btn btn-outline-success  btn-sm">PEI</a>
+            <a href="#" class="btn btn-secondary  btn-sm">PMI</a>
+        </div>
+    </div>
+    <div
+        data-component="IndexPMI"
+    >
+
+    </div>
 @endsection
