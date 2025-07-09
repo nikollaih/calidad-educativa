@@ -10,14 +10,12 @@ return new class extends Migration
     {
         Schema::create('pam_acciones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('indicador_id');
-            $table->text('text');
-            $table->boolean('estado');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->text('descripcion');
             $table->date('fecha_inicio');
             $table->date('fecha_final');
-            // $table->timestamps();
 
-            $table->foreign('indicador_id')->references('id')->on('pam_indicadores');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

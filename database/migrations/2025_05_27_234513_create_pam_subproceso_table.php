@@ -8,17 +8,15 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('pam_indicadores', function (Blueprint $table) {
+        Schema::create('pam_subprocesos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('meta_id');
-            $table->text('text');
+            $table->text('descripcion');
 
-            $table->foreign('meta_id')->references('id')->on('pam_metas');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('pam_indicadores');
+        Schema::dropIfExists('pam_subprocesos');
     }
 };

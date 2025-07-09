@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('pam_metas', function (Blueprint $table) {
+        Schema::create('pam_indicadores', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('descripcion');
 
@@ -17,6 +17,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('pam_metas');
+        Schema::dropIfExists('pam_indicadores');
     }
 };

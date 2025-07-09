@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { h } from 'preact';
 import Swal from 'sweetalert2';
+import AdvancesModal from './AdvancesModal';
 
 // Función para formatear fechas ISO a formato legible
 const formatDate = (isoString) => {
@@ -17,10 +18,24 @@ const PamIndex = () => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAdvancesModal, setShowAdvancesModal] = useState(false);
+  const [selectedPamId, setSelectedPamId] = useState(null);
 
   // Función para obtener el token CSRF
   const getCsrfToken = () => {
     return document.querySelector('meta[name="csrf-token"]')?.content || '';
+  };
+
+  // Function to open the modal
+  const openAdvancesModal = (pamId) => {
+    setSelectedPamId(pamId);
+    setShowAdvancesModal(true);
+  };
+
+  // Function to close the modal
+  const closeAdvancesModal = () => {
+    setShowAdvancesModal(false);
+    setSelectedPamId(null);
   };
 
   // Cargar datos iniciales
@@ -283,6 +298,13 @@ const PamIndex = () => {
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
+                        <button
+                          className="btn btn-sm btn-info text-white"
+                          onClick={() => openAdvancesModal(row.id)}
+                          title="Ver Avances"
+                        >
+                          <i className="fas fa-eye"></i>
+                        </button>
                         <a 
                           href={`/pam/pam-form/${row.id}`}
                           className="btn btn-sm btn-primary"
@@ -312,23 +334,10 @@ const PamIndex = () => {
         <div className="text-muted small">
           Mostrando {rows.length} registros
         </div>
-        {/* <button 
-          className="btn btn-success"
-          onClick={saveChanges}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2"></span>
-              Guardando...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-save me-2"></i>
-              Guardar Cambios
-            </>
-          )}
-        </button> */}
+        {/* Render the AdvancesModal when showAdvancesModal is true */}
+        {showAdvancesModal && (
+          <AdvancesModal pamId={selectedPamId} onClose={closeAdvancesModal} />
+        )}
       </div>
     </div>
   );

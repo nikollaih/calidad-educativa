@@ -1,4 +1,4 @@
-// src/ui/CNavigationButton.jsx
+// src/ui/CBackButton.jsx
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 

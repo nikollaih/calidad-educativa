@@ -2,7 +2,7 @@
 
 @section('content')
     <div
-        data-component="CNavigationButton"
+        data-component="CBackButton"
     ></div>
     <div class="container">
     @if(session('success'))
