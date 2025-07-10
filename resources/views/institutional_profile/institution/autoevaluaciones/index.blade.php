@@ -1,6 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (Session::has('tiene_notas_pendientes'))
+        <div class="alert alert-warning" role="alert">
+            No se puede enviar a validación ya que tiene notas pendientes por calificar.
+            <a href="#" data-bs-toggle="modal" data-bs-target="#notasPendientesModal">Haz clic aquí para verlas</a>
+        </div>
+    @endif
+    @if (Session::has('tiene_notas_pendientes'))
+        <!-- Modal -->
+        <div class="modal fade" id="notasPendientesModal" tabindex="-1" aria-labelledby="notasPendientesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notasPendientesLabel">Notas pendientes por calificar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            @foreach (Session::get('tiene_notas_pendientes') as $nota)
+                                <li class="list-group-item">
+                                    {{ $nota->indice ?? 'Sin observación' }}
+                                    {{-- Ajusta los campos según tu estructura --}}
+                                    <strong>{{ $nota->nombre ?? 'Asignatura desconocida' }}</strong>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">

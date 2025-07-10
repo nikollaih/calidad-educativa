@@ -465,10 +465,8 @@ class InstitutionController extends Controller
 
         if(!$autoevaluacion)
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
-
-        $resultado = $this->autoevaluacionService->tieneNotasPendientes(autoevaluacion: $autoevaluacion);
-
-        if (!$resultado->success){
+        $notasPendientes = $this->autoevaluacionService->obtenerNotasPendientes(autoevaluacion: $autoevaluacion);
+        if ($notasPendientes->count() == 0){
             $autoevaluacion->alias_estado = "VALIDACION";
             $autoevaluacion->save();
             return redirect()->route(
@@ -476,7 +474,7 @@ class InstitutionController extends Controller
                 ['institution' => $autoevaluacion->institucion_id]
             )->with('flash_success_message', 'Autoevaluación enviada a validación correctamente');
         }
-        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_error_message', $resultado->msg);
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('tiene_notas_pendientes', $notasPendientes);
     }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
     {
