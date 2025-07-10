@@ -27,6 +27,16 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="infraestructura-tab" data-bs-toggle="tab" data-bs-target="#infraestructura" type="button" role="tab">
+                        Infraestructura
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="mobiliario-tab" data-bs-toggle="tab" data-bs-target="#mobiliario" type="button" role="tab">
+                        Mobiliario
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
                         Modelos educativos
                     </button>
@@ -69,7 +79,7 @@
                                 </div>
                                 <div class="mb-3" id="is_sede_principal_container" style="display: block;">
                                     <label  class="form-label">Modelo pedagógico</label>
-                                    <select name="sede[modelo_pedagogico_id]" class="form-control" required>
+                                    <select name="sede[modelo_pedagogico_id]" class="form-control" >
                                         <option value="">Seleccione una un modelo pedagógico</option>
                                         @foreach ($modelosPedagogicos as $modeloPedagogico)
                                             <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
@@ -274,6 +284,239 @@
 
 
                     </div>
+                    <div class="tab-pane fade" id="infraestructura" role="tabpanel">
+                        <div class="row">
+                            <!-- Sección de equipos (oculta inicialmente) -->
+                            <div class="row row-cols-md-1 " >
+                                @php
+                                    $infraestructura = [
+                                        [
+                                            'nombre' => 'Área del lote',
+                                            'tiene_cantidad' => false
+                                        ],
+                                        [
+                                            'nombre' => 'Área construida',
+                                            'tiene_cantidad' => false
+                                        ],
+                                        [
+                                            'nombre' => 'Área total del primer piso',
+                                            'tiene_cantidad' => false
+                                        ],
+                                        [
+                                            'nombre' => 'Área zonas de recreación',
+                                            'tiene_cantidad' => false
+                                        ],
+                                        [
+                                            'nombre' => 'Área libre',
+                                            'tiene_cantidad' => false
+                                        ],
+                                        [
+                                            'nombre' => 'Aulas de preescolar',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Aulas de primaria',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Aulas de secundaria',
+                                            'tiene_cantidad' => true
+                                        ],
+                                         [
+                                            'nombre' => 'Biblioteca general',
+                                            'tiene_cantidad' => true
+                                        ],[
+                                            'nombre' => 'Biblioteca infantil',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Sala audiovisuales',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Aulas de tecnología',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Aula múltiple',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Laboratorio integrado',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Laboratorio ciencias',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Laboratorio biología',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Laboratorio fisíca',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Ludoteca',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Auditorio/Teatro',
+                                            'tiene_cantidad' => true
+                                        ],
+                                        [
+                                            'nombre' => 'Otro',
+                                            'tiene_cantidad' => true
+                                        ],
+
+                                    ];
+                                @endphp
+                                @foreach ($infraestructura as $key => $equipo)
+                                    <div class="mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="infraestructura[]" id="infraestructura_{{ Str::slug($equipo['nombre']) }}" value="{{ $equipo['nombre'] }}" @if( $sede->infraestructuras->firstWhere('nombre', $equipo['nombre']) ) checked @endif >
+                                                    <label class="form-check-label" for="infraestructura_{{ Str::slug($equipo['nombre']) }}">{{ $equipo['nombre'] }}</label>
+                                                </div>
+                                            </div>
+                                            @if($equipo['tiene_cantidad'])
+                                                <div class="col-md-4">
+                                                    <div id="label_cantidad_{{ Str::slug($equipo['nombre']) }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};">
+                                                        <label class="form-check-label">Cantidad.</label>
+                                                    </div>
+                                                    <input type="number" name="infraestructura[{{$key}}][cantidad]" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->cantidad  }}" id="cantidad_{{ Str::slug($equipo['nombre']) }}" class="form-control" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1">
+                                                </div>
+                                            @endif
+                                            <div class="col-md-4">
+                                                <div id="label_area_{{ Str::slug($equipo['nombre']) }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};">
+                                                    <label class="form-check-label">Área.</label>
+                                                </div>
+                                                <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
+                                                <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
+                                                <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m^2)" step="0.1" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="mobiliario" role="tabpanel">
+                        <div class="row">
+                            <!-- Sección de equipos (oculta inicialmente) -->
+                            <div class="row row-cols-md-1 " >
+                                @php
+                                    $mobiliarios = [
+                                        [
+                                            'nombre' => 'Carrito de carga Smart charging',
+                                        ],
+                                        [
+                                            'nombre' => 'Brazo soporte de monitor',
+                                        ],
+                                        [
+                                            'nombre' => 'Computador docente',
+                                        ],
+                                        [
+                                            'nombre' => 'Cámara U70',
+                                        ],
+                                        [
+                                            'nombre' => 'Silla docente',
+                                        ],
+                                        [
+                                            'nombre' => 'Mesa Docente',
+                                        ],
+                                        [
+                                            'nombre' => 'Microscopio digital',
+                                        ],
+                                        [
+                                            'nombre' => 'Tablero Interactivo',
+                                        ],
+                                         [
+                                            'nombre' => 'Brazo soporte para Video Beam ',
+                                        ],[
+                                            'nombre' => 'Video Beam',
+                                        ],
+                                        [
+                                            'nombre' => 'Mesa escolar trapezoidal',
+                                        ],
+                                        [
+                                            'nombre' => 'Silla escolar',
+                                        ],
+                                        [
+                                            'nombre' => 'Lápiz interactivo',
+                                        ],
+                                        [
+                                            'nombre' => 'Kit Iot estudio',
+                                        ],
+                                        [
+                                            'nombre' => 'Kit STEM',
+                                        ],
+                                        [
+                                            'nombre' => 'Locker',
+                                        ],
+                                        [
+                                            'nombre' => 'Cajoneros',
+                                        ],
+                                        [
+                                            'nombre' => 'Sillas universitarias',
+                                        ],
+                                        [
+                                            'nombre' => 'Pupitres individuales',
+                                        ],
+                                        [
+                                            'nombre' => 'Sillas individuales',
+                                        ],
+                                         [
+                                            'nombre' => 'Escritorio rector',
+                                        ],
+                                         [
+                                            'nombre' => 'Escritorio Coordinador',
+                                        ],
+                                         [
+                                            'nombre' => 'Escritorio docentes',
+                                        ],
+                                         [
+                                            'nombre' => 'Escritorio Auxiliares Administrativas',
+                                        ],
+                                         [
+                                            'nombre' => 'Estantería de Archivo',
+                                        ],
+                                         [
+                                            'nombre' => 'Sillas ejecutivas',
+                                        ],
+                                         [
+                                            'nombre' => 'Ventilador',
+                                        ],[
+                                            'nombre' => 'Archivador',
+                                        ],
+
+                                    ];
+                                @endphp
+                                @foreach ($mobiliarios as $key => $mobiliario)
+                                    <div class="mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="mobiliario[]" id="mobiliario_{{ Str::slug($mobiliario['nombre']) }}" value="{{ $mobiliario['nombre'] }}" @if( $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'] ))) checked @endif  >
+                                                    <label class="form-check-label" for="mobiliario_{{ Str::slug($mobiliario['nombre']) }}">{{ $mobiliario['nombre'] }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div id="label_cantidad_{{ Str::slug($mobiliario['nombre']) }}" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};">
+                                                    <label class="form-check-label">Cantidad.</label>
+                                                </div>
+                                                <input type="hidden" name="mobiliario[{{$key}}][nombre]" value="{{ $mobiliario['nombre'] }}"  />
+
+                                                <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="form-control" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade"  id="modelos" role="tabpanel">
                         <div class="row">
                             <!-- Modelos educativos -->
@@ -455,6 +698,51 @@
                         fuenteFinanciacion.style.display = 'none';
                         cantidad.value='';
                         cantidad.style.display = 'none';
+                    }
+                });
+            });
+
+            const infraestructuraCheckboxes = document.querySelectorAll('input[name="infraestructura[]"]');
+            infraestructuraCheckboxes.forEach(infra => {
+                infra.addEventListener('change', function () {
+                    const equipoId = this.id.replace('infraestructura_', '');
+                    const labelArea = document.getElementById(`label_area_${equipoId}`);
+                    const labelCantidad = document.getElementById(`label_cantidad_${equipoId}`);
+                    const cantidad = document.getElementById(`cantidad_${equipoId}`);
+                    const area = document.getElementById(`area_${equipoId}`);
+
+                    if (this.checked) {
+                        labelArea.style.display = 'block';
+                        area.style.display = 'block';
+                        if ( labelCantidad && cantidad){
+                            cantidad.style.display = 'block';
+                            labelCantidad.style.display = 'block';
+                        }
+                    } else {
+                        labelArea.style.display = 'none';
+                        area.style.display = 'none';
+                        if ( labelCantidad && cantidad){
+                            cantidad.style.display = 'none';
+                            labelCantidad.style.display = 'none';
+                        }
+                    }
+                });
+            });
+
+            const mobiliarioCheckboxes = document.querySelectorAll('input[name="mobiliario[]"]');
+            mobiliarioCheckboxes.forEach(mobiliario => {
+                mobiliario.addEventListener('change', function () {
+                    const equipoId = this.id.replace('mobiliario_', '');
+                    const labelCantidad = document.getElementById(`label_cantidad_${equipoId}`);
+                    const cantidad = document.getElementById(`cantidad_${equipoId}`);
+
+                    if (this.checked) {
+                        cantidad.style.display = 'block';
+                        labelCantidad.style.display = 'block';
+
+                    } else {
+                        cantidad.style.display = 'none';
+                        labelCantidad.style.display = 'none';
                     }
                 });
             });

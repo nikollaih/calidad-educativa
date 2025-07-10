@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
+use App\Http\Services\InfraestructuraService;
 use App\Http\Services\InventoryService;
+use App\Http\Services\MobiliarioService;
 use App\Http\Services\SedesService;
 use App\Http\Services\SteamClassroomService;
 use App\Http\Services\TitularitySedesService;
@@ -25,6 +27,8 @@ class SedeController extends Controller
         private TitularitySedesService $titularitySedesService,
         private SteamClassroomService $steamClassroomService,
         private InventoryService $inventoryService,
+        private InfraestructuraService  $infraestructuraService,
+        private MobiliarioService $mobiliarioService,
         private EducationalOfferService $educationalOfferService,
         private EducationalModelService $educationalModelService,
     ){}
@@ -57,6 +61,8 @@ class SedeController extends Controller
         $titularityData = $request->input('titularity');
         $steamClassroomData = $request->input('steam_classroom');
         $inventoryData = $request->input('inventory');
+        $infraestructuraData = $request->input('infraestructura');
+        $mobiliarioData = $request->input('mobiliario');
         $educationalOfferData =  $request->input('educational_offer');
         $educationalModelsData =  $request->input('educational_models');
 
@@ -129,8 +135,8 @@ class SedeController extends Controller
                 return redirect()->back()->with('flash_error_message', $steamClassroomResponse->msg);
         }
         $this->inventoryService->syncInventory(inventoryArray: $inventoryData, sedeId: $sedeCreatedResponse->data->id);
-
-
+        $this->infraestructuraService->syncInfraestructura(infraestructuraArray: $infraestructuraData, sedeId: $sedeCreatedResponse->data->id);
+        $this->mobiliarioService->syncMobiliarios(mobiliarioArray: $mobiliarioData, sedeId: $sedeCreatedResponse->data->id);
         return redirect()->back()->with('success', 'Sede creada correctamente.');
     }
 
@@ -142,7 +148,9 @@ class SedeController extends Controller
             'institution:id,nombre,dane',
             'titularidadSede.adjunto',
             'steamClassroom',
-            'inventories'
+            'inventories',
+            'infraestructuras',
+            'mobiliarios'
         )->first();
 
         if (empty($sede)){
@@ -171,7 +179,9 @@ class SedeController extends Controller
             'institution:id,nombre,dane',
             'titularidadSede.adjunto',
             'steamClassroom',
-            'inventories'
+            'inventories',
+            'infraestructuras',
+            'mobiliarios'
         )->first();
 
         if (empty($sede)){

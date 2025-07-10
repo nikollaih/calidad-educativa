@@ -48,6 +48,12 @@ class Sede extends Model
     public function inventories (){
         return $this->hasMany(Inventory::class,'sede_id');
     }
+    public function infraestructuras (){
+        return $this->hasMany(SedeInfraestructura::class,'sede_id');
+    }
+    public function mobiliarios (){
+        return $this->hasMany(SedeMobiliario::class,'sede_id');
+    }
     public function levelSedeEducational (){
         return $this->hasMany(LevelSedeEducational::class,'sede_id');
     }
