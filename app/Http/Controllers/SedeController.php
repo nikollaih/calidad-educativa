@@ -207,6 +207,7 @@ class SedeController extends Controller
     {
         $sedeToUpdate = Sede::find($sede);
 
+
         if(empty($sedeToUpdate)){
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
         }
@@ -242,6 +243,8 @@ class SedeController extends Controller
         $titularityData = $request->input('titularity');
         $steamClassroomData = $request->input('steam_classroom');
         $inventoryData = $request->input('inventory');
+        $infraestructuraData = $request->input('infraestructura');
+        $mobiliarioData = $request->input('mobiliario');
         if($request->hasFile('administrative_act_file')){
                 // Intenta almacenar el Adjunto
             $storeAdministrativeActResponse = $this->adjuntoService->storeAdjunto(
@@ -297,6 +300,8 @@ class SedeController extends Controller
             $sedeToUpdate?->steamClassroom?->delete();
         }
         $this->inventoryService->syncInventory(inventoryArray: $inventoryData, sedeId: $sedeToUpdate->id);
+        $this->infraestructuraService->syncInfraestructura(infraestructuraArray: $infraestructuraData, sedeId: $sedeToUpdate->id);
+        $this->mobiliarioService->syncMobiliarios(mobiliarioArray: $mobiliarioData, sedeId: $sedeToUpdate->id);
         return redirect()->route('sede-with-institution.edit', [
             'institutionId' => $sedeToUpdate->institution_id,
             'sede_with_institution' => $sedeToUpdate->id
