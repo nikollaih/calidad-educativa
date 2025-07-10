@@ -98,46 +98,124 @@
                     <!-- Redes Sociales -->
                     <div class="mb-3">
                         <label class="form-label">Redes Sociales</label>
+                        @php
+                            $redes = [
+                                ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
+                                ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
+                                ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
+                                ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
+                                ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
+                                ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
+                                ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
+                                ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
+                                ['icono' => 'fa-discord', 'nombre' => 'Discord'],
+                                ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
+                                ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
+                                ['icono' => 'fa-pinterest', 'nombre' => 'Pinterest'],
+                                ['icono' => 'fa-threads', 'nombre' => 'Threads'],
+                            ];
+
+                            $redesGuardadas = collect($institution?->redesSociales ?? []);
+                        @endphp
+
+                        <div class="row align-items-center mb-3">
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-primary" onclick="mostrarSelectorRed()">Agregar red social</button>
+                            </div>
+                            <div class="col-md-4 d-none" id="selector-red">
+                                <select id="red-select" class="form-select" onchange="agregarRedSocial()">
+                                    <option value="">Selecciona una red social</option>
+                                    @foreach ($redes as $red)
+                                        <option value="{{ $red['nombre'] }}" data-icono="{{ $red['icono'] }}">{{ $red['nombre'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div id="redes-sociales-container" class="row">
-                            @php
-                                $redes = [
-                                    ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
-                                    ['icono' => 'fa-twitter', 'nombre' => 'Twitter'],
-                                    ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
-                                    ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
-                                ];
-                            @endphp
-
-
-
-                            @foreach ($redes as $key => $red)
+                            @foreach ($redes as $index => $red)
                                 @php
-                                    // Buscar la red social correspondiente en la base de datos
-                                    $social = collect($institution?->redesSociales ?? [])->firstWhere('nombre', $red['nombre']);
+                                    $social = $redesGuardadas->firstWhere('nombre', $red['nombre']);
                                 @endphp
-                                <div class="col-md-6 mb-3">
+                                @if ($social)
+                                    <div class="col-md-6 mb-3" data-red="{{ $red['nombre'] }}">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
+                                                        <strong>{{ $red['nombre'] }}</strong>
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="eliminarRed('{{ $red['nombre'] }}', this)">×</button>
+                                                </div>
+                                                <label class="form-label mt-2">URL</label>
+                                                <input type="hidden" name="redes_sociales[{{ $index }}][nombre]" value="{{ $red['nombre'] }}">
+                                                <input type="url" name="redes_sociales[{{ $index }}][url]" class="form-control"
+                                                       placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
+                                                       value="{{ $social['url'] }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        <script>
+                            const redesDisponibles = @json($redes);
+                            const redesIniciales = @json($redesGuardadas->pluck('nombre'));
+                            const usadas = new Set(redesIniciales);
+
+                            function mostrarSelectorRed() {
+                                document.getElementById('selector-red').classList.remove('d-none');
+                                document.getElementById('red-select').focus();
+                            }
+
+                            function agregarRedSocial() {
+                                const select = document.getElementById('red-select');
+                                const nombre = select.value;
+                                const icono = select.selectedOptions[0]?.dataset.icono;
+
+                                if (!nombre || usadas.has(nombre)) return;
+
+                                usadas.add(nombre);
+                                const index = document.querySelectorAll('#redes-sociales-container .col-md-6').length;
+
+                                const container = document.getElementById('redes-sociales-container');
+
+                                const html = `
+                                <div class="col-md-6 mb-3" data-red="${nombre}">
                                     <div class="card">
                                         <div class="card-body">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
-                                                <strong>{{ $red['nombre'] }}</strong>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fab ${icono} fa-2x me-3"></i>
+                                                    <strong>${nombre}</strong>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="eliminarRed('${nombre}', this)">×</button>
                                             </div>
                                             <label class="form-label mt-2">URL</label>
-
-                                            <!-- Input oculto para el nombre de la red social -->
-                                            <input type="hidden" name="redes_sociales[{{ $key }}][nombre]" value="{{ $red['nombre'] }}">
-
-                                            <!-- Input para la URL con el valor correcto -->
-                                            <input type="url" name="redes_sociales[{{ $key }}][url]" class="form-control"
-                                                   placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
-                                                   value="{{ $social['url'] ?? '' }}">
+                                            <input type="hidden" name="redes_sociales[${index}][nombre]" value="${nombre}">
+                                            <input type="url" name="redes_sociales[${index}][url]" class="form-control"
+                                                   placeholder="Ej: https://${nombre.toLowerCase().replace(/[^a-z]/g, '')}.com">
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            `;
 
+                                container.insertAdjacentHTML('beforeend', html);
 
-                        </div>
+                                // Ocultar y resetear selector
+                                document.getElementById('selector-red').classList.add('d-none');
+                                select.selectedIndex = 0;
+                            }
+
+                            function eliminarRed(nombre, btn) {
+                                usadas.delete(nombre);
+                                const card = btn.closest(`[data-red="${nombre}"]`);
+                                if (card) card.remove();
+                            }
+                        </script>
+
                     </div>
 
                     <!-- Botones de acción -->

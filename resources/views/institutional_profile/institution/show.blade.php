@@ -98,11 +98,20 @@
                         <div id="redes-sociales-container" class="row">
                             @php
                                 $redes = [
-                                    ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
-                                    ['icono' => 'fa-twitter', 'nombre' => 'Twitter'],
-                                    ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
-                                    ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
-                                ];
+                               ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
+                               ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
+                               ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
+                               ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
+                               ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
+                               ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
+                               ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
+                               ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
+                               ['icono' => 'fa-discord', 'nombre' => 'Discord'],
+                               ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
+                               ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
+                               ['icono' => 'fa-pinterest', 'nombre' => 'Pinterest'],
+                               ['icono' => 'fa-threads', 'nombre' => 'Threads'],
+                           ];
                             @endphp
 
 
@@ -128,14 +137,10 @@
                                             </div>
 
                                             <label class="form-label mt-2">URL</label>
-
-                                            <!-- Input oculto para el nombre de la red social -->
-                                            <input type="hidden" name="redes_sociales[{{ $key }}][nombre]" value="{{ $red['nombre'] }}">
-
                                             <!-- Input para la URL con el valor correcto -->
                                             <input type="url" name="redes_sociales[{{ $key }}][url]" class="form-control"
                                                    placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
-                                                   value="{{ $social['url'] ?? '' }}" disabled>
+                                                   value="{{ $social['url'] ?? '' }}" >
                                         </div>
                                     </div>
                                 </div>
