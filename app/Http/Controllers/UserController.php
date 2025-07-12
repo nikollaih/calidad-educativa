@@ -17,6 +17,25 @@ class UserController extends Controller
         return view('usuarios.index', compact('usuarios'));
     }
 
+    public function all() {
+        
+        try {
+            $usuarios = User::get();
+            
+            return response()->json([
+                'success' => true,
+                'data' => $usuarios,
+                'message' => 'Usuarios obtenidos correctamente'
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los datos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function create()
     {
         $roles = Role::all();

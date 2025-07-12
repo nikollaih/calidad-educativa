@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Usuarios
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+    Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
@@ -100,27 +101,23 @@ Route::middleware(['auth'])->group(function () {
         */
     });
     Route::prefix('pam')->group(function () {
-        // Rutas para la gestion de instituciones
-        Route::get('/index'             , [PAMController::class, 'index'])->name('pam.index');
-        Route::get('/pammockup1', function () {
-            return view('pam.index_mochups1');
-        })->name('pammockup1');
+        // Vistas ------------------
+        // Visualiza formulario para crear filas del pam
+        // Visualiza el index del pam
+        Route::get('/pam-form', [PamController::class, 'create'])->name('pam.create');
+        Route::get('/pam-form/{id}', [PamController::class, 'show'])->name('pam.show');
+        Route::get('/index', [PamController::class, 'index'])->name('pam.index');
 
-        Route::get('/pammockup2', function () {
-            return view('pam.index_mochups2');
-        })->name('pammockup2');
+        // Rutas para API/AJAX
+        // Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
 
-        Route::get('/pammockup3', function () {
-            return view('pam.index_mochups3');
-        })->name('pammockup3');
-
-        Route::get('/pammockup4', function () {
-            return view('pam.index_mochups4');
-        })->name('pammockup4');
-
-        // Route::get('/matriz'             , [PAMController::class, 'matriz']);
-        // Route::get('/forms_ie_pestanas'             , [PAMController::class, 'forms_ie_pestanas']);
-        // Route::get('/forms_ie'             , [PAMController::class, 'forms_ie']);
+        Route::get('/get-pam', [PamController::class, 'all'])->name('pam.all');
+        // Ruta para obtener un registro específico
+        Route::get('/get-pam/{id}', [PamController::class, 'edit'])->name('pam.edit');
+        // Ruta para actualizar un registro específico
+        Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
+        Route::delete('/{id}', [PamController::class, 'destroy'])->name('pam.destroy');
+        Route::post('/pam-row-store', [PamController::class, 'store'])->name('pam.store');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
