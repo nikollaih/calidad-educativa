@@ -383,7 +383,7 @@ const ModalHistoricos = ({
                           rel="noopener noreferrer"
                           className="text-decoration-none text-primary"
                         >
-                          Ver documento adicional
+                          Ver documento administrativo
                         </a>
                       </div>
                     )}

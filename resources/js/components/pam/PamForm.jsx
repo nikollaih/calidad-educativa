@@ -918,7 +918,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => route('/pam')}
+              onClick={() => window.location.href = "/pam/index"}
             >
               <i className="bi bi-arrow-left"></i> Volver al listado
             </button>

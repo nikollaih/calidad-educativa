@@ -43,6 +43,13 @@ const PamIndex = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
+
+        Swal.fire({
+          icon: 'info',
+          title: 'PAM en Desarrollo',
+          text: 'La funcionalidad de creación de PAM, creación de avances y exportación de excel se encuentran actualmente en desarrollo.',
+          confirmButtonText: 'Entendido'
+        });
         const response = await fetch('get-pam', {
           headers: {
             'Accept': 'application/json',
