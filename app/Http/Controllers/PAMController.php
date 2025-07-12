@@ -41,11 +41,11 @@ class PamController extends Controller {
 
     public function all() {
         try {
-            $rows = PamRow::with('responsable')->get();
+            // $rows = PamRow::with('responsable')->get();
             
             return response()->json([
                 'success' => true,
-                'data' => $rows,
+                'data' => [],
                 'message' => 'Datos del plan de desarrollo obtenidos correctamente'
             ], 200);
             

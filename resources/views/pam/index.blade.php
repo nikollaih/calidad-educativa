@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex gap-2 mb-4">
+    <div class="d-flex mb-4">
         <div data-component="CBackButton"
             data-label="Crear registro" 
             data-to="pam-form"

@@ -31,26 +31,6 @@
         background-color: #d98b8b;
     }
 
-    /* Botón del acordeón abierto */
-    .accordion-button:not(.collapsed) {
-        background-color: var(--blue-pastel);
-    }
-
-    /* Botón del acordeón en hover */
-    .accordion-button:hover {
-        background-color: var(--blue-pastel);
-    }
-
-    /* Cuerpo del acordeón cuando está visible (desplegado) */
-    .accordion-collapse.show .accordion-body {
-        background-color: var(--blue-pastel-bg);
-    }
-
-    /* Hover dentro del cuerpo también azul pastel */
-    .accordion-body:hover {
-        background-color: var(--blue-pastel-bg);
-    }
-
     /* Estilo de tabs */
     .nav-tabs .nav-link {
         background-color: #d6d6d6; /* Gris claro */
