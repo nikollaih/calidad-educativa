@@ -1,4 +1,4 @@
-// src/ui/CBackButton.jsx
+// src/ui/CNavigationButton.jsx
 import { h } from 'preact';
 
 /**
@@ -16,7 +16,7 @@ import { h } from 'preact';
  * @param {function} [props.onClick] - Handler de click adicional
  * @returns {JSX.Element} Componente de botón
  */
-const CBackButton = ({
+const CNavigationButton = ({
   to = -1,
   label = 'Volver',
   isContainer = false,
@@ -70,4 +70,4 @@ const CBackButton = ({
   return buttonElement;
 };
 
-export default CBackButton;
+export default CNavigationButton;

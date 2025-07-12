@@ -1,9 +1,9 @@
-// src/components/CrearModal.jsx
+// src/components/CrearAvance.jsx
 import { useState, useEffect } from 'preact/hooks';
 import { render } from 'preact'; // Asegúrate de tener esto para montar el modal
 
-const CrearModal = ({ onClose }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CrearAvance = ({ onClose }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
     fecha_avance: '',
     accion: '',
@@ -35,9 +35,9 @@ const CrearModal = ({ onClose }) => {
 
   // Exponemos la función openModal globalmente para ser llamada desde Blade
   useEffect(() => {
-    window.openCrearModal = openModal;
+    window.openCrearAvance = openModal;
     return () => {
-      delete window.openCrearModal;
+      delete window.openCrearAvance;
     };
   }, []); // Se ejecuta una sola vez al montar el componente
 
@@ -203,7 +203,7 @@ const CrearModal = ({ onClose }) => {
                   className="form-control"
                   id="observacion"
                   name="observacion"
-                  rows="30" // 30 filas iniciales como pediste
+                  rows="4"
                   value={formData.observacion}
                   onChange={handleChange}
                 ></textarea>
@@ -238,4 +238,4 @@ const CrearModal = ({ onClose }) => {
   );
 };
 
-export default CrearModal;
+export default CrearAvance;

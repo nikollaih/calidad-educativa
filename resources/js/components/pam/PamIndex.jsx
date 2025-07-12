@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'preact/hooks';
 import { h } from 'preact';
 import Swal from 'sweetalert2';
-import AdvancesModal from './AdvancesModal';
+import CNavigationButton from '../shared/CNavigationButton';
+import CrearAvance from './CrearAvance';
 
 // Función para formatear fechas ISO a formato legible
 const formatDate = (isoString) => {
@@ -18,8 +19,9 @@ const PamIndex = () => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAdvancesModal, setShowAdvancesModal] = useState(false);
-  const [selectedPamId, setSelectedPamId] = useState(null);
+  const [showCrearAvance, setShowCrearAvance] = useState(false);
+  // const [selectedPamId, setSelectedPamId] = useState(null);
+
 
   // Función para obtener el token CSRF
   const getCsrfToken = () => {
@@ -27,15 +29,15 @@ const PamIndex = () => {
   };
 
   // Function to open the modal
-  const openAdvancesModal = (pamId) => {
-    setSelectedPamId(pamId);
-    setShowAdvancesModal(true);
+  const openCrearAvance = (pamId) => {
+    // setSelectedPamId(pamId);
+    setShowCrearAvance(true);
   };
 
   // Function to close the modal
-  const closeAdvancesModal = () => {
-    setShowAdvancesModal(false);
-    setSelectedPamId(null);
+  const closeCrearAvance = () => {
+    setShowCrearAvance(false);
+    // setSelectedPamId(null);
   };
 
   // Cargar datos iniciales
@@ -44,12 +46,12 @@ const PamIndex = () => {
       try {
         setIsLoading(true);
 
-        Swal.fire({
-          icon: 'info',
-          title: 'PAM en Desarrollo',
-          text: 'La funcionalidad de creación de PAM, creación de avances y exportación de excel se encuentran actualmente en desarrollo.',
-          confirmButtonText: 'Entendido'
-        });
+        // Swal.fire({
+        //   icon: 'info',
+        //   title: 'PAM en Desarrollo',
+        //   text: 'La funcionalidad de creación de PAM, creación de avances y exportación de excel se encuentran actualmente en desarrollo.',
+        //   confirmButtonText: 'Entendido'
+        // });
         const response = await fetch('get-pam', {
           headers: {
             'Accept': 'application/json',
@@ -153,6 +155,16 @@ const PamIndex = () => {
       setIsLoading(false);
     }
   };
+
+  // Function for "Exportar tabla" (example)
+  const handleExportTable = () => {
+    Swal.fire({
+      icon: 'info',
+      title: 'Exportar Tabla',
+      text: 'La funcionalidad de exportación de tabla se encuentra en desarrollo.',
+      confirmButtonText: 'Ok'
+    });
+  }
 
   // const handleCellChange = (index, field, value) => {
   //   const newRows = [...rows];
@@ -267,6 +279,16 @@ const PamIndex = () => {
 
   return (
     <div className="container-fluid mt-4">
+      <div className="d-flex justify-content-start gap-2 mb-4">
+        <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
+        <CNavigationButton
+          label="Crear avance"
+          to="#"
+          icon="fas fa-history"
+          onClick={openCrearAvance}
+        />
+        <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable}/>
+      </div>
       <div className="card shadow-sm">
         <div className="card-body p-0">
           <div className="table-responsive" style={{ maxHeight: '600px', overflowY: 'auto' }}>
@@ -307,7 +329,7 @@ const PamIndex = () => {
                       <div className="d-flex justify-content-center gap-2">
                         <button
                           className="btn btn-sm btn-info text-white"
-                          onClick={() => openAdvancesModal(row.id)}
+                          onClick={() => openCrearAvance(row.id)}
                           title="Ver Avances"
                         >
                           <i className="fas fa-eye"></i>
@@ -341,9 +363,9 @@ const PamIndex = () => {
         <div className="text-muted small">
           Mostrando {rows.length} registros
         </div>
-        {/* Render the AdvancesModal when showAdvancesModal is true */}
-        {showAdvancesModal && (
-          <AdvancesModal pamId={selectedPamId} onClose={closeAdvancesModal} />
+        {/* Render the CrearAvance when showCrearAvance is true */}
+        {showCrearAvance && (
+          <CrearAvance onClose={closeCrearAvance} />
         )}
       </div>
     </div>
