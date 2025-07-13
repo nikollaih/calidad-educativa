@@ -12,6 +12,11 @@
     </div>
     <div
         data-component="IndexPMI"
+        data-pmis='@json([[
+        "rango_vigencia" => "2024 - 2026",
+        "alias_estado" => "PROCESO",
+        "created_at" => now()->ceilDays(365)->toDateString()
+    ]])'
     >
 
     </div>
