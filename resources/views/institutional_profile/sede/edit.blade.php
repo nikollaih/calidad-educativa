@@ -632,7 +632,7 @@
                                     <thead>
                                     <tr>
                                         <th>NIVELES EDUCATIVOS</th>
-                                        <th>JORNADA</th>
+                                        <th>DOCUMENTO JORNADA</th>
                                         <th>NOMBRE SEDE</th>
                                         <th>TIPO DE SEDE</th>
                                         <th>ACCIONES</th>
@@ -650,7 +650,6 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $levelSede->schedule->schedule }}
                                                     @if($levelSede->schedule->document_id)
                                                         <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
                                                             <i class="fas fa-eye"></i> Ver Anexo
