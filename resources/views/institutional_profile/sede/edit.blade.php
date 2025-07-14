@@ -78,9 +78,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3" id="is_sede_principal_container" style="display: block;">
-                                    <label  class="form-label">Modelo pedagógico</label>
+                                    <label  class="form-label">Estrategia pedagógica</label>
                                     <select name="sede[modelo_pedagogico_id]" class="form-control" >
-                                        <option value="">Seleccione una un modelo pedagógico</option>
+                                        <option value="">Seleccione una estrategia pedagógica</option>
                                         @foreach ($modelosPedagogicos as $modeloPedagogico)
                                             <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
                                         @endforeach
@@ -282,7 +282,14 @@
                             </div>
                         </div>
 
-
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="infraestructura" role="tabpanel">
                         <div class="row">
@@ -402,6 +409,14 @@
                                 @endforeach
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="mobiliario" role="tabpanel">
                         <div class="row">
@@ -516,6 +531,14 @@
                                 @endforeach
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade"  id="modelos" role="tabpanel">
                         <div class="row">
@@ -588,15 +611,23 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
+
                     </div>
 
                 </form>
                 <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                         <div class="card-body">
                             <div class="col-md-12">
-                                <a href="{{ route('educational-offer.vinculate', $sede->institution_id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                                <a href="{{ route('educational-offer.vinculate', ['institutionId' => $sede->institution_id, 'sedeId'=> $sede->id]) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
                                 <table class="table">
                                     <thead>
                                     <tr>

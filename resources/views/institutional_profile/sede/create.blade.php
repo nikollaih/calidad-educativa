@@ -73,9 +73,9 @@
                                 </select>
                             </div>
                             <div class="mb-3" id="is_sede_principal_container" style="display: block;">
-                                <label  class="form-label">Modelo pedagógico</label>
+                                <label  class="form-label">Estrategia pedagógica</label>
                                 <select name="sede[modelo_pedagogico_id]" class="form-control">
-                                    <option value="">Seleccione una un modelo pedagógico</option>
+                                    <option value="">Seleccione una estrategia pedagógica</option>
                                     @foreach ($modelosPedagogicos as $modeloPedagogico)
                                         <option value="{{ $modeloPedagogico->id }}">{{ $modeloPedagogico->nombre }}</option>
                                     @endforeach

@@ -3,6 +3,7 @@
 @section('content')
     <div
         data-component="CBackButton"
+        data-to="{{ route('sede-with-institution.edit', ['institutionId' => $institutionId, 'sede_with_institution' => $sedeId])}}"
     ></div>
 <div class="container">
     @if(session('success'))
@@ -11,20 +12,9 @@
         </div>
     @endif
 
-    <form id="vinculationForm" action="{{ route('educational-offer.make-vinculation', $allSedes?->first()?->id ?? -1) }}" method="POST" enctype="multipart/form-data">
+    <form id="vinculationForm" action="{{ route('educational-offer.make-vinculation', $sedeId ?? -1) }}" method="POST" enctype="multipart/form-data">
         @csrf
-
-        <!-- Selección de sede -->
-        <div class="mb-4">
-            <label for="sede" class="form-label fw-bold">Selecciona una sede <span class="text-danger fw-bold">*</span></label>
-            <select class="form-select" name="sede_educational[sede_id]" id="sede">
-                @foreach($allSedes as $sede)
-                    <option value="{{ $sede->id }}" {{ $loop->first ? 'selected' : '' }}>
-                        {{ $sede->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <input type="hidden" name="sede_educational[sede_id]" id="sede" value="{{$sedeId}}">
 
         <!-- Contenedor para niveles educativos -->
         <div class="mb-4">

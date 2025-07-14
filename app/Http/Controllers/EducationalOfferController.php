@@ -119,10 +119,8 @@ class EducationalOfferController extends Controller
         $educationalOffer->delete();
         return redirect()->back()->with('success', 'Oferta educativa eliminada correctamente.');
     }
-    public function vinculationView(int $institutionId = null)
+    public function vinculationView(int $institutionId, int $sedeId)
     {
-        $allSedes = Sede::where('institution_id', $institutionId)->select('id','name')->get();
-
         $allEducationalLevels =  EducationalOfferLevel::with('anexo')
             ->where('institution_id', $institutionId)
             ->whereIn('category',
@@ -138,7 +136,8 @@ class EducationalOfferController extends Controller
         $educationalSchedules = EducationalOfferScheduleEnum::toArray();
         return view('institutional_profile.educational_offer.vinculate',
         [
-            'allSedes' => $allSedes,
+            'sedeId' => $sedeId,
+            'institutionId' => $institutionId,
             'educationalLevels' => $allEducationalLevels,
             'educationalCategories' => $educationalCategories,
             'educationalSchedules' => $educationalSchedules

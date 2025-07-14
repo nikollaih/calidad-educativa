@@ -83,7 +83,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
         <div class="container mt-4">
             <h2 class="mb-4">Modelos pedagógicos</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar modelo pedagógico
+                Agregar estrategia pedagógica
             </button>
 
             <table class="table">
@@ -109,7 +109,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
                                 method="POST"
                                 style={{display: 'inline'}}
                                 onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este modelo pedagógico?')) {
+                                    if (!confirm('¿Estás seguro de que quieres eliminar esta estrategia pedagógica?')) {
                                         e.preventDefault();
                                     }
                                 }}
@@ -133,7 +133,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    {modalMode === 'agregar' ? 'Agregar modelo pedagógico' : 'Editar modelo pedagógico'}
+                                    {modalMode === 'agregar' ? 'Agregar estrategia pedagógica' : 'Editar estrategia pedagógica'}
                                 </h5>
                                 <button
                                     type="button"
@@ -145,7 +145,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
                             <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">
-                                            Nombre del modelo pedagógico
+                                            Nombre de la estrategia pedagógica
                                         </label>
                                         <input
                                             type="text"

@@ -65,22 +65,19 @@
                                             <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                         </select>
                                     </div>
-
-
-
                                     <div class="mb-3" id="sede_principal_container" style="display: none;">
                                         <label for="sede_principal_id" class="form-label">Sede Principal</label>
-                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
+                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control" disabled>
                                             <option value="">Seleccione una sede principal</option>
                                             @foreach ($availableSedes as $sede_principal)
                                                 <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
-                                            @endforeach
+                                            @endforeach9
                                         </select>
                                     </div>
                                     <div class="mb-3" id="is_sede_principal_container" style="display: none;">
-                                        <label  class="form-label">Modelo pedagógico</label>
+                                        <label  class="form-label">Estrategia pedagógica</label>
                                         <select name="sede[modelo_pedagogico_id]" class="form-control" disabled>
-                                            <option value="">Seleccione una un modelo pedagógico</option>
+                                            <option value="">Seleccione una estrategia pedagógica</option>
                                             @foreach ($modelosPedagogicos as $modeloPedagogico)
                                                 <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
                                             @endforeach
