@@ -1,29 +1,119 @@
 import React, { useState, useEffect } from 'react';
-// import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 import Swal from 'sweetalert2';
 
 const PamForm = ({ id, csrfToken = '' }) => {
+  // El estado ahora maneja un array de componentes, permitiendo múltiples jerarquías
   const [formData, setFormData] = useState({
-    componente: null,
-    proceso: null,
-    subproceso: null,
-    meta_plan_desarrollo: null,
-    objetivo: null,
-    meta: null,
-    indicador: null,
-    accion: null,
-    responsable: null,
-    recursos: null,
-    fechas: null
+    componentes: [], // Ahora un array de componentes
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [originalData, setOriginalData] = useState(null);
-  // NEW STATE: To store the list of users for the dropdown
+  const [originalData, setOriginalData] = useState(null); // No se usa directamente en el renderizado, pero se mantiene para referencia
   const [users, setUsers] = useState([]);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
 
+  /**
+   * Helper para encontrar y actualizar un campo específico de un elemento anidado de forma inmutable.
+   * Recorre la estructura de datos para encontrar el elemento por su ID y actualiza el campo especificado.
+   *
+   * @param {Array} items El array actual en el nivel de anidación.
+   * @param {string} targetId El ID del elemento a actualizar.
+   * @param {string} fieldName El nombre del campo a actualizar (ej: 'descripcion', 'id', 'fecha_inicio').
+   * @param {any} newValue El nuevo valor para el campo.
+   * @returns {Array} Un nuevo array con el elemento actualizado.
+   */
+  const updateItemField = (items, targetId, fieldName, newValue) => {
+    return items.map(item => {
+      // Si encontramos el elemento por su ID
+      if (item.id === targetId) {
+        return { ...item, [fieldName]: newValue };
+      }
+
+      // Si el elemento tiene una 'accion' anidada y su ID coincide
+      if (item.accion && item.accion.id === targetId) {
+        return { ...item, accion: { ...item.accion, [fieldName]: newValue } };
+      }
+
+      // Recursivamente busca en los arrays de hijos si existen
+      if (item.procesos) {
+        item.procesos = updateItemField(item.procesos, targetId, fieldName, newValue);
+      }
+      if (item.subprocesos) {
+        item.subprocesos = updateItemField(item.subprocesos, targetId, fieldName, newValue);
+      }
+      if (item.metas_plan_desarrollo) {
+        item.metas_plan_desarrollo = updateItemField(item.metas_plan_desarrollo, targetId, fieldName, newValue);
+      }
+      if (item.objetivos) {
+        item.objetivos = updateItemField(item.objetivos, targetId, fieldName, newValue);
+      }
+      if (item.metas) {
+        item.metas = updateItemField(item.metas, targetId, fieldName, newValue);
+      }
+      if (item.indicadores) {
+        item.indicadores = updateItemField(item.indicadores, targetId, fieldName, newValue);
+      }
+      return item;
+    });
+  };
+
+  /**
+   * Función específica para actualizar el campo 'descripcion' de cualquier elemento anidado.
+   *
+   * @param {string} itemId El ID del elemento cuya descripción se va a actualizar.
+   * @param {string} value El nuevo valor de la descripción.
+   */
+  const updateDescription = (itemId, value) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      componentes: updateItemField(prevFormData.componentes, itemId, 'descripcion', value)
+    }));
+  };
+
+  /**
+   * Función específica para actualizar campos anidados dentro del objeto 'accion' de un indicador.
+   * Esta función se encarga de 'responsable', 'recursos' y 'fechas'.
+   *
+   * @param {string} indicadorId El ID del indicador que contiene la acción.
+   * @param {string} fieldName El nombre del campo dentro de 'accion' a actualizar (ej: 'responsable', 'recursos', 'fechas').
+   * @param {any} value El nuevo valor para el campo.
+   */
+  const updateAccionNestedField = (indicadorId, fieldName, value) => {
+    setFormData(prevFormData => {
+      const newComponents = prevFormData.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj => ({
+                ...obj,
+                metas: obj.metas.map(meta => ({
+                  ...meta,
+                  indicadores: meta.indicadores.map(indicador => {
+                    if (indicador.id === indicadorId) {
+                      return {
+                        ...indicador,
+                        accion: {
+                          ...indicador.accion,
+                          [fieldName]: value
+                        }
+                      };
+                    }
+                    return indicador;
+                  })
+                }))
+              }))
+            }))
+          }))
+        }))
+      }));
+      return { componentes: newComponents };
+    });
+  };
 
   // Cargar datos cuando el componente se monta o el ID cambia
   useEffect(() => {
@@ -31,14 +121,12 @@ const PamForm = ({ id, csrfToken = '' }) => {
       try {
         setIsLoading(true);
 
-        // If no ID or it's 'new', it's a new record
         if (!id || isNaN(id)) {
           setIsEditing(false);
           setIsLoading(false);
           return;
         }
 
-        // It's an existing record, load the data
         const response = await fetch(`/pam/get-pam/${id}`, {
           headers: {
             'Accept': 'application/json',
@@ -55,29 +143,75 @@ const PamForm = ({ id, csrfToken = '' }) => {
         if (result.success && result.data) {
           const data = result.data;
           setIsEditing(true);
-          setOriginalData(data);
+          setOriginalData(data); // Guarda los datos originales para referencia
 
-          // Map backend data to frontend format
-          setFormData({
-            componente: data.componente ? { id: 'componente-1', descripcion: data.componente } : null,
-            proceso: data.proceso ? { id: 'proceso-1', descripcion: data.proceso } : null,
-            subproceso: data.subproceso ? { id: 'subproceso-1', descripcion: data.subproceso } : null,
-            meta_plan_desarrollo: data.meta_plan_desarrollo ? { id: 'meta-plan-1', descripcion: data.meta_plan_desarrollo } : null,
-            objetivo: data.objetivo_estrategico ? { id: 'objetivo-1', descripcion: data.objetivo_estrategico } : null,
-            meta: data.meta ? { id: 'meta-1', descripcion: data.meta } : null,
-            indicador: data.indicador ? { id: 'indicador-1', descripcion: data.indicador } : null,
-            accion: data.accion ? { id: 'accion-1', descripcion: data.accion } : null,
-            // Adjust responsible to match the new selector's value format (e.g., the user's ID)
-            // You might need to adjust 'id' based on what your /usuarios/get returns
-            responsable: data.responsable ? { id: data.user_id || 'responsable-1', descripcion: data.responsable } : null, // Assuming user_id exists
-            responsable_id: data.responsable ? { id: data.user_id || 'responsable-1', descripcion: data.responsable } : null, // Assuming user_id exists
-            recursos: data.recursos ? { id: 'recursos-1', descripcion: data.recursos } : null,
-            fechas: (data.fecha_inicio || data.fecha_final) ? {
-              id: 'fechas-1',
-              fecha_inicio: data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '',
-              fecha_final: data.fecha_final ? data.fecha_final.split(' ')[0] : ''
-            } : null
-          });
+          // Mapeo de datos del backend a la nueva estructura de arrays anidados.
+          // Esta lógica asume que el backend devuelve una única jerarquía completa.
+          // Si el backend puede devolver múltiples componentes/procesos, etc.,
+          // esta parte necesitará una lógica de mapeo más compleja.
+          const mappedData = {
+            componentes: [
+              {
+                id: data.componente_id || `componente-${Date.now()}`,
+                descripcion: data.componente_descripcion || '',
+                procesos: [
+                  {
+                    id: data.proceso_id || `proceso-${Date.now() + 1}`,
+                    descripcion: data.proceso_descripcion || '',
+                    subprocesos: [
+                      {
+                        id: data.subproceso_id || `subproceso-${Date.now() + 2}`,
+                        descripcion: data.subproceso_descripcion || '',
+                        metas_plan_desarrollo: [
+                          {
+                            id: data.meta_plan_desarrollo_id || `meta-plan-${Date.now() + 3}`,
+                            descripcion: data.meta_plan_desarrollo_descripcion || '',
+                            objetivos: [
+                              {
+                                id: data.objetivo_estrategico_id || `objetivo-${Date.now() + 4}`,
+                                descripcion: data.objetivo_estrategico_descripcion || '',
+                                metas: [
+                                  {
+                                    id: data.meta_id || `meta-${Date.now() + 5}`,
+                                    descripcion: data.meta_descripcion || '',
+                                    indicadores: [
+                                      {
+                                        id: data.indicador_id || `indicador-${Date.now() + 6}`,
+                                        descripcion: data.indicador_descripcion || '',
+                                        accion: { // Acción sigue siendo un objeto único por indicador
+                                          id: data.accion_id || `accion-${Date.now() + 7}`,
+                                          descripcion: data.accion_descripcion || '',
+                                          responsable: {
+                                            id: data.user_id || '',
+                                            descripcion: data.responsable_nombre || ''
+                                          },
+                                          recursos: {
+                                            id: `recursos-${Date.now() + 8}`,
+                                            descripcion: data.recursos_descripcion || ''
+                                          },
+                                          fechas: {
+                                            id: `fechas-${Date.now() + 9}`,
+                                            fecha_inicio: data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '',
+                                            fecha_final: data.fecha_final ? data.fecha_final.split(' ')[0] : ''
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          };
+          setFormData(mappedData);
+
         } else {
           throw new Error(result.message || 'Formato de datos inesperado');
         }
@@ -89,7 +223,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
           icon: 'error',
           confirmButtonText: 'OK'
         }).then(() => {
-          route('/pam'); // Redirect to the list if there's an error
+          route('/pam'); // Redirige a la lista si hay un error
         });
       } finally {
         setIsLoading(false);
@@ -99,7 +233,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
     fetchData();
   }, [id]);
 
-  // NEW useEffect: Fetch users when the component mounts
+  // Carga la lista de usuarios para el selector de responsable
   useEffect(() => {
     const fetchUsers = async () => {
       setIsUsersLoading(true);
@@ -134,160 +268,250 @@ const PamForm = ({ id, csrfToken = '' }) => {
     };
 
     fetchUsers();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); // Se ejecuta una sola vez al montar el componente
 
 
-  // Helper function for updating form data
-  const updateField = (field, value) => {
+  // --- Funciones para agregar elementos (ahora agregan a arrays específicos) ---
+
+  const addComponente = () => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      componentes: [...prev.componentes, { id: `componente-${Date.now()}`, descripcion: '', procesos: [] }]
     }));
   };
 
-  // Functions to add elements (same as before)
-  const addComponente = () => {
-    if (formData.componente) return;
-    const newComponent = { id: `componente-${Date.now()}`, descripcion: '' };
-    updateField('componente', newComponent);
+  const addProceso = (componenteId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp =>
+        comp.id === componenteId
+          ? { ...comp, procesos: [...comp.procesos, { id: `proceso-${Date.now()}`, descripcion: '', subprocesos: [] }] }
+          : comp
+      )
+    }));
   };
 
-  const addProceso = () => {
-    if (!formData.componente || formData.proceso) return;
-    const newProceso = { id: `proceso-${Date.now()}`, descripcion: '' };
-    updateField('proceso', newProceso);
+  const addSubproceso = (procesoId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc =>
+          proc.id === procesoId
+            ? { ...proc, subprocesos: [...proc.subprocesos, { id: `subproceso-${Date.now()}`, descripcion: '', metas_plan_desarrollo: [] }] }
+            : proc
+        )
+      }))
+    }));
   };
 
-  const addSubproceso = () => {
-    if (!formData.proceso || formData.subproceso) return;
-    const newSubproceso = { id: `subproceso-${Date.now()}`, descripcion: '' };
-    updateField('subproceso', newSubproceso);
+  const addMetaPlan = (subprocesoId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc =>
+            subproc.id === subprocesoId
+              ? { ...subproc, metas_plan_desarrollo: [...subproc.metas_plan_desarrollo, { id: `meta-plan-${Date.now()}`, descripcion: '', objetivos: [] }] }
+              : subproc
+          )
+        }))
+      }))
+    }));
   };
 
-  const addMetaPlan = () => {
-    if (!formData.subproceso || formData.meta_plan_desarrollo) return;
-    const newMetaPlan = { id: `meta-plan-${Date.now()}`, descripcion: '' };
-    updateField('meta_plan_desarrollo', newMetaPlan);
+  const addObjetivo = (metaPlanId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan =>
+              metaPlan.id === metaPlanId
+                ? { ...metaPlan, objetivos: [...metaPlan.objetivos, { id: `objetivo-${Date.now()}`, descripcion: '', metas: [] }] }
+                : metaPlan
+            )
+          }))
+        }))
+      }))
+    }));
   };
 
-  const addObjetivo = () => {
-    if (!formData.meta_plan_desarrollo || formData.objetivo) return;
-    const newObjetivo = { id: `objetivo-${Date.now()}`, descripcion: '' };
-    updateField('objetivo', newObjetivo);
+  const addMeta = (objetivoId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj =>
+                obj.id === objetivoId
+                  ? { ...obj, metas: [...obj.metas, { id: `meta-${Date.now()}`, descripcion: '', indicadores: [] }] }
+                  : obj
+              )
+            }))
+          }))
+        }))
+      }))
+    }));
   };
 
-  const addMeta = () => {
-    if (!formData.objetivo || formData.meta) return;
-    const newMeta = { id: `meta-${Date.now()}`, descripcion: '' };
-    updateField('meta', newMeta);
+  const addIndicador = (metaId) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj => ({
+                ...obj,
+                metas: obj.metas.map(meta =>
+                  meta.id === metaId
+                    ? {
+                      ...meta,
+                      indicadores: [...meta.indicadores, {
+                        id: `indicador-${Date.now()}`,
+                        descripcion: '',
+                        accion: { // Inicializa la acción aquí
+                          id: `accion-${Date.now()}`,
+                          descripcion: '',
+                          responsable: { id: '', descripcion: '' },
+                          recursos: { id: '', descripcion: '' },
+                          fechas: { fecha_inicio: '', fecha_final: '' }
+                        }
+                      }]
+                    }
+                    : meta
+                )
+              }))
+            }))
+          }))
+        }))
+      }))
+    }));
   };
 
-  const addIndicador = () => {
-    if (!formData.meta || formData.indicador) return;
-    const newIndicador = { id: `indicador-${Date.now()}`, descripcion: '' };
-    updateField('indicador', newIndicador);
-  };
-
-  const addAccion = () => {
-    if (!formData.indicador || formData.accion) return;
-    const newAccion = { id: `accion-${Date.now()}`, descripcion: '' };
-    updateField('accion', newAccion);
-  };
-
-  const addResponsable = () => {
-    // No need to set a default id/descripcion here, let the dropdown handle it
-    if (!formData.accion || formData.responsable) return;
-    updateField('responsable', { id: '', descripcion: '' }); // Initialize with empty values
-  };
-
-  const addRecursos = () => {
-    if (!formData.responsable || formData.recursos) return;
-    const newRecursos = { id: `recursos-${Date.now()}`, descripcion: '' };
-    updateField('recursos', newRecursos);
-  };
-
-  const addFechas = () => {
-    if (!formData.recursos || formData.fechas) return;
-    const newFechas = { id: `fechas-${Date.now()}`, fecha_inicio: '', fecha_final: '' };
-    updateField('fechas', newFechas);
-  };
-
-  // Function to remove elements and their dependencies
-  const removeElement = (field) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este elemento y todos sus elementos hijos?')) {
+  /**
+   * Función para eliminar un elemento de un array anidado.
+   *
+   * @param {Array<string|number>} parentArrayPath La ruta al array padre que contiene el elemento a eliminar.
+   * (ej: ['componentes', componenteId, 'procesos']).
+   * @param {string} itemId El ID del elemento a eliminar.
+   * @param {string} [confirmMessage] Mensaje opcional de confirmación.
+   */
+  const removeElement = (parentArrayPath, itemId, confirmMessage) => {
+    if (!confirm(confirmMessage || '¿Estás seguro de que deseas eliminar este elemento y todos sus elementos hijos?')) {
       return;
     }
 
-    const fieldOrder = [
-      'componente', 'proceso', 'subproceso', 'meta_plan_desarrollo',
-      'objetivo', 'meta', 'indicador', 'accion', 'responsable', 'recursos', 'fechas'
-    ];
-    const fieldIndex = fieldOrder.indexOf(field);
+    setFormData(prevFormData => {
+      const newFormData = JSON.parse(JSON.stringify(prevFormData)); // Copia profunda
 
-    if (fieldIndex === -1) return;
+      let currentLevel = newFormData;
+      // Navega hasta el array que contiene el elemento a eliminar
+      for (let i = 0; i < parentArrayPath.length - 1; i++) {
+        const key = parentArrayPath[i];
+        const nextId = parentArrayPath[i + 1];
+        if (Array.isArray(currentLevel[key])) {
+          currentLevel = currentLevel[key].find(item => item.id === nextId);
+          i++; // Salta el ID en la siguiente iteración
+        } else {
+          currentLevel = currentLevel[key];
+        }
+      }
+      // Filtra el elemento del array final
+      const targetArrayKey = parentArrayPath[parentArrayPath.length - 1];
+      currentLevel[targetArrayKey] = currentLevel[targetArrayKey].filter(item => item.id !== itemId);
 
-    const fieldsToReset = fieldOrder.slice(fieldIndex);
-
-    setFormData(prev => {
-      const newData = { ...prev
-      };
-      fieldsToReset.forEach(f => {
-        newData[f] = null;
-      });
-      return newData;
+      return newFormData;
     });
   };
 
-  // Function to save data (updated to handle editing)
-  const saveAll = async () => {
-    // Validation of required fields
-    const requiredFields = {
-      componente: 'Componente',
-      proceso: 'Proceso',
-      subproceso: 'Subproceso',
-      meta_plan_desarrollo: 'Meta del Plan de Desarrollo',
-      objetivo: 'Objetivo Estratégico',
-      meta: 'Meta',
-      indicador: 'Indicador',
-      accion: 'Acción',
-      responsable_id: 'Responsable',
-      // user_id: 'Id del responsable',
-      recursos: 'Recursos',
-      fecha_inicio: 'Fecha de Inicio',
-      fecha_final: 'Fecha Final'
-    };
 
-    const missingFields = [];
-    Object.entries(requiredFields).forEach(([field, name]) => {
-      if (field === 'fecha_inicio' || field === 'fecha_final') {
-        if (!formData.fechas?.[field]) {
-          missingFields.push(`• ${name}`);
-        }
-      } else if (field === 'responsable') {
-        // For responsible, check if both id and description are present
-        if (!formData.responsable?.id || !formData.responsable?.descripcion) {
-            missingFields.push(`• ${name}`);
-        }
-      } else if (!formData[field]?.descripcion) {
-        missingFields.push(`• ${name}`);
-      }
-    });
-
-    if (missingFields.length > 0) {
+  // Función para guardar datos (adaptada para manejar la edición y la nueva estructura)
+  const saveAll = async () => {    
+    // Validar que al menos un componente exista antes de intentar guardar
+    if (formData.componentes.length === 0) {
       await Swal.fire({
-        title: 'Campos obligatorios faltantes',
-        html: missingFields.join('<br>'),
+        title: 'Campos incompletos',
+        text: 'Debe agregar al menos un Componente para guardar.',
         icon: 'error',
         confirmButtonText: 'Entendido'
       });
       return;
     }
 
-    // Date validation
-    if (new Date(formData.fechas.fecha_final) < new Date(formData.fechas.fecha_inicio)) {
+    // Opcional: Puedes agregar validaciones más detalladas aquí para asegurar que cada nivel
+    // dentro de cada componente tenga al menos una descripción, etc., si es necesario.
+    // Por ejemplo, podrías iterar sobre `formData.componentes` y sus hijos para validar.
+    // La validación actual se mantiene para asegurar que la primera jerarquía completa
+    // tenga los campos necesarios, como un ejemplo de validación mínima.
+    const firstComponent = formData.componentes[0];
+    if (firstComponent.procesos.length === 0 ||
+        firstComponent.procesos[0].subprocesos.length === 0 ||
+        firstComponent.procesos[0].subprocesos[0].metas_plan_desarrollo.length === 0 ||
+        firstComponent.procesos[0].subprocesos[0].metas_plan_desarrollo[0].objetivos.length === 0 ||
+        firstComponent.procesos[0].subprocesos[0].metas_plan_desarrollo[0].objetivos[0].metas.length === 0 ||
+        firstComponent.procesos[0].subprocesos[0].metas_plan_desarrollo[0].objetivos[0].metas[0].indicadores.length === 0 ||
+        !firstComponent.procesos[0].subprocesos[0].metas_plan_desarrollo[0].objetivos[0].metas[0].indicadores[0].accion
+    ) {
       await Swal.fire({
-        title: 'Error en fechas',
-        text: 'La fecha final no puede ser anterior a la fecha de inicio',
+        title: 'Campos incompletos',
+        text: 'Debe completar al menos una jerarquía completa de Componente a Acción para guardar.',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
+    const firstProceso = firstComponent.procesos[0];
+    const firstSubproceso = firstProceso.subprocesos[0];
+    const firstMetaPlan = firstSubproceso.metas_plan_desarrollo[0];
+    const firstObjetivo = firstMetaPlan.objetivos[0];
+    const firstMeta = firstObjetivo.metas[0];
+    const firstIndicador = firstMeta.indicadores[0];
+    const firstAccion = firstIndicador.accion;
+
+    // Validación de campos obligatorios para la primera jerarquía completa
+    const requiredFields = {
+      componente: firstComponent.descripcion,
+      proceso: firstProceso.descripcion,
+      subproceso: firstSubproceso.descripcion,
+      meta_plan_desarrollo: firstMetaPlan.descripcion,
+      objetivo_estrategico: firstObjetivo.descripcion,
+      meta: firstMeta.descripcion,
+      indicador: firstIndicador.descripcion,
+      accion: firstAccion.descripcion,
+      responsable_id: firstAccion.responsable?.id,
+      recursos: firstAccion.recursos?.descripcion,
+      fecha_inicio: firstAccion.fechas?.fecha_inicio,
+      fecha_final: firstAccion.fechas?.fecha_final
+    };
+
+    const missingFields = [];
+    for (const key in requiredFields) {
+      if (!requiredFields[key]) {
+        missingFields.push(`• ${key.replace(/_/g, ' ')}`); // Formato básico
+      }
+    }
+
+    if (missingFields.length > 0) {
+      await Swal.fire({
+        title: 'Campos obligatorios faltantes',
+        html: missingFields.join('<br>'),
         icon: 'error',
         confirmButtonText: 'Entendido'
       });
@@ -313,28 +537,50 @@ const PamForm = ({ id, csrfToken = '' }) => {
     });
 
     try {
-      // Prepare data to send
+      // Prepara los datos para enviar: ¡Ahora enviamos la estructura completa anidada!
       const dataToSend = {
-        id: isEditing ? id : null,
-        componente: formData.componente.descripcion,
-        proceso: formData.proceso.descripcion,
-        subproceso: formData.subproceso.descripcion,
-        meta_plan_desarrollo: formData.meta_plan_desarrollo.descripcion,
-        objetivo_estrategico: formData.objetivo.descripcion,
-        meta: formData.meta.descripcion,
-        indicador: formData.indicador.descripcion,
-        accion: formData.accion.descripcion,
-        // Send the ID of the selected user for responsible
-        user_id: formData.responsable?.id ?? formData.user_id,
-        responsable: formData.responsable.descripcion, // Keep sending description if needed on backend
-        recursos: formData.recursos.descripcion,
-        fecha_inicio: formData.fechas.fecha_inicio,
-        fecha_final: formData.fechas.fecha_final
+        id: isEditing ? id : null, // Solo envía ID si está editando
+        componentes: formData.componentes.map(comp => ({
+          // id: comp.id,
+          descripcion: comp.descripcion,
+          procesos: comp.procesos.map(proc => ({
+            // id: proc.id,
+            descripcion: proc.descripcion,
+            subprocesos: proc.subprocesos.map(subproc => ({
+              // id: subproc.id,
+              descripcion: subproc.descripcion,
+              metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+                // id: metaPlan.id,
+                descripcion: metaPlan.descripcion,
+                objetivos: metaPlan.objetivos.map(obj => ({
+                  // id: obj.id,
+                  descripcion: obj.descripcion,
+                  metas: obj.metas.map(meta => ({
+                    // id: meta.id,
+                    descripcion: meta.descripcion,
+                    indicadores: meta.indicadores.map(indicador => ({
+                      // id: indicador.id,
+                      descripcion: indicador.descripcion,
+                      accion: indicador.accion ? { // Asegúrate de que accion exista
+                        // id: indicador.accion.id,
+                        descripcion: indicador.accion.descripcion,
+                        user_id: indicador.accion.responsable?.id, // Envía solo el ID del responsable
+                        responsable_nombre: indicador.accion.responsable?.descripcion, // Mantiene la descripción si es necesaria
+                        recursos_descripcion: indicador.accion.recursos?.descripcion,
+                        fecha_inicio: indicador.accion.fechas?.fecha_inicio,
+                        fecha_final: indicador.accion.fechas?.fecha_final
+                      } : null
+                    }))
+                  }))
+                }))
+              }))
+            }))
+          }))
+        }))
       };
-      console.log('dataToSend', dataToSend);
-      
 
-      // Determine URL and method based on whether it's editing or creating
+      console.log('dataToSend', dataToSend); // Para verificar la estructura enviada
+
       const url = isEditing ? `/pam/update-pam/${id}` : '/pam/pam-row-store';
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -363,7 +609,6 @@ const PamForm = ({ id, csrfToken = '' }) => {
         throw new Error(errorMessage);
       }
 
-      // Success - show message
       await Swal.fire({
         title: '¡Éxito!',
         text: isEditing ? 'Registro actualizado correctamente' : 'Registro creado correctamente',
@@ -371,20 +616,11 @@ const PamForm = ({ id, csrfToken = '' }) => {
         confirmButtonText: 'Aceptar'
       });
 
-      // Reset form data after successful save/update
-      setFormData({
-        componente: null,
-        proceso: null,
-        subproceso: null,
-        meta_plan_desarrollo: null,
-        objetivo: null,
-        meta: null,
-        indicador: null,
-        accion: null,
-        responsable: null,
-        recursos: null,
-        fechas: null
-      });
+      // Después de guardar exitosamente, resetea el formulario para una nueva entrada o redirige
+      setFormData({ componentes: [] }); // Resetea a vacío para una nueva entrada
+      setIsEditing(false); // Asegura que el formulario esté en modo "crear nuevo"
+      // Opcionalmente, redirige a una página de lista o al elemento recién creado
+      // route('/pam');
 
     } catch (error) {
       console.error('Error al guardar:', error);
@@ -398,66 +634,65 @@ const PamForm = ({ id, csrfToken = '' }) => {
   };
 
 
-  // Actualiza la función renderFechas para mostrar los campos de fecha
-  const renderFechas = () => {
-    if (!formData.fechas) return null;
+  // --- Funciones de Renderizado (ahora aceptan el elemento y callbacks para agregar/eliminar hijos) ---
+
+  const renderFechas = (accion, indicadorId) => {
+    if (!accion.fechas) return null;
 
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div className="card mt-3" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Fechas</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('fechas')}
+            onClick={() => updateAccionNestedField(indicadorId, 'fechas', null)} // Establece fechas a null para eliminar
           >
             Eliminar Fechas
           </button>
         </div>
         <div className="card-body">
-
-          {/* Campos de fecha */}
-          <div className="row">
-            <div className="col-md-6 ">
-              <label className="form-label fw-bold">Fecha de Inicio:</label>
-              <input
-                type="date"
-                className="form-control"
-                value={formData.fechas.fecha_inicio}
-                onChange={(e) => updateField('fechas', {
-                  ...formData.fechas,
-                  fecha_inicio: e.target.value
-                })}
-              />
-            </div>
-            <div className="col-md-6 ">
-              <label className="form-label fw-bold">Fecha Final:</label>
-              <input
-                type="date"
-                className="form-control"
-                value={formData.fechas.fecha_final}
-                onChange={(e) => updateField('fechas', {
-                  ...formData.fechas,
-                  fecha_final: e.target.value
-                })}
-                min={formData.fechas.fecha_inicio} // Fecha mínima = fecha inicio
-              />
-            </div>
+          {/* Eliminadas las clases col-md-6 para asegurar 100% de ancho */}
+          <div>
+            <label className="form-label fw-bold">Fecha de Inicio:</label>
+            <input
+              type="date"
+              className="form-control"
+              style={{ width: '100%' }}
+              value={accion.fechas.fecha_inicio}
+              onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
+                ...accion.fechas,
+                fecha_inicio: e.target.value
+              })}
+            />
+          </div>
+          <div className="mt-3"> {/* Añadido margen para espaciado */}
+            <label className="form-label fw-bold">Fecha Final:</label>
+            <input
+              type="date"
+              className="form-control"
+              style={{ width: '100%' }}
+              value={accion.fechas.fecha_final}
+              onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
+                ...accion.fechas,
+                fecha_final: e.target.value
+              })}
+              min={accion.fechas.fecha_inicio}
+            />
           </div>
         </div>
-        </div>
+      </div>
     );
   };
 
-  // Component to render resources
-  const renderRecursos = () => {
-    if (!formData.recursos) return null;
+  const renderRecursos = (accion, indicadorId) => {
+    if (!accion.recursos) return null;
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div className="card mt-3" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Recursos</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('recursos')}
+            onClick={() => updateAccionNestedField(indicadorId, 'recursos', null)} // Establece recursos a null para eliminar
           >
             Eliminar Recursos
           </button>
@@ -468,37 +703,36 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.recursos.descripcion}
-              onInput={(e) => updateField('recursos', { ...formData.recursos, descripcion: e.target.value })}
+              value={accion.recursos.descripcion}
+              onInput={(e) => updateAccionNestedField(indicadorId, 'recursos', { ...accion.recursos, descripcion: e.target.value })}
             />
           </div>
-          {formData.recursos.descripcion && !formData.fechas && (
+          {accion.recursos.descripcion && !accion.fechas && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addFechas}
+                onClick={() => updateAccionNestedField(indicadorId, 'fechas', { fecha_inicio: '', fecha_final: '' })}
               >
                 Agregar Fechas
               </button>
             </div>
           )}
         </div>
-          {renderFechas()}
+        {renderFechas(accion, indicadorId)}
       </div>
     );
   };
 
-  // NEW renderResponsable function with a selector
-  const renderResponsable = () => {
-    if (!formData.responsable) return null;
+  const renderResponsable = (accion, indicadorId) => {
+    if (!accion.responsable) return null;
 
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div className="card mt-3" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Responsable</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('responsable')}
+            onClick={() => updateAccionNestedField(indicadorId, 'responsable', null)} // Establece responsable a null para eliminar
           >
             Eliminar Responsable
           </button>
@@ -511,13 +745,14 @@ const PamForm = ({ id, csrfToken = '' }) => {
             ) : (
               <select
                 className="form-control"
-                value={formData.responsable.id || ''} // Use the ID for the select's value
+                style={{ width: '100%' }} // Asegura 100% de ancho
+                value={accion.responsable.id || ''}
                 onChange={(e) => {
                   const selectedUserId = e.target.value;
                   const selectedUser = users.find(user => user.id === parseInt(selectedUserId));
-                  updateField('responsable', {
+                  updateAccionNestedField(indicadorId, 'responsable', {
                     id: selectedUserId,
-                    descripcion: selectedUser ? selectedUser.name : '' // Assuming 'name' is the display field
+                    descripcion: selectedUser ? selectedUser.name : ''
                   });
                 }}
                 required
@@ -525,39 +760,37 @@ const PamForm = ({ id, csrfToken = '' }) => {
                 <option value="">Seleccione un responsable</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.name} {/* Assuming user object has 'id' and 'name' properties */}
+                    {user.name}
                   </option>
                 ))}
               </select>
             )}
           </div>
-          {/* Only enable adding resources if a responsible is selected */}
-          {formData.responsable?.id && !formData.recursos && (
+          {accion.responsable?.id && !accion.recursos && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addRecursos}
+                onClick={() => updateAccionNestedField(indicadorId, 'recursos', { descripcion: '' })}
               >
                 Agregar Recursos
               </button>
             </div>
           )}
         </div>
-          {renderRecursos()}
+        {renderRecursos(accion, indicadorId)}
       </div>
     );
   };
 
-  // Component to render action
-  const renderAccion = () => {
-    if (!formData.accion) return null;
+  const renderAccion = (indicador) => {
+    if (!indicador.accion) return null;
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div className="card mt-3" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Acción</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('accion')}
+            onClick={() => updateAccionNestedField(indicador.id, 'accion', null)} // Establece acción a null para eliminar
           >
             Eliminar Acción
           </button>
@@ -568,36 +801,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.accion.descripcion}
-              onInput={(e) => updateField('accion', { ...formData.accion, descripcion: e.target.value })}
+              value={indicador.accion.descripcion}
+              onInput={(e) => updateDescription(indicador.accion.id, e.target.value)} // Usar updateDescription para la descripción de la acción
             />
           </div>
-          {formData.accion.descripcion && !formData.responsable && (
+          {indicador.accion.descripcion && !indicador.accion.responsable && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addResponsable}
+                onClick={() => updateAccionNestedField(indicador.id, 'responsable', { id: '', descripcion: '' })}
               >
                 Agregar Responsable
               </button>
             </div>
           )}
         </div>
-          {renderResponsable()}
+        {renderResponsable(indicador.accion, indicador.id)}
       </div>
     );
   };
 
-  // Component to render indicator
-  const renderIndicador = () => {
-    if (!formData.indicador) return null;
+  const renderIndicador = (indicador, metaId) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={indicador.id} className="card mt-3 border-secondary" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Indicador</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('indicador')}
+            onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', 'metas', metaId, 'indicadores'], indicador.id)}
           >
             Eliminar Indicador
           </button>
@@ -608,36 +839,48 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.indicador.descripcion}
-              onInput={(e) => updateField('indicador', { ...formData.indicador, descripcion: e.target.value })}
+              value={indicador.descripcion}
+              onInput={(e) => updateDescription(indicador.id, e.target.value)}
             />
           </div>
-          {formData.indicador.descripcion && !formData.accion && (
+          {indicador.descripcion && !indicador.accion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addAccion}
+                onClick={() => addIndicadorAccion(indicador.id)} // Función para agregar la acción al indicador
               >
                 Agregar Acción
               </button>
             </div>
           )}
         </div>
-          {renderAccion()}
+        {renderAccion(indicador)}
       </div>
     );
   };
 
-  // Component to render goal
-  const renderMeta = () => {
-    if (!formData.meta) return null;
+  // Helper para añadir la acción a un indicador específico
+  const addIndicadorAccion = (indicadorId) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      componentes: updateItemField(prevFormData.componentes, indicadorId, 'accion', {
+        id: `accion-${Date.now()}`,
+        descripcion: '',
+        responsable: { id: '', descripcion: '' },
+        recursos: { id: '', descripcion: '' },
+        fechas: { fecha_inicio: '', fecha_final: '' }
+      })
+    }));
+  };
+
+  const renderMeta = (meta, objetivoId) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={meta.id} className="card mt-3 border-info" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Meta</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('meta')}
+            onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', objetivoId, 'metas'], meta.id)}
           >
             Eliminar Meta
           </button>
@@ -648,36 +891,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.meta.descripcion}
-              onInput={(e) => updateField('meta', { ...formData.meta, descripcion: e.target.value })}
+              value={meta.descripcion}
+              onInput={(e) => updateDescription(meta.id, e.target.value)}
             />
           </div>
-          {formData.meta.descripcion && !formData.indicador && (
+          {meta.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addIndicador}
+                onClick={() => addIndicador(meta.id)}
               >
                 Agregar Indicador
               </button>
             </div>
           )}
+          {meta.indicadores.map(indicador => renderIndicador(indicador, meta.id))}
         </div>
-          {renderIndicador()}
       </div>
     );
   };
 
-  // Component to render objective
-  const renderObjetivo = () => {
-    if (!formData.objetivo) return null;
+  const renderObjetivo = (objetivo, metaPlanId) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={objetivo.id} className="card mt-3 border-primary" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Objetivo Estratégico</h6>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('objetivo')}
+            onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', metaPlanId, 'objetivos'], objetivo.id)}
           >
             Eliminar Objetivo
           </button>
@@ -688,36 +929,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.objetivo.descripcion}
-              onInput={(e) => updateField('objetivo', { ...formData.objetivo, descripcion: e.target.value })}
+              value={objetivo.descripcion}
+              onInput={(e) => updateDescription(objetivo.id, e.target.value)}
             />
           </div>
-          {formData.objetivo.descripcion && !formData.meta && (
+          {objetivo.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addMeta}
+                onClick={() => addMeta(objetivo.id)}
               >
                 Agregar Meta
               </button>
             </div>
           )}
+          {objetivo.metas.map(meta => renderMeta(meta, objetivo.id))}
         </div>
-          {renderMeta()}
       </div>
     );
   };
 
-  // Component to render development plan goal
-  const renderMetaPlan = () => {
-    if (!formData.meta_plan_desarrollo) return null;
+  const renderMetaPlan = (metaPlan, subprocesoId) => {
     return (
-      <div className="card  border-info" style={{ width: '100%' }}>
+      <div key={metaPlan.id} className="card mt-3 border-success" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Meta del Plan de Desarrollo</h5>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('meta_plan_desarrollo')}
+            onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', subprocesoId, 'metas_plan_desarrollo'], metaPlan.id)}
           >
             Eliminar Meta del Plan
           </button>
@@ -728,36 +967,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.meta_plan_desarrollo.descripcion}
-              onInput={(e) => updateField('meta_plan_desarrollo', { ...formData.meta_plan_desarrollo, descripcion: e.target.value })}
+              value={metaPlan.descripcion}
+              onInput={(e) => updateDescription(metaPlan.id, e.target.value)}
             />
           </div>
-          {formData.meta_plan_desarrollo.descripcion && !formData.objetivo && (
+          {metaPlan.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addObjetivo}
+                onClick={() => addObjetivo(metaPlan.id)}
               >
                 Agregar Objetivo Estratégico
               </button>
             </div>
           )}
+          {metaPlan.objetivos.map(objetivo => renderObjetivo(objetivo, metaPlan.id))}
         </div>
-            {renderObjetivo()}
       </div>
     );
   };
 
-  // Component to render subprocess
-  const renderSubproceso = () => {
-    if (!formData.subproceso) return null;
+  const renderSubproceso = (subproceso, procesoId) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={subproceso.id} className="card mt-3 border-warning" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Subproceso</h5>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('subproceso')}
+            onClick={() => removeElement(['componentes', 'procesos', procesoId, 'subprocesos'], subproceso.id)}
           >
             Eliminar Subproceso
           </button>
@@ -768,36 +1005,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.subproceso.descripcion}
-              onInput={(e) => updateField('subproceso', { ...formData.subproceso, descripcion: e.target.value })}
+              value={subproceso.descripcion}
+              onInput={(e) => updateDescription(subproceso.id, e.target.value)}
             />
           </div>
-          {formData.subproceso.descripcion && !formData.meta_plan_desarrollo && (
+          {subproceso.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addMetaPlan}
+                onClick={() => addMetaPlan(subproceso.id)}
               >
                 Agregar Meta del Plan
               </button>
             </div>
           )}
+          {subproceso.metas_plan_desarrollo.map(metaPlan => renderMetaPlan(metaPlan, subproceso.id))}
         </div>
-            {renderMetaPlan()}
       </div>
     );
   };
 
-  // Component to render process
-  const renderProceso = () => {
-    if (!formData.proceso) return null;
+  const renderProceso = (proceso, componenteId) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={proceso.id} className="card mt-3 border-danger" style={{ width: '100%' }}>
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h4 className="mb-0">Proceso</h4>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('proceso')}
+            onClick={() => removeElement(['componentes', componenteId, 'procesos'], proceso.id)}
           >
             Eliminar Proceso
           </button>
@@ -808,36 +1043,34 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.proceso.descripcion}
-              onInput={(e) => updateField('proceso', { ...formData.proceso, descripcion: e.target.value })}
+              value={proceso.descripcion}
+              onInput={(e) => updateDescription(proceso.id, e.target.value)}
             />
           </div>
-          {formData.proceso.descripcion && !formData.subproceso && (
+          {proceso.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addSubproceso}
+                onClick={() => addSubproceso(proceso.id)}
               >
                 Agregar Subproceso
               </button>
             </div>
           )}
+          {proceso.subprocesos.map(subproceso => renderSubproceso(subproceso, proceso.id))}
         </div>
-            {renderSubproceso()}
       </div>
     );
   };
 
-  // Component to render component
-  const renderComponente = () => {
-    if (!formData.componente) return null;
+  const renderComponente = (componente) => {
     return (
-      <div className="card" style={{ width: '100%' }}>
+      <div key={componente.id} className="card mt-3 border-primary" style={{ width: '100%' }}>
         <div className="card-header bg-light d-flex justify-content-between align-items-center">
           <h3 className="mb-0">Componente</h3>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => removeElement('componente')}
+            onClick={() => removeElement(['componentes'], componente.id)}
           >
             Eliminar Componente
           </button>
@@ -848,27 +1081,27 @@ const PamForm = ({ id, csrfToken = '' }) => {
             <textarea
               className="form-control"
               rows="3"
-              value={formData.componente.descripcion}
-              onInput={(e) => updateField('componente', { ...formData.componente, descripcion: e.target.value })}
+              value={componente.descripcion}
+              onInput={(e) => updateDescription(componente.id, e.target.value)}
             />
           </div>
-          {formData.componente.descripcion && !formData.proceso && (
+          {componente.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
-                onClick={addProceso}
+                onClick={() => addProceso(componente.id)}
               >
                 Agregar Proceso
               </button>
             </div>
           )}
+          {componente.procesos.map(proceso => renderProceso(proceso, componente.id))}
         </div>
-            {renderProceso()}
       </div>
     );
   };
 
-  if (isLoading || isUsersLoading) { // Check both loading states
+  if (isLoading || isUsersLoading) {
     return (
       <div className="container py-4 text-center">
         <div className="spinner-border text-primary" role="status">
@@ -891,18 +1124,16 @@ const PamForm = ({ id, csrfToken = '' }) => {
           </p>
         </div>
         <div className="card-body">
-          {!formData.componente && (
-            <button
-              type="button"
-              className="btn btn-success mb-4"
-              onClick={addComponente}
-            >
-              <i className="bi bi-plus-circle"></i> Agregar componente
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-success mb-4"
+            onClick={addComponente}
+          >
+            <i className="bi bi-plus-circle"></i> Agregar Componente
+          </button>
 
           <div id="componentes-container">
-            {renderComponente()}
+            {formData.componentes.map(componente => renderComponente(componente))}
           </div>
 
           <div className="mt-4 pt-3 border-top">
@@ -910,7 +1141,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
               type="button"
               className="btn btn-primary me-2"
               onClick={saveAll}
-              disabled={!formData.componente}
+              disabled={formData.componentes.length === 0} // Deshabilita si no hay componentes
             >
               <i className="bi bi-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}
             </button>

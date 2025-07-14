@@ -11,7 +11,14 @@ return new class extends Migration
         Schema::create('pam_procesos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('descripcion');
+            $table->unsignedBigInteger('componente_id');
 
+            $table->foreign('componente_id')
+                ->references('id')
+                ->on('pam_componentes');
+                
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -11,6 +11,13 @@ return new class extends Migration
         Schema::create('pam_indicadores', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('descripcion');
+            $table->unsignedBigInteger('meta_id');
+
+            $table->foreign('meta_id')
+                ->references('id')
+                ->on('pam_metas');
+            $table->timestamps();
+            $table->softDeletes();
 
         });
     }

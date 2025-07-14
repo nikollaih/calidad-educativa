@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePamRowRequest;
+use App\Models\PamAccion;
+use App\Models\PamComponente;
+use App\Models\PamObjetivoEstrategico;
 use App\Models\PamRow;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -60,35 +65,108 @@ class PamController extends Controller {
     /**
      * Crea registros del pam
      */
-    public function store(StorePamRowRequest $request) {
-        try {
-            $pamRow = PamRow::create([
-                'pam_id'               => $request->input('pam_id'),
-                'user_id'              => $request->input('user_id') ?? auth()->id(),
-                'componente'           => $request->input('componente'),
-                'proceso'              => $request->input('proceso'),
-                'subproceso'           => $request->input('subproceso'),
-                'meta_plan_desarrollo' => $request->input('meta_plan_desarrollo'),
-                'objetivo_estrategico' => $request->input('objetivo_estrategico'),
-                'meta'                 => $request->input('meta'),
-                'indicador'            => $request->input('indicador'),
-                'accion'               => $request->input('accion'),
-                'recursos'             => $request->input('recursos'),
-                'fecha_inicio'         => $request->input('fecha_inicio'),
-                'fecha_final'          => $request->input('fecha_final'),
-            ]);
+    public function store(Request $request) {
+        // Reglas de validación para la estructura anidada
+        $validator = Validator::make($request->all(), [
+            'componentes' => 'required|array|min:1',
+            'componentes.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos' => 'required|array|min:1',
+            'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.user_id' => 'required|exists:users,id',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.responsable_nombre' => 'required|string|max:255',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.recursos_descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio' => 'required|date',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_final' => 'required|date|after_or_equal:componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio',
+        ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Registro creado correctamente',
-                'data' => $pamRow
-            ]);
-
-        } catch (\Exception $e) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el registro',
-                'error' => $e->getMessage()
+                'message' => 'Error de validación',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $createdPamIds = []; // Para almacenar los IDs de los PAMs creados si se crean múltiples
+
+            foreach ($request->input('componentes') as $compData) {
+                $componente = PamComponente::create([
+                    'descripcion' => $compData['descripcion'],
+                    'nombre' => $compData['descripcion'],
+                ]);
+
+                foreach ($compData['procesos'] as $procData) {
+                    $proceso = $componente->procesos()->create(['descripcion' => $procData['descripcion']]);
+
+                    foreach ($procData['subprocesos'] as $subprocData) {
+                        $subproceso = $proceso->subprocesos()->create(['descripcion' => $subprocData['descripcion']]);
+
+                        // Nuevo orden: Crear Objetivo Estratégico bajo Subproceso
+                        foreach ($subprocData['metas_plan_desarrollo'][0]['objetivos'] as $objData) {
+                            $objetivoEstrategico = PamObjetivoEstrategico::create(['descripcion' => $objData['descripcion']]);
+
+                            // Crear Meta Plan Desarrollo bajo Objetivo Estratégico,
+                            // pero también asignando subproceso_id
+                            foreach ($subprocData['metas_plan_desarrollo'] as $metaPlanData) {
+                                $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->create([
+                                    'descripcion' => $metaPlanData['descripcion'],
+                                    'subproceso_id' => $subproceso->id // Asignar manualmente subproceso_id
+                                ]);
+                            }
+
+                            // Crear Meta bajo Objetivo Estratégico
+                            foreach ($objData['metas'] as $metaData) {
+                                $meta = $objetivoEstrategico->metas()->create(['descripcion' => $metaData['descripcion']]);
+
+                                foreach ($metaData['indicadores'] as $indicadorData) {
+                                    $indicador = $meta->indicadores()->create(['descripcion' => $indicadorData['descripcion']]);
+
+                                    // La acción es un objeto único por indicador
+                                    if (isset($indicadorData['accion'])) {
+                                        $accionData = $indicadorData['accion'];
+                                        $accion = $indicador->accion()->create([
+                                            'descripcion' => $accionData['descripcion'],
+                                            'user_id' => $accionData['user_id'],
+                                            'nombre_responsable' => $accionData['responsable_nombre'],
+                                            'recursos' => $accionData['recursos_descripcion'],
+                                            'fecha_inicio' => $accionData['fecha_inicio'],
+                                            'fecha_final' => $accionData['fecha_final'],
+                                        ]);
+                                        $createdPamIds[] = $accion->id; // Almacena el ID de la acción final
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Registro(s) PAM creado(s) correctamente',
+                'ids' => $createdPamIds
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el registro PAM: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -110,7 +188,6 @@ class PamController extends Controller {
             ], 500);
         }
     }
-
     
     /**
      * Actualizar un registro específico

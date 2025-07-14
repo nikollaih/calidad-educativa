@@ -11,6 +11,9 @@ return new class extends Migration
         Schema::create('pam_objetivos_estrategicos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('descripcion');
+            
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

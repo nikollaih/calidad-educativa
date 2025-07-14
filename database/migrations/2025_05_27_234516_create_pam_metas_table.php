@@ -11,6 +11,13 @@ return new class extends Migration
         Schema::create('pam_metas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('descripcion');
+            $table->unsignedBigInteger('objetivo_estrategico_id');
+
+            $table->foreign('objetivo_estrategico_id')
+                ->references('id')
+                ->on('pam_objetivos_estrategicos');
+            $table->timestamps();
+            $table->softDeletes();
 
         });
     }
