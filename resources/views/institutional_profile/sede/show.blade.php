@@ -69,9 +69,9 @@
                                         <label for="sede_principal_id" class="form-label">Sede Principal</label>
                                         <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control" disabled>
                                             <option value="">Seleccione una sede principal</option>
-                                            @foreach ($availableSedes as $sede_principal)
-                                                <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
-                                            @endforeach9
+                                            @foreach ($availableSedes as $sedePrincipal)
+                                                <option value="{{ $sedePrincipal->id }}" @selected($sede?->parentSede?->id == $sedePrincipal->id )>{{ $sedePrincipal->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-3" id="is_sede_principal_container" style="display: none;">
@@ -91,8 +91,6 @@
                                         <label for="sede[name]" class="form-label">Nombre</label>
                                         <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" disabled>
                                     </div>
-
-
 
                                     <div class="mb-3">
                                         <label for="sede[address]" class="form-label">Dirección</label>

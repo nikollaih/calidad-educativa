@@ -160,7 +160,7 @@ class SedeController extends Controller
         $eduactionalModels = EducationalModel::get();
         $modelosPedagogicos = ModeloPedagogico::get();
 
-        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->select('name','id')->get();
 
         return view('institutional_profile.sede.edit',
             [
