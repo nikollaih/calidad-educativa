@@ -3,6 +3,7 @@
 @section('content')
     <div
         data-component="CBackButton"
+        data-to="{{ route('institution.edit', $sede->institution_id ) }}"
     ></div>
     <div class="container">
     @if(session('success'))
