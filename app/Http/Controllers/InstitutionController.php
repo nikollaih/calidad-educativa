@@ -51,8 +51,8 @@ class InstitutionController extends Controller
             'licenciaFuncionamiento',
             'redesSociales',
             'sedes.levelSedeEducational.educationalLevel',
-            'sedes.levelSedeEducational.schedule',
-            'sedes.levelSedeEducational.schedule.anexo',
+            'sedes.levelSedeEducational.schedules',
+            'sedes.levelSedeEducational.schedules.anexo',
             'sedes.educationalOffer'
         )
             ->where('id',$institucion)
@@ -534,8 +534,8 @@ class InstitutionController extends Controller
             'licenciaFuncionamiento',
             'redesSociales',
             'sedes.levelSedeEducational.educationalLevel',
-            'sedes.levelSedeEducational.schedule',
-            'sedes.levelSedeEducational.schedule.anexo',
+            'sedes.levelSedeEducational.schedules',
+            'sedes.levelSedeEducational.schedules.anexo',
             'sedes.educationalOffer'
             )
             ->where('id',$institucion)

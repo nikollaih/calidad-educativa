@@ -146,21 +146,15 @@ class EducationalOfferController extends Controller
     }
     public function makeVinculation(Request $request) {
         try {
-            \Log::info('Iniciando makeVinculation', [
-                'request_data' => $request->all(),
-                'files' => $request->allFiles()
-            ]);
-
             $sedeEducationalData = $request->input('sede_educational');
             $levelSchedules = $request->input('level_schedules');
             $sede = Sede::where('id',$sedeEducationalData['sede_id'])->firstOrFail();
-
-
-
             // Procesar cada nivel y su horario
             foreach ($levelSchedules as $index => $levelSchedule) {
                 $levelInfo = $levelSchedule['level_info'];
-                $scheduleInfo = $levelSchedule['schedule'];
+                $schedules = data_get($levelSchedule, 'adult_schedules',
+                    isset($levelSchedule['schedule']) ? [$levelSchedule['schedule']] : []
+                );
 
                 // Si es un nivel personalizado, crear el nivel primero
                 if ($levelInfo['is_custom'] == '1') {
@@ -172,12 +166,6 @@ class EducationalOfferController extends Controller
 
                     // Procesar el anexo del nivel si existe
                     if ($request->hasFile("level_attachments.{$index}")) {
-                        \Log::info('Procesando anexo del nivel', [
-                            'index' => $index,
-                            'file' => $request->file("level_attachments.{$index}")->getClientOriginalName(),
-                            'mime_type' => $request->file("level_attachments.{$index}")->getMimeType(),
-                            'size' => $request->file("level_attachments.{$index}")->getSize()
-                        ]);
 
                         $storeLevelResponse = $this->adjuntoService->storeAdjunto(
                             adjunto: $request->file("level_attachments.{$index}"),
@@ -186,36 +174,17 @@ class EducationalOfferController extends Controller
                         );
 
                         if ($storeLevelResponse->success) {
-                            \Log::info('Anexo guardado exitosamente', [
-                                'document_id' => $storeLevelResponse->data->id,
-                                'path' => $storeLevelResponse->data->path
-                            ]);
                             $levelData['document_id'] = $storeLevelResponse->data->id;
                         } else {
-                            \Log::error('Error al guardar el anexo', [
-                                'error' => $storeLevelResponse->msg
-                            ]);
                             throw new \Exception($storeLevelResponse->msg);
                         }
                     }
 
                     $level = EducationalOfferLevel::create($levelData);
-                    \Log::info('Nivel educativo creado', [
-                        'level_id' => $level->id,
-                        'level_data' => $levelData
-                    ]);
                 } else {
                     $level = EducationalOfferLevel::find($levelInfo['id']);
                 }
-
-                // Crear el horario
-                $scheduleData = [
-                    'name' => $scheduleInfo['name'],
-                    'hora_inicio' => $scheduleInfo['hora_inicio'],
-                    'hora_fin' => $scheduleInfo['hora_fin'],
-                    'notes' => $scheduleInfo['notes'] ?? null
-                ];
-
+                $documentId = null;
                 // Procesar el anexo del horario si existe
                 if ($request->hasFile("schedule_attachments.{$index}")) {
                     $storeScheduleResponse = $this->adjuntoService->storeAdjunto(
@@ -225,21 +194,31 @@ class EducationalOfferController extends Controller
                     );
 
                     if ($storeScheduleResponse->success) {
-                        $scheduleData['document_id'] = $storeScheduleResponse->data->id;
+                        $documentId = $storeScheduleResponse->data->id;
                     } else {
                         throw new \Exception($storeScheduleResponse->msg);
                     }
                 }
-
-                // Crear el horario
-                $schedule = EducationalOfferSchedule::create($scheduleData);
-
                 // Crear la relación en la tabla pivote usando el modelo
-                LevelSedeEducational::create([
+                $levelSedeCreated = LevelSedeEducational::create([
                     'educational_level_id' => $level->id,
-                    'educational_shedule_id' => $schedule->id,
                     'sede_id' => $sede->id
                 ]);
+                foreach ($schedules as $schedule) {
+
+                    // Crear el horario
+                    $scheduleData = [
+                        'name' => $schedule['name'],
+                        'hora_inicio' => $schedule['hora_inicio'],
+                        'hora_fin' => $schedule['hora_fin'],
+                        'notes' => $schedule['notes'] ?? null,
+                        'document_id' => $documentId,
+                        'level_sede_educational_id' => $levelSedeCreated->id
+                    ];
+
+                    // Crear el horario
+                    $scheduleCreated = EducationalOfferSchedule::create($scheduleData);
+                }
             }
 
             return redirect()->back()->with('success', 'Oferta educativa vinculada correctamente.');
@@ -251,8 +230,8 @@ class EducationalOfferController extends Controller
     {
         $levelSede = LevelSedeEducational::with([
             'educationalLevel',
-            'schedule',
-            'schedule.anexo',
+            'schedules',
+            'schedules.anexo',
             'sede:id,name,institution_id',
             'sede.institution:id'
         ])
@@ -287,8 +266,8 @@ class EducationalOfferController extends Controller
     {
         $levelSede = LevelSedeEducational::with([
             'educationalLevel',
-            'schedule',
-            'schedule.anexo',
+            'schedules',
+            'schedules.anexo',
             'sede:id,name,institution_id',
             'sede.institution:id'
         ])
@@ -326,29 +305,30 @@ class EducationalOfferController extends Controller
         try {
             DB::beginTransaction();
             $levelSedeToUpdate = LevelSedeEducational::where('id',$levelSede)->first();
-
             // Actualizar el horario
-            $schedule = $levelSedeToUpdate->schedule;
-            $schedule->name = $request->input('schedule.name');
-            $schedule->notes = $request->input('schedule.notes');
-            $schedule->hora_inicio = $request->input('schedule.hora_inicio');
-            $schedule->hora_fin = $request->input('schedule.hora_fin');
+            $newSchedules =  $request->input('schedule');
+            foreach ($newSchedules as $key => $newSchedule) {
+                $schedule = EducationalOfferSchedule::findOrFail($newSchedule['id']);
+                $schedule->notes = $newSchedule['notes'];
+                $schedule->hora_inicio = $newSchedule['hora_inicio'];
+                $schedule->hora_fin = $newSchedule['hora_fin'];
 
-            // Manejar el documento del horario si se subió uno nuevo
-            if ($request->hasFile('schedule_attachment')) {
-                $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
-                    $request->file('schedule_attachment'),
-                    'educational_offer/schedule',
-                    'public'
-                );
+                // Manejar el documento del horario si se subió uno nuevo
+                if ($request->hasFile('schedule_attachment_'.$newSchedule['id'])) {
+                    $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
+                        $request->file('schedule_attachment_'.$newSchedule['id']),
+                        'educational_offer/schedule',
+                        'public'
+                    );
 
-                if (!$storeAdjuntoResponse->success) {
-                    throw new \Exception($storeAdjuntoResponse->msg);
+                    if (!$storeAdjuntoResponse->success) {
+                        throw new \Exception($storeAdjuntoResponse->msg);
+                    }
+                    $schedule->document_id = $storeAdjuntoResponse->data->id;
                 }
-                $schedule->document_id = $storeAdjuntoResponse->data->id;
-            }
 
-            $schedule->save();
+                $schedule->save();
+            }
             // Actualizar el anexo del nivel educativo si se subió uno nuevo
             if ($request->hasFile('level_attachment')) {
                 $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
@@ -364,7 +344,7 @@ class EducationalOfferController extends Controller
             }
             DB::commit();
 
-            return redirect()->route('institution.edit', ['institution' => $levelSedeToUpdate->sede->institution_id])
+            return redirect()->route('sede-with-institution.edit', ['institutionId' => $levelSedeToUpdate->sede->institution_id, 'sede_with_institution' => $levelSedeToUpdate->sede->id])
                 ->with('flash_success_message', 'Vinculación de oferta educativa actualizada correctamente.');
 
         } catch (\Exception $e) {

@@ -41,7 +41,7 @@
                         @endif
                     </div>
                 </div>
-
+                @foreach($levelSede->schedules as $key => $schedule)
                 <!-- Horario -->
                 <div class="mb-4">
                     <h4>Horario</h4>
@@ -49,7 +49,7 @@
                         <label class="form-label">Tipo de horario</label>
                         <select class="form-select" name="schedule[name]" disabled>
                             @foreach($educationalSchedules as $key => $value)
-                                <option value="{{ $key }}" {{ $levelSede->schedule->name == $key ? 'selected' : '' }}>
+                                <option value="{{ $key }}" {{ $schedule->name == $key ? 'selected' : '' }}>
                                     {{ $value }}
                                 </option>
                             @endforeach
@@ -62,7 +62,7 @@
                                 <label class="form-label">Hora de Inicio</label>
                                 <input type="time" class="form-control"
                                        name="schedule[hora_inicio]"
-                                       value="{{ $levelSede->schedule->hora_inicio }}" disabled>
+                                       value="{{ $schedule->hora_inicio }}" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -70,7 +70,7 @@
                                 <label class="form-label">Hora de Final</label>
                                 <input type="time" class="form-control"
                                        name="schedule[hora_fin]"
-                                       value="{{ $levelSede->schedule->hora_fin }}" disabled>
+                                       value="{{ $schedule->hora_fin }}" disabled>
                             </div>
                         </div>
                     </div>
@@ -78,15 +78,15 @@
                     <div class="mb-3">
                         <label class="form-label">Notas detalladas</label>
                         <textarea class="form-control" rows="3"
-                                  name="schedule[notes]" disabled>{{ $levelSede->schedule->notes }}</textarea>
+                                  name="schedule[notes]" disabled>{{ $schedule->notes }}</textarea>
                     </div>
 
                     <!-- Anexo del horario -->
                     <div class="mb-3">
                         <label class="form-label">Documento del horario actual</label>
-                        @if($levelSede->schedule->document_id)
+                        @if($schedule->document_id)
                             <div class="mt-2">
-                                <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                     <i class="fas fa-eye"></i> Ver documento actual
                                 </a>
                             </div>
@@ -95,6 +95,7 @@
                         @endif
                     </div>
                 </div>
+                @endforeach
             </form>
         </div>
     </div>
