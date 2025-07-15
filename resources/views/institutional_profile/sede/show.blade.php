@@ -576,9 +576,8 @@
                                         <thead>
                                         <tr>
                                             <th>NIVELES EDUCATIVOS</th>
+                                            <th>DOCUMENTO JORNADA</th>
                                             <th>JORNADA</th>
-                                            <th>NOMBRE SEDE</th>
-                                            <th>TIPO DE SEDE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                         </thead>
@@ -594,15 +593,24 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $levelSede->schedule->schedule }}
-                                                    @if($levelSede->schedule->document_id)
-                                                        <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                            <i class="fas fa-eye"></i> Ver Anexo
-                                                        </a>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            @if($schedule?->anexo?->url)
+                                                                <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                                    <i class="fas fa-eye"></i> Ver Anexo
+                                                                </a>
+                                                                @if(!$loop->last) @endif
+                                                            @endif
+                                                        @endforeach
                                                     @endif
                                                 </td>
-                                                <td>{{ $sede->name }}</td>
-                                                <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                                <td>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            {{$schedule->name}}
+                                                        @endforeach
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
                                                 </td>

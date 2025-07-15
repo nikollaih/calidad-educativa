@@ -44,17 +44,7 @@
                 @foreach($levelSede->schedules as $key => $schedule)
                 <!-- Horario -->
                 <div class="mb-4">
-                    <h4>Horario</h4>
-                    <div class="mb-3">
-                        <label class="form-label">Tipo de horario</label>
-                        <select class="form-select" name="schedule[name]" disabled>
-                            @foreach($educationalSchedules as $key => $value)
-                                <option value="{{ $key }}" {{ $schedule->name == $key ? 'selected' : '' }}>
-                                    {{ $value }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <h4>Horario {{$schedule->name}}</h4>
 
                     <div class="row">
                         <div class="col-md-6">
