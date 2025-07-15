@@ -160,7 +160,7 @@ class SedeController extends Controller
         $eduactionalModels = EducationalModel::get();
         $modelosPedagogicos = ModeloPedagogico::get();
 
-        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->select('name','id')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->whereNot('id',$sede->id)->select('name','id')->get();
         return view('institutional_profile.sede.edit',
             [
                 'sede' => $sede,
@@ -235,6 +235,10 @@ class SedeController extends Controller
         $sedeData =  $request->input('sede');
 
         unset($sedeData['institution_id']);
+	if ($request->input('tipo_sede') == "Principal" ){
+        	$sedeData['parent_sede_id'] = null;
+	}
+   
 
         if( !isset($sedeData['is_new_school']) )
             $sedeData['is_new_school'] = false ;
