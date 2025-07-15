@@ -171,7 +171,7 @@
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-pedagogicos')}}" class="menu-link">
                                         <i class="menu-icon fas fa-chalkboard-teacher"></i>
-                                        <div data-i18n="Modelos pedagógicos"> Modelos pedagógicos</div>
+                                        <div data-i18n="Estrategias pedagógicas"> Estrategias pedagógicas</div>
                                     </a>
                                 </li>
                             </ul>

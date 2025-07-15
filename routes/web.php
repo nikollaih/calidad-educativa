@@ -135,7 +135,7 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
-    Route::resource('pmi', PMIController::class);
+    Route::resource('/{institucionId}/pmi', PMIController::class);
 
 });
 

@@ -81,7 +81,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Modelos pedagógicos</h2>
+            <h2 class="mb-4">Estrategias pedagógicas</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
                 Agregar estrategia pedagógica
             </button>
