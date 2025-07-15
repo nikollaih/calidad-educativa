@@ -383,7 +383,7 @@ const ModalHistoricos = ({
                           rel="noopener noreferrer"
                           className="text-decoration-none text-primary"
                         >
-                          Ver documento adicional
+                          Ver documento administrativo
                         </a>
                       </div>
                     )}
@@ -556,7 +556,7 @@ export default function ActualizarPei({
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 bg-white p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">Ajustes al PEI</h2>
       </div>
@@ -566,6 +566,7 @@ export default function ActualizarPei({
           {gestionArray.map((grupo, index) => (
             <li className="nav-item" key={`tab-${grupo.id}`}>
               <button
+               style={activeTab === index ? {backgroundColor: '#cfe2ff',color: '#084298'} : {backgroundColor: '#d6d6d6', color: '#000'}}
                 className={`nav-link ${activeTab === index ? 'active' : ''}`}
                 onClick={() => setActiveTab(index)}
                 type="button"

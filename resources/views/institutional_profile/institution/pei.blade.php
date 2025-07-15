@@ -31,26 +31,6 @@
         background-color: #d98b8b;
     }
 
-    /* Botón del acordeón abierto */
-    .accordion-button:not(.collapsed) {
-        background-color: var(--blue-pastel);
-    }
-
-    /* Botón del acordeón en hover */
-    .accordion-button:hover {
-        background-color: var(--blue-pastel);
-    }
-
-    /* Cuerpo del acordeón cuando está visible (desplegado) */
-    .accordion-collapse.show .accordion-body {
-        background-color: var(--blue-pastel-bg);
-    }
-
-    /* Hover dentro del cuerpo también azul pastel */
-    .accordion-body:hover {
-        background-color: var(--blue-pastel-bg);
-    }
-
     /* Estilo de tabs */
     .nav-tabs .nav-link {
         background-color: #d6d6d6; /* Gris claro */
@@ -66,6 +46,15 @@
 </style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('institution.show', $institucionId) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
+            <a href="#" class="btn btn-success  btn-sm">PEI</a>
+            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
+            <a href="{{ route('pmi.index') }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
+        </div>
+    </div>
 
     <!-- <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-is-container="{{false}}"></div>
