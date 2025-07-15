@@ -294,7 +294,7 @@ class EducationalOfferController extends Controller
         if(empty($levelSede))
             return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
 
-        $levelSede->schedule->delete();
+        $levelSede->schedules()->delete();
         $levelSede->educationalLevel->delete();
         $levelSede->delete();
 
