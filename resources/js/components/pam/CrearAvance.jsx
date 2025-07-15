@@ -6,68 +6,151 @@ const CrearAvance = ({ onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
     fecha_avance: '',
-    accion: '',
+    meta_id: '', // New field for selected meta ID
+    accion_id: '', // Changed to accion_id
     cantidad_ejecutada: '',
     observacion: '',
-    archivos_adjuntos: [], // Para almacenar los objetos File
+    archivos_adjuntos: [],
   });
-  const [accionesOptions, setAccionesOptions] = useState([]);
-  const [loadingAcciones, setLoadingAcciones] = useState(true);
-  const [submitMessage, setSubmitMessage] = useState(null); // Para mensajes de éxito/error
+  const [metasOptions, setMetasOptions] = useState([]);
+  const [filteredMetas, setFilteredMetas] = useState([]);
+  const [searchTermMeta, setSearchTermMeta] = useState('');
 
-  // --- Funciones de control del modal ---
+  const [accionesOptions, setAccionesOptions] = useState([]);
+  const [filteredAcciones, setFilteredAcciones] = useState([]);
+  const [searchTermAccion, setSearchTermAccion] = useState('');
+
+  const [loadingMetas, setLoadingMetas] = useState(true);
+  const [loadingAcciones, setLoadingAcciones] = useState(false); // Initially false, loads after meta selection
+  const [submitMessage, setSubmitMessage] = useState(null);
+
+  // --- CSRF Token State ---
+  const [csrfToken, setCsrfToken] = useState('');
+
+  // --- Modal control functions ---
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setIsOpen(false);
-    // Reiniciar el formulario cuando se cierra
+    // Reset the form when closed
     setFormData({
       fecha_avance: '',
-      accion: '',
+      meta_id: '',
+      accion_id: '',
       cantidad_ejecutada: '',
       observacion: '',
       archivos_adjuntos: [],
     });
-    setSubmitMessage(null); // Limpiar mensaje al cerrar
+    setSubmitMessage(null); // Clear message on close
+    setSearchTermMeta(''); // Clear search terms
+    setSearchTermAccion('');
+    setFilteredMetas([]);
+    setFilteredAcciones([]);
+    setLoadingMetas(true); // Reset loading states to refetch on next open
+    setLoadingAcciones(false);
     if (onClose) {
       onClose();
     }
   };
 
-  // Exponemos la función openModal globalmente para ser llamada desde Blade
+  // Expose openModal globally for Blade
   useEffect(() => {
     window.openCrearAvance = openModal;
     return () => {
       delete window.openCrearAvance;
     };
-  }, []); // Se ejecuta una sola vez al montar el componente
+  }, []);
 
-  // --- Carga de opciones para el selector de 'accion' ---
+  // --- Get CSRF token on component mount ---
   useEffect(() => {
-    const fetchAcciones = async () => {
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (token) {
+      setCsrfToken(token);
+    } else {
+      console.error('CSRF token not found! Ensure meta tag is present in your Blade layout.');
+    }
+  }, []); // Run once on mount
+
+  // --- Load options for 'metas' selector ---
+  useEffect(() => {
+    const fetchMetas = async () => {
       try {
-        const response = await fetch('/get-pam-rows'); // Ajusta la URL si es necesario
+        const response = await fetch('/pam/get-metas');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        // Asume que 'data' es un array de objetos con 'id' y 'nombre' (o el nombre real de tu campo)
+        setMetasOptions(data);
+        setFilteredMetas(data); // Initialize filtered metas with all options
+      } catch (error) {
+        console.error('Error al cargar las metas:', error);
+      } finally {
+        setLoadingMetas(false);
+      }
+    };
+    if (isOpen && loadingMetas) {
+      fetchMetas();
+    } else if (!isOpen) {
+      setLoadingMetas(true); // Reset loading state for next open
+    }
+  }, [isOpen, loadingMetas]);
+
+  // --- Filter 'metas' based on search term ---
+  useEffect(() => {
+    if (searchTermMeta === '') {
+      setFilteredMetas(metasOptions);
+    } else {
+      setFilteredMetas(
+        metasOptions.filter((meta) =>
+          meta.descripcion.toLowerCase().includes(searchTermMeta.toLowerCase()) // Assuming 'descripcion' is the display field
+        )
+      );
+    }
+  }, [searchTermMeta, metasOptions]);
+
+  // --- Load options for 'acciones' selector based on selected meta_id ---
+  useEffect(() => {
+    const fetchAcciones = async (metaId) => {
+      setLoadingAcciones(true);
+      try {
+        const response = await fetch(`/pam/get-acciones?meta_id=${metaId}`); // Adjusted URL with meta_id
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
         setAccionesOptions(data);
+        setFilteredAcciones(data); // Initialize filtered acciones with all options
       } catch (error) {
         console.error('Error al cargar las acciones:', error);
-        // Podrías establecer un estado de error para mostrar al usuario
+        setAccionesOptions([]); // Clear options on error
+        setFilteredAcciones([]);
       } finally {
         setLoadingAcciones(false);
       }
     };
-    if (isOpen && loadingAcciones) { // Cargar opciones solo cuando el modal se abre y si no se han cargado
-      fetchAcciones();
-    } else if (!isOpen) {
-        // Reiniciar el estado de carga si el modal se cierra, para que se recarguen si se abre de nuevo
-        setLoadingAcciones(true);
-    }
-  }, [isOpen]); // Depende de 'isOpen' para recargar cuando el modal se abre
 
-  // --- Manejo de cambios en el formulario ---
+    if (formData.meta_id) {
+      fetchAcciones(formData.meta_id);
+    } else {
+      setAccionesOptions([]);
+      setFilteredAcciones([]);
+      setFormData((prevData) => ({ ...prevData, accion_id: '' })); // Clear selected action if meta is unselected
+    }
+  }, [formData.meta_id]);
+
+  // --- Filter 'acciones' based on search term ---
+  useEffect(() => {
+    if (searchTermAccion === '') {
+      setFilteredAcciones(accionesOptions);
+    } else {
+      setFilteredAcciones(
+        accionesOptions.filter((accion) =>
+          accion.descripcion.toLowerCase().includes(searchTermAccion.toLowerCase()) // Assuming 'descripcion' is the display field
+        )
+      );
+    }
+  }, [searchTermAccion, accionesOptions]);
+
+  // --- Handle form changes ---
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'archivos_adjuntos') {
@@ -75,6 +158,13 @@ const CrearAvance = ({ onClose }) => {
         ...prevData,
         [name]: files ? Array.from(files) : [],
       }));
+    } else if (name === 'meta_id') {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+        accion_id: '', // Reset accion when meta changes
+      }));
+      setSearchTermAccion(''); // Clear accion search term
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -83,14 +173,46 @@ const CrearAvance = ({ onClose }) => {
     }
   };
 
-  // --- Manejo del envío del formulario ---
+  // --- Handle search input changes ---
+  const handleSearchMetaChange = (e) => {
+    setSearchTermMeta(e.target.value);
+    // When searching, clear selected meta if the current input doesn't match a selected one
+    if (!metasOptions.some(meta => meta.id === formData.meta_id && meta.descripcion.toLowerCase().includes(e.target.value.toLowerCase()))) {
+      setFormData((prevData) => ({ ...prevData, meta_id: '', accion_id: '' }));
+    }
+  };
+
+  const handleSearchAccionChange = (e) => {
+    setSearchTermAccion(e.target.value);
+    // When searching, clear selected accion if the current input doesn't match a selected one
+    if (!accionesOptions.some(accion => accion.id === formData.accion_id && accion.descripcion.toLowerCase().includes(e.target.value.toLowerCase()))) {
+      setFormData((prevData) => ({ ...prevData, accion_id: '' }));
+    }
+  };
+
+  // --- Handle form submission ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitMessage(null); // Limpiar mensajes anteriores
+    setSubmitMessage(null); // Clear previous messages
+
+    // Basic client-side validation
+    if (!formData.fecha_avance || !formData.meta_id || !formData.accion_id || !formData.cantidad_ejecutada) {
+      setSubmitMessage({ type: 'error', text: 'Por favor, completa todos los campos obligatorios.' });
+      return;
+    }
 
     const dataToSend = new FormData();
+    // *** IMPORTANT: Append the CSRF token here ***
+    if (csrfToken) {
+      dataToSend.append('_token', csrfToken);
+    } else {
+      setSubmitMessage({ type: 'error', text: 'Error: CSRF token no disponible. La página podría estar expirada.' });
+      return; // Stop submission if token is missing
+    }
+
     dataToSend.append('fecha_avance', formData.fecha_avance);
-    dataToSend.append('accion', formData.accion);
+    dataToSend.append('meta_id', formData.meta_id);
+    dataToSend.append('accion_id', formData.accion_id);
     dataToSend.append('cantidad_ejecutada', formData.cantidad_ejecutada);
     dataToSend.append('observacion', formData.observacion);
 
@@ -99,21 +221,25 @@ const CrearAvance = ({ onClose }) => {
     });
 
     try {
-      const response = await fetch('/save-advance', { // Ajusta la URL de envío
+      const response = await fetch('/pam/store-advance', {
         method: 'POST',
         body: dataToSend,
-        // No establezcas 'Content-Type' para FormData, el navegador lo hace automáticamente
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        // If it's a validation error, errorData.errors will contain specific field errors
+        if (response.status === 422 && errorData.errors) {
+            const errorMessages = Object.values(errorData.errors).flat().join('\n');
+            throw new Error(`Errores de validación:\n${errorMessages}`);
+        }
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
+      console.log('Server response:', result);
       setSubmitMessage({ type: 'success', text: result.message || 'Avance guardado exitosamente!' });
-      // Podrías cerrar el modal o limpiar el formulario después de un éxito
-      setTimeout(closeModal, 2000); // Cierra el modal después de 2 segundos
+      setTimeout(closeModal, 2000);
     } catch (error) {
       console.error('Error al guardar el avance:', error);
       setSubmitMessage({ type: 'error', text: error.message || 'Error al guardar el avance. Inténtalo de nuevo.' });
@@ -121,11 +247,11 @@ const CrearAvance = ({ onClose }) => {
   };
 
   if (!isOpen) {
-    return null; // No renderiza nada si el modal está cerrado
+    return null; // Don't render anything if the modal is closed
   }
 
   return (
-    // Backdrop del modal
+    // Modal backdrop
     <div
       className="modal fade show"
       style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -160,28 +286,75 @@ const CrearAvance = ({ onClose }) => {
                 />
               </div>
 
+              {/* Meta Selector with Search */}
               <div className="mb-3">
-                <label htmlFor="accion" className="form-label">Acción:</label>
-                {loadingAcciones ? (
-                  <p>Cargando acciones...</p>
+                <label htmlFor="meta_id" className="form-label">Meta:</label>
+                {loadingMetas ? (
+                  <p>Cargando metas...</p>
                 ) : (
-                  <select
-                    className="form-select"
-                    id="accion"
-                    name="accion"
-                    value={formData.accion}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Selecciona una acción</option>
-                    {accionesOptions.map((accion) => (
-                      <option key={accion.id} value={accion.id}>
-                        {accion.nombre} {/* Asume que tus objetos tienen 'nombre' */}
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      placeholder="Buscar meta..."
+                      value={searchTermMeta}
+                      onChange={handleSearchMetaChange}
+                    />
+                    <select
+                      className="form-select"
+                      id="meta_id"
+                      name="meta_id"
+                      value={formData.meta_id}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Selecciona una meta</option>
+                      {filteredMetas.map((meta) => (
+                        <option key={meta.id} value={meta.id}>
+                          {meta.descripcion} {/* Assuming 'descripcion' is the display field */}
+                        </option>
+                      ))}
+                    </select>
+                  </>
                 )}
               </div>
+
+              {/* Accion Selector with Search (conditionally rendered) */}
+              {formData.meta_id && (
+                <div className="mb-3">
+                  <label htmlFor="accion_id" className="form-label">Acción:</label>
+                  {loadingAcciones ? (
+                    <p>Cargando acciones...</p>
+                  ) : (
+                    <>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Buscar acción..."
+                        value={searchTermAccion}
+                        onChange={handleSearchAccionChange}
+                        disabled={!formData.meta_id} // Disable if no meta is selected
+                      />
+                      <select
+                        className="form-select"
+                        id="accion_id"
+                        name="accion_id"
+                        value={formData.accion_id}
+                        onChange={handleChange}
+                        required
+                        disabled={!formData.meta_id} // Disable if no meta is selected
+                      >
+                        <option value="">Selecciona una acción</option>
+                        {filteredAcciones.map((accion) => (
+                          <option key={accion.id} value={accion.id}>
+                            {accion.descripcion} {/* Assuming 'descripcion' is the display field */}
+                          </option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="mb-3">
                 <label htmlFor="cantidad_ejecutada" className="form-label">Cantidad Ejecutada:</label>
@@ -216,7 +389,7 @@ const CrearAvance = ({ onClose }) => {
                   className="form-control"
                   id="archivos_adjuntos"
                   name="archivos_adjuntos"
-                  multiple // Permite seleccionar múltiples archivos
+                  multiple // Allows multiple file selection
                   onChange={handleChange}
                 />
                 {formData.archivos_adjuntos.length > 0 && (

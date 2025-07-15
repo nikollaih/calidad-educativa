@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePamRowRequest;
 use App\Models\PamAccion;
+use App\Models\PamAvance;
 use App\Models\PamComponente;
+use App\Models\PamMeta;
 use App\Models\PamObjetivoEstrategico;
 use App\Models\PamRow;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PamController extends Controller {
@@ -43,7 +45,7 @@ class PamController extends Controller {
      *
      * @param int $id
      */
-    public function show($id): View {
+    public function edit($id): View {
         return view('pam.edit', compact('id'));
     }
 
@@ -247,9 +249,7 @@ class PamController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         // Reglas de validación para la nueva estructura anidada completa
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
@@ -361,81 +361,162 @@ class PamController extends Controller {
             ], 500);
         }
     }
-    
-    /**
-     * Obtener un registro específico para edición
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function edit($id) {
-        try {
-            // Carga la acción con todas sus relaciones anidadas en el nuevo orden
-            $accion = PamAccion::with([
-                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
-                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo',
-                'user'
-            ])->find($id);
 
-            if (!$accion) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Registro PAM no encontrado.'
-                ], 404);
-            }
+    public function getMetas(Request $request): JsonResponse {
+        $query = PamMeta::query();
 
-            // Aplanar la estructura para que coincida con el formato que tu frontend espera para la carga.
-            // Es crucial que esta estructura aplanada coincida con cómo tu `useEffect` en el frontend
-            // mapea los datos al estado `formData`.
-            $objetivo = $accion->indicador->meta->objetivoEstrategico ?? null;
-            $subproceso = $objetivo?->metaPlanDesarrollo?->first()->subproceso ?? null;
-            $proceso = $subproceso->proceso ?? null;
-            $componente = $proceso->componente ?? null;
-
-            // Para simplificar la carga en el frontend, se toma la primera MetaPlanDesarrollo asociada al Objetivo
-            // Si hay múltiples, necesitarías una lógica más compleja en el frontend para manejar un array.
-            $firstMetaPlanDesarrollo = $objetivo && $objetivo->metaPlanDesarrollo->isNotEmpty()
-                ? $objetivo->metaPlanDesarrollo->first()
-                : null;
-
-            $data = [
-                'componente_id' => $componente->id ?? null,
-                'componente_descripcion' => $componente->descripcion ?? '',
-                'proceso_id' => $proceso->id ?? null,
-                'proceso_descripcion' => $proceso->descripcion ?? '',
-                'subproceso_id' => $subproceso->id ?? null,
-                'subproceso_descripcion' => $subproceso->descripcion ?? '',
-
-                // Ahora objetivo_estrategico_id es directo de subproceso
-                'objetivo_estrategico_id' => $objetivo->id ?? null,
-                'objetivo_estrategico_descripcion' => $objetivo->descripcion ?? '',
-
-                // Meta Plan Desarrollo ahora es hijo de Objetivo Estratégico (y también tiene subproceso_id)
-                'meta_plan_desarrollo_id' => $firstMetaPlanDesarrollo->id ?? null,
-                'meta_plan_desarrollo_descripcion' => $firstMetaPlanDesarrollo->descripcion ?? '',
-
-                'meta_id' => $accion->indicador->meta->id ?? null,
-                'meta_descripcion' => $accion->indicador->meta->descripcion ?? '',
-                'indicador_id' => $accion->indicador->id ?? null,
-                'indicador_descripcion' => $accion->indicador->descripcion ?? '',
-                'accion_id' => $accion->id,
-                'accion_descripcion' => $accion->descripcion,
-                'user_id' => $accion->user_id,
-                'responsable_nombre' => $accion->user->name ?? $accion->nombre_responsable,
-                'recursos_descripcion' => $accion->recursos,
-                'fecha_inicio' => $accion->fecha_inicio,
-                'fecha_final' => $accion->fecha_final,
-            ];
-
-            return response()->json(['success' => true, 'data' => $data]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al cargar el registro PAM: ' . $e->getMessage()
-            ], 500);
+        // Puedes agregar lógica de filtrado si deseas un término de búsqueda inicial
+        // Aunque el frontend ya maneja el filtrado, esto es útil si quieres
+        // un filtrado del lado del servidor para grandes volúmenes de datos.
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
         }
+
+        // Selecciona solo los campos 'id' y 'nombre' para optimizar la respuesta
+        // Cambia 'nombre' al nombre real de tu columna descriptiva en la tabla 'metas'
+        $metas = $query->select('id', 'descripcion')->get();
+
+        return response()->json($metas);
     }
+
+    public function getAcciones(Request $request): JsonResponse {
+
+        $metaId = (int) $request->input('meta_id');
+
+        // Start the query on PamAccion
+        $query = PamAccion::query();
+
+        // Join with the 'indicadores' table and then filter by the meta_id
+        // Assuming:
+        // - PamAccion has an 'indicador_id' foreign key
+        // - Your 'indicadores' table has a 'meta_id' foreign key
+        // - 'indicadores' is the name of your indicators table
+        // - 'indicador_id' is the column in pam_acciones that links to indicadores.id
+        $query->whereHas('indicador', function ($q) use ($metaId) {
+            $q->where('meta_id', $metaId);
+        });
+
+
+        // You can add server-side filtering by search term here if needed
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Select only the 'id' and 'descripcion' fields for optimized response
+        $acciones = $query->select('id', 'descripcion')->get();
+
+        return response()->json($acciones);
+    }
+
+    public function storeAvance(Request $request) {
+
+        try {
+            // 1. Validate the incoming request data
+            $validatedData = $request->validate([
+                'fecha_avance' => ['required', 'date'],
+                'meta_id' => ['required', 'integer', 'exists:pam_metas,id'],
+                'accion_id' => ['required', 'integer', 'exists:pam_acciones,id'],
+                'cantidad_ejecutada' => ['required', 'integer', 'min:0'],
+                'observacion' => ['nullable', 'string', 'max:1000'],
+                'archivos_adjuntos.*' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png'], // Max 10MB per file, specific mimes
+            ]);
+
+            // Using a database transaction to ensure data consistency
+            // If anything fails during saving, everything is rolled back.
+            DB::beginTransaction();
+            
+            // 2. Create the PamAvance record
+            $avance = PamAvance::create([
+                'fecha_avance' => $validatedData['fecha_avance'],
+                'meta_id' => $validatedData['meta_id'],
+                'accion_id' => $validatedData['accion_id'],
+                'cantidad_ejecutada' => $validatedData['cantidad_ejecutada'],
+                'observacion' => $validatedData['observacion'],
+            ]);
+
+            // 3. Handle file uploads (if any)
+            // if ($request->hasFile('archivos_adjuntos')) {
+            //     foreach ($request->file('archivos_adjuntos') as $file) {
+            //         // Generate a unique file name
+            //         $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            //         // Store the file in the 'public/avances_adjuntos' directory
+            //         // The 'public' disk often maps to storage/app/public,
+            //         // which needs to be symlinked to public/storage for web access.
+            //         $filePath = $file->storeAs('avances_adjuntos', $fileName, 'public');
+
+            //         // RECOMMENDATION: Store file paths in a separate table
+            //         // If you haven't created the `pam_avance_archivos` table and model yet,
+            //         // you can temporarily store the paths in the 'observacion' field (not ideal for production)
+            //         // or just skip this part until you have the dedicated table.
+
+            //         // For now, let's just log it or add a placeholder comment
+            //         // In a real application, you'd save this path to your `PamAvanceArchivo` model
+            //         // $avance->archivosAdjuntos()->create([
+            //         //     'nombre_original' => $file->getClientOriginalName(),
+            //         //     'ruta_archivo' => $filePath,
+            //         //     'tipo_mime' => $file->getClientMimeType(),
+            //         //     'tamano' => $file->getSize(),
+            //         // ]);
+            //          // For demonstration, we'll just acknowledge the upload
+            //         // dd("File stored at: " . $filePath); // For testing file uploads
+            //     }
+            // }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Avance guardado exitosamente!', 'avance' => $avance], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Catch validation errors specifically
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422); // HTTP 422 Unprocessable Entity
+        } catch (Exception $e) {
+            // Catch any other unexpected errors
+            DB::rollBack(); // Rollback transaction on error
+            return response()->json([
+                'message' => 'Error al guardar el avance. ' . $e->getMessage(),
+                'error_code' => $e->getCode()
+            ], 500); // HTTP 500 Internal Server Error
+        }
+        }
+
+    public function getAvancesPorAccion(int $accionId) {
+        // 2. Fetch advances related to the given accion_id
+        // We'll also eager load related models for display, like 'meta' and 'accion'
+        // If you've implemented the files attachments, you can eager load 'archivosAdjuntos' too.
+        $avances = PamAvance::where('accion_id', $accionId)
+                            ->with(['meta', 'accion']) // Load related meta and accion for display
+                            ->orderBy('fecha_avance', 'desc') // Order by most recent advances
+                            ->get();
+
+        // 3. Transform the data for frontend (optional, but good for consistent display)
+        $formattedAvances = $avances->map(function ($avance) {
+            return [
+                'id' => $avance->id,
+                'fecha_avance' => $avance->fecha_avance->format('Y-m-d'), // Format date
+                'cantidad_ejecutada' => $avance->cantidad_ejecutada,
+                'observacion' => $avance->observacion,
+                'meta_descripcion' => $avance->meta->descripcion ?? 'N/A', // Access meta description
+                'accion_descripcion' => $avance->accion->descripcion ?? 'N/A', // Access accion description
+                // If you have attachments, include them here:
+                // 'archivos_adjuntos' => $avance->archivosAdjuntos->map(function($file) {
+                //     return [
+                //         'id' => $file->id,
+                //         'nombre' => $file->nombre_original,
+                //         'url' => Storage::url($file->ruta_archivo), // Generate public URL
+                //     ];
+                // })->toArray(),
+            ];
+        });
+
+        return response()->json($formattedAvances);
+    }
+
 }
 
 

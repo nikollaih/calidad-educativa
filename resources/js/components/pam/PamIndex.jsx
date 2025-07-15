@@ -3,13 +3,15 @@ import { h } from 'preact';
 import Swal from 'sweetalert2';
 import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
+import VerAvance from './VerAvance';
 
 const PamIndex = () => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCrearAvance, setShowCrearAvance] = useState(false);
-  // const [selectedPamId, setSelectedPamId] = useState(null);
+    const [showAvancesModal, setShowAvancesModal] = useState(false);
+    const [selectedAccionId, setSelectedAccionId] = useState(null);
 
 
   // Función para obtener el token CSRF
@@ -17,6 +19,16 @@ const PamIndex = () => {
     return document.querySelector('meta[name="csrf-token"]')?.content || '';
   };
 
+  const openAvancesModal = (accionId) => {
+      setSelectedAccionId(accionId);
+      setShowAvancesModal(true);
+  };
+
+  const closeAvancesModal = () => {
+      setShowAvancesModal(false);
+      setSelectedAccionId(null);
+  };
+  
   // Function to open the modal
   const openCrearAvance = (pamId) => {
     // setSelectedPamId(pamId);
@@ -316,13 +328,13 @@ const PamIndex = () => {
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
-                        {/* <button
-                          className="btn btn-sm btn-info text-white"
-                          onClick={() => openCrearAvance(row.id)}
-                          title="Ver Avances"
+                        <button
+                            className="btn btn-sm btn-info text-white"
+                            onClick={() => openAvancesModal(row.id)}
+                            title="Ver Avances"
                         >
-                          <i className="fas fa-eye"></i>
-                        </button> */}
+                            <i className="fas fa-eye"></i>
+                        </button>
                         <a 
                           href={`/pam/pam-form/${row.id}`}
                           className="btn btn-sm btn-primary"
@@ -355,6 +367,12 @@ const PamIndex = () => {
         {/* Render the CrearAvance when showCrearAvance is true */}
         {showCrearAvance && (
           <CrearAvance onClose={closeCrearAvance} />
+        )}
+        {showAvancesModal && (
+            <VerAvance
+                accionId={selectedAccionId}
+                onClose={closeAvancesModal}
+            />
         )}
       </div>
     </div>
