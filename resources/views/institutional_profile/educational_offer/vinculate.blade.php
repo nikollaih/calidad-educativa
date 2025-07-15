@@ -217,8 +217,9 @@
             <div class="mb-3">
                 <label class="form-label fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
                 <select class="form-select schedule-select" required>
+
                     @foreach($educationalSchedules as $key => $value)
-                        <option value="{{ $key }}">{{ $value }}</option>
+                        <option value="{{ $value }}">{{ $value }}</option>
                     @endforeach
                 </select>
             </div>
