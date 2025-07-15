@@ -4,17 +4,6 @@ import Swal from 'sweetalert2';
 import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
 
-// Función para formatear fechas ISO a formato legible
-const formatDate = (isoString) => {
-  if (!isoString) return '';
-  const date = new Date(isoString);
-  return date.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
-
 const PamIndex = () => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,8 +68,8 @@ const PamIndex = () => {
             accion: item.accion || '',
             responsable: item.responsable || '',
             recursos: item.recursos || '',
-            fechaInicio: item.fecha_inicio ? formatDate(item.fecha_inicio) : '',
-            fechaTerminacion: item.fecha_final ? formatDate(item.fecha_final) : ''
+            fechaInicio: item.fecha_inicio ? item.fecha_inicio : '',
+            fechaTerminacion: item.fecha_final ? item.fecha_final : ''
           }));
           
           setRows(mappedData);
@@ -238,8 +227,8 @@ const PamIndex = () => {
             accion: item.accion || '',
             responsable: '',
             recursos: item.recursos || '',
-            fechaInicio: item.fecha_inicio ? formatDate(item.fecha_inicio) : '',
-            fechaTerminacion: item.fecha_final ? formatDate(item.fecha_final) : ''
+            fechaInicio: item.fecha_inicio ? item.fecha_inicio : '',
+            fechaTerminacion: item.fecha_final ? item.fecha_final : ''
           }));
           setRows(updatedData);
         }
@@ -327,13 +316,13 @@ const PamIndex = () => {
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
-                        <button
+                        {/* <button
                           className="btn btn-sm btn-info text-white"
                           onClick={() => openCrearAvance(row.id)}
                           title="Ver Avances"
                         >
                           <i className="fas fa-eye"></i>
-                        </button>
+                        </button> */}
                         <a 
                           href={`/pam/pam-form/${row.id}`}
                           className="btn btn-sm btn-primary"
