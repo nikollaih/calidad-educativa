@@ -105,7 +105,7 @@ Route::middleware(['auth'])->group(function () {
         // Visualiza formulario para crear filas del pam
         // Visualiza el index del pam
         Route::get('/pam-form', [PamController::class, 'create'])->name('pam.create');
-        Route::get('/pam-form/{id}', [PamController::class, 'edit'])->name('pam.edit');
+        Route::get('/pam-form/{id}', [PamController::class, 'show'])->name('pam.show');
         Route::get('/index', [PamController::class, 'index'])->name('pam.index');
 
         // Rutas para API/AJAX

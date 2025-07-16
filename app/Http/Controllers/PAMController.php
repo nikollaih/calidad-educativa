@@ -45,7 +45,7 @@ class PamController extends Controller {
      *
      * @param int $id
      */
-    public function edit($id): View {
+    public function show($id): View {
         return view('pam.edit', compact('id'));
     }
 
@@ -104,6 +104,81 @@ class PamController extends Controller {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los datos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtener un registro específico para edición
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function edit($id) {
+        try {
+            // Carga la acción con todas sus relaciones anidadas en el nuevo orden
+            $accion = PamAccion::with([
+                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
+                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo',
+                'user'
+            ])->find($id);
+
+            if (!$accion) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registro PAM no encontrado.'
+                ], 404);
+            }
+
+            // Aplanar la estructura para que coincida con el formato que tu frontend espera para la carga.
+            // Es crucial que esta estructura aplanada coincida con cómo tu `useEffect` en el frontend
+            // mapea los datos al estado `formData`.
+            $objetivo = $accion->indicador->meta->objetivoEstrategico ?? null;
+            $subproceso = $objetivo?->metaPlanDesarrollo?->first()->subproceso ?? null;
+            $proceso = $subproceso->proceso ?? null;
+            $componente = $proceso->componente ?? null;
+
+            // Para simplificar la carga en el frontend, se toma la primera MetaPlanDesarrollo asociada al Objetivo
+            // Si hay múltiples, necesitarías una lógica más compleja en el frontend para manejar un array.
+            $firstMetaPlanDesarrollo = $objetivo && $objetivo->metaPlanDesarrollo->isNotEmpty()
+                ? $objetivo->metaPlanDesarrollo->first()
+                : null;
+
+            $data = [
+                'componente_id' => $componente->id ?? null,
+                'componente_descripcion' => $componente->descripcion ?? '',
+                'proceso_id' => $proceso->id ?? null,
+                'proceso_descripcion' => $proceso->descripcion ?? '',
+                'subproceso_id' => $subproceso->id ?? null,
+                'subproceso_descripcion' => $subproceso->descripcion ?? '',
+
+                // Ahora objetivo_estrategico_id es directo de subproceso
+                'objetivo_estrategico_id' => $objetivo->id ?? null,
+                'objetivo_estrategico_descripcion' => $objetivo->descripcion ?? '',
+
+                // Meta Plan Desarrollo ahora es hijo de Objetivo Estratégico (y también tiene subproceso_id)
+                'meta_plan_desarrollo_id' => $firstMetaPlanDesarrollo->id ?? null,
+                'meta_plan_desarrollo_descripcion' => $firstMetaPlanDesarrollo->descripcion ?? '',
+
+                'meta_id' => $accion->indicador->meta->id ?? null,
+                'meta_descripcion' => $accion->indicador->meta->descripcion ?? '',
+                'indicador_id' => $accion->indicador->id ?? null,
+                'indicador_descripcion' => $accion->indicador->descripcion ?? '',
+                'accion_id' => $accion->id,
+                'accion_descripcion' => $accion->descripcion,
+                'user_id' => $accion->user_id,
+                'responsable_nombre' => $accion->user->name ?? $accion->nombre_responsable,
+                'recursos_descripcion' => $accion->recursos,
+                'fecha_inicio' => Carbon::parse($accion->fecha_inicio)->format('Y-m-d'),
+                'fecha_final' => Carbon::parse($accion->fecha_final)->format('Y-m-d'),
+            ];
+
+            return response()->json(['success' => true, 'data' => $data]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar el registro PAM: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -250,7 +325,7 @@ class PamController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request, $id) {
-        // Reglas de validación para la nueva estructura anidada completa
+        // Reglas de validación para la estructura anidada (consistente con store)
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
             'componentes.*.descripcion' => 'required|string|max:1000',
@@ -258,21 +333,21 @@ class PamController extends Controller {
             'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
             'componentes.*.procesos.*.subprocesos.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas_plan_desarrollo' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas_plan_desarrollo.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.user_id' => 'required|exists:users,id',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.responsable_nombre' => 'required|string|max:255',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.recursos_descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio' => 'required|date',
-            'componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.fecha_final' => 'required|date|after_or_equal:componentes.*.procesos.*.subprocesos.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.user_id' => 'required|exists:users,id',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.responsable_nombre' => 'required|string|max:255',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.recursos_descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio' => 'required|date',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_final' => 'required|date|after_or_equal:componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio',
         ]);
 
         if ($validator->fails()) {
@@ -292,51 +367,76 @@ class PamController extends Controller {
                 return response()->json(['success' => false, 'message' => 'Acción no encontrada.'], 404);
             }
 
-            // Accede a los datos de la primera jerarquía del request
+            // Accede a los datos siguiendo la estructura del store
             $compData = $request->input('componentes')[0];
             $procData = $compData['procesos'][0];
             $subprocData = $procData['subprocesos'][0];
-            $objData = $subprocData['objetivos'][0]; // Objetivo ahora bajo Subproceso
-            $metaPlanData = $objData['metas_plan_desarrollo'][0]; // Meta Plan Desarrollo bajo Objetivo
-            $metaData = $objData['metas'][0]; // Meta bajo Objetivo
+            $metaPlanData = $subprocData['metas_plan_desarrollo'][0];
+            $objData = $metaPlanData['objetivos'][0];
+            $metaData = $objData['metas'][0];
             $indicadorData = $metaData['indicadores'][0];
             $accionData = $indicadorData['accion'];
 
+            // Seguir la cadena de relaciones desde la acción hacia arriba
+            $indicador = $accion->indicador;
+            $meta = $indicador->meta;
+            $objetivoEstrategico = $meta->objetivoEstrategico;
+            $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->first();
+            
+            // Obtener subproceso desde metaPlanDesarrollo
+            $subproceso = $metaPlanDesarrollo ? $metaPlanDesarrollo->subproceso : null;
+            $proceso = $subproceso ? $subproceso->proceso : null;
+            $componente = $proceso ? $proceso->componente : null;
+
+            // Verificar que tenemos toda la cadena de relaciones
+            if (!$componente || !$proceso || !$subproceso || !$metaPlanDesarrollo) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Error: No se pudo obtener la cadena completa de relaciones'
+                ], 500);
+            }
+
             // Actualizar Componente
-            $componente = $accion->indicador->meta->objetivoEstrategico->subproceso->proceso->componente;
-            $componente->update(['descripcion' => $compData['descripcion']]);
+            $componente->update([
+                'descripcion' => $compData['descripcion'],
+                'nombre' => $compData['descripcion'], // Consistente con store
+            ]);
 
             // Actualizar Proceso
-            $proceso = $accion->indicador->meta->objetivoEstrategico->subproceso->proceso;
             $proceso->update(['descripcion' => $procData['descripcion']]);
 
             // Actualizar Subproceso
-            $subproceso = $accion->indicador->meta->objetivoEstrategico->subproceso;
             $subproceso->update(['descripcion' => $subprocData['descripcion']]);
 
-            // Actualizar Objetivo Estratégico
-            $objetivoEstrategico = $accion->indicador->meta->objetivoEstrategico;
-            $objetivoEstrategico->update(['descripcion' => $objData['descripcion'], 'subproceso_id' => $subproceso->id]);
-
             // Actualizar Meta Plan Desarrollo
-            // Esto es más complejo si hay múltiples MetaPlanDesarrollo por Objetivo.
-            // Aquí se asume que se actualiza el primero encontrado o el que corresponde al ID.
-            $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->firstOrCreate(
-                ['id' => $metaPlanData['id'] ?? null], // Intenta encontrar por ID si existe
-                ['descripcion' => $metaPlanData['descripcion'], 'subproceso_id' => $subproceso->id]
-            );
-            $metaPlanDesarrollo->update(['descripcion' => $metaPlanData['descripcion'], 'subproceso_id' => $subproceso->id]);
+            // Basándose en el store, metaPlanDesarrollo está bajo objetivoEstrategico
+            // pero mantiene subproceso_id como referencia
+            $metaPlanDesarrollo->update([
+                'descripcion' => $metaPlanData['descripcion'],
+                'subproceso_id' => $subproceso->id
+            ]);
 
+            // Actualizar Objetivo Estratégico
+            // En el store, se crea directamente sin referencia a subproceso
+            $objetivoEstrategico->update([
+                'descripcion' => $objData['descripcion']
+            ]);
 
             // Actualizar Meta
-            $meta = $accion->indicador->meta;
-            $meta->update(['descripcion' => $metaData['descripcion'], 'objetivo_estrategico_id' => $objetivoEstrategico->id]);
+            // En el store, las metas están bajo objetivoEstrategico
+            $meta->update([
+                'descripcion' => $metaData['descripcion']
+            ]);
 
             // Actualizar Indicador
-            $indicador = $accion->indicador;
-            $indicador->update(['descripcion' => $indicadorData['descripcion'], 'meta_id' => $meta->id]);
+            // En el store, los indicadores están bajo meta
+            $indicador->update([
+                'descripcion' => $indicadorData['descripcion']
+            ]);
 
             // Actualizar Acción
+            // En el store, las acciones están bajo indicador
             $accion->update([
                 'descripcion' => $accionData['descripcion'],
                 'user_id' => $accionData['user_id'],
@@ -347,6 +447,7 @@ class PamController extends Controller {
             ]);
 
             DB::commit();
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Registro PAM actualizado correctamente',
@@ -483,7 +584,7 @@ class PamController extends Controller {
                 'error_code' => $e->getCode()
             ], 500); // HTTP 500 Internal Server Error
         }
-        }
+    }
 
     public function getAvancesPorAccion(int $accionId) {
         // 2. Fetch advances related to the given accion_id
