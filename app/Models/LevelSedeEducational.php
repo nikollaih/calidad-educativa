@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class LevelSedeEducational extends Model
 {
     protected $table = 'level_sede_educationals';
-    
+
     public $timestamps = false;
 
     protected $fillable = [
         'educational_level_id',
-        'educational_shedule_id',
         'sede_id'
     ];
 
@@ -21,13 +20,13 @@ class LevelSedeEducational extends Model
         return $this->belongsTo(EducationalOfferLevel::class, 'educational_level_id');
     }
 
-    public function schedule()
+    public function schedules()
     {
-        return $this->belongsTo(EducationalOfferSchedule::class, 'educational_shedule_id');
+        return $this->hasMany(EducationalOfferSchedule::class, 'level_sede_educational_id');
     }
 
     public function sede()
     {
         return $this->belongsTo(Sede::class, 'sede_id');
     }
-} 
+}

@@ -17,7 +17,7 @@ class EducationalOfferSchedule extends Model
         'name',
         'schedule',
         'document_id',
-        'sede_offer_id',
+        'level_sede_educational_id',
         'notes',
         'hora_inicio',
         'hora_fin',
@@ -26,9 +26,7 @@ class EducationalOfferSchedule extends Model
         return $this->belongsTo(Adjunto::class,'document_id');
     }
 
-    public function levelSedeEducational()
-    {
-        return $this->belongsToMany(SedeEducationalOffer::class, 'level_sede_educationals', 'educational_shedule_id', 'sede_educational_offer_id')
-            ->withPivot('educational_level_id');
+    public function levelSedeEducational() {
+        return $this->belongsTo(LevelSedeEducational::class, 'level_sede_educationals');
     }
 }

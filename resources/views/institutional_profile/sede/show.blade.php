@@ -65,22 +65,19 @@
                                             <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                         </select>
                                     </div>
-
-
-
                                     <div class="mb-3" id="sede_principal_container" style="display: none;">
                                         <label for="sede_principal_id" class="form-label">Sede Principal</label>
-                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
+                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control" disabled>
                                             <option value="">Seleccione una sede principal</option>
-                                            @foreach ($availableSedes as $sede_principal)
-                                                <option value="{{ $sede_principal->id }}" @selected($sede?->parentSede?->id == $sede_principal->id )>{{ $sede_principal->name }}</option>
+                                            @foreach ($availableSedes as $sedePrincipal)
+                                                <option value="{{ $sedePrincipal->id }}" @selected($sede?->parentSede?->id == $sedePrincipal->id )>{{ $sedePrincipal->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-3" id="is_sede_principal_container" style="display: none;">
-                                        <label  class="form-label">Modelo pedagógico</label>
+                                        <label  class="form-label">Estrategia pedagógica</label>
                                         <select name="sede[modelo_pedagogico_id]" class="form-control" disabled>
-                                            <option value="">Seleccione una un modelo pedagógico</option>
+                                            <option value="">Seleccione una estrategia pedagógica</option>
                                             @foreach ($modelosPedagogicos as $modeloPedagogico)
                                                 <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
                                             @endforeach
@@ -94,8 +91,6 @@
                                         <label for="sede[name]" class="form-label">Nombre</label>
                                         <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" disabled>
                                     </div>
-
-
 
                                     <div class="mb-3">
                                         <label for="sede[address]" class="form-label">Dirección</label>
@@ -581,9 +576,8 @@
                                         <thead>
                                         <tr>
                                             <th>NIVELES EDUCATIVOS</th>
+                                            <th>DOCUMENTO JORNADA</th>
                                             <th>JORNADA</th>
-                                            <th>NOMBRE SEDE</th>
-                                            <th>TIPO DE SEDE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                         </thead>
@@ -599,15 +593,24 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $levelSede->schedule->schedule }}
-                                                    @if($levelSede->schedule->document_id)
-                                                        <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                            <i class="fas fa-eye"></i> Ver Anexo
-                                                        </a>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            @if($schedule?->anexo?->url)
+                                                                <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                                    <i class="fas fa-eye"></i> Ver Anexo
+                                                                </a>
+                                                                @if(!$loop->last) @endif
+                                                            @endif
+                                                        @endforeach
                                                     @endif
                                                 </td>
-                                                <td>{{ $sede->name }}</td>
-                                                <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                                <td>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            {{$schedule->name}}
+                                                        @endforeach
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
                                                 </td>

@@ -3,6 +3,7 @@
 @section('content')
     <div
         data-component="CBackButton"
+        data-to="{{ route('institution.edit', $sede->institution_id ) }}"
     ></div>
     <div class="container">
     @if(session('success'))
@@ -78,9 +79,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3" id="is_sede_principal_container" style="display: block;">
-                                    <label  class="form-label">Modelo pedagógico</label>
+                                    <label  class="form-label">Estrategia pedagógica</label>
                                     <select name="sede[modelo_pedagogico_id]" class="form-control" >
-                                        <option value="">Seleccione una un modelo pedagógico</option>
+                                        <option value="">Seleccione una estrategia pedagógica</option>
                                         @foreach ($modelosPedagogicos as $modeloPedagogico)
                                             <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
                                         @endforeach
@@ -282,7 +283,14 @@
                             </div>
                         </div>
 
-
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="infraestructura" role="tabpanel">
                         <div class="row">
@@ -402,6 +410,14 @@
                                 @endforeach
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="mobiliario" role="tabpanel">
                         <div class="row">
@@ -516,6 +532,14 @@
                                 @endforeach
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
                     <div class="tab-pane fade"  id="modelos" role="tabpanel">
                         <div class="row">
@@ -588,22 +612,29 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{{ route('institution.edit', [ 'institution' => $sede->institution_id ]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
                     </div>
+
                     </div>
 
                 </form>
                 <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                         <div class="card-body">
                             <div class="col-md-12">
-                                <a href="{{ route('educational-offer.vinculate', $sede->institution_id) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                                <a href="{{ route('educational-offer.vinculate', ['institutionId' => $sede->institution_id, 'sedeId'=> $sede->id]) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
                                 <table class="table">
                                     <thead>
                                     <tr>
                                         <th>NIVELES EDUCATIVOS</th>
-                                        <th>JORNADA</th>
-                                        <th>NOMBRE SEDE</th>
-                                        <th>TIPO DE SEDE</th>
+                                        <th>DOCUMENTO JORNADA</th>
+                                        <th>NOMBRE JORNADA</th>
                                         <th>ACCIONES</th>
                                     </tr>
                                     </thead>
@@ -619,15 +650,24 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $levelSede->schedule->schedule }}
-                                                    @if($levelSede->schedule->document_id)
-                                                        <a href="{{ $levelSede->schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
-                                                            <i class="fas fa-eye"></i> Ver Anexo
-                                                        </a>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            @if($schedule?->anexo?->url)
+                                                                <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
+                                                                    <i class="fas fa-eye"></i> Ver Anexo
+                                                                </a>
+                                                                @if(!$loop->last) @endif
+                                                            @endif
+                                                        @endforeach
                                                     @endif
                                                 </td>
-                                                <td>{{ $sede->name }}</td>
-                                                <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                                <td>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            {{$schedule->name}}
+                                                        @endforeach
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
                                                     <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
