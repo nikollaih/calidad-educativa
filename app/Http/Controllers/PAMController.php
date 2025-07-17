@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PamExport;
 use App\Http\Requests\StorePamRowRequest;
 use App\Models\PamAccion;
 use App\Models\PamAvance;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PamController extends Controller {
 
@@ -618,6 +620,9 @@ class PamController extends Controller {
         return response()->json($formattedAvances);
     }
 
+    public function export() {
+        return Excel::download(new PamExport, 'pam.xlsx');
+    }
 }
 
 

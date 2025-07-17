@@ -117,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/get-metas', [PamController::class, 'getMetas'])->name('pam.get-metas');
         Route::get('/get-acciones', [PamController::class, 'getAcciones'])->name('pam.get-acciones');
         Route::get('/get-avances-by-accion/{accionId}', [PamController::class, 'getAvancesPorAccion'])->name('pam.get-acciones');
+        Route::get('/export', [PamController::class, 'export'])->name('pam.export');
         // Ruta para actualizar un registro específico
         Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
         Route::delete('/{id}', [PamController::class, 'destroy'])->name('pam.destroy');
