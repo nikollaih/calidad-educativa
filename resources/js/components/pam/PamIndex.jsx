@@ -158,20 +158,78 @@ const PamIndex = () => {
   };
 
   // Function for "Exportar tabla" (example)
-  const handleExportTable = () => {
-    Swal.fire({
-      icon: 'info',
-      title: 'Exportar Tabla',
-      text: 'La funcionalidad de exportación de tabla se encuentra en desarrollo.',
-      confirmButtonText: 'Ok'
-    });
-  }
+  // Function for "Exportar tabla" 
+  const handleExportTable = async () => {
+    try {
+      // Mostrar loading
+      Swal.fire({
+        title: 'Exportando...',
+        text: 'Por favor espere mientras se genera el archivo',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
-  // const handleCellChange = (index, field, value) => {
-  //   const newRows = [...rows];
-  //   newRows[index][field] = value;
-  //   setRows(newRows);
-  // };
+      // Realizar la petición para exportar
+      const response = await fetch('/pam/export', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'X-Requested-With': 'XMLHttpRequest',
+          // Agregar token CSRF si es necesario
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      // Obtener el blob del archivo
+      const blob = await response.blob();
+      
+      // Crear nombre del archivo con timestamp
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      const filename = `pam_export_${timestamp}.xlsx`;
+      
+      // Crear enlace de descarga
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      
+      // Ejecutar descarga
+      document.body.appendChild(link);
+      link.click();
+      
+      // Limpiar
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        icon: 'success',
+        title: 'Exportación Exitosa',
+        text: `El archivo ${filename} se ha descargado correctamente.`,
+        confirmButtonText: 'Ok'
+      });
+
+    } catch (error) {
+      console.error('Error al exportar:', error);
+      
+      // Mostrar mensaje de error
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en la Exportación',
+        text: 'Hubo un problema al generar el archivo. Por favor intente nuevamente.',
+        confirmButtonText: 'Ok'
+      });
+    }
+  };
+
   const handleCellChange = (index, field, value) => {
     // Sanitizar el valor (eliminar etiquetas HTML potencialmente peligrosas)
     const sanitizedValue = value.replace(/<[^>]*>?/gm, '');

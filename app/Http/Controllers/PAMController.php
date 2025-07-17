@@ -621,7 +621,9 @@ class PamController extends Controller {
     }
 
     public function export() {
-        return Excel::download(new PamExport, 'pam.xlsx');
+        $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        
+        return Excel::download(new PamExport, $fileName);
     }
 }
 
