@@ -108,9 +108,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pam-form/{id}', [PamController::class, 'show'])->name('pam.show');
         Route::get('/index', [PamController::class, 'index'])->name('pam.index');
 
-        // Rutas para API/AJAX
-        // Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
-
         Route::get('/get-pam', [PamController::class, 'all'])->name('pam.all');
         // Ruta para obtener un registro específico
         Route::get('/get-pam/{id}', [PamController::class, 'edit'])->name('pam.edit');

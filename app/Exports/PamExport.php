@@ -11,14 +11,19 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
+/**
+ * Exporta tabla del PAM a Excel
+ * 
+ * @author Cristian Camilo Palacio N. 17 - Jul - 2025
+ */
 class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize {
+
     /**
      * Obtiene la colección completa de acciones PAM con todas sus relaciones
      * 
      * @return \Illuminate\Support\Collection
      */
-    public function collection()
-    {
+    public function collection() {
         return PamAccion::with([
             'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
             'user'
@@ -30,10 +35,8 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
      * 
      * @return array
      */
-    public function headings(): array
-    {
+    public function headings(): array {
         return [
-            // 'ID Acción',
             'Componente',
             'Proceso',
             'Subproceso',
@@ -47,9 +50,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'Recursos',
             'Fecha Inicio',
             'Fecha Final',
-            // 'Estado',
             'Creado el',
-            // 'Actualizado el'
         ];
     }
 
@@ -61,7 +62,6 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
      */
     public function map($accion): array {
         return [
-            // $accion->id,
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->componente->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->descripcion ?? 'N/A',
@@ -75,9 +75,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $accion->recursos,
             Carbon::parse($accion->fecha_inicio)->format('Y-m-d'),
             Carbon::parse($accion->fecha_final)->format('Y-m-d'),
-            // $this->getEstado($accion),
             $accion->created_at->format('Y-m-d H:i:s'),
-            // $accion->updated_at->format('Y-m-d H:i:s')
         ];
     }
 
@@ -91,7 +89,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
         $columns = range('A', 'Q');
         $columnWidth = 20;
 
-        // Set fixed width for all specified columns
+        // Agrega anchor a las columnas seleccionadas
         foreach ($columns as $column) {
             $sheet->getColumnDimension($column)->setWidth($columnWidth);
             $sheet->getColumnDimension($column)->setAutoSize(false);
@@ -105,33 +103,12 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
         $sheet->getStyle('A1:' . $highestColumn . $highestRow)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
         return [
-            // Estilo para la cabecera (solo negrilla)
+            // Estilo para la cabecera
             1 => [
                 'font' => [
                     'bold' => true
                 ]
             ],
         ];
-    }
-
-    /**
-     * Determina el estado de la acción basado en las fechas
-     * 
-     * @param PamAccion $accion
-     * @return string
-     */
-    private function getEstado($accion): string
-    {
-        $now = now();
-        $fechaInicio = \Carbon\Carbon::parse($accion->fecha_inicio);
-        $fechaFinal = \Carbon\Carbon::parse($accion->fecha_final);
-
-        if ($now->lt($fechaInicio)) {
-            return 'Pendiente';
-        } elseif ($now->between($fechaInicio, $fechaFinal)) {
-            return 'En Proceso';
-        } else {
-            return 'Vencida';
-        }
     }
 }

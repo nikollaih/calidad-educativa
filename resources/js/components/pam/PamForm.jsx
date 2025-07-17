@@ -440,7 +440,6 @@ const PamForm = ({ id, csrfToken = '' }) => {
     });
   };
 
-
   // Función para guardar datos (adaptada para manejar la edición y la nueva estructura)
   const saveAll = async () => {    
     // Validar que al menos un componente exista antes de intentar guardar
@@ -454,11 +453,6 @@ const PamForm = ({ id, csrfToken = '' }) => {
       return;
     }
 
-    // Opcional: Puedes agregar validaciones más detalladas aquí para asegurar que cada nivel
-    // dentro de cada componente tenga al menos una descripción, etc., si es necesario.
-    // Por ejemplo, podrías iterar sobre `formData.componentes` y sus hijos para validar.
-    // La validación actual se mantiene para asegurar que la primera jerarquía completa
-    // tenga los campos necesarios, como un ejemplo de validación mínima.
     const firstComponent = formData.componentes[0];
     if (firstComponent.procesos.length === 0 ||
         firstComponent.procesos[0].subprocesos.length === 0 ||
@@ -579,8 +573,6 @@ const PamForm = ({ id, csrfToken = '' }) => {
         }))
       };
 
-      console.log('dataToSend', dataToSend); // Para verificar la estructura enviada
-
       const url = isEditing ? `/pam/update-pam/${id}` : '/pam/pam-row-store';
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -616,9 +608,12 @@ const PamForm = ({ id, csrfToken = '' }) => {
         confirmButtonText: 'Aceptar'
       });
 
-      setFormData({ componentes: [] });
-      setIsEditing(false);
-      route('/pam');
+      if (!isEditing) {
+        setFormData({ componentes: [] });
+        setIsEditing(false);
+        route('/pam');
+      }
+
 
     } catch (error) {
       console.error('Error al guardar:', error);
@@ -631,9 +626,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
     }
   };
 
-
   // --- Funciones de Renderizado (ahora aceptan el elemento y callbacks para agregar/eliminar hijos) ---
-
   const renderFechas = (accion, indicadorId) => {
     if (!accion.fechas) return null;
 

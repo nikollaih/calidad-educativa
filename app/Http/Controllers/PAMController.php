@@ -132,9 +132,6 @@ class PamController extends Controller {
                 ], 404);
             }
 
-            // Aplanar la estructura para que coincida con el formato que tu frontend espera para la carga.
-            // Es crucial que esta estructura aplanada coincida con cómo tu `useEffect` en el frontend
-            // mapea los datos al estado `formData`.
             $objetivo = $accion->indicador->meta->objetivoEstrategico ?? null;
             $subproceso = $objetivo?->metaPlanDesarrollo?->first()->subproceso ?? null;
             $proceso = $subproceso->proceso ?? null;
@@ -465,54 +462,9 @@ class PamController extends Controller {
         }
     }
 
-    public function getMetas(Request $request): JsonResponse {
-        $query = PamMeta::query();
-
-        // Puedes agregar lógica de filtrado si deseas un término de búsqueda inicial
-        // Aunque el frontend ya maneja el filtrado, esto es útil si quieres
-        // un filtrado del lado del servidor para grandes volúmenes de datos.
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
-        }
-
-        // Selecciona solo los campos 'id' y 'nombre' para optimizar la respuesta
-        // Cambia 'nombre' al nombre real de tu columna descriptiva en la tabla 'metas'
-        $metas = $query->select('id', 'descripcion')->get();
-
-        return response()->json($metas);
-    }
-
-    public function getAcciones(Request $request): JsonResponse {
-
-        $metaId = (int) $request->input('meta_id');
-
-        // Start the query on PamAccion
-        $query = PamAccion::query();
-
-        // Join with the 'indicadores' table and then filter by the meta_id
-        // Assuming:
-        // - PamAccion has an 'indicador_id' foreign key
-        // - Your 'indicadores' table has a 'meta_id' foreign key
-        // - 'indicadores' is the name of your indicators table
-        // - 'indicador_id' is the column in pam_acciones that links to indicadores.id
-        $query->whereHas('indicador', function ($q) use ($metaId) {
-            $q->where('meta_id', $metaId);
-        });
-
-
-        // You can add server-side filtering by search term here if needed
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
-        }
-
-        // Select only the 'id' and 'descripcion' fields for optimized response
-        $acciones = $query->select('id', 'descripcion')->get();
-
-        return response()->json($acciones);
-    }
-
+    /**
+     * Guarda avances por accion
+     */
     public function storeAvance(Request $request) {
 
         try {
@@ -588,10 +540,12 @@ class PamController extends Controller {
         }
     }
 
+    /**
+     * Obtiene los avances por accion
+     * 
+     * @param int $accionId
+     */
     public function getAvancesPorAccion(int $accionId) {
-        // 2. Fetch advances related to the given accion_id
-        // We'll also eager load related models for display, like 'meta' and 'accion'
-        // If you've implemented the files attachments, you can eager load 'archivosAdjuntos' too.
         $avances = PamAvance::where('accion_id', $accionId)
                             ->with(['meta', 'accion']) // Load related meta and accion for display
                             ->orderBy('fecha_avance', 'desc') // Order by most recent advances
@@ -620,10 +574,65 @@ class PamController extends Controller {
         return response()->json($formattedAvances);
     }
 
+    /**
+     * Exportar PAM a Excel
+     */
     public function export() {
         $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
-        
+
         return Excel::download(new PamExport, $fileName);
+    }
+
+    // --------------------
+    //  Obtencion de registros para selectores
+    // --------------------
+    
+    public function getMetas(Request $request): JsonResponse {
+        $query = PamMeta::query();
+
+        // Puedes agregar lógica de filtrado si deseas un término de búsqueda inicial
+        // Aunque el frontend ya maneja el filtrado, esto es útil si quieres
+        // un filtrado del lado del servidor para grandes volúmenes de datos.
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Selecciona solo los campos 'id' y 'nombre' para optimizar la respuesta
+        // Cambia 'nombre' al nombre real de tu columna descriptiva en la tabla 'metas'
+        $metas = $query->select('id', 'descripcion')->get();
+
+        return response()->json($metas);
+    }
+
+    public function getAcciones(Request $request): JsonResponse {
+
+        $metaId = (int) $request->input('meta_id');
+
+        // Start the query on PamAccion
+        $query = PamAccion::query();
+
+        // Join with the 'indicadores' table and then filter by the meta_id
+        // Assuming:
+        // - PamAccion has an 'indicador_id' foreign key
+        // - Your 'indicadores' table has a 'meta_id' foreign key
+        // - 'indicadores' is the name of your indicators table
+        // - 'indicador_id' is the column in pam_acciones that links to indicadores.id
+        $query->whereHas('indicador', function ($q) use ($metaId) {
+            $q->where('meta_id', $metaId);
+        });
+
+
+        // You can add server-side filtering by search term here if needed
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Select only the 'id' and 'descripcion' fields for optimized response
+        $acciones = $query->select('id', 'descripcion')->get();
+
+        return response()->json($acciones);
     }
 }
 

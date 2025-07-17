@@ -42,15 +42,6 @@ class PamMeta extends Model
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        // No hay atributos que necesiten un casting especial por ahora.
-    ];
-
-    /**
      * Get the objetivo estrategico that owns the PamMeta.
      * Define la relación de "pertenece a" con el modelo PamObjetivoEstrategico.
      *
