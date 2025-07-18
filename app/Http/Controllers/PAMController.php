@@ -20,12 +20,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
-class PamController extends Controller {
+class PAMController extends Controller {
 
     // --------------------
     // Vistas
     // --------------------
-    
+
     /**
      * Mostrar la vista principal del PAM
      *
@@ -184,7 +184,7 @@ class PamController extends Controller {
 
     /**
      * Crea registros del pam
-     * 
+     *
      * @param Request $request Datos del formulario
      */
     public function store(Request $request): JsonResponse {
@@ -295,19 +295,19 @@ class PamController extends Controller {
 
     /**
      * Elimina un registro especifico
-     * 
+     *
      * @param int $id id de la accion
      */
     public function destroy(int $id): JsonResponse {
         try {
             $pam = PamAccion::findOrFail($id);
             $pam->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Registro eliminado correctamente'
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -315,7 +315,7 @@ class PamController extends Controller {
             ], 500);
         }
     }
-    
+
     /**
      * Actualizar un registro específico
      *
@@ -381,7 +381,7 @@ class PamController extends Controller {
             $meta = $indicador->meta;
             $objetivoEstrategico = $meta->objetivoEstrategico;
             $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->first();
-            
+
             // Obtener subproceso desde metaPlanDesarrollo
             $subproceso = $metaPlanDesarrollo ? $metaPlanDesarrollo->subproceso : null;
             $proceso = $subproceso ? $subproceso->proceso : null;
@@ -391,7 +391,7 @@ class PamController extends Controller {
             if (!$componente || !$proceso || !$subproceso || !$metaPlanDesarrollo) {
                 DB::rollBack();
                 return response()->json([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Error: No se pudo obtener la cadena completa de relaciones'
                 ], 500);
             }
@@ -446,7 +446,7 @@ class PamController extends Controller {
             ]);
 
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Registro PAM actualizado correctamente',
@@ -481,7 +481,7 @@ class PamController extends Controller {
             // Using a database transaction to ensure data consistency
             // If anything fails during saving, everything is rolled back.
             DB::beginTransaction();
-            
+
             // 2. Create the PamAvance record
             $avance = PamAvance::create([
                 'fecha_avance' => $validatedData['fecha_avance'],
@@ -542,7 +542,7 @@ class PamController extends Controller {
 
     /**
      * Obtiene los avances por accion
-     * 
+     *
      * @param int $accionId
      */
     public function getAvancesPorAccion(int $accionId) {
@@ -586,7 +586,7 @@ class PamController extends Controller {
     // --------------------
     //  Obtencion de registros para selectores
     // --------------------
-    
+
     public function getMetas(Request $request): JsonResponse {
         $query = PamMeta::query();
 
