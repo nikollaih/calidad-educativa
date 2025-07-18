@@ -272,6 +272,7 @@ class InstitutionController extends Controller
             'oportunidadesMejora' => $oportunidadesMejora,
             'gestiones' => $gestiones,
             'autoevaluacionId' => $autoevaluacion->id,
+            'institucionId' => $autoevaluacion->institucion_id,
             'factoresCriticosExistentes' => $factoresCriticosFormateados,
             'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
         ]);

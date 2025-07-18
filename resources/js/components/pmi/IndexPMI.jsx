@@ -1,7 +1,9 @@
 import { h } from 'preact';
+import {useEffect, useState} from "preact/hooks";
 
 
-export default function IndexPMI({ agregarUrl, pmis = [], csrfToken = '',}) {
+export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPaginated = {}, csrfToken = '',}) {
+    const [pmis, setPmis] = useState([]);
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
@@ -34,34 +36,32 @@ export default function IndexPMI({ agregarUrl, pmis = [], csrfToken = '',}) {
                 <thead>
                 <tr>
                     <th>Años Vigencia</th>
-                    <th>Estado</th>
-                    <th>Creado</th>
+                    <th>FECHA DE CREACIÓN</th>
+                    <th>DESCRIPCIÓN</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 {pmis.map((pmi) => (
                     <tr key={pmi.id}>
-                        <td>{pmi.rango_vigencia}</td>
-                        <td>{pmi.alias_estado}</td>
+                        <td>{pmi.anio_inicio} - {pmi.anio_fin}</td>
                         <td>{formatFecha(pmi.created_at)}</td>
+                        <td>{pmi.descripcion}</td>
                         <td>
                             <a
-                                href={`/institutional_profile/institution/${pmi.id}/autoevaluaciones-ver`}
+                                href={`/${institucionId}/pmi/${pmi.id}/edit`}
                                 className="btn btn-primary btn-sm me-2"
                             >
                                 Ver detalles
                             </a>
 
-                            {/* Mostrar Editar solo si no está en VALIDACION */}
-                            {pmi.alias_estado !== "VALIDACION" && (
-                                <a
-                                    href={`/institutional_profile/institution/${pmi.id}/autoevaluaciones-editar`}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </a>
-                            )}
+                            <a
+                                href={`/${institucionId}/pmi/${pmi.id}/edit`}
+                                className="btn btn-warning btn-sm me-2"
+                            >
+                                Editar
+                            </a>
+
                         </td>
                     </tr>
                 ))}

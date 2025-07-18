@@ -23,6 +23,16 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
+                        Modelos educativos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ofertas-tab" data-bs-toggle="tab" data-bs-target="#ofertas" type="button" role="tab">
+                        Ofertas educativas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">
                         Inventario tecnologico
                     </button>
@@ -35,16 +45,6 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="mobiliario-tab" data-bs-toggle="tab" data-bs-target="#mobiliario" type="button" role="tab">
                         Mobiliario
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
-                        Modelos educativos
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="ofertas-tab" data-bs-toggle="tab" data-bs-target="#ofertas" type="button" role="tab">
-                       Ofertas educativas
                     </button>
                 </li>
                 <!-- Agrega más pestañas si es necesario -->
@@ -89,8 +89,8 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="sede[name]" class="form-label">Nombre</label>
-                                    <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" required>
+                                    <label for="sede[longitude]" class="form-label">Longitud</label>
+                                    <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" required>
                                 </div>
 
                                 <div class="mb-3">
@@ -142,11 +142,11 @@
                                         <option value="URBANA" {{ $sede->zone == 'URBANA' ? 'selected' : '' }}>Urbana</option>
                                     </select>
                                 </div>
-
                                 <div class="mb-3">
-                                    <label for="sede[longitude]" class="form-label">Longitud</label>
-                                    <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" required>
+                                    <label for="sede[name]" class="form-label">Nombre</label>
+                                    <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" required>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label for="sede[latitude]" class="form-label">Latitud</label>
@@ -403,7 +403,7 @@
                                                 </div>
                                                 <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                 <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m^2)" step="0.1" >
+                                                <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" >
                                             </div>
                                         </div>
                                     </div>

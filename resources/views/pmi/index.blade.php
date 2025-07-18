@@ -13,11 +13,8 @@
     <div
         data-component="IndexPMI"
         data-agregar-url="{{route('pmi.create',$institucionId)}}"                                                                                                                                                                                                                                                                                                                                                      rl
-        data-pmis='@json([[
-        "rango_vigencia" => "2024 - 2026",
-        "alias_estado" => "PROCESO",
-        "created_at" => now()->ceilDays(365)->toDateString()
-    ]])'
+        data-institucion-id="{{$institucionId}}"
+        data-pmis-paginated='@json($pmis)'
     >
 
     </div>

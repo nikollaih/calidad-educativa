@@ -21,4 +21,13 @@ class Autoevaluacion extends Model
             ->withPivot('evidencia')
             ->withTimestamps();
     }
+    public function pmi(){
+        return $this->hasOne(Pmi::class, 'autoevaluacion_id');
+    }
+    public function institucion(){
+        return $this->belongsTo(Institucion::class, 'institucion_id');
+    }
+    public function factoresCriticos() {
+        return $this->hasMany(FactorCritico::class, 'autoevaluacion_id');
+    }
 }
