@@ -8,6 +8,9 @@ use App\Models\Calificacion;
 use Illuminate\Support\Collection;
 
 class AutoevaluacionService {
+
+    const PUNTAJE_MINIMO_PARA_PMI = 4;
+
     // Permite almacenar un adjunto
     public function tieneNotasPendientes(Autoevaluacion $autoevaluacion):Result {
             $cantidadTotalNotas = Calificacion::count();
@@ -37,5 +40,17 @@ class AutoevaluacionService {
         return Calificacion::whereNotIn('indice', $indicesRespondidos)
             ->orderBy('indice')
             ->get();
+    }
+    public function asignarPmiFactoresCriticos(Autoevaluacion $autoevaluacion,int $pmiId):Collection {
+        $factoresCriticos = $autoevaluacion->factoresCriticos;
+
+        $asignados = $factoresCriticos->filter(function ($factor) {
+            return $factor->valor >= self::PUNTAJE_MINIMO_PARA_PMI;
+        })->each(function ($factor) use ($pmiId) {
+            $factor->pmi_id = $pmiId;
+            $factor->save();
+        });
+
+        return $asignados->values();
     }
 }
