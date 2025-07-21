@@ -62,7 +62,11 @@ class PMIController extends Controller
                  'factoresCriticos.grupoCalificacion.padre'
              )
              ->first();
-        return  $pmi;
+        return view('pmi.edit',
+            [
+                'pmi2' => $pmi,
+                'institucionId' => $institucionId,
+            ]);
 
     }
 }
