@@ -23,6 +23,16 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
+                        Modelos educativos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ofertas-tab" data-bs-toggle="tab" data-bs-target="#ofertas" type="button" role="tab">
+                        Ofertas educativas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">
                         Inventario tecnologico
                     </button>
@@ -37,16 +47,8 @@
                         Mobiliario
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
-                        Modelos educativos
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="ofertas-tab" data-bs-toggle="tab" data-bs-target="#ofertas" type="button" role="tab">
-                        Ofertas educativas
-                    </button>
-                </li>
+
+
                 <!-- Agrega más pestañas si es necesario -->
             </ul>
 
@@ -64,6 +66,10 @@
                                             <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                             <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                         </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sede[latitude]" class="form-label">Latitud</label>
+                                        <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
                                     </div>
                                     <div class="mb-3" id="sede_principal_container" style="display: none;">
                                         <label for="sede_principal_id" class="form-label">Sede Principal</label>
@@ -83,10 +89,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="sede[longitude]" class="form-label">Longitud</label>
-                                        <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
-                                    </div>
+
                                     <div class="mb-3">
                                         <label for="sede[name]" class="form-label">Nombre</label>
                                         <input type="text" name="sede[name]" class="form-control" value="{{ $sede->name }}" disabled>
@@ -133,8 +136,8 @@
 
 
                                     <div class="mb-3">
-                                        <label for="sede[latitude]" class="form-label">Latitud</label>
-                                        <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
+                                        <label for="sede[longitude]" class="form-label">Longitud</label>
+                                        <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="sede[dane]" class="form-label">Código DANE</label>
@@ -373,7 +376,7 @@
                                                     </div>
                                                     <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                     <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m^2)" step="0.1" disabled>
+                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" disabled>
                                                 </div>
                                             </div>
                                         </div>

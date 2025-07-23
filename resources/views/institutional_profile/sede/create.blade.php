@@ -367,7 +367,7 @@
                                                     </div>
                                                     <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                     <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" style="display: none;" placeholder="Área (m^2)" step="0.1" >
+                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" style="display: none;" placeholder="Área (m²)" step="0.1" >
                                                 </div>
                                             </div>
                                         </div>

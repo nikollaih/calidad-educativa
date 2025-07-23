@@ -6,6 +6,8 @@
     </div>
     <div
         data-component="CreatePMI"
+        data-create-url="{{ route('pmi.store', $institucionId)}}"
+        data-csrf-token="{{ csrf_token() }}"
         data-autoevaluaciones-disponibles='@json($autoevaluaciones)'
     >
 

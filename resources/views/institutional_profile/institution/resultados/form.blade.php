@@ -3,6 +3,7 @@
 @section('content')
     <div
         data-component="CBackButton"
+        data-to="{{ route('institution.autoevaluaciones', $institucionId) }}"
     >
     </div>
     <div
@@ -13,7 +14,7 @@
         data-autoevaluacion-id ='{{ $autoevaluacionId }}'
         data-csrf-token="{{ csrf_token() }}"
         data-sincronizar-url="{{ route('institution.fort_deb-save', ['autoevaluacionId' => $autoevaluacionId]) }}"
-        data-factores-criticos-existentes='{!! json_encode($factoresCriticosExistentes) !!}'
+        data-factores-criticos-existentes='@json($factoresCriticosExistentes)'
         data-puede-editar="{{$puedeEditar}}"
     >
     </div>

@@ -3,8 +3,8 @@
 @section('content')
     @if (Session::has('tiene_notas_pendientes'))
         <div class="alert alert-warning" role="alert">
-            No se puede enviar a validación ya que tiene notas pendientes por calificar.
-            <a href="#" data-bs-toggle="modal" data-bs-target="#notasPendientesModal">Haz clic aquí para verlas</a>
+            EXISTEN COMPONENTES PENDIENTES POR AUTOEVALUAR.
+            <a href="#" data-bs-toggle="modal" data-bs-target="#notasPendientesModal">Haz clic aquí para verlos</a>
         </div>
     @endif
     @if (Session::has('tiene_notas_pendientes'))
@@ -13,7 +13,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="notasPendientesLabel">Notas pendientes por calificar</h5>
+                        <h5 class="modal-title" id="notasPendientesLabel">COMPONENTES PENDIENTES POR AUTOEVALUAR</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
