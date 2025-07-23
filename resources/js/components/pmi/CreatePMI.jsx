@@ -1,46 +1,37 @@
-import React, { useState } from 'react';
-import {useEffect} from "preact/hooks";
-import {h} from "preact";
+import React, { useState, useEffect } from 'react';
+import { h } from 'preact';
 
-const CreatePMI = ({createUrl='', csrfToken='', autoevaluacionesDisponibles = [] }) => {
+const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles = [] }) => {
     const [selectedId, setSelectedId] = useState('');
     const [anioInicio, setAnioInicio] = useState('');
     const [anioFin, setAnioFin] = useState('');
+    const [aniosFinDisponibles, setAniosFinDisponibles] = useState([]);
 
-    const selected = autoevaluacionesDisponibles.find((a) => a.id === parseInt(selectedId));
-    const currentYear = new Date().getFullYear();
+    const aniosDisponibles = [...new Set(autoevaluacionesDisponibles.map((a) => a.anio_vigencia))].sort((a, b) => b - a);
 
-    const aniosInicio = Array.from({ length: 11 }, (_, i) => currentYear - i); // actual hasta 10 atrás
-    const aniosFin = Array.from({ length: 11 }, (_, i) => currentYear + i); // actual hasta 10 adelante
+    // Al cambiar el año de inicio, actualizar autoevaluación seleccionada y los años de fin disponibles
+    useEffect(() => {
+        const autoeval = autoevaluacionesDisponibles.find((a) => parseInt(a.anio_vigencia) === parseInt(anioInicio));
+        if (autoeval) {
+            setSelectedId(autoeval.id.toString());
+            // Generar lista de años fin válidos (de anioInicio hasta anioInicio + 3)
+            const inicio = parseInt(anioInicio);
+            const opcionesFin = Array.from({ length: 4 }, (_, i) => inicio + i);
+            setAniosFinDisponibles(opcionesFin);
+            if (!opcionesFin.includes(parseInt(anioFin))) {
+                setAnioFin(''); // reset si el año fin no es válido
+            }
+        }
+    }, [anioInicio]);
 
     return (
         <div className="container py-4">
             <form method="POST" action={createUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
-                <h5 className="mb-2">Seleccione una autoevaluación para realizar el PMI<span
-                    className="text-danger">*</span></h5>
-                <select
-                    className="form-select mb-4"
-                name="pmi[autoevaluacion_id]"
-                value={selectedId}
-                onChange={(e) => setSelectedId(e.target.value)}
-                required
-                >
-                    <option value="">-- Selecciona una autoevaluación --</option>
-                    {autoevaluacionesDisponibles.map((a) => (
-                        <option key={a.id} value={a.id}>
-                            {a.anio_vigencia} - {a.alias_estado}
-                        </option>
-                    ))}
-                </select>
-                <h5 className="mb-2">Ingresa una descripción del PMI</h5>
-                <textarea
-                    class="form-control mb-2"
-                    type="text"
-                    name="pmi[descripcion]"
-                ></textarea>
-                <h5 className="mb-2">Seleccionar años de ejecución del PMI<span className="text-danger">*</span></h5>
-                <div className="row mb-4">
+                <input type="hidden" name="pmi[autoevaluacion_id]" value={selectedId} />
+
+                <h5 className="mb-2">Seleccionar años de ejecución del PMI <span className="text-danger">*</span></h5>
+                <div className="row mb-3">
                     <div className="col">
                         <label htmlFor="anioInicio" className="form-label">Año de inicio</label>
                         <select
@@ -52,7 +43,7 @@ const CreatePMI = ({createUrl='', csrfToken='', autoevaluacionesDisponibles = []
                             required
                         >
                             <option value="">-- Selecciona año inicio --</option>
-                            {aniosInicio.map((y) => (
+                            {aniosDisponibles.map((y) => (
                                 <option key={y} value={y}>{y}</option>
                             ))}
                         </select>
@@ -68,12 +59,20 @@ const CreatePMI = ({createUrl='', csrfToken='', autoevaluacionesDisponibles = []
                             required
                         >
                             <option value="">-- Selecciona año fin --</option>
-                            {aniosFin.map((y) => (
+                            {aniosFinDisponibles.map((y) => (
                                 <option key={y} value={y}>{y}</option>
                             ))}
                         </select>
                     </div>
                 </div>
+
+                <h5 className="mb-2">Ingresa una descripción del PMI</h5>
+                <textarea
+                    className="form-control mb-3"
+                    type="text"
+                    name="pmi[descripcion]"
+                ></textarea>
+
                 <button className="btn btn-success">
                     Crear PMI
                 </button>
@@ -83,4 +82,3 @@ const CreatePMI = ({createUrl='', csrfToken='', autoevaluacionesDisponibles = []
 };
 
 export default CreatePMI;
-
