@@ -9,6 +9,7 @@ use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
 use App\Models\Pmi;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -46,7 +47,40 @@ class PMIController extends Controller
         ]);
     }
     public function store(Request $request, int $institucionId = null) {
+        try {
+            // Validación manual
+            $this->validate($request, [
+                'pmi.anio_inicio' => 'required|integer',
+                'pmi.anio_fin' => 'required|integer|gte:pmi.anio_inicio',
+                'pmi.descripcion' => 'nullable|string',
+                'pmi.autoevaluacion_id' => 'required|integer|exists:autoevaluacions,id',
+            ], [
+                'pmi.anio_fin.gt' => 'El año de fin debe ser mayor que el año de inicio.',
+            ]);
+        } catch (ValidationException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', collect($e->errors())->flatten()->first());
+        }
         $pmiData = $request->input('pmi');
+        $anioInicio = (int) $pmiData['anio_inicio'];
+        $anioFin = (int) $pmiData['anio_fin'];
+
+        // Validar traslape de intervalos de PMIs
+        $existeTraslape = Pmi::whereHas('autoevaluacion', function ($query) use ($institucionId) {
+            $query->where('institucion_id', $institucionId);
+        })
+            ->where(function ($query) use ($anioInicio, $anioFin) {
+                $query->where('anio_inicio', '<=', $anioFin)
+                    ->orWhere('anio_fin', '=>', $anioInicio);
+            })
+            ->exists();
+
+        if ($existeTraslape) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'El intervalo de años se cruza con otro PMI existente para esta institución.');
+        }
 
         $pmiCreated = Pmi::create($pmiData);
 
@@ -55,7 +89,7 @@ class PMIController extends Controller
 
         return redirect()
             ->route('pmi.edit', ['institucionId' => $institucionId, 'pmi' => $pmiCreated->id])
-            ->with('flash_success_message', 'Modelo educacional creado correctamente.');
+            ->with('flash_success_message', 'PMI creado correctamente.');
     }
     public function edit(Request $request, int $institucionId , int $pmi){
          $pmi = PMI::where('id', $pmi)
