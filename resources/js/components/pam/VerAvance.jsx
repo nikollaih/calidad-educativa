@@ -76,7 +76,7 @@ const VerAvance = ({ accionId, onClose }) => {
                                                 <th>Cantidad</th>
                                                 <th>Observación</th>
                                                 <th>Acción Relacionada</th>
-                                                {/* Add column for files if you implement them */}
+                                                <th>Archivos Adjuntos</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -86,18 +86,32 @@ const VerAvance = ({ accionId, onClose }) => {
                                                     <td>{avance.cantidad_ejecutada}</td>
                                                     <td>{avance.observacion || 'N/A'}</td>
                                                     <td>{avance.accion_descripcion}</td>
-                                                    {/* Render files here if applicable */}
-                                                    {/* <td>
+                                                    <td>
                                                         {avance.archivos_adjuntos && avance.archivos_adjuntos.length > 0 ? (
-                                                            <ul>
+                                                            <div className="d-flex flex-wrap gap-2">
                                                                 {avance.archivos_adjuntos.map(file => (
-                                                                    <li key={file.id}>
-                                                                        <a href={file.url} target="_blank" rel="noopener noreferrer">{file.nombre}</a>
-                                                                    </li>
+                                                                    <div key={file.id} className="mb-1">
+                                                                        <a 
+                                                                            href={file.url} 
+                                                                            target="_blank" 
+                                                                            rel="noopener noreferrer"
+                                                                            className="btn btn-sm btn-outline-primary d-flex align-items-center"
+                                                                            title={`Descargar ${file.nombre}`}
+                                                                        >
+                                                                            <i className="fas fa-file-download me-1"></i>
+                                                                            <span className="text-truncate" style={{maxWidth: '150px'}}>
+                                                                                {file.nombre}
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
                                                                 ))}
-                                                            </ul>
-                                                        ) : 'Ninguno'}
-                                                    </td> */}
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-muted">
+                                                                <i className="fas fa-minus"></i> Sin archivos
+                                                            </span>
+                                                        )}
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>

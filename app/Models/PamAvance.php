@@ -58,21 +58,8 @@ class PamAvance extends Model {
 
     /**
      * Get the attached files for the advance.
-     *
-     * If you create a separate table for attachments (e.g., 'pam_avance_archivos'),
-     * you would define a hasMany relationship here.
-     *
-     * public function archivosAdjuntos()
-     * {
-     * return $this->hasMany(PamAvanceArchivo::class, 'pam_avance_id');
-     * }
      */
-
-    // Si quieres relacionar con el usuario que hizo el avance
-    /*
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function archivosAdjuntos() {
+        return $this->hasMany(PamAvanceArchivo::class, 'pam_avance_id');
     }
-    */
 }

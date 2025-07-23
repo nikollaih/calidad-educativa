@@ -10,7 +10,7 @@ const CrearAvance = ({ onClose }) => {
     accion_id: '', // Changed to accion_id
     cantidad_ejecutada: '',
     observacion: '',
-    archivos_adjuntos: [],
+    archivos_adjuntos: [], // Estado para almacenar los objetos File de los adjuntos
   });
   const [metasOptions, setMetasOptions] = useState([]);
   const [filteredMetas, setFilteredMetas] = useState([]);
@@ -38,7 +38,7 @@ const CrearAvance = ({ onClose }) => {
       accion_id: '',
       cantidad_ejecutada: '',
       observacion: '',
-      archivos_adjuntos: [],
+      archivos_adjuntos: [], // Restablece el array de archivos adjuntos
     });
     setSubmitMessage(null); // Clear message on close
     setSearchTermMeta(''); // Clear search terms
@@ -154,9 +154,11 @@ const CrearAvance = ({ onClose }) => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'archivos_adjuntos') {
+      // Cuando se seleccionan archivos, se añaden al array existente de archivos_adjuntos
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files ? Array.from(files) : [],
+        // Concatena los nuevos archivos con los que ya existían
+        [name]: prevData.archivos_adjuntos.concat(Array.from(files)),
       }));
     } else if (name === 'meta_id') {
       setFormData((prevData) => ({
@@ -171,6 +173,28 @@ const CrearAvance = ({ onClose }) => {
         [name]: value,
       }));
     }
+  };
+
+  // --- Función para eliminar un archivo adjunto de la lista ---
+  const handleDeleteFile = (fileNameToDelete) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      // Filtra el array de archivos adjuntos para remover el archivo con el nombre especificado
+      archivos_adjuntos: prevData.archivos_adjuntos.filter(
+        (file) => file.name !== fileNameToDelete
+      ),
+    }));
+  };
+
+  // --- Función para abrir un archivo adjunto en una nueva pestaña ---
+  const handleOpenFile = (file) => {
+    // Crea una URL de objeto temporal para el archivo
+    const fileURL = URL.createObjectURL(file);
+    // Abre la URL en una nueva ventana/pestaña
+    window.open(fileURL, '_blank');
+    // Libera la URL del objeto después de un corto tiempo para evitar fugas de memoria
+    // (Generalmente, el navegador lo limpia cuando la página se cierra, pero es buena práctica)
+    setTimeout(() => URL.revokeObjectURL(fileURL), 100);
   };
 
   // --- Handle search input changes ---
@@ -216,6 +240,7 @@ const CrearAvance = ({ onClose }) => {
     dataToSend.append('cantidad_ejecutada', formData.cantidad_ejecutada);
     dataToSend.append('observacion', formData.observacion);
 
+    // Adjunta cada archivo al FormData
     formData.archivos_adjuntos.forEach((file, index) => {
       dataToSend.append(`archivos_adjuntos[${index}]`, file);
     });
@@ -382,20 +407,48 @@ const CrearAvance = ({ onClose }) => {
                 ></textarea>
               </div>
 
+              {/* Sección para adjuntar archivos */}
               <div className="mb-3">
-                <label htmlFor="archivos_adjuntos" className="form-label">Adjuntar Archivos:</label>
+                <label htmlFor="archivos_adjuntos" className="form-label">Adjuntar archivo(s) de evidencia(s):</label>
                 <input
                   type="file"
                   className="form-control"
                   id="archivos_adjuntos"
                   name="archivos_adjuntos"
-                  multiple // Allows multiple file selection
-                  onChange={handleChange}
+                  accept=".jpg,.png,.pdf,.docx"
+                  multiple // Permite seleccionar múltiples archivos
+                  onChange={handleChange} // Usa la misma función handleChange, adaptada para archivos
                 />
+
+                {/* Muestra la lista de archivos seleccionados */}
                 {formData.archivos_adjuntos.length > 0 && (
-                  <small className="form-text text-muted">
-                    Archivos seleccionados: {formData.archivos_adjuntos.map(f => f.name).join(', ')}
-                  </small>
+                  <div className="mt-2">
+                    <small className="form-text text-muted">Archivos seleccionados:</small>
+                    <ul className="list-group">
+                      {formData.archivos_adjuntos.map((file, index) => (
+                        <li
+                          key={file.name + index} // Usa el nombre del archivo y el índice como key única
+                          className="list-group-item d-flex justify-content-between align-items-center"
+                        >
+                          {/* Nombre del archivo clickeable para abrirlo */}
+                          <span
+                            onClick={() => handleOpenFile(file)}
+                            style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                          >
+                            {file.name}
+                          </span>
+                          {/* Botón para eliminar el archivo */}
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDeleteFile(file.name)}
+                          >
+                            Eliminar
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
 

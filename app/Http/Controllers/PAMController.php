@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -201,7 +202,7 @@ class PamController extends Controller {
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos' => 'required|array|min:1',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
@@ -323,8 +324,9 @@ class PamController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id) {
-        // Reglas de validación para la estructura anidada (consistente con store)
+    public function update(Request $request, $id): JsonResponse {
+        // Reglas de validación para la estructura anidada.
+        // Son idénticas a las del método 'store' para asegurar consistencia.
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
             'componentes.*.descripcion' => 'required|string|max:1000',
@@ -337,7 +339,7 @@ class PamController extends Controller {
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos' => 'required|array|min:1',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required|string|max:1000',
+            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
@@ -350,23 +352,29 @@ class PamController extends Controller {
         ]);
 
         if ($validator->fails()) {
+            // Si la validación falla, retorna los errores
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
-            ], 422);
+            ], 422); // Código 422 para "Unprocessable Entity"
         }
 
+        // Inicia una transacción de base de datos para asegurar la atomicidad de las actualizaciones
         DB::beginTransaction();
         try {
-            // Recupera la acción existente para iniciar la actualización de la jerarquía
+            // 1. Recupera la acción existente usando el ID proporcionado
             $accion = PamAccion::find($id);
             if (!$accion) {
+                // Si la acción no se encuentra, revierte y retorna un error 404
                 DB::rollBack();
-                return response()->json(['success' => false, 'message' => 'Acción no encontrada.'], 404);
+                return response()->json(['success' => false, 'message' => 'Acción PAM no encontrada.'], 404);
             }
 
-            // Accede a los datos siguiendo la estructura del store
+            // 2. Accede a los datos de entrada de la solicitud, asumiendo una única rama de la jerarquía
+            // Estas líneas extraen el primer elemento de cada array anidado,
+            // lo que es consistente con la idea de actualizar una sola jerarquía.
+
             $compData = $request->input('componentes')[0];
             $procData = $compData['procesos'][0];
             $subprocData = $procData['subprocesos'][0];
@@ -376,30 +384,44 @@ class PamController extends Controller {
             $indicadorData = $metaData['indicadores'][0];
             $accionData = $indicadorData['accion'];
 
-            // Seguir la cadena de relaciones desde la acción hacia arriba
+            // 3. Asciende en la cadena de relaciones de Eloquent para obtener los modelos padre
+            // Esto es crucial para poder actualizar los registros correctos en la base de datos.
             $indicador = $accion->indicador;
             $meta = $indicador->meta;
             $objetivoEstrategico = $meta->objetivoEstrategico;
+            
+            // La relación de PamMetaPlanDesarrollo con PamObjetivoEstrategico es uno a muchos,
+            // pero en tu 'store' parece que se crea una 'meta_plan_desarrollo' por 'objetivo'.
+            // Tomamos la primera o ajusta si sabes qué 'meta_plan_desarrollo' específica actualizar.
             $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->first();
             
-            // Obtener subproceso desde metaPlanDesarrollo
+            // Obtener subproceso, proceso y componente a través de sus relaciones
             $subproceso = $metaPlanDesarrollo ? $metaPlanDesarrollo->subproceso : null;
             $proceso = $subproceso ? $subproceso->proceso : null;
             $componente = $proceso ? $proceso->componente : null;
 
-            // Verificar que tenemos toda la cadena de relaciones
-            if (!$componente || !$proceso || !$subproceso || !$metaPlanDesarrollo) {
+            // 4. Verificar que se pudieron obtener todos los modelos de la cadena
+            // Si falta alguno, significa que la estructura esperada no se encontró, lo cual es un error.
+            if (!$componente || !$proceso || !$subproceso || !$metaPlanDesarrollo || !$objetivoEstrategico || !$meta || !$indicador) {
                 DB::rollBack();
                 return response()->json([
                     'success' => false, 
-                    'message' => 'Error: No se pudo obtener la cadena completa de relaciones'
+                    'message' => 'Error: No se pudo obtener la cadena completa de relaciones para la actualización.'
                 ], 500);
             }
 
+            dd($procData['descripcion'],
+                $subprocData['descripcion'],
+                $metaPlanData['descripcion'],
+                $objData['descripcion'],
+                $metaData['descripcion'],
+                $indicadorData['descripcion'],
+                $accionData['descripcion']);
+            // 5. Realiza las actualizaciones de cada modelo con los datos de la solicitud
             // Actualizar Componente
             $componente->update([
                 'descripcion' => $compData['descripcion'],
-                'nombre' => $compData['descripcion'], // Consistente con store
+                'nombre' => $compData['descripcion'], // Consistente con el 'store'
             ]);
 
             // Actualizar Proceso
@@ -408,34 +430,31 @@ class PamController extends Controller {
             // Actualizar Subproceso
             $subproceso->update(['descripcion' => $subprocData['descripcion']]);
 
-            // Actualizar Meta Plan Desarrollo
-            // Basándose en el store, metaPlanDesarrollo está bajo objetivoEstrategico
-            // pero mantiene subproceso_id como referencia
-            $metaPlanDesarrollo->update([
-                'descripcion' => $metaPlanData['descripcion'],
-                'subproceso_id' => $subproceso->id
-            ]);
-
-            // Actualizar Objetivo Estratégico
-            // En el store, se crea directamente sin referencia a subproceso
+            // Actualizar Objetivo Estratégico (se actualiza directamente ya que PamObjetivoEstrategico
+            // se crea directamente en el 'store' sin una relación directa padre con Subproceso,
+            // pero 'metas_plan_desarrollo' lo referencia).
             $objetivoEstrategico->update([
                 'descripcion' => $objData['descripcion']
             ]);
 
-            // Actualizar Meta
-            // En el store, las metas están bajo objetivoEstrategico
+            // Actualizar Meta Plan Desarrollo
+            // Se actualiza la descripción y se asegura que el 'subproceso_id' sea el correcto.
+            $metaPlanDesarrollo->update([
+                'descripcion' => $metaPlanData['descripcion'],
+                'subproceso_id' => $subproceso->id // Re-asigna para asegurar consistencia
+            ]);
+
+            // Actualizar Meta (que está bajo Objetivo Estratégico)
             $meta->update([
                 'descripcion' => $metaData['descripcion']
             ]);
 
-            // Actualizar Indicador
-            // En el store, los indicadores están bajo meta
+            // Actualizar Indicador (que está bajo Meta)
             $indicador->update([
                 'descripcion' => $indicadorData['descripcion']
             ]);
 
-            // Actualizar Acción
-            // En el store, las acciones están bajo indicador
+            // Actualizar Acción (que está bajo Indicador)
             $accion->update([
                 'descripcion' => $accionData['descripcion'],
                 'user_id' => $accionData['user_id'],
@@ -445,20 +464,24 @@ class PamController extends Controller {
                 'fecha_final' => $accionData['fecha_final'],
             ]);
 
+            // 6. Confirma la transacción si todas las actualizaciones fueron exitosas
             DB::commit();
             
+            // 7. Retorna una respuesta de éxito
             return response()->json([
                 'success' => true,
                 'message' => 'Registro PAM actualizado correctamente',
-                'id' => $accion->id
-            ], 200);
+                'id' => $accion->id // Retorna el ID de la acción actualizada
+            ], 200); // Código 200 para "OK"
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            // Si ocurre algún error durante el proceso, revierte la transacción
             DB::rollBack();
+            // Retorna una respuesta de error con el mensaje de la excepción
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el registro PAM: ' . $e->getMessage()
-            ], 500);
+            ], 500); // Código 500 para "Internal Server Error"
         }
     }
 
@@ -466,23 +489,24 @@ class PamController extends Controller {
      * Guarda avances por accion
      */
     public function storeAvance(Request $request) {
-
         try {
-            // 1. Validate the incoming request data
+            // Validar los datos de la solicitud entrante
             $validatedData = $request->validate([
                 'fecha_avance' => ['required', 'date'],
                 'meta_id' => ['required', 'integer', 'exists:pam_metas,id'],
                 'accion_id' => ['required', 'integer', 'exists:pam_acciones,id'],
                 'cantidad_ejecutada' => ['required', 'integer', 'min:0'],
                 'observacion' => ['nullable', 'string', 'max:1000'],
-                'archivos_adjuntos.*' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png'], // Max 10MB per file, specific mimes
+                'archivos_adjuntos.*' => [
+                    'nullable',
+                    'file',
+                    'max:10240',
+                ],
             ]);
 
-            // Using a database transaction to ensure data consistency
-            // If anything fails during saving, everything is rolled back.
             DB::beginTransaction();
-            
-            // 2. Create the PamAvance record
+
+            // Crear el registro PamAvance
             $avance = PamAvance::create([
                 'fecha_avance' => $validatedData['fecha_avance'],
                 'meta_id' => $validatedData['meta_id'],
@@ -491,48 +515,49 @@ class PamController extends Controller {
                 'observacion' => $validatedData['observacion'],
             ]);
 
-            // 3. Handle file uploads (if any)
-            // if ($request->hasFile('archivos_adjuntos')) {
-            //     foreach ($request->file('archivos_adjuntos') as $file) {
-            //         // Generate a unique file name
-            //         $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            // Verificar si la solicitud contiene archivos en el campo 'archivos_adjuntos'
+            if ($request->hasFile('archivos_adjuntos')) {
+                // Iterar sobre cada archivo adjunto recibido
+                foreach ($request->file('archivos_adjuntos') as $file) {
+                    // Generar un nombre único para el archivo para evitar colisiones
+                    // Se usa time() para la marca de tiempo, uniqid() para una cadena única,
+                    // y getClientOriginalExtension() para mantener la extensión original.
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-            //         // Store the file in the 'public/avances_adjuntos' directory
-            //         // The 'public' disk often maps to storage/app/public,
-            //         // which needs to be symlinked to public/storage for web access.
-            //         $filePath = $file->storeAs('avances_adjuntos', $fileName, 'public');
+                    // Almacenar el archivo en el disco 'public' dentro del subdirectorio 'avances_adjuntos'.
+                    // El disco 'public' generalmente mapea a 'storage/app/public' y necesita un enlace simbólico
+                    // a 'public/storage' para ser accesible vía web.
+                    $filePath = $file->storeAs('avances_adjuntos', $fileName, 'public');
 
-            //         // RECOMMENDATION: Store file paths in a separate table
-            //         // If you haven't created the `pam_avance_archivos` table and model yet,
-            //         // you can temporarily store the paths in the 'observacion' field (not ideal for production)
-            //         // or just skip this part until you have the dedicated table.
+                    // Guardar la información del archivo en la tabla 'pam_avance_archivos'.
+                    // Se utiliza la relación definida en el modelo PamAvance para crear el registro.
+                    $avance->archivosAdjuntos()->create([
+                        'nombre_original' => $file->getClientOriginalName(), // Nombre original del archivo subido por el usuario
+                        'ruta_archivo' => $filePath, // Ruta donde se almacenó el archivo en el servidor
+                        'tipo_mime' => $file->getClientMimeType(), // Tipo MIME del archivo (ej. application/pdf)
+                        'tamano' => $file->getSize(), // Tamaño del archivo en bytes
+                    ]);
+                }
+            }
 
-            //         // For now, let's just log it or add a placeholder comment
-            //         // In a real application, you'd save this path to your `PamAvanceArchivo` model
-            //         // $avance->archivosAdjuntos()->create([
-            //         //     'nombre_original' => $file->getClientOriginalName(),
-            //         //     'ruta_archivo' => $filePath,
-            //         //     'tipo_mime' => $file->getClientMimeType(),
-            //         //     'tamano' => $file->getSize(),
-            //         // ]);
-            //          // For demonstration, we'll just acknowledge the upload
-            //         // dd("File stored at: " . $filePath); // For testing file uploads
-            //     }
-            // }
-
+            // Si todo fue exitoso, confirmar la transacción en la base de datos
             DB::commit();
 
+            // Devolver una respuesta JSON de éxito
             return response()->json(['message' => 'Avance guardado exitosamente!', 'avance' => $avance], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Catch validation errors specifically
+            // Capturar errores de validación específicamente
+            // Revertir la transacción si hay errores de validación
+            DB::rollBack();
             return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $e->errors()
             ], 422); // HTTP 422 Unprocessable Entity
         } catch (Exception $e) {
-            // Catch any other unexpected errors
-            DB::rollBack(); // Rollback transaction on error
+            // Capturar cualquier otro error inesperado
+            // Revertir la transacción en caso de cualquier excepción
+            DB::rollBack();
             return response()->json([
                 'message' => 'Error al guardar el avance. ' . $e->getMessage(),
                 'error_code' => $e->getCode()
@@ -547,27 +572,26 @@ class PamController extends Controller {
      */
     public function getAvancesPorAccion(int $accionId) {
         $avances = PamAvance::where('accion_id', $accionId)
-                            ->with(['meta', 'accion']) // Load related meta and accion for display
-                            ->orderBy('fecha_avance', 'desc') // Order by most recent advances
+                            ->with(['meta', 'accion', 'archivosAdjuntos'])
+                            ->orderBy('fecha_avance', 'desc')
                             ->get();
 
         // 3. Transform the data for frontend (optional, but good for consistent display)
         $formattedAvances = $avances->map(function ($avance) {
             return [
                 'id' => $avance->id,
-                'fecha_avance' => $avance->fecha_avance->format('Y-m-d'), // Format date
+                'fecha_avance' => $avance->fecha_avance->format('Y-m-d'),
                 'cantidad_ejecutada' => $avance->cantidad_ejecutada,
                 'observacion' => $avance->observacion,
-                'meta_descripcion' => $avance->meta->descripcion ?? 'N/A', // Access meta description
-                'accion_descripcion' => $avance->accion->descripcion ?? 'N/A', // Access accion description
-                // If you have attachments, include them here:
-                // 'archivos_adjuntos' => $avance->archivosAdjuntos->map(function($file) {
-                //     return [
-                //         'id' => $file->id,
-                //         'nombre' => $file->nombre_original,
-                //         'url' => Storage::url($file->ruta_archivo), // Generate public URL
-                //     ];
-                // })->toArray(),
+                'meta_descripcion' => $avance->meta->descripcion ?? 'N/A',
+                'accion_descripcion' => $avance->accion->descripcion ?? 'N/A',
+                'archivos_adjuntos' => $avance->archivosAdjuntos->map(function($file) {
+                    return [
+                        'id' => $file->id,
+                        'nombre' => $file->nombre_original,
+                        'url' => Storage::url($file->ruta_archivo),
+                    ];
+                })->toArray(),
             ];
         });
 

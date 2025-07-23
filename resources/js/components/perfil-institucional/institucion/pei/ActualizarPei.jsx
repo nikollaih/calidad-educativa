@@ -204,7 +204,7 @@ const handleNewFile = (fieldName, e) => {
               
               {/* Campo adicional para subir documento */}
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Documento anexo  <span style={{color: 'red'}}>*</span></label>
+                <label className="form-label text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
                 <div className="input-group">
                   <input 
                     type="file" 

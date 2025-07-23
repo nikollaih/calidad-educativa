@@ -65,9 +65,10 @@ const PamForm = ({ id, csrfToken = '' }) => {
    * @param {string} value El nuevo valor de la descripción.
    */
   const updateDescription = (itemId, value) => {
+
     setFormData(prevFormData => ({
       ...prevFormData,
-      componentes: updateItemField(prevFormData.componentes, itemId, 'descripcion', value)
+      componentes: updateItemField(prevFormData.componentes, itemId, 'descripcion', value),
     }));
   };
 
@@ -82,7 +83,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
   const updateAccionNestedField = (indicadorId, fieldName, value) => {
     setFormData(prevFormData => {
       const newComponents = prevFormData.componentes.map(comp => ({
-        ...comp,
+        ...comp, 
         procesos: comp.procesos.map(proc => ({
           ...proc,
           subprocesos: proc.subprocesos.map(subproc => ({
@@ -879,12 +880,12 @@ const PamForm = ({ id, csrfToken = '' }) => {
         <div className="card-body">
           <div>
             <label className="form-label fw-bold">Descripción:</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={meta.descripcion}
-              onInput={(e) => updateDescription(meta.id, e.target.value)}
-            />
+          <input
+            type="number"
+            className="form-control"
+            value={meta.descripcion}
+            onChange={(e) => updateDescription(meta.id, e.target.value)}
+          />
           </div>
           {meta.descripcion && (
             <div className="mt-3">
