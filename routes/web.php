@@ -134,6 +134,8 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
+    Route::get('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'editFactorCritico'])
+        ->name('pmi.edit-factor-critico');
     Route::resource('/{institucionId}/pmi', PMIController::class);
 
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Models\Autoevaluacion;
+use App\Models\FactorCritico;
 use App\Models\Pmi;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -64,9 +65,22 @@ class PMIController extends Controller
              ->first();
         return view('pmi.edit',
             [
-                'pmi2' => $pmi,
+                'pmi' => $pmi,
                 'institucionId' => $institucionId,
             ]);
 
     }
+    public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
+        $factorCritico = FactorCritico::where('id', $factorCriticoId)
+            ->with('grupoCalificacion.padre')
+            ->firstOrFail();
+        return view('pmi.editFactorCritico',
+            [
+                'factorCritico' => $factorCritico,
+                'institucionId' => $institucionId,
+                'pmiId' => $pmi,
+            ]);
+
+    }
+
 }

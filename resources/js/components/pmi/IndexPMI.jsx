@@ -4,6 +4,10 @@ import {useEffect, useState} from "preact/hooks";
 
 export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPaginated = {}, csrfToken = '',}) {
     const [pmis, setPmis] = useState([]);
+
+    useEffect(()=>{
+        setPmis(pmisPaginated.data);
+    },[]);
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
