@@ -1,10 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div
-        data-component="CBackButton"
-        data-to="{{ route('institution.edit', $sede->institution_id ) }}"
-    ></div>
+    <div class="d-flex align-items-center justify-content-between container">
+        <div data-component="CBackButton" data-to="{{ route('institution.edit', $sede->institution_id) }}" data-is-container="{{false}}"></div>
+        <div class="d-flex gap-2">
+            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
+            <a href="{{ route('institution.pei', $sede->institution_id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
+            <a href="{{ route('institution.autoevaluaciones', $sede->institution_id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
+            <a href="{{ route('pmi.index', $sede->institution_id) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
+        </div>
+    </div>
     <div class="container">
     @if(session('success'))
         <div class="alert alert-success">
@@ -224,6 +229,18 @@
                             <div class="row  row-cols-md-1" >
                                 @php
                                     $equipos = [
+                                        'Carrito de carga Smart charging',
+                                        'Brazo soporte de monitor',
+                                        'Computador docente',
+                                        'Cámara U70',
+                                        'Tablero Interactivo',
+                                        'Brazo soporte para Video Beam',
+                                        'Video Beam',
+                                        'Lápiz interactivo',
+                                        'Kit Iot estudio',
+                                        'Locker',
+                                        'Ventilador',
+                                        'Microscopio digital ',
                                         'Equipo Servidor.',
                                         'Computadores de escritorio para uso académico en buen estado.',
                                         'Computadores portátiles para uso académico en buen estado.',
@@ -399,7 +416,7 @@
                                             @endif
                                             <div class="col-md-4">
                                                 <div id="label_area_{{ Str::slug($equipo['nombre']) }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};">
-                                                    <label class="form-check-label">Área.</label>
+                                                    <label class="form-check-label">Área (m²).</label>
                                                 </div>
                                                 <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                 <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
@@ -425,52 +442,17 @@
                             <div class="row row-cols-md-1 " >
                                 @php
                                     $mobiliarios = [
-                                        [
-                                            'nombre' => 'Carrito de carga Smart charging',
-                                        ],
-                                        [
-                                            'nombre' => 'Brazo soporte de monitor',
-                                        ],
-                                        [
-                                            'nombre' => 'Computador docente',
-                                        ],
-                                        [
-                                            'nombre' => 'Cámara U70',
-                                        ],
-                                        [
-                                            'nombre' => 'Silla docente',
-                                        ],
-                                        [
-                                            'nombre' => 'Mesa Docente',
-                                        ],
-                                        [
-                                            'nombre' => 'Microscopio digital',
-                                        ],
-                                        [
-                                            'nombre' => 'Tablero Interactivo',
-                                        ],
-                                         [
-                                            'nombre' => 'Brazo soporte para Video Beam ',
-                                        ],[
-                                            'nombre' => 'Video Beam',
-                                        ],
+                                                                                      [
+                                                 'nombre' => 'Silla docente',
+                                             ],
+                                             [
+                                                 'nombre' => 'Mesa Docente',
+                                             ],
                                         [
                                             'nombre' => 'Mesa escolar trapezoidal',
                                         ],
                                         [
                                             'nombre' => 'Silla escolar',
-                                        ],
-                                        [
-                                            'nombre' => 'Lápiz interactivo',
-                                        ],
-                                        [
-                                            'nombre' => 'Kit Iot estudio',
-                                        ],
-                                        [
-                                            'nombre' => 'Kit STEM',
-                                        ],
-                                        [
-                                            'nombre' => 'Locker',
                                         ],
                                         [
                                             'nombre' => 'Cajoneros',
@@ -501,10 +483,8 @@
                                         ],
                                          [
                                             'nombre' => 'Sillas ejecutivas',
-                                        ],
-                                         [
-                                            'nombre' => 'Ventilador',
-                                        ],[
+                                        ]
+                                       ,[
                                             'nombre' => 'Archivador',
                                         ],
 
