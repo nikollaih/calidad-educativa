@@ -212,18 +212,7 @@
                                 <div class="row  row-cols-md-1" >
                                     @php
                                         $equipos = [
-                                        'Carrito de carga Smart charging',
-                                        'Brazo soporte de monitor',
-                                        'Computador docente',
-                                        'Cámara U70',
-                                        'Tablero Interactivo',
-                                        'Brazo soporte para Video Beam',
-                                        'Video Beam',
-                                        'Lápiz interactivo',
-                                        'Kit Iot estudio',
-                                        'Locker',
-                                        'Ventilador',
-                                        'Microscopio digital ',
+
                                         'Equipo Servidor.',
                                         'Computadores de escritorio para uso académico en buen estado.',
                                         'Computadores portátiles para uso académico en buen estado.',
@@ -244,6 +233,15 @@
                                         'Impresora 3D.',
                                         'Televisores.',
                                         'Cabinas de sonido.',
+                                         'Carrito de carga Smart charging',
+                                        'Brazo soporte de monitor',
+                                        'Computador docente',
+                                        'Cámara U70',
+                                        'Tablero Interactivo',
+                                        'Brazo soporte para Video Beam',
+                                        'Lápiz interactivo',
+                                        'Kit Iot estudio',
+                                        'Microscopio digital ',
                                     ];
                                     @endphp
                                     @foreach ($equipos as $key => $equipo)
@@ -408,6 +406,12 @@
                                 <div class="row row-cols-md-1 " >
                                     @php
                                         $mobiliarios = [
+                                        [
+                                                 'nombre' => 'Locker',
+                                             ],
+                                             [
+                                                 'nombre' => 'Ventilador',
+                                             ],
                                               [
                                                  'nombre' => 'Silla docente',
                                              ],

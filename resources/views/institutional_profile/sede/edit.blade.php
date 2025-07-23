@@ -229,39 +229,37 @@
                             <div class="row  row-cols-md-1" >
                                 @php
                                     $equipos = [
+
+                                       'Equipo Servidor.',
+                                       'Computadores de escritorio para uso académico en buen estado.',
+                                       'Computadores portátiles para uso académico en buen estado.',
+                                       'Tabletas para uso académico en buen estado.',
+                                       'Pantallas interactivas en buen estado.',
+                                       'Computadores de escritorio para uso administrativo en buen estado.',
+                                       'Computadores portátiles para uso administrativo en buen estado.',
+                                       'Routers.',
+                                       'Switch de red.',
+                                       'Access Point.',
+                                       'Proyectores / Videobeam.',
+                                       'Kit de robótica.',
+                                       'Kit STEM.',
+                                       'Arduinos.',
+                                       'Microbit.',
+                                       'UPS.',
+                                       'Brazo robótico.',
+                                       'Impresora 3D.',
+                                       'Televisores.',
+                                       'Cabinas de sonido.',
                                         'Carrito de carga Smart charging',
-                                        'Brazo soporte de monitor',
-                                        'Computador docente',
-                                        'Cámara U70',
-                                        'Tablero Interactivo',
-                                        'Brazo soporte para Video Beam',
-                                        'Video Beam',
-                                        'Lápiz interactivo',
-                                        'Kit Iot estudio',
-                                        'Locker',
-                                        'Ventilador',
-                                        'Microscopio digital ',
-                                        'Equipo Servidor.',
-                                        'Computadores de escritorio para uso académico en buen estado.',
-                                        'Computadores portátiles para uso académico en buen estado.',
-                                        'Tabletas para uso académico en buen estado.',
-                                        'Pantallas interactivas en buen estado.',
-                                        'Computadores de escritorio para uso administrativo en buen estado.',
-                                        'Computadores portátiles para uso administrativo en buen estado.',
-                                        'Routers.',
-                                        'Switch de red.',
-                                        'Access Point.',
-                                        'Proyectores / Videobeam.',
-                                        'Kit de robótica.',
-                                        'Kit STEM.',
-                                        'Arduinos.',
-                                        'Microbit.',
-                                        'UPS.',
-                                        'Brazo robótico.',
-                                        'Impresora 3D.',
-                                        'Televisores.',
-                                        'Cabinas de sonido.',
-                                    ];
+                                       'Brazo soporte de monitor',
+                                       'Computador docente',
+                                       'Cámara U70',
+                                       'Tablero Interactivo',
+                                       'Brazo soporte para Video Beam',
+                                       'Lápiz interactivo',
+                                       'Kit Iot estudio',
+                                       'Microscopio digital ',
+                                   ];
                                 @endphp
                                 @foreach ($equipos as $key => $equipo)
                                     <div class="mb-3">
@@ -442,53 +440,59 @@
                             <div class="row row-cols-md-1 " >
                                 @php
                                     $mobiliarios = [
-                                                                                      [
+                                        [
+                                                 'nombre' => 'Locker',
+                                             ],
+                                             [
+                                                 'nombre' => 'Ventilador',
+                                             ],
+                                              [
                                                  'nombre' => 'Silla docente',
                                              ],
                                              [
                                                  'nombre' => 'Mesa Docente',
                                              ],
-                                        [
-                                            'nombre' => 'Mesa escolar trapezoidal',
-                                        ],
-                                        [
-                                            'nombre' => 'Silla escolar',
-                                        ],
-                                        [
-                                            'nombre' => 'Cajoneros',
-                                        ],
-                                        [
-                                            'nombre' => 'Sillas universitarias',
-                                        ],
-                                        [
-                                            'nombre' => 'Pupitres individuales',
-                                        ],
-                                        [
-                                            'nombre' => 'Sillas individuales',
-                                        ],
-                                         [
-                                            'nombre' => 'Escritorio rector',
-                                        ],
-                                         [
-                                            'nombre' => 'Escritorio Coordinador',
-                                        ],
-                                         [
-                                            'nombre' => 'Escritorio docentes',
-                                        ],
-                                         [
-                                            'nombre' => 'Escritorio Auxiliares Administrativas',
-                                        ],
-                                         [
-                                            'nombre' => 'Estantería de Archivo',
-                                        ],
-                                         [
-                                            'nombre' => 'Sillas ejecutivas',
-                                        ]
-                                       ,[
-                                            'nombre' => 'Archivador',
-                                        ],
+                                             [
+                                                 'nombre' => 'Mesa escolar trapezoidal',
+                                             ],
+                                             [
+                                                 'nombre' => 'Silla escolar',
+                                             ],
+                                             [
+                                                 'nombre' => 'Cajoneros',
+                                             ],
+                                             [
+                                                 'nombre' => 'Sillas universitarias',
+                                             ],
+                                             [
+                                                 'nombre' => 'Pupitres individuales',
+                                             ],
+                                             [
+                                                 'nombre' => 'Sillas individuales',
+                                             ],
+                                              [
+                                                 'nombre' => 'Escritorio rector',
+                                             ],
+                                              [
+                                                 'nombre' => 'Escritorio Coordinador',
+                                             ],
+                                              [
+                                                 'nombre' => 'Escritorio docentes',
+                                             ],
+                                              [
+                                                 'nombre' => 'Escritorio Auxiliares Administrativas',
+                                             ],
+                                              [
+                                                 'nombre' => 'Estantería de Archivo',
+                                             ],
+                                              [
+                                                 'nombre' => 'Sillas ejecutivas',
+                                             ]
+                                            ,[
+                                                 'nombre' => 'Archivador',
+                                             ],
 
-                                    ];
+                                         ];
                                 @endphp
                                 @foreach ($mobiliarios as $key => $mobiliario)
                                     <div class="mb-3">
