@@ -21,12 +21,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
-class PamController extends Controller {
+class PAMController extends Controller {
 
     // --------------------
     // Vistas
     // --------------------
-    
+
     /**
      * Mostrar la vista principal del PAM
      *
@@ -185,7 +185,7 @@ class PamController extends Controller {
 
     /**
      * Crea registros del pam
-     * 
+     *
      * @param Request $request Datos del formulario
      */
     public function store(Request $request): JsonResponse {
@@ -296,19 +296,19 @@ class PamController extends Controller {
 
     /**
      * Elimina un registro especifico
-     * 
+     *
      * @param int $id id de la accion
      */
     public function destroy(int $id): JsonResponse {
         try {
             $pam = PamAccion::findOrFail($id);
             $pam->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Registro eliminado correctamente'
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -316,7 +316,7 @@ class PamController extends Controller {
             ], 500);
         }
     }
-    
+
     /**
      * Actualizar un registro específico
      *
@@ -567,7 +567,7 @@ class PamController extends Controller {
 
     /**
      * Obtiene los avances por accion
-     * 
+     *
      * @param int $accionId
      */
     public function getAvancesPorAccion(int $accionId) {
@@ -610,7 +610,7 @@ class PamController extends Controller {
     // --------------------
     //  Obtencion de registros para selectores
     // --------------------
-    
+
     public function getMetas(Request $request): JsonResponse {
         $query = PamMeta::query();
 
