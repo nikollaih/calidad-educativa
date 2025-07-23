@@ -851,9 +851,7 @@
             </label>
             ${anexoFile ? `
                 <span class="badge bg-info ms-2">Anexo: ${anexoFile.name}</span>
-                <a href="#" class="btn btn-outline-info btn-sm ms-2 view-anexo" data-file="${anexoFile.name}" title="Ver anexo">
-                    <i class="fas fa-eye"></i> Ver Anexo
-                </a>
+
             ` : ''}
         `;
 
