@@ -744,9 +744,12 @@
                     hasAdultEducation = true;
 
                     // Solo validar si es educación de adultos
-                    if (adultCheckboxes.length > 0) {
+                    if (adultCheckboxes.length == 3) {
+                        console.log('educacion para adultos', adultCheckboxes);
                         // Validar que al menos un checkbox esté seleccionado
                         const checkedCount = card.querySelectorAll('.adult-schedule-checkbox:checked').length;
+                        console.log('checkeando', card.querySelectorAll('.adult-schedule-checkbox:checked').length);
+
                         if (checkedCount === 0) {
                             allValid = false;
                             // Resaltar el card como error
