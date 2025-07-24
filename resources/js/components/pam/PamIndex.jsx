@@ -3,9 +3,10 @@ import { h } from 'preact';
 import Swal from 'sweetalert2';
 import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
+import CBackButton from '../shared/CBackButton';
 import VerAvance from './VerAvance';
 
-const PamIndex = () => {
+const PamIndex = ({ pamGeneralId, csrfToken }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +54,7 @@ const PamIndex = () => {
         //   text: 'La funcionalidad de creación de PAM, creación de avances y exportación de excel se encuentran actualmente en desarrollo.',
         //   confirmButtonText: 'Entendido'
         // });
-        const response = await fetch('get-pam', {
+        const response = await fetch(`get-pam`, {
           headers: {
             'Accept': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
@@ -339,6 +340,7 @@ const PamIndex = () => {
   return (
     <div className="container-fluid mt-4">
       <div className="d-flex justify-content-start gap-2 mb-4">
+        {/* <CBackButton /> */}
         <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
         <CNavigationButton
           label="Crear avance"

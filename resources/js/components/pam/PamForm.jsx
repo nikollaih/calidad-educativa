@@ -2,7 +2,7 @@
 import { route } from 'preact-router';
 import Swal from 'sweetalert2';
 
-const PamForm = ({ id, csrfToken = '' }) => {
+const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   // El estado ahora maneja un array de componentes, permitiendo múltiples jerarquías
   const [formData, setFormData] = useState({
     componentes: [], // Ahora un array de componentes
@@ -574,7 +574,7 @@ const PamForm = ({ id, csrfToken = '' }) => {
         }))
       };
 
-      const url = isEditing ? `/pam/update-pam/${id}` : '/pam/pam-row-store';
+      const url = isEditing ? `/pam/${pamGeneralId}/update-pam/${id}` : `/pam/${pamGeneralId}/pam-row-store`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -880,12 +880,12 @@ const PamForm = ({ id, csrfToken = '' }) => {
         <div className="card-body">
           <div>
             <label className="form-label fw-bold">Descripción:</label>
-          <input
-            type="number"
-            className="form-control"
-            value={meta.descripcion}
-            onChange={(e) => updateDescription(meta.id, e.target.value)}
-          />
+            <textarea
+              className="form-control"
+              rows="3"
+              value={meta.descripcion}
+              onInput={(e) => updateDescription(meta.id, e.target.value)}
+            />
           </div>
           {meta.descripcion && (
             <div className="mt-3">
