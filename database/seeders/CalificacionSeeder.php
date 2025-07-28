@@ -28,7 +28,7 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Política de inclusión de personas de diferentes grupos poblacionales o diversidad cultural',
-                'indice' => '1.1.4',
+                'indice' => '1.1.3',
                 'grupo_indice' => '1.1'
             ],
             [
@@ -43,7 +43,7 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Seguimiento y autoevaluación',
-                'indice' => '1.2.5',
+                'indice' => '1.2.3',
                 'grupo_indice' => '1.2'
             ],
             [
@@ -58,27 +58,27 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Comité de convivencia',
-                'indice' => '1.3.4',
+                'indice' => '1.3.3',
                 'grupo_indice' => '1.3'
             ],
             [
                 'nombre' => 'Consejo estudiantil',
-                'indice' => '1.3.5',
+                'indice' => '1.3.4',
                 'grupo_indice' => '1.3'
             ],
             [
                 'nombre' => 'Personero estudiantil',
-                'indice' => '1.3.6',
+                'indice' => '1.3.5',
                 'grupo_indice' => '1.3'
             ],
             [
                 'nombre' => 'Asamblea de padres de familia',
-                'indice' => '1.3.7',
+                'indice' => '1.3.6',
                 'grupo_indice' => '1.3'
             ],
             [
                 'nombre' => 'Consejo de padres de familia',
-                'indice' => '1.3.8',
+                'indice' => '1.3.7',
                 'grupo_indice' => '1.3'
             ],
             [
@@ -88,47 +88,37 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Política de bienestar',
-                'indice' => '1.4.3',
+                'indice' => '1.4.2',
                 'grupo_indice' => '1.4'
             ],
             [
                 'nombre' => 'Apoyo a la investigación y divulgación de buenas prácticas',
-                'indice' => '1.4.4',
+                'indice' => '1.4.3',
                 'grupo_indice' => '1.4'
             ],
             [
-                'nombre' => 'Sentido de pertenencia y participación',
+                'nombre' => 'Sentido de pertenencia y participación de la comunidad educativa',
                 'indice' => '1.5.1',
                 'grupo_indice' => '1.5'
             ],
             [
-                'nombre' => 'Ambiente físico',
+                'nombre' => 'Programa de inducción institucional',
                 'indice' => '1.5.2',
                 'grupo_indice' => '1.5'
             ],
             [
-                'nombre' => 'Programa de inducción institucional',
+                'nombre' => 'Manual de convivencia',
                 'indice' => '1.5.3',
                 'grupo_indice' => '1.5'
             ],
             [
-                'nombre' => 'Motivación hacia el aprendizaje',
+                'nombre' => 'Actividades extracurriculares',
                 'indice' => '1.5.4',
                 'grupo_indice' => '1.5'
             ],
             [
-                'nombre' => 'Manual de convivencia',
+                'nombre' => 'Manejo de conflictos y casos díficiles.',
                 'indice' => '1.5.5',
-                'grupo_indice' => '1.5'
-            ],
-            [
-                'nombre' => 'Actividades extracurriculares',
-                'indice' => '1.5.6',
-                'grupo_indice' => '1.5'
-            ],
-            [
-                'nombre' => 'Manejo de conflictos y casos difíciles',
-                'indice' => '1.5.8',
                 'grupo_indice' => '1.5'
             ],
             [
@@ -137,7 +127,7 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '1.6'
             ],
             [
-                'nombre' => 'Relaciones con los egresados',
+                'nombre' => 'Egresados',
                 'indice' => '1.6.2',
                 'grupo_indice' => '1.6'
             ],
@@ -163,33 +153,33 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '2.1'
             ],
             [
-                'nombre' => 'Recursos para el aprendizaje',
+                'nombre' => 'Estrategia pedagógica',
                 'indice' => '2.1.3',
                 'grupo_indice' => '2.1'
             ],
             [
-                'nombre' => 'Recursos para el aprendizaje',
+                'nombre' => 'Jornada escolar',
                 'indice' => '2.1.4',
                 'grupo_indice' => '2.1'
             ],
             [
-                'nombre' => 'Sistema institucional de Evaluación de los Estudiantes (SIEE)',
+                'nombre' => 'Sistema Institucional de Evaluación de los Estudiantes (SIEE)',
                 'indice' => '2.1.5',
                 'grupo_indice' => '2.1'
             ],
             [
-                'nombre' => 'Estrategia pedagógica',
-                'indice' => '2.1.6',
-                'grupo_indice' => '2.1'
+                'nombre' => 'Estrategias para las tareas escolares',
+                'indice' => '2.2.1',
+                'grupo_indice' => '2.2'
             ],
 
             [
-                'nombre' => 'Estrategias para las tareas escolares',
+                'nombre' => 'Uso de los tiempos para el aprendizaje',
                 'indice' => '2.2.2',
                 'grupo_indice' => '2.2'
             ],
             [
-                'nombre' => 'Uso articulado de los recursos para el aprendizaje',
+                'nombre' => 'Opciones didácticas para las áreas, asignaturas y proyectos transversales',
                 'indice' => '2.2.3',
                 'grupo_indice' => '2.2'
             ],
@@ -200,8 +190,13 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '2.3'
             ],
             [
-                'nombre' => 'Plan de aula, opciones didácticas y temas de enseñanza obligatoria',
+                'nombre' => 'Motivación hacia el aprendizaje',
                 'indice' => '2.3.2',
+                'grupo_indice' => '2.3'
+            ],
+            [
+                'nombre' => 'Plan de aula',
+                'indice' => '2.3.3',
                 'grupo_indice' => '2.3'
             ],
             [
@@ -221,8 +216,13 @@ class CalificacionSeeder extends Seeder
                 'grupo_indice' => '2.4'
             ],
             [
+                'nombre' => 'Seguimiento a la asistencia',
+                'indice' => '2.4.3',
+                'grupo_indice' => '2.4'
+            ],
+            [
                 'nombre' => 'Apoyo pedagógico para estudiantes con dificultades de aprendizaje',
-                'indice' => '2.4.5',
+                'indice' => '2.4.4',
                 'grupo_indice' => '2.4'
             ],
             // gestion administrativa
@@ -244,16 +244,16 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Dotación, mantenimiento y uso de recursos para el aprendizaje',
-                'indice' => '3.2.4',
+                'indice' => '3.2.2',
                 'grupo_indice' => '3.2'
             ],
             [
                 'nombre' => 'Programas de seguridad',
-                'indice' => '3.2.5',
+                'indice' => '3.2.3',
                 'grupo_indice' => '3.2'
             ],
             [
-                'nombre' => 'Estrategias de acceso y permanencia (Programa de Alimentación Escolar (PAE), transporte escolar y otros).',
+                'nombre' => 'Estrategias de acceso y permanencia (PAE, transporte escolar y otros).',
                 'indice' => '3.3.1',
                 'grupo_indice' => '3.3'
             ],
@@ -266,25 +266,24 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Programa de formación y capacitación institucional',
-                'indice' => '3.4.3',
+                'indice' => '3.4.2',
                 'grupo_indice' => '3.4'
             ],
             [
                 'nombre' => 'Pertenencia del personal vinculado',
-                'indice' => '3.4.5',
+                'indice' => '3.4.3',
                 'grupo_indice' => '3.4'
             ],
             [
                 'nombre' => 'Evaluación del desempeño de directivos, docentes  y administrativos',
-                'indice' => '3.4.6',
+                'indice' => '3.4.4',
                 'grupo_indice' => '3.4'
             ],
             [
                 'nombre' => 'Convivencia y manejo de conflictos',
-                'indice' => '3.4.9',
+                'indice' => '3.4.5',
                 'grupo_indice' => '3.4'
             ],
-
 
             [
                 'nombre' => 'Presupuesto anual del Fondo de Servicios Educativos (FSE)',
@@ -317,12 +316,12 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Necesidades y expectativas de los estudiantes',
-                'indice' => '4.1.3',
+                'indice' => '4.1.2',
                 'grupo_indice' => '4.1'
             ],
             [
                 'nombre' => 'Proyectos de vida',
-                'indice' => '4.1.4',
+                'indice' => '4.1.3',
                 'grupo_indice' => '4.1'
             ],
 
@@ -339,10 +338,15 @@ class CalificacionSeeder extends Seeder
             ],
             [
                 'nombre' => 'Programa de servicio social institucional',
-                'indice' => '4.2.4',
+                'indice' => '4.2.3',
                 'grupo_indice' => '4.2'
             ],
 
+            [
+                'nombre' => 'Participación de los estudiantes',
+                'indice' => '4.3.1',
+                'grupo_indice' => '4.3'
+            ],
             [
                 'nombre' => 'Prevención de riesgos físicos',
                 'indice' => '4.4.1',

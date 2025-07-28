@@ -14,1795 +14,1307 @@ class NotaCalificacionSeeder extends Seeder
     public function run(): void
     {
         $notasCalificaciones = [
-            [
-                'descripcion' => 'Los estudiantes se identifican con la institución y sienten orgullo de pertenecer a ella. Además, participan activamente en actividades internas y externas, en su representación. Se resalta el valor de la diversidad y la importancia del ejercicio de los derechos de todos y todas, lo cual permite mayor participación e integración entre todos sus estamentos.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.1'
-            ],
-            [
-                'descripcion' => 'Los informes financieros presentados
-por la institución a
-las autoridades competentes
-no siempre se hacen de manera
-oportuna y no son conocidos
-por la comunidad educativa.',
-                'valor' => 1,
-                'indice_calificacion' => '3.5.4'
-            ],
-            [
-                'descripcion' => 'Se cuenta con un plan de estudios para toda la institución que, además de responder a las políticas trazadas en el PEI, los lineamientos y
-los estándares básicos de competencias, fundamenta los planes de aula de los docentes de todas las áreas, grados y sedes. Otorga especial importancia a la enseñanza y el aprendizaje de contenidos actitudinales, de valores y normas relacionados con las diferencias individuales, raciales, culturales, familiares, que le permitan valorar, aceptar y comprender la diversidad y la interdependencia humana.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un
-personero elegido democráticamente
-que representa a todas y todos los estudiantes de todas las sedes, pero no es tenido en cuenta en las decisiones.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.6'
-            ],
-            [
-                'descripcion' => 'La formación y la capacitación
-son asumidas como un asunto
-de interés particular de cada
-docente. La institución acepta
-procesos de formación sin evaluar
-su pertinencia con respecto
-al PEI o sus necesidades.',
-                'valor' => 1,
-                'indice_calificacion' => '3.4.3'
-            ],
-            [
-                'descripcion' => 'El servicio social obligatorio de
-los estudiantes es un requisito,
-pero se encuentra desarticulado
-de la institución y su entorno.',
-                'valor' => 1,
-                'indice_calificacion' => '4.2.4'
-            ],
-            [
-                'descripcion' => 'La asamblea de padres de familia se reúne periódicamente y cuenta con la participación activa de sus miembros. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.7'
-            ],
-            [
-                'descripcion' => 'La institución ha definido parcialmente
-un enfoque metodológico que hace explícitos los métodos de enseñanza por áreas o grados.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.6'
-            ],
-            [
-                'descripcion' => 'Los estudiantes se sienten parte de la institución, pero se
-identifican principalmente con
-algunos elementos tales como
-las instalaciones, el escudo, el
-uniforme, o el himno.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.1'
-            ],
-            [
-                'descripcion' => 'El consejo académico se reúne periódicamente
-para garantizar que el proyecto pedagógico
-sea coherente con las necesidades de la diversidad y se implemente en todas las sedes, áreas y niveles. Sin embargo, no hace seguimiento suficiente al mismo.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.2'
-            ],
-            [
-                'descripcion' => 'La institución establece comunicaciones con las familias o acudientes en función de las demandas y necesidades presentadas.
-De manera general, cada sede posee sus propios
-canales de comunicación.',
-                'valor' => 1,
-                'indice_calificacion' => '1.6.1'
-            ],
-            [
-                'descripcion' => 'La institución ofrece a los padres
-de familia algunos talleres y charlas sobre diversos temas,
-aunque sin una programación
-clara.',
-                'valor' => 1,
-                'indice_calificacion' => '4.2.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente el impacto de sus alianzas con el sector productivo en el ámbito del fortalecimiento de las competencias de los estudiantes. Los resultados de estas evaluaciones son la base para la realización de acciones de mejoramiento institucional.',
-                'valor' => 4,
-                'indice_calificacion' => '1.6.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política para identificar y divulgar
-las buenas prácticas pedagógicas, administrativas y culturales.',
-                'valor' => 2,
-                'indice_calificacion' => '1.4.4'
-            ],
-            [
-                'descripcion' => 'El servicio social estudiantil tiene proyectos que responden a las necesidades de la comunidad
-y éstos, a su vez, son pertinentes para la actividad institucional.',
-                'valor' => 2,
-                'indice_calificacion' => '4.2.4'
-            ],
-            [
-                'descripcion' => 'Las conclusiones de los análisis de los resultados de los estudiantes en las evaluaciones externas son fuente de información para la construcción de los planes de mejoramiento por área y por grado y es aplicado por todos los docentes.',
-                'valor' => 3,
-                'indice_calificacion' => '2.4.2'
-            ],
-            [
-                'descripcion' => 'La institución ha establecido
-alianzas con el sector productivo.
-Éstas tienen muy claros los objetivos, metodologías de trabajo y sistemas de seguimiento generados por parte de las instancias involucradas.',
-                'valor' => 2,
-                'indice_calificacion' => '1.6.4'
-            ],
-            [
-                'descripcion' => 'La institución presenta los informes financieros
-a las autoridades competentes de manera
-apropiada y oportuna. Éstos son parte del
-proceso de control interno y sirven para tomar
-decisiones y realizar seguimiento al manejo
-de los recursos.',
-                'valor' => 3,
-                'indice_calificacion' => '3.5.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con programas organizados con el apoyo de otras entidades que buscan favorecer los aprendizajes de los estudiantes y de la comunidad sobre los riesgos a que están expuestos y crear una cultura del autocuidado y de la prevención. Los estudiantes y la comunidad se vinculan a estos programas. Existen mecanismos de seguimiento a los factores de riesgo identificados como significativos para la comunidad y los estudiantes.',
-                'valor' => 3,
-                'indice_calificacion' => '4.4.2'
-            ],
-            [
-                'descripcion' => 'Hay conocimiento sobre las
-fuentes potenciales de los conflictos,
-pero la institución no
-cuenta con estrategias para
-abordarlos eficazmente; en algunas
-oportunidades se hacen
-reuniones pero no hay avances
-en la solución de los mismos.',
-                'valor' => 1,
-                'indice_calificacion' => '3.4.9'
-            ],
-            [
-                'descripcion' => 'La institución educativa cuenta con un proceso de seguimiento y retroalimentación sistemático a los desempeños de los estudiantes y se aplica de manera oportuna en todos los grados. Además, es conocido por los estudiantes y padres de familia.',
-                'valor' => 3,
-                'indice_calificacion' => '2.4.1'
-            ],
-            [
-                'descripcion' => 'Los mecanismos para el seguimiento a las horas efectivas de clase recibidas por los estudiantes
-hacen parte de un sistema de mejoramiento
-institucional que se implementa en todas las
-sedes y es aplicado por los docentes.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.4'
-            ],
-            [
-                'descripcion' => 'La institución tiene un programa de formación
-que responde a problemas identificados
-y demandas específicas; existen criterios claros
-para valorar la oferta externa y se cuenta
-con destinación de recursos para adelantar
-procesos internos de capacitación.',
-                'valor' => 3,
-                'indice_calificacion' => '3.4.3'
-            ],
-            [
-                'descripcion' => 'La institución dispone de estrategias claras
-para mediación y solución de conflictos y éstos se resuelven a través del diálogo y la negociación permanente. Esto contribuye a que exista un buen clima laboral.',
-                'valor' => 3,
-                'indice_calificacion' => '3.4.9'
-            ],
-            [
-                'descripcion' => 'El consejo académico está conformado en el marco de la integración institucional, y cuenta con una metodología de
-trabajo orientada al diseño y la
-implementación del proyecto
-pedagógico. Sin embargo, no
-se reúne con regularidad o no
-asisten todos sus miembros,
-afectando negativamente las
-decisiones.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.2'
-            ],
-            [
-                'descripcion' => 'Los resultados de las evaluaciones externas son conocidos por los docentes, pero éstos no se utilizan para diseñar e implementar acciones de mejoramiento.',
-                'valor' => 1,
-                'indice_calificacion' => '2.4.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política de dotación, uso y
-mantenimiento de los recursos
-para el aprendizaje y hay una
-conexión clara entre el enfoque
-metodológico y los criterios
-administrativos.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.3'
-            ],
-            [
-                'descripcion' => 'Los docentes cuentan con una
-herramienta de planeación
-muy general en la que se explicitan: los contenidos del
-aprendizaje; los logros; y los recursos didácticos.',
-                'valor' => 1,
-                'indice_calificacion' => '2.3.2'
-            ],
-            [
-                'descripcion' => 'El proceso de evaluación de docentes, directivos
-y personal administrativo permite la implementación
-de acciones de mejoramiento y de desarrollo profesional. Además, es conocido por la comunidad y cuenta con un respaldo amplio de los miembros de la institución.',
-                'valor' => 3,
-                'indice_calificacion' => '3.4.6'
-            ],
-            [
-                'descripcion' => 'La institución asegura que la inclusión y la calidad sean el centro de su desarrollo, lo cual se ve reflejado en la misión, la visión y los principios están claramente definidos para la institución integrada e inclusiva y son revisados y ajustados periódicamente, en función de los nuevos retos externos y de las necesidades de los estudiantes.',
-                'valor' => 4,
-                'indice_calificacion' => '1.1.1'
-            ],
-            [
-                'descripcion' => 'Las prácticas pedagógicas se basan en la comunicación, la cogestión del aprendizaje y la relación afectiva y la valoración de la diversidad de los estudiantes, como elementos facilitadores del proceso de enseñanza-aprendizaje, y esto se evidencia en la organización del aula, en las relaciones recíprocas y en las estrategias de aprendizaje utilizadas.',
-                'valor' => 3,
-                'indice_calificacion' => '2.3.1'
-            ],
-            [
-                'descripcion' => 'La institución trabaja los temas
-de prevención de riesgos físicos (accidentes caseros, disposición
-de desechos, ergonomía, etc.) de manera parcial y esporádica.',
-                'valor' => 1,
-                'indice_calificacion' => '4.4.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa el impacto de las alianzas y acuerdos con diferentes entidades, y los ajusta en concordancia con los resultados obtenidos.',
-                'valor' => 4,
-                'indice_calificacion' => '1.6.3'
-            ],
-            [
-                'descripcion' => 'La institución posee mecanismos aislados para ejecutar el control de las horas efectivas de clase recibidas por los estudiantes.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.4'
-            ],
-            [
-                'descripcion' => 'Los programas de prevención de riesgos físicos son reconocidos por la comunidad y sus beneficios irradian hacia los hogares el mejoramiento de las condiciones de seguridad.
-Se orientan a la formación de la cultura del autocuidado, la solidaridad y la prevención frente a las condiciones de riesgo físico a las que pueden estar expuestos los miembros de la comunidad.',
-                'valor' => 3,
-                'indice_calificacion' => '4.4.1'
-            ],
-            [
-                'descripcion' => 'Los planes, proyectos y acciones se enmarcan
-en principios de corresponsabilidad, participación
-y equidad, articulados al planteamiento
-estratégico de la institución integrada e inclusiva,
-y son conocidos por la comunidad educativa.
-Se trabaja en equipo para articular las acciones.',
-                'valor' => 3,
-                'indice_calificacion' => '1.2.2'
-            ],
-            [
-                'descripcion' => 'La institución revisa permanentemente si el personal vinculado está identificado con su filosofía, principios, valores y objetivos, y toma medidas pertinentes para lograr que todos se sientan parte
-de la misma.',
-                'valor' => 4,
-                'indice_calificacion' => '3.4.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con mecanismos que le permiten conocer las necesidades y expectativas de todos los estudiantes y divulga esta información en su comunidad; los estudiantes encuentran elementos de identificación con la institución.',
-                'valor' => 3,
-                'indice_calificacion' => '4.1.3'
-            ],
-            [
-                'descripcion' => 'La institución reconoce que las tareas escolares tienen una gran importancia pedagógica; sin embargo, los docentes las manejanvcbajo criterios individuales.',
-                'valor' => 1,
-                'indice_calificacion' => '2.2.2'
-            ],
-            [
-                'descripcion' => 'La estrategia de promoción de la inclusión de
-personas de diferentes grupos poblacionales
-o diversidad cultural es la base para que
-se adapten metodologías y espacios físicos,
-apoyar talentos y hacerlos valorar por todos
-los estamentos de la comunidad educativa.
-Además, promueve la coordinación con otros
-organismos para su atención integral.',
-                'valor' => 3,
-                'indice_calificacion' => '1.1.4'
-            ],
-            [
-                'descripcion' => 'La institución ha implementado
-un proceso de evaluación de
-desempeño para docentes, directivos
-y personal administrativo
-que indaga los diferentes
-aspectos en el desarrollo del
-cargo. Este proceso cuenta con
-indicadores y referentes claros
-que están en concordancia con
-la normatividad vigente, y son
-conocidos por todos.',
-                'valor' => 2,
-                'indice_calificacion' => '3.4.6'
-            ],
-            [
-                'descripcion' => 'Los criterios básicos sobre el manejo del establecimiento educativo y la atención a la diversidad fueron definidos de manera participativa y permiten el trabajo en equipo, pero no han sido evaluados para establecer su eficacia.',
-                'valor' => 3,
-                'indice_calificacion' => '1.2.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un proceso de matrícula ágil y oportuno que tiene en cuenta las necesidades de los estudiantes y los padres de familia, y que es reconocido por la comunidad
-educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '3.1.1'
-            ],
-            [
-                'descripcion' => 'La institución ha delineado
-políticas para atender a poblaciones con requerimientos especiales, pero carece de información
-relativa a las necesidades
-de su localidad o municipio.',
-                'valor' => 1,
-                'indice_calificacion' => '4.1.1'
-            ],
-            [
-                'descripcion' => 'La institución tiene un sistema de estímulos y reconocimientos a los logros de los docentes y estudiantes que se aplica de manera coherente, sistemática y organizada. Además, este sistema cuenta con el reconocimiento de la comunidad educativa y es parte de la cultura, las políticas y practicas inclusivas.',
-                'valor' => 3,
-                'indice_calificacion' => '1.4.3'
-            ],
-            [
-                'descripcion' => 'La institución realiza su autoevaluación
-sin un procedimiento claramente establecido;
-la recolección de información y la evaluación se hacen sobre la marcha. Además, cada sede tiene su propio proceso de evaluación.',
-                'valor' => 1,
-                'indice_calificacion' => '1.2.5'
-            ],
-            [
-                'descripcion' => 'El personero elegido desarrolla proyectos y programas a favor de todas y todos los estudiantes
-y su labor es reconocida en los diferentes estamentos de la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.6'
-            ],
-            [
-                'descripcion' => 'La mayoría de los estudiantes
-de la institución manifiesta entusiasmo y ganas de aprender.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.4'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente el cumplimiento de las horas efectivas de clase recibidas por los estudiantes y toma las medidas pertinentes para corregir situaciones anómalas.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.4'
-            ],
-            [
-                'descripcion' => 'El consejo estudiantil se reúne periódicamente y es reconocido como la instancia de representación
-de los intereses de todos y todas los
-estudiantes de la institución.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.5'
-            ],
-            [
-                'descripcion' => 'La institución presenta los informes
-financieros a las autoridades
-competentes de manera
-apropiada y oportuna, y
-también los da a conocer a la
-comunidad educativa. Sin embargo,
-no los utiliza para apoyar
-la toma de decisiones.',
-                'valor' => 2,
-                'indice_calificacion' => '3.5.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con alianzas y acuerdos con diferentes entidades para apoyar la ejecución de sus proyectos. Además, tales alianzas y acuerdos cuentan con la participación de los diferentes estamentos de la comunidad educativa
-y sectores de la comunidad general.',
-                'valor' => 3,
-                'indice_calificacion' => '1.6.3'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente la implementación de su política de evaluación tanto en cuanto a su aplicación por parte de los docentes, como en su efecto sobre la diversidad de los estudiantes, e introduce los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.5'
-            ],
-            [
-                'descripcion' => 'La institución tiene un sistema de archivo que le permite disponer de la información de los estudiantes de todas las sedes, así como expedir constancias y certificados de manera ágil, confiable y oportuna.',
-                'valor' => 3,
-                'indice_calificacion' => '3.1.2'
-            ],
-            [
-                'descripcion' => 'Está conformado el consejo de
-padres de familia, pero éste no
-se reúne para deliberar sobre
-los temas de su competencia.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.8'
-            ],
-            [
-                'descripcion' => 'El consejo de padres de familia se reúne periódicamente para apoyar al rector o director en el marco del plan de mejoramiento. Sin embargo, no hace seguimiento sistemático a los resultados obtenidos.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.8'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente sus estrategias de mediación de conflictos y los ajusta de acuerdo con las necesidades.',
-                'valor' => 4,
-                'indice_calificacion' => '3.4.9'
-            ],
-            [
-                'descripcion' => 'La institución conoce los requerimientos
-educativos de las poblaciones o personas que experimentan barreras para el aprendizaje y la participación en su entorno y ha diseñado planes de trabajo pedagógico para atenderlas en concordancia con el PEI y la normatividad vigente.',
-                'valor' => 2,
-                'indice_calificacion' => '4.1.1'
-            ],
-            [
-                'descripcion' => 'Hay un plan de estudios institucional que cuenta con proyectos pedagógicos y contenidos transversales, y en su elaboración se tuvieron en cuenta las características del entorno, la diversidad de la población, el PEI, los lineamientos curriculares y los estándares básicos de competencias establecidos por el MEN.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.1'
-            ],
-            [
-                'descripcion' => 'La institución realiza seguimiento a la incidencia de los resultados de las evaluaciones externas en la planeación de los docentes en cada área y grado y promueve acciones correctivas para su ajuste en el plan de mejoramiento de las áreas.',
-                'valor' => 4,
-                'indice_calificacion' => '2.4.2'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente el sistema de estímulos y reconocimientos de los logros de los docentes y estudiantes, y hace los ajustes pertinentes para cualificarlo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.4.3'
-            ],
-            [
-                'descripcion' => 'Las metas están formuladas
-solamente para algunas sedes.
-Además, ninguna o sólo
-algunas son cuantificables y
-responden a unos propósitos
-claros de mejoramiento.',
-                'valor' => 1,
-                'indice_calificacion' => '1.1.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con políticas
-y mecanismos para abordar
-los casos de bajo rendimiento
-y problemas de aprendizaje,
-pero no se hace seguimiento a
-los mismos, ni se acude a recursos
-externos.',
-                'valor' => 2,
-                'indice_calificacion' => '2.4.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una política de comunicación e interacción con las autoridades educativas, y se han establecido los canales, el tipo y la periodicidad de la información.',
-                'valor' => 2,
-                'indice_calificacion' => '1.6.2'
-            ],
-            [
-                'descripcion' => 'Los programas de prevención que se llevan a cabo son evaluados, así como los mecanismos de información y análisis de los factores de riesgo psicosocial, con el fin de fortalecerlos, y por esa vía mejorar los modelos de intervención que tiene la institución.',
-                'valor' => 4,
-                'indice_calificacion' => '4.4.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un
-sistema de archivo organizado
-donde se integra la información
-histórica de los estudiantes
-de todas las sedes.',
-                'valor' => 2,
-                'indice_calificacion' => '3.1.2'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente los resultados de los programas de apoyo pedagógico
-que realiza e implementa acciones correctivas, tendientes a mejorar los resultados de los estudiantes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.4.5'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa las políticas, procesos de comunicación e intercambio con las familias o acudientes y, con base en estos resultados, realiza los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '1.6.1'
-            ],
-            [
-                'descripcion' => 'La institución ha definido estrategias
-para la mediación de
-conflictos, pero éstas se usan
-de manera esporádica y no
-abarcan la totalidad de sedes,
-grados o niveles.',
-                'valor' => 2,
-                'indice_calificacion' => '3.4.9'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente su estrategia de inclusión de personas de diferentes grupos poblacionales o diversidad cultural, e introduce los ajustes pertinentes para fortalecerla.',
-                'valor' => 4,
-                'indice_calificacion' => '1.1.4'
-            ],
-            [
-                'descripcion' => 'La escuela de padres es un
-programa pedagógico institucional que orienta a los integrantes de la familia respecto de la mejor manera de ayudar a sus hijos en el desarrollo de competencias académicas o sociales y apoyar la institución en sus diferentes procesos.',
-                'valor' => 2,
-                'indice_calificacion' => '4.2.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa y hace seguimiento a los resultados de los informes financieros, para que éstos sean un elemento clave en el momento de
-planear las acciones, tomar decisiones y evaluar los resultados de las mismas.',
-                'valor' => 4,
-                'indice_calificacion' => '3.5.4'
-            ],
-            [
-                'descripcion' => 'El personal vinculado está identificado con la
-institución: comparte la filosofía, principios,
-valores y objetivos, y está dispuesto a realizar
-actividades complementarias que sean necesarias para cualificar su labor.',
-                'valor' => 3,
-                'indice_calificacion' => '3.4.5'
-            ],
-            [
-                'descripcion' => 'La institución tiene una política
-sobre el uso de los recursos
-para el aprendizaje, pero ésta
-no está articulada con la propuesta
-pedagógica.',
-                'valor' => 1,
-                'indice_calificacion' => '2.2.3'
-            ],
-            [
-                'descripcion' => 'Los procesos de inclusión de personas de diferentes grupos poblacionales o diversidad
-cultural están bajo la responsabilidad de cada sede; no responden a una estrategia institucional articulada y conocida por todos los estamentos de la comunidad educativa.',
-                'valor' => 1,
-                'indice_calificacion' => '1.1.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política para desarrollar el proceso de matrícula que garantiza su agilidad y coherencia con los lineamientos nacionales y
-locales.',
-                'valor' => 2,
-                'indice_calificacion' => '3.1.1'
-            ],
-            [
-                'descripcion' => 'El plan de estudios es articulado y coherente. Además, cuenta con mecanismos de seguimiento y retroalimentación, a partir de los cuales se mantienen su pertinencia, relevancia y calidad.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.1'
-            ],
-            [
-                'descripcion' => 'El plan de estudios es un agregado
-de planes de área elaborados de forma aislada e individual, sin coherencia con lo estipulado en el PEI.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.1'
-            ],
-            [
-                'descripcion' => 'La institución tiene una política sobre el uso de los recursos para el aprendizaje que está articulada con su propuesta pedagógica. Además, ésta es aplicada por todos.',
-                'valor' => 3,
-                'indice_calificacion' => '2.2.3'
-            ],
-            [
-                'descripcion' => 'La institución conoce las características
-de su entorno y procura dar respuestas a éstas mediante acciones que buscan
-acercar los estudiantes a la institución,
-en concordancia con el PEI.',
-                'valor' => 2,
-                'indice_calificacion' => '4.1.3'
-            ],
-            [
-                'descripcion' => 'La evaluación del desempeño
-académico de los estudiantes
-responde a criterios individuales
-o de áreas.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.5'
-            ],
-            [
-                'descripcion' => 'La institución realiza un intercambio fluido de
-información con las autoridades educativas
-en el marco de la política definida, lo que facilita la ejecución de las actividades y la solución oportuna de los problemas.',
-                'valor' => 3,
-                'indice_calificacion' => '1.6.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con programas
-definidos para algunos servicios complementarios, y los presta con la calidad y la regularidad necesarias para atender los requerimientos del
-estudiantado. Además, hay una articulación con la oferta externa.',
-                'valor' => 2,
-                'indice_calificacion' => '3.3.1'
-            ],
-            [
-                'descripcion' => 'La institución desarrolla actividades
-para la comunidad en respuesta a situaciones o problemas críticos, y ésta es la receptora de sus acciones.',
-                'valor' => 1,
-                'indice_calificacion' => '4.2.2'
-            ],
-            [
-                'descripcion' => 'El consejo estudiantil está conformado
-mediante elección democrática, pero no se reúne periódicamente para deliberar y tomar las decisiones que le corresponden.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.5'
-            ],
-            [
-                'descripcion' => 'Casi todas las sedes de la institución
-poseen espacios suficientes para realizar las labores académicas, administrativas y recreativas, y éstas se mantienen limpias y ordenadas. La dotación es adecuada. Esto genera sentimientos de apropiación y cuidado hacia los mismos.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política de comunicación e
-interacción con las familias o
-acudientes y se han establecido
-los canales, el tipo y la periodicidad de la información.',
-                'valor' => 2,
-                'indice_calificacion' => '1.6.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente los procedimientos para la elaboración del presupuesto, de manera que se logre coordinar las necesidades de las distintas sedes y niveles. Asimismo, realiza
-análisis financieros y proyecciones presupuestales para la planeación y gestión institucional.',
-                'valor' => 4,
-                'indice_calificacion' => '3.5.1'
-            ],
-            [
-                'descripcion' => 'Los planes de clases desarrollan
-el plan de estudios y allí se
-definen: los contenidos del
-aprendizaje; los logros; el rol del docente y del estudiante; la elección y uso de
-los recursos didácticos; los
-medios, momentos y criterios
-para la evaluación; y los
-estándares de referencia. Sin
-embargo, éstos no son aplicados
-en todas las sedes, niveles,
-áreas o grados.',
-                'valor' => 2,
-                'indice_calificacion' => '2.3.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con programas de apoyo pedagógico a los casos de bajo rendimiento académico, así como con mecanismos de seguimiento, actividades institucionales y soporte
-interinstitucional.',
-                'valor' => 3,
-                'indice_calificacion' => '2.4.5'
-            ],
-            [
-                'descripcion' => 'Los equipos docentes han realizado
-esfuerzos coordinados
-para apoyar el proceso de
-enseñanza-aprendizaje en la
-comunicación recíproca, las
-relaciones horizontales y la negociación
-con los estudiantes.',
-                'valor' => 2,
-                'indice_calificacion' => '2.3.1'
-            ],
-            [
-                'descripcion' => 'El sistema de evaluación del desempeño de los estudiantes se aplica permanentemente, se realiza seguimiento a los estudiantes con bajo desempeño y es conocido por los padres de familia.',
-                'valor' => 3,
-                'indice_calificacion' => '2.3.4'
-            ],
-            [
-                'descripcion' => 'La institución implementa un proceso de autoevaluación integral a partir de los resultados de las evaluaciones internas y externas, y las evaluaciones de desempeño de los docentes y personal administrativo que abarca las diferentes sedes, empleando instrumentos y procedimientos claros. Además, cuenta con la participación de los diferentes estamentos de la comunidad educativa cuyo resultados se evidencia en el plan de mejoramiento institucional y la resignificación del PEI.',
-                'valor' => 3,
-                'indice_calificacion' => '1.2.5'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente la efectividad de su política relativa a las actividades
-curriculares y realiza los ajustes pertinentes a la misma para garantizar la participación de todos.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.6'
-            ],
-            [
-                'descripcion' => 'La institución tiene una política de evaluación
-fundamentada en los lineamientos curriculares,
-los estándares básicos de competencias y los
-artículos 2° y 3° del Decreto 230 de 2002 y el
-articulo 8 del decreto 2082 de 1996, la cual se
-refleja en las prácticas de los docentes.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.5'
-            ],
-            [
-                'descripcion' => 'Algunas sedes realizan actividades
-extracurriculares , pero éstas no se enmarcan en
-una política institucional.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.6'
-            ],
-            [
-                'descripcion' => 'La institución utiliza diferentes medios de comunicación, previamente identificados, para informar, actualizar y motivar a cada uno de los estamentos de la comunidad educativa en el proceso de mejoramiento institucional. Reconoce y garantiza el acceso a los medios de comunicación, ajustados a las necesidades de la diversidad de la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.4.1'
-            ],
-            [
-                'descripcion' => 'El seguimiento que se hace a los desempeños de los estudiantes es aislado e individual, y no se generan acciones concretas para el logro de las competencias.',
-                'valor' => 1,
-                'indice_calificacion' => '2.4.1'
-            ],
-            [
-                'descripcion' => 'Las prácticas pedagógicas de aula de los docentes de todas las áreas, grados y sedes desarrollan el enfoque metodológico común en cuanto a métodos de enseñanza flexibles, relación pedagógica y uso de recursos que respondan a la diversidad de la población.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.6'
-            ],
-            [
-                'descripcion' => 'Ocasionalmente se han establecido
-procesos administrativos para la dotación, el uso y el mantenimiento de los recursos para el aprendizaje. Cuando existen, se aplican esporádicamente.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.3'
-            ],
-            [
-                'descripcion' => 'La institución realiza reuniones
-ocasionales para identificar y
-socializar los mejores desempeños en el ámbito pedagógico y administrativo.',
-                'valor' => 1,
-                'indice_calificacion' => '1.4.4'
-            ],
-            [
-                'descripcion' => 'El consejo académico está
-conformado pero tiene escasa
-incidencia en el diseño e
-implementación del proyecto
-pedagógico; sus miembros se
-reúnen ocasionalmente y, en
-la mayoría de casos, se atienden
-prioritariamente asuntos
-administrativos. En algunos
-casos, cada sede tiene su propio
-consejo académico.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.2'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente la articulación entre la política sobre el uso de los recursos para el aprendizaje y su propuesta pedagógica, y realiza ajustes a la misma con base en los resultados de los estudiantes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.2.3'
-            ],
-            [
-                'descripcion' => 'Los modelos pedagógicos diseñados para la atención a la población que xperimenta barreras para el aprendizaje y la participación y los mecanismos de seguimiento a estas demandas son evaluados permanentemente con el propósito de mejorar la oferta y la calidad del servicio prestado.
-La institución es sensible a las necesidades de su entorno y busca adecuar su oferta educativa a tales demandas.',
-                'valor' => 4,
-                'indice_calificacion' => '4.1.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente el manual de convivencia en relación con su papel en la gestión
-del clima institucional y orienta los ajustes y mejoramientos al mismo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.5'
-            ],
-            [
-                'descripcion' => 'Hay metas establecidas para
-la institución integrada e inclusiva, pero solamente algunas responden a sus objetivos y al direccionamiento estratégico.',
-                'valor' => 2,
-                'indice_calificacion' => '1.1.2'
-            ],
-            [
-                'descripcion' => 'La institución hace seguimiento a las relaciones de aula, y diseña e implementa acciones de mejoramiento para contrarrestar las debilidades evidenciadas.',
-                'valor' => 4,
-                'indice_calificacion' => '2.3.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa y mejora el uso de los diferentes medios de comunicación empleados, en función del reconocimiento y la aceptación de los diferentes estamentos de la comunidad educativa.',
-                'valor' => 4,
-                'indice_calificacion' => '1.4.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una estrategia de
-interacción con la comunidad que orienta,
-da sentido a las acciones que se planean conjuntamente y dan respuesta a problemáticas y necesidades que apuntan al mejoramiento de las condiciones de vida de la comunidad y los estudiantes',
-                'valor' => 3,
-                'indice_calificacion' => '4.2.2'
-            ],
-            [
-                'descripcion' => 'La institución establece comunicaciones
-con las autoridades educativas locales en función de las necesidades que se presenten.
-En general, cada sede posee sus propios canales de comunicación.',
-                'valor' => 1,
-                'indice_calificacion' => '1.6.2'
-            ],
-            [
-                'descripcion' => 'La comunidad educativa reconoce y utiliza el
-comité de convivencia para identificar y mediar
-los conflictos. Las actividades programadas
-para fortalecer la convivencia cuentan con
-amplia participación de los distintos estamentos
-de la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.8'
-            ],
-            [
-                'descripcion' => 'Existen en la institución algunas
-iniciativas para apoyar a los estudiantes en la formulación
-de sus proyectos de vida, pero éstas no están articuladas a otros procesos.',
-                'valor' => 1,
-                'indice_calificacion' => '4.1.4'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódica y sistemáticamente el impacto que tienen la socialización, la documentación y la apropiación de buenas prácticas y realiza los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '1.4.4'
-            ],
-            [
-                'descripcion' => 'Por iniciativa individual, algunos
-docentes se ocupan de los
-casos de bajo rendimiento y
-problemas de aprendizaje de
-los estudiantes.',
-                'valor' => 1,
-                'indice_calificacion' => '2.4.5'
-            ],
-            [
-                'descripcion' => 'Pocos estudiantes de algunas sedes, niveles o grados manifiestan entusiasmo y ganas de aprender.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.4'
-            ],
-            [
-                'descripcion' => 'Hay un reconocimiento de la
-importancia de la interacción
-pedagógica como un pilar del
-proceso educativo; sin embargo,
-la organización del trabajo
-de aula privilegia la relación
-unilateral con el docente.',
-                'valor' => 1,
-                'indice_calificacion' => '2.3.1'
-            ],
-            [
-                'descripcion' => 'El gobierno escolar evalúa el impacto de la labor del personero y a partir de ésta se mejoran los procesos de elección y participación del estudiantado.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.6'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con mecanismos
-claros, articulados y sistemáticos para realizar el seguimiento de las horas efectivas de clase recibidas por los
-estudiantes.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.4'
-            ],
-            [
-                'descripcion' => 'Los perfiles con que cuenta la institución se
-usan para la toma de decisiones de personal
-y son coherentes con su estructura organizativa.
-Además, su uso en procesos de selección,
-solicitud e inducción del personal facilita el
-desempeño de las personas que se vinculan
-laboralmente a la institución.',
-                'valor' => 3,
-                'indice_calificacion' => '3.4.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa y mejora los procesos relacionados con los proyectos de vida de sus estudiantes, de modo que hay un interés por cualificar este aspecto en la formación de sus alumnos.',
-                'valor' => 4,
-                'indice_calificacion' => '4.1.4'
-            ],
-            [
-                'descripcion' => 'El consejo estudiantil se reúne periódicamente y cuenta con el aporte activo de todos sus miembros.
-Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.5'
-            ],
-            [
-                'descripcion' => 'El proceso de matrícula se
-desarrolla según los criterios
-adoptados por cada una de las
-sedes.',
-                'valor' => 1,
-                'indice_calificacion' => '3.1.1'
-            ],
-            [
-                'descripcion' => 'El comité de convivencia se reúne periódicamente y cuenta con el aporte activo de todos sus miembros. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.4'
-            ],
-            [
-                'descripcion' => 'La institución realiza evaluaciones
-de desempeño de docentes,
-directivos y personal
-administrativo de forma esporádica
-y sin contar con un
-modelo evaluativo para este
-propósito.',
-                'valor' => 1,
-                'indice_calificacion' => '3.4.6'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa continuamente su programa de formación y capacitación en función de su incidencia en el mejoramiento de los procesos de enseñanza y aprendizaje y en el desarrollo institucional.',
-                'valor' => 4,
-                'indice_calificacion' => '3.4.3'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa continuamente la definición de los perfiles y su uso en los procesos de selección, solicitud e inducción del personal, en función del plan de mejoramiento y de sus necesidades.',
-                'valor' => 4,
-                'indice_calificacion' => '3.4.1'
-            ],
-            [
-                'descripcion' => 'La contabilidad de la institución
-se organiza de acuerdo
-con los requisitos reglamentarios
-y discrimina claramente
-los servicios prestados. Sin
-embargo, su uso se limita a la
-elaboración de informes para
-los organismos de control, de
-modo que no se cuenta con
-esta información como instrumento
-de análisis financiero.',
-                'valor' => 2,
-                'indice_calificacion' => '3.5.2'
-            ],
-            [
-                'descripcion' => 'ELa institución ofrece algunos
-servicios complementarios esporádicamente y su cobertura
-es insuficiente.',
-                'valor' => 1,
-                'indice_calificacion' => '3.3.1'
-            ],
-            [
-                'descripcion' => 'Existen estrategias de comunicación
-que permiten que la institución y la comunidad se conozcan mutuamente; las actividades se organizan de manera
-conjunta, así no guarden estrecha relación con el PEI.',
-                'valor' => 2,
-                'indice_calificacion' => '4.2.2'
-            ],
-            [
-                'descripcion' => 'La institución tiene una estrategia articulada para promover inclusión de personas de
-diferentes grupos poblacionales o diversidad cultural, que es conocida por todos los
-estamentos de la comunidad educativa para direccionar las acciones en este sentido.',
-                'valor' => 2,
-                'indice_calificacion' => '1.1.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con perfiles
-poco específicos que no
-orientan con claridad el proceso
-de selección o solicitud de
-personal.',
-                'valor' => 1,
-                'indice_calificacion' => '3.4.1'
-            ],
-            [
-                'descripcion' => 'Las estrategias de evaluación del desempeño de los estudiantes son conocidas por la comunidad educativa y diseñadas teniendo en cuenta los niveles de competencia a alcanzar en cada grado y nivel, pero se aplican ocasionalmente.',
-                'valor' => 2,
-                'indice_calificacion' => '2.3.4'
-            ],
-            [
-                'descripcion' => 'El consejo académico se reúne ordinariamente y cuenta con el aporte activo de todos sus miembros. Allí se toman decisiones sobre los procesos
-pedagógicos y se hace seguimiento sistemático al plan de trabajo, para asegurar su cumplimiento.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.2'
-            ],
-            [
-                'descripcion' => 'La institución realiza un intercambio muy ágil
-y fluido de información con las familias o acudientes
-en el marco de la política definida, lo
-que facilita la solución oportuna de los problemas.',
-                'valor' => 3,
-                'indice_calificacion' => '1.6.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un enfoque metodológico que hacen explícitos los acuerdos básicos relativos a métodos de enseñanza, relación pedagógica y usos de recursos que responde a las características de la diversidad de la población.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.6'
-            ],
-            [
-                'descripcion' => 'La institución no cuenta con
-información adecuadamente
-sistematizada respecto de las
-necesidades y expectativas de
-los estudiantes; por ello, su
-sentido de pertenencia es bajo
-y es alta la incidencia del ausentismo y la deserción.',
-                'valor' => 1,
-                'indice_calificacion' => '4.1.3'
-            ],
-            [
-                'descripcion' => 'La institución asegura los recursos para cumplir el programa de mantenimiento de su planta física.',
-                'valor' => 3,
-                'indice_calificacion' => '3.2.1'
-            ],
-            [
-                'descripcion' => 'La contabilidad tiene todos sus soportes; los informes financieros se elaboran y se presentan dentro de los plazos establecidos por las normas y se usan para el control financiero y para la toma
-de decisiones en el corto, mediano y largo plazo.
-Sus resultados aportan información para ajustar los planes de mejoramiento.',
-                'valor' => 4,
-                'indice_calificacion' => '3.5.2'
-            ],
-            [
-                'descripcion' => 'Los planes, proyectos y acciones
-se elaboran y se implementan
-de manera aislada, y
-no responden claramente al
-planteamiento estratégico. La
-articulación de los mismos en
-las diferentes sedes es inexistente
-o incipiente.',
-                'valor' => 1,
-                'indice_calificacion' => '1.2.2'
-            ],
-            [
-                'descripcion' => 'En el marco del SIEE de la institución educativa, los docentes aplican estrategias para evaluar los desempeños de los estudiantes de manera aislada y no son conocidas por los padres de familia.',
-                'valor' => 1,
-                'indice_calificacion' => '2.3.4'
-            ],
-            [
-                'descripcion' => 'La institución evalúa y ajusta el funcionamiento del comité de convivencia, recupera la información
-relativa a las estrategias exitosas para el manejo de conflictos y el desarrollo de competencias para la convivencia y el respeto a la diversidad.
-Además, propicia su transferencia y apropiación.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.8'
-            ],
-            [
-                'descripcion' => 'Se evalúan periódicamente los aspectos relativos a la identificación de los estudiantes con la institución y al fortalecimiento de su sentimiento de pertenencia, y se introducen medidas oportunas para promover y reforzar este sentimiento.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa las políticas, procesos de comunicación e intercambio con las autoridades
-educativas y, con base en estos resultados, realiza los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '1.6.2'
-            ],
-            [
-                'descripcion' => 'Al inicio del año escolar, en todas las sedes se explican a los estudiantes nuevos los usos y costumbres de la institución.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.3'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con políticas y programas claros que recogen las expectativas de todos los estudiantes y ofrece alternativas para que se identifiquen con ella. Los mecanismos empleados para hacer el seguimiento a las necesidades de los estudiantes y ponderar su grado de satisfacción se
-evalúan y mejoran constantemente y sus resultados retroalimentan el plan de mejoramiento institucional.',
-                'valor' => 4,
-                'indice_calificacion' => '4.1.3'
-            ],
-            [
-                'descripcion' => 'La institución ha implementado un rocedimiento para identificar, divulgar y documentar las buenas prácticas pedagógicas, administrativas y culturales que reconocen la diversidad de la población en todos sus componentes de gestión. El intercambio de experiencias propicia acciones de mejoramiento.',
-                'valor' => 3,
-                'indice_calificacion' => '1.4.4'
-            ],
-            [
-                'descripcion' => 'Los servicios complementarios y recursos que
-ofrece la comunidad y los Establecimientos
-Educativos, se distribuyen de forma equitativa, se ofrecen oportunamente teniendo en cuenta la calidad requerida . Cada sede tiene programas sensibles a las demandas de los
-estudiantes, y la institución cuenta con el apoyo de otras entidades para su prestación.',
-                'valor' => 3,
-                'indice_calificacion' => '3.3.1'
-            ],
-            [
-                'descripcion' => 'Está conformada la asamblea
-de padres de familia, pero ésta
-no se reúne periódicamente
-para deliberar y tomar decisiones
-sobre los temas de su competencia.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.7'
-            ],
-            [
-                'descripcion' => 'Todas las metas establecidas para la institución integrada e inclusiva responden a sus objetivos y al direccionamiento estratégico. Además, éstas son conocidas y puestas en práctica por la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.1.2'
-            ],
-            [
-                'descripcion' => 'Los perfiles se encuentran bien
-definidos, son coherentes con
-el PEI y con la normatividad
-vigente; sin embargo, no son
-tenidos en cuenta en los procesos
-de selección, solicitud e
-inducción del personal.',
-                'valor' => 2,
-                'indice_calificacion' => '3.4.1'
-            ],
-            [
-                'descripcion' => 'La institución tiene un plan para adquisición
-de los recursos para el aprendizaje que garantiza la disponibilidad oportuna de los mismos dirigidos a prevenir las barreras y potenciar la participación de todos los estudiantes, en concordancia con el direccionamiento estratégico y las necesidades de los docentes y estudiantes.',
-                'valor' => 3,
-                'indice_calificacion' => '3.2.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con mecanismos parciales de comunicación entre los integrantes de la comunidad educativa.',
-                'valor' => 1,
-                'indice_calificacion' => '1.4.1'
-            ],
-            [
-                'descripcion' => 'Hay algunos avances hacia la formulación de la misión,
-la visión y los principios que orientan estratégicamente la
-institución integrada e inclusiva, pero éstos todavía no están totalmente articulados.',
-                'valor' => 2,
-                'indice_calificacion' => '1.1.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la disponibilidad y calidad de los recursos para el aprendizaje y realiza ajustes a su plan de adquisiciones.',
-                'valor' => 4,
-                'indice_calificacion' => '3.2.4'
-            ],
-            [
-                'descripcion' => 'La institución hace evaluaciones periódicas sobre la satisfacción de de las familias y los estudiantes en relación con el proceso de matrícula y propicia el mejoramiento del mismo.',
-                'valor' => 4,
-                'indice_calificacion' => '3.1.1'
-            ],
-            [
-                'descripcion' => 'El manual de convivencia es conocido y utilizado frecuentemente como un instrumento que orienta los principios, valores, estrategias y actuaciones que favorecen un clima organizacional armónico entre los diferentes integrantes de la comunidad educativa; fomentando el
-respeto y la valoración de la diversidad.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.5'
-            ],
-            [
-                'descripcion' => 'Se reconoce la existencia de la
-asamblea de padres de familia,
-pero esta no se reúne para
-deliberar sobre los temas de su competencia.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.7'
-            ],
-            [
-                'descripcion' => 'El comité de convivencia se reúne periódicamente y es reconocido como la instancia encargada de analizar y plantear soluciones a los problemas de convivencia que se presentan en la institución.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.4'
-            ],
-            [
-                'descripcion' => 'El personal vinculado se identifica
-solamente con algunos
-aspectos de la misma, y ello
-genera indiferencia hacia la
-institución.',
-                'valor' => 1,
-                'indice_calificacion' => '3.4.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un programa estructurado de inducción y de acogida, el cual está apoyado en materiales y estrategias que se adaptan a las condiciones personales, sociales y culturales de todos los integrantes. La inducción se hace al inicio del año escolar a todos los estudiantes nuevos y sus familias.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.3'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una política
-sobre el uso de los recursos para
-el aprendizaje que está articulada
-a su propuesta pedagógica, pero
-ésta se aplica solamente en algunas
-sedes, niveles o grados.',
-                'valor' => 2,
-                'indice_calificacion' => '2.2.3'
-            ],
-            [
-                'descripcion' => 'La institución ha definido parcialmente
-un enfoque metodológico que hace explícitos los métodos de enseñanza por áreas o grados.',
-                'valor' => 1,
-                'indice_calificacion' => '2.1.2'
-            ],
-            [
-                'descripcion' => 'No se ha conformado su consejo
-directivo como institución integrada; o bien se ha establecido formalmente, pero éste no funciona en la práctica.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.1'
-            ],
-            [
-                'descripcion' => 'La asamblea de padres de familia se reúne periódicamente y es reconocida como la instancia de representación de estos integrantes de la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.7'
-            ],
-            [
-                'descripcion' => 'El consejo directivo tiene una agenda y un cronograma de trabajo para orientar los procesos de planeación y el seguimiento a las acciones institucionales.
-Sin embargo, no se reúne con regularidad.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un enfoque metodológico que hacen explícitos los acuerdos básicos relativos a métodos de enseñanza, relación pedagógica y usos de recursos que responde a las características de la diversidad de la población.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.2'
-            ],
-            [
-                'descripcion' => 'Hay una formulación incipiente o parcial del direccionamiento estratégico como institución integrada e inclusiva. Pueden estar prevaleciendo la misión, la visión o los principios de cada una de las distintas sedes.',
-                'valor' => 1,
-                'indice_calificacion' => '1.1.1'
-            ],
-            [
-                'descripcion' => 'El consejo directivo se reúne periódicamente de acuerdo con un cronograma establecido y sesiona con el aporte activo de todos sus miembros. Hace seguimiento sistemático al plan de trabajo, para garantizar su cumplimiento.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.1'
-            ],
-            [
-                'descripcion' => 'La institucion tiene una politica definida bcon respecto a las actividades extracurriculares, las cuales se articulan a los porcesos de formacion de los estudiantes. Sin embargo, estas solamente se aplica en algunas sedes',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.6'
-            ],
-            [
-                'descripcion' => 'Hay un personero, pero su
-elección no cuenta con el aval
-y reconocimiento de todas y
-todos los estudiantes de las diferentes sedes.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.6'
-            ],
-            [
-                'descripcion' => 'El consejo estudiantil está conformado mediante elección democrática, pero sus integrantes
-no se reúnen ni se toman
-las decisiones que son de
-su competencia.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.5'
-            ],
-            [
-                'descripcion' => 'La institución ofrece actividades
-de prevención, tanto propias
-como externas, sin que exista una relación entre los factores de riesgo de su comunidad y el contenido de las mismas. El análisis de los factores de riesgo se basa en anécdotas
-y casos particulares.',
-                'valor' => 1,
-                'indice_calificacion' => '4.4.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un
-programa de mantenimiento
-preventivo de su planta física.',
-                'valor' => 2,
-                'indice_calificacion' => '3.2.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un
-plan para la adquisición de los
-recursos para el aprendizaje
-que consulta las demandas de
-su direccionamiento estratégico
-y las necesidades de los docentes
-y estudiantes.',
-                'valor' => 2,
-                'indice_calificacion' => '3.2.4'
-            ],
-            [
-                'descripcion' => 'La contabilidad está disponible de manera
-oportuna y los informes financieros permiten
-realizar un control efectivo del presupuesto y
-del plan de ingresos y gastos.',
-                'valor' => 3,
-                'indice_calificacion' => '3.5.2'
-            ],
-            [
-                'descripcion' => 'Las alianzas con el sector productivo tienen objetivos y metodologías claras para apoyar el desarrollo de competencias en los estudiantes y se promueven procesos de seguimiento y evaluación periódicos.',
-                'valor' => 3,
-                'indice_calificacion' => '1.6.4'
-            ],
-            [
-                'descripcion' => 'Una parte importante del
-personal vinculado a la institución
-comparte la filosofía,
-principios, valores y objetivos y
-dedica algún tiempo a la realización
-de actividades relacionadas
-con estos aspectos.',
-                'valor' => 2,
-                'indice_calificacion' => '3.4.5'
-            ],
-            [
-                'descripcion' => 'Los docentes realizan seguimiento periódico a los desempeños de los estudiantes y diseñan algunas acciones de mejora a los mismos.',
-                'valor' => 2,
-                'indice_calificacion' => '2.4.1'
-            ],
-            [
-                'descripcion' => 'La institución ha definido los
-mecanismos de comunicación
-de acuerdo con las características
-y el tipo de información
-pertinente para cada uno de
-los estamentos de la comunidad
-educativa.',
-                'valor' => 2,
-                'indice_calificacion' => '1.4.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente el programa de mantenimiento de su planta física y realiza los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '3.2.1'
-            ],
-            [
-                'descripcion' => 'Las prácticas pedagógicas de aula de los docentes de todas las áreas, grados y sedes desarrollan el enfoque metodológico común en cuanto a métodos de enseñanza flexibles, relación pedagógica y uso de recursos que respondan a la diversidad de la población.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.2'
-            ],
-            [
-                'descripcion' => 'El análisis de los resultados de los estudiantes en las evaluaciones externas brinda información a los docentes para fortalecer los aprendizajes de los estudiantes.',
-                'valor' => 2,
-                'indice_calificacion' => '2.4.2'
-            ],
-            [
-                'descripcion' => 'En todas las sedes de la institución se observan el entusiasmo y una elevada motivación hacia el aprendizaje, lo que se refleja en toda la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.4'
-            ],
-            [
-                'descripcion' => 'La política institucional de dotación, uso y mantenimiento de los recursos para el aprendizaje permite apoyar el trabajo académico de la diversidad de sus estudiantes y docentes.',
-                'valor' => 3,
-                'indice_calificacion' => '2.1.3'
-            ],
-            [
-                'descripcion' => 'El mantenimiento de la planta
-física se realiza ocasionalmente,
-sin obedecer a una planeación
-sistemática.',
-                'valor' => 1,
-                'indice_calificacion' => '3.2.1'
-            ],
-            [
-                'descripcion' => 'Existen procedimientos establecidos para que
-las sedes y los niveles puedan elaborar el presupuesto
-de forma acorde con las actividades
-y metas establecidas en el Plan Operativo
-Anual. Además, el plan de ingresos y egresos
-está relacionado con los flujos de caja. El presupuesto
-es un instrumento de planeación y
-gestión financiera que opera coherentemente
-con otros procesos institucionales.',
-                'valor' => 3,
-                'indice_calificacion' => '3.5.1'
-            ],
-            [
-                'descripcion' => 'Los criterios básicos acerca del
-manejo de la institución integrada
-no están claramente definidos.
-Por ello hay dificultades en
-la coordinación entre las sedes y
-problemas en la delegación de
-tareas. Se trabaja aisladamente
-y no siempre se llevan a término
-los propósitos planteados.',
-                'valor' => 1,
-                'indice_calificacion' => '1.2.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente si sus espacios y dotaciones son suficientes, y si éstos propician un buen ambiente para el aprendizaje y la convivencia, sin que se constituyan en barreras para la participación de la comunidad educativa, así como para el desarrollo de actividades fuera de la jornada escolar.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.2'
-            ],
-            [
-                'descripcion' => 'El consejo de padres de familia se reúne periódicamente y cuenta con la participación activa de todos sus miembros. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.3.8'
-            ],
-            [
-                'descripcion' => 'El consejo de padres de familia
-solamente se reúne esporádicamente
-para trabajar sobre los asuntos de su competencia.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.8'
-            ],
-            [
-                'descripcion' => 'La institución revisa continuamente el proceso de evaluación de docentes, directivos y personal administrativo, así como los resultados de las acciones de mejoramiento, con el fin de ajustarlos
-y crear nuevos planes de incentivos, apoyo a la investigación, divulgación de buenas prácticas, etc.',
-                'valor' => 4,
-                'indice_calificacion' => '3.4.6'
-            ],
-            [
-                'descripcion' => 'El presupuesto de la institución
-es un agregado de ingresos y
-gastos que no tiene relación
-con las prioridades. No hay
-mecanismos de planeación financiera.',
-                'valor' => 1,
-                'indice_calificacion' => '3.5.1'
-            ],
-            [
-                'descripcion' => 'La mayoría de los estudiantes
-de la institución manifiesta entusiasmo y ganas de aprender.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.5'
-            ],
-            [
-                'descripcion' => 'La comunidad tiene participación en la vida institucional y hay procesos de seguimiento y evaluación de los programas y las actividades. Las alianzas con las organizaciones culturales, sociales, recreativas y productivas son permanentes y sirven como base para la realización de acciones conjuntas que propenden al desarrollo comunitario.',
-                'valor' => 4,
-                'indice_calificacion' => '4.2.2'
-            ],
-            [
-                'descripcion' => 'La escuela de padres es coherente con el PEI, cuenta con el respaldo pedagógico de los docentes y se encuentra ampliamente divulgada en la comunidad. Además, su acogida entre los integrantes de la familia es significativa.',
-                'valor' => 3,
-                'indice_calificacion' => '4.2.1'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con algunas formas de reconocimiento de los logros de docentes y estudiantes, pero éstas no se aplican de manera organizada ni sistemática.',
-                'valor' => 1,
-                'indice_calificacion' => '1.4.3'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente su proceso de seguimiento a los desempeños de los estudiantes y realiza los ajustes pertinentes, en el marco de la evaluación formativa.',
-                'valor' => 4,
-                'indice_calificacion' => '2.4.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente la calidad y disponibilidad del archivo académico y ajusta y mejora este sistema.',
-                'valor' => 4,
-                'indice_calificacion' => '3.1.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política para el establecimiento
-de alianzas o acuerdos con
-diferentes entidades para
-apoyar la ejecución de sus proyectos.
-Sin embargo, no hace seguimiento sistemático a sus resultados.',
-                'valor' => 2,
-                'indice_calificacion' => '1.6.3'
-            ],
-            [
-                'descripcion' => 'Hay manual de convivencia,
-pero éste pertenece solamente
-a algunas sedes.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.5'
-            ],
-            [
-                'descripcion' => 'Se cuenta con una formulación de la misión, la visión y los principios que articulan e identifican a la institución como un todo. Estos elementos han sido apropiados parcialmente por la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.1.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la pertinencia y funcionalidad de los procedimientos establecidos para la dotación, uso y mantenimiento de los recursos para el aprendizaje y las ajusta en función de los nuevos requerimientos.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.3'
-            ],
-            [
-                'descripcion' => 'En los procesos de adquisición
-de los recursos para el aprendizaje
-(computadores, laboratorios,
-bibliotecas, etc.) priman
-los intereses aislados de algunos
-docentes o los criterios de
-la administración municipal.',
-                'valor' => 1,
-                'indice_calificacion' => '3.2.4'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente el impacto de las tareas escolares en los aprendizajes
-de los estudiantes y ajusta su política en este tema.',
-                'valor' => 4,
-                'indice_calificacion' => '2.2.2'
-            ],
-            [
-                'descripcion' => 'En algunas sedes hay algunos
-acuerdos básicos entre docentes y estudiantes acerca de la intencionalidad de las tareas escolares para algunos grados, niveles o áreas.',
-                'valor' => 2,
-                'indice_calificacion' => '2.2.2'
-            ],
-            [
-                'descripcion' => 'El sistema de evaluación del desempeño de los estudiantes de la institución educativa, se aplica permanentemente. Se realiza seguimiento y cuenta con un buen sistema de información, el cual se evalúa periódicamente y se ajusta de acuerdo con las necesidades de la diversidad de los estudiantes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.3.4'
-            ],
-            [
-                'descripcion' => 'Los estudiantes se identifican
-con la institución a través de
-elementos tales como las instalaciones, el escudo, el uniforme o el himno, pero también con aspectos relacionados con la filosofía y los valores institucionales.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.1'
-            ],
-            [
-                'descripcion' => 'La institución lleva registros
-contables de algunas actividades,
-pero éstos se hacen de
-forma desorganizada y sin la
-totalidad de los soportes respectivos.',
-                'valor' => 1,
-                'indice_calificacion' => '3.5.2'
-            ],
-            [
-                'descripcion' => 'La institución evalúa sistemáticamente la efectividad de su programa de inducción y de acogida a estudiantes nuevos y sus familias y a otro personal, y realiza los ajustes pertinentes.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.3'
-            ],
-            [
-                'descripcion' => 'Las sedes poseen espacios amplios y suficientes,
-y éstos se encuentran adecuadamente dotados,
-organizados y decorados y señalizados, lo que
-propicia un buen ambiente para el aprendizaje y
-la convivencia de la diversidad de sus miembros,
-incluso de aquellos que requieren adaptaciones
-para su movilidad y ubicación en el espacio. Las
-plantas físicas son usadas adecuadamente fuera
-de la jornada escolar ordinaria.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.2'
-            ],
-            [
-                'descripcion' => 'La elaboración del presupuesto
-se hace teniendo en cuenta
-las necesidades de las sedes y
-niveles, y toma como referentes
-el Plan Operativo Anual, el
-PEI, el plan de mejoramiento y
-la normatividad vigente.',
-                'valor' => 2,
-                'indice_calificacion' => '3.5.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente la cobertura, calidad y oportunidad de los servicios complementarios y recursos y promueve acciones correctivas en función de las necesidades del estudiantado.',
-                'valor' => 4,
-                'indice_calificacion' => '3.3.1'
-            ],
-            [
-                'descripcion' => 'La institución revisa y evalúa periódicamente su estrategia de planeación de clases, y utiliza los
-resultados para implementar medidas de ajuste y mejoramiento que contribuyen a la consolidación
-de conjuntos articulados y ordenados de actividades para desarrollar las competencias de los estudiantes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.3.2'
-            ],
-            [
-                'descripcion' => 'La planeación de clases es reconocida como
-la estrategia institucional que posibilita establecer
-y aplicar el conjunto ordenado y articulado
-de actividades para: la consecución de un objetivo relacionado con un contenido concreto; la elección de los recursos didácticos; el establecimiento de unos procesos evaluativos; y la definición de unos estándares de referencia. Los planes de aula establecen sistemas didácticos accesibles a todo el estudiantado, que minimizan barreras al aprendizaje y están relacionados con el diseño curricular y el enfoque metodológico.',
-                'valor' => 3,
-                'indice_calificacion' => '2.3.2'
-            ],
-            [
-                'descripcion' => 'Algunas sedes de la institución
-tienen áreas insuficientes y poco organizadas, lo que conlleva al hacinamiento y a un sentimiento de escasa estimulación y apropiación. La dotación es precaria.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.2'
-            ],
-            [
-                'descripcion' => 'La institución se interesa de forma programática
-en la proyección personal y el futuro de sus estudiantes; este programa es conocido por la comunidad educativa, que lo apoya y enriquece.',
-                'valor' => 3,
-                'indice_calificacion' => '4.1.4'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la coherencia y la articulación del enfoque metodológico con el PEI, el plan de mejoramiento y las prácticas
-de aula de sus docentes. Esta información es usada como base para la realización de ajustes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.2'
-            ],
-            [
-                'descripcion' => 'Los programas de prevención de riesgos físicos de la institución son monitoreados y evaluados con el fin de establecer su eficacia. Con ello, se propicia su fortalecimiento de las alianzas y la
-búsqueda de apoyo de otras instituciones y de la comunidad.',
-                'valor' => 4,
-                'indice_calificacion' => '4.4.1'
-            ],
-            [
-                'descripcion' => 'La información académica de
-los estudiantes está organizada
-en archivo en algunas sedes,
-según criterios diferentes.',
-                'valor' => 1,
-                'indice_calificacion' => '3.1.2'
-            ],
-            [
-                'descripcion' => 'Las sedes y los niveles de la institución conocen la política de atención a la población que experimenta barreras para el aprendizaje y la participación, trabajan conjuntamente para diseñar modelos pedagógicos flexibles que permitan la inclusión y la atención a estas personas, y los dan a conocer a la comunidad.',
-                'valor' => 3,
-                'indice_calificacion' => '4.1.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente cuáles son las actitudes de los estudiantes hacia el aprendizaje y realiza acciones para favorecerlas.',
-                'valor' => 4,
-                'indice_calificacion' => '1.5.4'
-            ],
-            [
-                'descripcion' => 'La institución ha establecido un proceso para realizar la autoevaluación, mediante instrumentos y procedimientos claros para las distintas sedes, pero éstos todavía no son utilizados integralmente.',
-                'valor' => 2,
-                'indice_calificacion' => '1.2.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con programas
-para la prevención de riesgos físicos que hacen parte de los proyectos transversales y son coherentes con
-el PEI.',
-                'valor' => 2,
-                'indice_calificacion' => '4.4.1'
-            ],
-            [
-                'descripcion' => 'El servicio social estudiantil es valorado por la
-comunidad y los estudiantes han desarrollado
-una capacidad de empatía e integración con ésta en la medida en que éstos contribuyen a la solución de sus necesidades a través de
-programas interesantes y debidamente organizados.',
-                'valor' => 3,
-                'indice_calificacion' => '4.2.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un sistema de estímulos y reconocimientos a los logros de docentes y estudiantes que se aplica de manera coherente, sistemática y organizada.',
-                'valor' => 2,
-                'indice_calificacion' => '1.4.3'
-            ],
-            [
-                'descripcion' => 'La institución realiza jornadas,
-talleres y otras actividades
-orientadas a reducir los conflictos.
-Estas actividades son convocadas por algunos docentes.
-No hay una conciencia clara acerca de todas las competencias requeridas para la convivencia.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.8'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con programas
-concertados con el cuerpo docente para apoyar a los estudiantes en sus proyectos de vida. Estos programas están articulados con la identificación
-de las necesidades y expectativas de los estudiantes, así como con las posibilidades que ofrece el entorno para su desarrollo.',
-                'valor' => 2,
-                'indice_calificacion' => '4.1.4'
-            ],
-            [
-                'descripcion' => 'La institución revisa periódicamente los procedimientos e instrumentos establecidos para realizar la autoevaluación integral. Con esto orienta, ajusta y mejora continuamente este proceso.',
-                'valor' => 4,
-                'indice_calificacion' => '1.2.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con un
-conjunto de criterios básicos
-acerca de su manejo y éstos
-son aplicados parcialmente
-por las sedes.',
-                'valor' => 2,
-                'indice_calificacion' => '1.2.1'
-            ],
-            [
-                'descripcion' => 'La institución implementa un proceso de
-autoevaluación integral que abarca las diferentes
-sedes, empleando instrumentos y procedimientos
-claros. Además, cuenta con la participación de los diferentes estamentos de la comunidad educativa.',
-                'valor' => 3,
-                'indice_calificacion' => '1.3.1'
-            ],
-            [
-                'descripcion' => 'Se evalúa periódicamente el cumplimiento de las metas, lo que permite realizar ajustes y reorientar los diferentes aspectos de la gestión institucional. La revisión periódica de las metas da cuenta del proceso progresivo de la transformación hacia la atención a la población diversa y vulnerable.',
-                'valor' => 4,
-                'indice_calificacion' => '1.1.2'
-            ],
-            [
-                'descripcion' => 'Los programas de la escuela de padres se evalúan
-de forma regular; hay sistematización de estos
-procesos y su mejoramiento se hace teniendo en
-cuenta las necesidades y expectativas de los integrantes de la familia y de la comunidad.',
-                'valor' => 4,
-                'indice_calificacion' => '4.2.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la eficiencia y pertinencia de los criterios establecidos para su manejo y realiza ajustes para mejorarlos y lograr mayor cohesión. Se trabaja en equipo y se aplican distintas formas para resolver los problemas.',
-                'valor' => 4,
-                'indice_calificacion' => '1.2.1'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la coherencia y la articulación del enfoque metodológico con el PEI, el plan de mejoramiento y las prácticas
-de aula de sus docentes. Esta información es usada como base para la realización de ajustes.',
-                'valor' => 4,
-                'indice_calificacion' => '2.1.6'
-            ],
-            [
-                'descripcion' => 'La institución establece acuerdos
-ocasionales con otras entidades:
-bibliotecas, puestos de salud, hospitales, granjas, casas de cultura y centros de recreación para desarrollar algunas actividades pedagógicas.',
-                'valor' => 1,
-                'indice_calificacion' => '1.6.3'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una política clara sobre la intencionalidad de las tareas escolares en el afianzamiento de los aprendizajes de los estudiantes y ésta es aplicada por todos los docentes, conocida y
-comprendida por los estudiantes y las familias.',
-                'valor' => 3,
-                'indice_calificacion' => '2.2.2'
-            ],
-            [
-                'descripcion' => 'La institución ha identificado los principales problemas que constituyen factores de riesgo para sus estudiantes y la comunidad y diseña acciones orientadas a su prevención. Además, tiene en cuenta los análisis de los
-factores de riesgo sobre su comunidad
-realizados por otras entidades.',
-                'valor' => 2,
-                'indice_calificacion' => '4.4.2'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con lineamientos
-que permiten que sus
-integrantes opten por procesos
-de formación en coherencia
-con el PEI y con las necesidades
-detectadas.',
-                'valor' => 2,
-                'indice_calificacion' => '3.4.3'
-            ],
-            [
-                'descripcion' => 'La mayoría de planes, proyectos
-y acciones están articulados
-al planteamiento estratégico
-de la institución integrada
-e inclusiva y eventualmente se
-trabaja en equipo para articular
-las acciones.',
-                'valor' => 2,
-                'indice_calificacion' => '1.2.2'
-            ],
-            [
-                'descripcion' => 'El comité de convivencia está
-conformado, pero no se reúne
-periódicamente para analizar
-los casos que le son remitidos.',
-                'valor' => 2,
-                'indice_calificacion' => '1.3.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una
-política de evaluación de los
-desempeños académicos de los
-estudiantes que contempla los
-elementos del plan de estudios,
-los criterios de los docentes e integra la legislación vigente.',
-                'valor' => 2,
-                'indice_calificacion' => '2.1.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con el comité
-de convivencia, el cual se
-encarga de la identificación y
-mediación de los conflictos que
-se presentan entre los diferentes
-estamentos de la comunidad
-educativa. Además, existe
-un consenso acerca de las
-competencias que requieren
-desarrollarse para fortalecer la
-convivencia y el respeto a la diversidad,
-en coherencia con el
-PEI y la normatividad vigente.',
-                'valor' => 2,
-                'indice_calificacion' => '1.5.8'
-            ],
-            [
-                'descripcion' => 'La institución ha definido algunas
-actividades de inducción, pero éstas no se ejecutan adecuadamente o se realizan solamente en algunas sedes.',
-                'valor' => 1,
-                'indice_calificacion' => '1.5.3'
-            ],
-            [
-                'descripcion' => 'El comité de convivencia está
-conformado, pero sus integrantes no se reúnen ni se toman las decisiones que son de su competencia.',
-                'valor' => 1,
-                'indice_calificacion' => '1.3.4'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con una política y una
-programación completa de actividades extracurriculares que propicia la participación de todos, y éstas se orientan a complementar la formación de los estudiantes en los aspectos sociales, artísticos, deportivos, emocionales,
-éticos, etc.',
-                'valor' => 3,
-                'indice_calificacion' => '1.5.6'
-            ],
-            [
-                'descripcion' => 'El impacto del servicio social estudiantil es evaluado por la institución y se tienen en cuenta tanto las necesidades y expectativas de la comunidad como su satisfacción con estos programas.',
-                'valor' => 4,
-                'indice_calificacion' => '4.2.4'
-            ],
-            [
-                'descripcion' => 'La institución evalúa periódicamente la articulación de los planes, proyectos y acciones a su planteamiento estratégico, y realiza los cambios y ajustes necesarios para lograrla, mediante trabajo en equipo.',
-                'valor' => 4,
-                'indice_calificacion' => '1.2.2'
-            ],
-            [
-                'descripcion' => 'La institución establece relaciones esporádicas con el sector productivo; en ocasiones se reciben aportes y donaciones,
-y en otros casos cuenta con el
-acceso a laboratorios, talleres
-y espacios recreativos.',
-                'valor' => 1,
-                'indice_calificacion' => '1.6.4'
-            ],
-
-            [
-                'descripcion' => 'No posee',
-                'valor' => 1,
-                'indice_calificacion' => '3.5.3'
-            ],
-            [
-                'descripcion' => 'Posee pero es mínimo',
-                'valor' => 2,
-                'indice_calificacion' => '3.5.3'
-            ],
-            [
-                'descripcion' => 'Posee pero es aceptable',
-                'valor' => 3,
-                'indice_calificacion' => '3.5.3'
-            ],
-            [
-                'descripcion' => 'Posee y es suficiente',
-                'valor' => 4,
-                'indice_calificacion' => '3.5.3'
-            ],
-
-            [
-                'descripcion' => 'La institución cuenta con algunos
-planes de acción frente a
-accidentes o desastres naturales
-solamente para algunas sedes
-o ciertos riesgos; el estado de la infraestructura física no es sujeto de monitoreo ni de evaluación.',
-                'valor' => 1,
-                'indice_calificacion' => '3.2.5'
-            ],
-            [
-                'descripcion' => 'La institución cuenta con planes
-de evacuación frente a desastres
-naturales o similares y posee un sistema de monitoreo de las condiciones mínimas de seguridad que verifica el estado de su infraestructura y alerta sobre posibles accidentes.',
-                'valor' => 2,
-                'indice_calificacion' => '3.2.5'
-            ],            [
-                'descripcion' => 'Los planes de acción relativos a desastres naturales o similares son conocidos por todos los estamentos de la institución; se realizan simulacros regularmente y en caso de peligro real se cuenta con el apoyo de la defensa civil, los bomberos y hospitales.
-Existe un sistema de monitoreo de las condiciones de seguridad que permite verificar el estado de la infraestructura y alerta sobre posibles accidentes.',
-                'valor' => 3,
-                'indice_calificacion' => '3.2.5'
-            ],            [
-                'descripcion' => 'La institución evalúa periódicamente y mejora sus planes de seguridad, de manera que la comunidad esté preparada y sepa qué hacer y a dónde
-acudir al momento de cualquier evento de riesgo.
-Además, desarrolla programas de prevención de accidentes.',
-                'valor' => 4,
-                'indice_calificacion' => '3.2.5'
-            ],
-        ];
+      [
+          "indice_calificacion"=> "1.1.1",
+        "valor"=> 1,
+        "descripcion"=> "Hay una formulación incipiente o parcial del direccionamiento estratégico como institución integrada e inclusiva. \nPueden estar prevaleciendo la misión, la visión o los principios de cada una de las distintas sedes."
+      ],
+      [
+          "indice_calificacion"=> "1.1.1",
+        "valor"=> 2,
+        "descripcion"=> "Hay algunos avances hacia la formulación de la misión,\nla visión y los principios que orientan estratégicamente la\ninstitución integrada e inclusiva, pero éstos todavía no están totalmente articulados."
+      ],
+      [
+          "indice_calificacion"=> "1.1.1",
+        "valor"=> 3,
+        "descripcion"=> "Se cuenta con una misión, visión y principios articulados que identifican la Institución Educativa como un todo. Estos componentes han sido apropiados parcialmente por la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.1.1",
+        "valor"=> 4,
+        "descripcion"=> "La misión, la visión y los principios están claramente definidos para la institución integrada e inclusiva, son revisados y ajustados periódicamente, en función de los nuevos retos y de las necesidades de los estudiantes. Además, son conocidos y apropiados por la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.1.2",
+        "valor"=> 1,
+        "descripcion"=> "Las metas están formuladas\nsolamente para algunas sedes.\nNo todas son cuantificables y\nresponden a unos propósitos\nclaros de mejoramiento."
+      ],
+      [
+          "indice_calificacion"=> "1.1.2",
+        "valor"=> 2,
+        "descripcion"=> "Hay metas establecidas para\nla institución integrada e inclusiva, pero solamente algunas responden a sus objetivos y al direccionamiento estratégico."
+      ],
+      [
+          "indice_calificacion"=> "1.1.2",
+        "valor"=> 3,
+        "descripcion"=> "Todas las metas establecidas para la institución integrada e inclusiva responden a sus objetivos y al direccionamiento estratégico. Además, éstas son conocidas y puestas en práctica por la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.1.2",
+        "valor"=> 4,
+        "descripcion"=> "Se evalúa periódicamente el cumplimiento de las metas, lo que permite realizar ajustes y reorientar los diferentes aspectos de la gestión institucional. La revisión periódica de las metas da cuenta del proceso progresivo de la transformación hacia la atención a la población diversa y vulnerable."
+      ],
+      [
+          "indice_calificacion"=> "1.1.3",
+        "valor"=> 1,
+        "descripcion"=> "Los procesos de inclusión de personas de diferentes grupos poblacionales o diversidad\ncultural están bajo la responsabilidad de cada sede; no responden a una estrategia institucional articulada y conocida por todos los estamentos de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.1.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución tiene una estrategia articulada para promover inclusión de personas de\ndiferentes grupos poblacionales o diversidad cultural, que es conocida por todos los\nestamentos de la comunidad educativa para direccionar las acciones en este sentido."
+      ],
+      [
+          "indice_calificacion"=> "1.1.3",
+        "valor"=> 3,
+        "descripcion"=> "La Institución Educativa cuenta con una política de promoción de la inclusión de personas de diferentes grupos poblacionales o diversidad cultural como referente para que se adapten metodologías y espacios físicos,\napoyar talentos y hacerlos valorar por todos los estamentos de la comunidad educativa.\nAdemás, promueve la coordinación entre organismos para su atención integral."
+      ],
+      [
+          "indice_calificacion"=> "1.1.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente su política de inclusión de personas de diferentes grupos poblacionales o diversidad cultural, e introduce los ajustes pertinentes para fortalecerla."
+      ],
+      [
+          "indice_calificacion"=> "1.2.1",
+        "valor"=> 1,
+        "descripcion"=> "Los criterios básicos acerca del manejo de la institución integrada no están claramente definidos. Por ello hay dificultades en la coordinación entre las sedes y problemas en la delegación de tareas. Se trabaja aisladamente y no siempre se llevan a término los propósitos planteados, evidenciando falta de trabajo en equipo."
+      ],
+      [
+          "indice_calificacion"=> "1.2.1",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un conjunto de criterios básicos acerca de su manejo y trabajo en equipo pero éstos son aplicados parcialmente."
+      ],
+      [
+          "indice_calificacion"=> "1.2.1",
+        "valor"=> 3,
+        "descripcion"=> "Los criterios básicos sobre el manejo del establecimiento educativo y la atención a la diversidad fueron definidos de manera participativa y permiten el trabajo en equipo garantizando la ejecución de los diferentes proyectos institucionales, pero no han sido evaluados para establecer su eficacia."
+      ],
+      [
+          "indice_calificacion"=> "1.2.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente la eficiencia y pertinencia de los criterios establecidos para su manejo y realiza ajustes para mejorarlos y lograr mayor cohesión. Se trabaja en equipo y se aplican distintas formas para resolver los problemas."
+      ],
+      [
+          "indice_calificacion"=> "1.2.2",
+        "valor"=> 1,
+        "descripcion"=> "Los planes y proyectos se elaboran y se implementan de manera aislada y no responden con objetividad al planteamiento estratégico. \nLa articulación de los mismos en las diferentes sedes es inexistente o incipiente."
+      ],
+      [
+          "indice_calificacion"=> "1.2.2",
+        "valor"=> 2,
+        "descripcion"=> "Algunos planes y  proyectos están articulados\nal planteamiento estratégico de la institución integrada\ne inclusiva."
+      ],
+      [
+          "indice_calificacion"=> "1.2.2",
+        "valor"=> 3,
+        "descripcion"=> "Los planes, proyectos y acciones se enmarcan en principios de corresponsabilidad, participación\ny equidad, articulados al planteamiento estratégico de la institución integrada e inclusiva,\ny son conocidos por la comunidad educativa. Se trabaja en equipo para articular las acciones."
+      ],
+      [
+          "indice_calificacion"=> "1.2.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente la articulación de los planes y proyectos a su planteamiento estratégico, y realiza los cambios y ajustes necesarios para lograrla, mediante trabajo en equipo."
+      ],
+      [
+          "indice_calificacion"=> "1.2.3",
+        "valor"=> 1,
+        "descripcion"=> "La institución realiza su autoevaluación\nsin un procedimiento claramente establecido;\nla recolección de información y la evaluación se hacen sobre la marcha. Además, cada sede tiene su propio proceso de evaluación."
+      ],
+      [
+          "indice_calificacion"=> "1.2.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha establecido un proceso para realizar la autoevaluación, mediante instrumentos y procedimientos claros para las distintas sedes, pero éstos todavía no son utilizados integralmente."
+      ],
+      [
+          "indice_calificacion"=> "1.2.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución implementa un proceso de autoevaluación integral a partir de los resultados de las evaluaciones internas, externas, evaluaciones de desempeño de los docentes y personal administrativo, que abarca las diferentes sedes empleando instrumentos y procedimientos claros. Además, cuenta con la participación de los diferentes estamentos de la comunidad educativa cuyo resultados se evidencia en el plan de mejoramiento institucional y la resignificación del PEI."
+      ],
+      [
+          "indice_calificacion"=> "1.2.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa periódicamente los procedimientos e instrumentos establecidos para realizar la autoevaluación integral y aplicar procesos de mejora continua."
+      ],
+      [
+          "indice_calificacion"=> "1.3.1",
+        "valor"=> 1,
+        "descripcion"=> "La institución no ha conformado el consejo directivo como instancia de participación y toma de decisiones."
+      ],
+      [
+          "indice_calificacion"=> "1.3.1",
+        "valor"=> 2,
+        "descripcion"=> "\nLa institución cuenta con un consejo directivo; sin embargo, no existe un plan de trabajo definido para orientar los procesos de planeación y el seguimiento a las acciones institucionales."
+      ],
+      [
+          "indice_calificacion"=> "1.3.1",
+        "valor"=> 3,
+        "descripcion"=> "El consejo directivo tiene una agenda y un cronograma de trabajo para orientar los procesos de planeación y el seguimiento a las acciones institucionales. Sin embargo, no se reúne con regularidad."
+      ],
+      [
+          "indice_calificacion"=> "1.3.1",
+        "valor"=> 4,
+        "descripcion"=> "\n\nEl consejo directivo se reúne periódicamente de acuerdo con un cronograma establecido y sesiona con el aporte activo de todos sus miembros. Hace seguimiento sistemático al plan de trabajo, para garantizar su cumplimiento."
+      ],
+      [
+          "indice_calificacion"=> "1.3.2",
+        "valor"=> 1,
+        "descripcion"=> "El consejo académico está conformado pero tiene escasa\nincidencia en el diseño e implementación del componente pedagógico. Además, no cuenta con un plan de trabajo y cronograma de reuniones."
+      ],
+      [
+          "indice_calificacion"=> "1.3.2",
+        "valor"=> 2,
+        "descripcion"=> "\nEl consejo académico está conformado en el marco de la integración institucional, y cuenta con una metodología de trabajo orientada al diseño y la implementación del componente pedagógico. Sin embargo, no se reúne con regularidad o no asisten todos sus miembros, afectando negativamente la toma de decisiones."
+      ],
+      [
+          "indice_calificacion"=> "1.3.2",
+        "valor"=> 3,
+        "descripcion"=> "El consejo académico se reúne periódicamente para garantizar que el componente pedagógico sea coherente con las necesidades de la diversidad y se implemente en todas las sedes, áreas y niveles. Sin embargo, no hace seguimiento suficiente al mismo."
+      ],
+      [
+          "indice_calificacion"=> "1.3.2",
+        "valor"=> 4,
+        "descripcion"=> "El consejo académico se reúne ordinariamente y cuenta con el aporte activo de todos sus miembros. Allí se toman decisiones sobre los procesos pedagógicos y se hace seguimiento sistemático al plan de trabajo, para asegurar su cumplimiento."
+      ],
+      [
+          "indice_calificacion"=> "1.3.3",
+        "valor"=> 1,
+        "descripcion"=> "El comité de convivencia no está conformado."
+      ],
+      [
+          "indice_calificacion"=> "1.3.3",
+        "valor"=> 2,
+        "descripcion"=> "El comité de convivencia está conformado, pero sus integrantes no se reúnen ni se toman las decisiones que son de su competencia."
+      ],
+      [
+          "indice_calificacion"=> "1.3.3",
+        "valor"=> 3,
+        "descripcion"=> "El comité de convivencia se reúne periódicamente y es reconocido como la instancia encargada de analizar y plantear soluciones a los problemas de convivencia que se presentan en la institución."
+      ],
+      [
+          "indice_calificacion"=> "1.3.3",
+        "valor"=> 4,
+        "descripcion"=> "El comité de convivencia se reúne periódicamente y cuenta con el aporte activo de todos sus miembros. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo."
+      ],
+      [
+          "indice_calificacion"=> "1.3.4",
+        "valor"=> 1,
+        "descripcion"=> "La institución no cuenta con un consejo estudiantil conformado mediante elección democrática."
+      ],
+      [
+          "indice_calificacion"=> "1.3.4",
+        "valor"=> 2,
+        "descripcion"=> "El consejo estudiantil está conformado\nmediante elección democrática, pero no se reúne periódicamente para deliberar y tomar las decisiones que le corresponden."
+      ],
+      [
+          "indice_calificacion"=> "1.3.4",
+        "valor"=> 3,
+        "descripcion"=> "El consejo estudiantil se reúne periódicamente y es reconocido como la instancia de representación de los intereses de todos y todas los estudiantes de la institución."
+      ],
+      [
+          "indice_calificacion"=> "1.3.4",
+        "valor"=> 4,
+        "descripcion"=> "El consejo estudiantil se reúne periódicamente y cuenta con el aporte activo de todos sus miembros.\nAdemás, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo."
+      ],
+      [
+          "indice_calificacion"=> "1.3.5",
+        "valor"=> 1,
+        "descripcion"=> "La institución no cuenta con un personero elegido democráticamente."
+      ],
+      [
+          "indice_calificacion"=> "1.3.5",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un personero elegido democráticamente\nque representa a todas y todos los estudiantes de todas las sedes, pero no es tenido en cuenta en las decisiones."
+      ],
+      [
+          "indice_calificacion"=> "1.3.5",
+        "valor"=> 3,
+        "descripcion"=> "El personero elegido desarrolla proyectos y programas a favor de todas y todos los estudiantes\ny su labor es reconocida en los diferentes estamentos de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.3.5",
+        "valor"=> 4,
+        "descripcion"=> "El gobierno escolar evalúa el impacto de la labor del personero y a partir de ésta se mejoran los procesos de elección y participación del estudiantado."
+      ],
+      [
+          "indice_calificacion"=> "1.3.6",
+        "valor"=> 1,
+        "descripcion"=> "No se reconoce la asamblea de padres de familia como instancia de participación para la toma de decisiones."
+      ],
+      [
+          "indice_calificacion"=> "1.3.6",
+        "valor"=> 2,
+        "descripcion"=> "Está conformada la asamblea de padres de familia, pero ésta\nno se reúne periódicamente para deliberar y tomar decisiones\nsobre los temas de su competencia."
+      ],
+      [
+          "indice_calificacion"=> "1.3.6",
+        "valor"=> 3,
+        "descripcion"=> "La asamblea de padres de familia se reúne periódicamente y es reconocida por la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.3.6",
+        "valor"=> 4,
+        "descripcion"=> "La asamblea de padres de familia se reúne periódicamente y cuenta con la participación activa de sus integrantes. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo."
+      ],
+      [
+          "indice_calificacion"=> "1.3.7",
+        "valor"=> 1,
+        "descripcion"=> "La institución no cuenta con un consejo de padres de familia debidamente conformado."
+      ],
+      [
+          "indice_calificacion"=> "1.3.7",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un consejo de padres de familia el cual se reúne esporádicamente para tratar asuntos de su competencia."
+      ],
+      [
+          "indice_calificacion"=> "1.3.7",
+        "valor"=> 3,
+        "descripcion"=> "El consejo de padres de familia se reúne periódicamente para apoyar al rector o director en el marco del plan de mejoramiento.  Sin embargo, no hace seguimiento sistemático a los resultados obtenidos."
+      ],
+      [
+          "indice_calificacion"=> "1.3.7",
+        "valor"=> 4,
+        "descripcion"=> "El consejo de padres de familia se reúne periódicamente y cuenta con la participación activa de todos sus miembros. Además, evalúa los resultados de sus acciones y decisiones y los utiliza para fortalecer su trabajo."
+      ],
+      [
+          "indice_calificacion"=> "1.4.1",
+        "valor"=> 1,
+        "descripcion"=> "La institución cuenta con algunos mecanismos de comunicación que utiliza ocasionalmente para difundir información entre los integrantes de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.4.1",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido los mecanismos de comunicación de acuerdo con las características y el tipo de información pertinente para cada uno de los estamentos de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.4.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con una política de comunicación institucional para informar y actualizar a cada uno de los estamentos de la comunidad educativa, pero no se evalúa."
+      ],
+      [
+          "indice_calificacion"=> "1.4.1",
+        "valor"=> 4,
+        "descripcion"=> "La política de comunicación institucional es reconocida y aplicada por todos los integrantes de la comunidad educativa; cuenta con principios de objetividad, transparencia y celeridad, y se evalúa periódicamente."
+      ],
+      [
+          "indice_calificacion"=> "1.4.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución realiza esporádicamente actividades orientadas a la integración, al bienestar y al reconocimiento de los logros de docentes, estudiantes, padres de familia y personal administrativo, pero estas no se aplican de manera organizada ni sistemática."
+      ],
+      [
+          "indice_calificacion"=> "1.4.2",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un programa de bienestar que se ejecuta parcialmente, además, no tiene en cuenta a todos los estamentos de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.4.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con un programa de bienestar que integra un sistema de estímulos y reconocimiento de logros para docentes, estudiantes, padres de familia y personal administrativo, el cual se cumple en su totalidad y se aplica de manera coherente, sistemática y organizada."
+      ],
+      [
+          "indice_calificacion"=> "1.4.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa continuamente su programa de bienestar para docentes, estudiantes, padres de familia y personal administrativo y realiza los ajustes pertinentes. "
+      ],
+      [
+          "indice_calificacion"=> "1.4.3",
+        "valor"=> 1,
+        "descripcion"=> "La institución educativa no cuenta con criterios claros para el apoyo a la investigación e identificación de buenas prácticas pedagógicas, administrativas y culturales."
+      ],
+      [
+          "indice_calificacion"=> "1.4.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un programa para el apoyo a la investigación e identificación de buenas prácticas pedagógicas, administrativas y culturales, el cual se ha implementado parcialmente."
+      ],
+      [
+          "indice_calificacion"=> "1.4.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución ha implementado el programa para el apoyo a la investigación e identificación de buenas prácticas pedagógicas, administrativas y culturales, el cual reconoce la diversidad de la población y propicia el intercambio de experiencias."
+      ],
+      [
+          "indice_calificacion"=> "1.4.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódica y sistemáticamente el impacto de la socialización, la documentación, la apropiación y ejecución del programa para el apoyo a la investigación e identificación de buenas prácticas pedagógicas, administrativas y culturales; y realiza los ajustes pertinentes."
+      ],
+      [
+          "indice_calificacion"=> "1.5.1",
+        "valor"=> 1,
+        "descripcion"=> "Los estudiantes, docentes, padres de familia y administrativos se sienten parte de la institución educativa y se identifican con algunos elementos simbólicos de la institución."
+      ],
+      [
+          "indice_calificacion"=> "1.5.1",
+        "valor"=> 2,
+        "descripcion"=> "Los estudiantes, docentes, padres de familia y administrativos se sienten parte de la institución educativa, se identifican con algunos elementos simbólicos y con aspectos relacionados con el horizonte institucional. "
+      ],
+      [
+          "indice_calificacion"=> "1.5.1",
+        "valor"=> 3,
+        "descripcion"=> "Los estudiantes, docentes, padres de familia y administrativos se identifican y sienten orgullo de pertenecer a la institución lo cual se evidencia en la aplicación de los instrumentos valorativos y actitudinales, así como en la participación y representación activa en eventos internos y externos. "
+      ],
+      [
+          "indice_calificacion"=> "1.5.1",
+        "valor"=> 4,
+        "descripcion"=> "Se consolidan y analizan periódicamente los instrumentos valorativos y actitudinales que evidencian el grado de pertenencia de los estudiantes, docentes, padres de familia y administrativos hacia la institución y se establecen medidas oportunas para su promoción y fortalecimiento."
+      ],
+      [
+          "indice_calificacion"=> "1.5.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución realiza algunas actividades de inducción con estudiantes, docentes, administrativos y padres de familia, pero éstas no son sistemáticas y obedecen a iniciativas individuales, de áreas o de sedes."
+      ],
+      [
+          "indice_calificacion"=> "1.5.2",
+        "valor"=> 2,
+        "descripcion"=> "Al inicio del año escolar, se realizan actividades de inducción con estudiantes, docentes, administrativos y padres de familia, pero estas no responden a un programa institucional."
+      ],
+      [
+          "indice_calificacion"=> "1.5.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con un programa estructurado de inducción y reinducción, con estrategias que se adaptan a las condiciones personales, sociales y culturales de todos sus integrantes, el cual es socializado al inicio del año escolar."
+      ],
+      [
+          "indice_calificacion"=> "1.5.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa sistemáticamente la efectividad de su programa de inducción y reinducción y realiza los ajustes pertinentes para el mejoramiento continuo."
+      ],
+      [
+          "indice_calificacion"=> "1.5.3",
+        "valor"=> 1,
+        "descripcion"=> "Existe un manual de convivencia, pero su aplicación está restringida a algunas sedes y no es reconocido como herramienta para orientar la vida escolar."
+      ],
+      [
+          "indice_calificacion"=> "1.5.3",
+        "valor"=> 2,
+        "descripcion"=> "El manual de convivencia es conocido por la mayoría de los miembros de la comunidad educativa y se utiliza para regular la convivencia y promover valores compartidos."
+      ],
+      [
+          "indice_calificacion"=> "1.5.3",
+        "valor"=> 3,
+        "descripcion"=> "El manual de convivencia se emplea de manera activa como instrumento que orienta valores, principios, normas y procedimientos para fomentar una convivencia armónica y el respeto por la diversidad."
+      ],
+      [
+          "indice_calificacion"=> "1.5.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa periódicamente el manual de convivencia, lo ajusta en función de su impacto en el clima escolar y lo articula con los procesos de formación ciudadana y resolución pacífica de conflictos."
+      ],
+      [
+          "indice_calificacion"=> "1.5.4",
+        "valor"=> 1,
+        "descripcion"=> "Algunas sedes desarrollan actividades extracurriculares de forma aislada, sin un programa institucional que oriente su propósito ni su articulación con los procesos formativos."
+      ],
+      [
+          "indice_calificacion"=> "1.5.4",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un programa institucional para las actividades extracurriculares, pero su implementación es parcial y no involucra a toda la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.5.4",
+        "valor"=> 3,
+        "descripcion"=> "Existe un programa institucional de actividades extracurriculares, orientado al fortalecimiento de las capacidades artísticas, deportivas, sociales, emocionales y éticas de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "1.5.4",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa regularmente su programa de actividades extracurriculares, realiza ajustes para mejorar su alcance y asegura la participación activa de todos los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "1.5.5",
+        "valor"=> 1,
+        "descripcion"=> "La atención de casos difíciles y la prevención de conflictos se realiza mediante acciones aisladas por parte de los docentes, sin consolidarse todavía en una estrategia institucional alineada con el comité de convivencia."
+      ],
+      [
+          "indice_calificacion"=> "1.5.5",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con una estrategia para abordar los casos difíciles y la prevención de conflictos pero esta no se encuentra articulada con el comité de convivencia."
+      ],
+      [
+          "indice_calificacion"=> "1.5.5",
+        "valor"=> 3,
+        "descripcion"=> "La comunidad educativa reconoce el comité de convivencia como instancia para identificar y prevenir los conflictos y casos difíciles. Se implementan mecanismos internos y externos para prevenir riesgos y manejar situaciones complejas, con participación de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.5.5",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente la eficacia del comité de convivencia y de las estrategias implementadas para el manejo de conflictos y casos difíciles. Ajusta sus acciones con base en experiencias exitosas, promoviendo su apropiación por todos los estamentos."
+      ],
+      [
+          "indice_calificacion"=> "1.6.1",
+        "valor"=> 1,
+        "descripcion"=> "La institución establece comunicaciones con las familias o acudientes en función de las demandas y necesidades presentadas. De manera general, cada sede posee sus propios canales de comunicación."
+      ],
+      [
+          "indice_calificacion"=> "1.6.1",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido una política de comunicación e interacción con las familias o acudientes, estableciendo canales, tipos de información y periodicidad, aunque su aplicación es parcial."
+      ],
+      [
+          "indice_calificacion"=> "1.6.1",
+        "valor"=> 3,
+        "descripcion"=> "Existe un intercambio fluido de información con las familias o acudientes, en coherencia con la política institucional. Este intercambio facilita la atención oportuna a situaciones y fortalece la corresponsabilidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.6.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa sistemáticamente su política de comunicación con las familias o acudientes. Con base en los resultados, realiza los ajustes necesarios para fortalecer el vínculo y la participación activa de las familias."
+      ],
+      [
+          "indice_calificacion"=> "1.6.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución mantiene un contacto esporádico con sus egresados, sin un programdo establecido, ni canales sistemáticos de comunicación."
+      ],
+      [
+          "indice_calificacion"=> "1.6.2",
+        "valor"=> 2,
+        "descripcion"=> "Se ha formulado un programa institucional para establecer relaciones con los egresados, definiendo canales de comunicación e instancias de participación, aunque su implementación aún es limitada."
+      ],
+      [
+          "indice_calificacion"=> "1.6.2",
+        "valor"=> 3,
+        "descripcion"=> "A través del programa institucional de egresados, se realiza seguimiento de manera regular, y se utilizan indicadores para orientar sus acciones pedagógicas. Además, promueve su participación y organización, y cuenta con una base de datos que le permite tener información actualizada de los egresados (estudios postsecundarios y/o vinculación al mercado laboral, entre otros)."
+      ],
+      [
+          "indice_calificacion"=> "1.6.2",
+        "valor"=> 4,
+        "descripcion"=> "El programa de relación con los egresados es evaluada periódicamente. Sus resultados orientan acciones para fortalecer el sentido de pertenencia, fomentar la participación activa y aprovechar el aporte de los mismos al mejoramiento institucional."
+      ],
+      [
+          "indice_calificacion"=> "1.6.3",
+        "valor"=> 1,
+        "descripcion"=> "La institución establece acuerdos ocasionales con otras entidades del entorno (bibliotecas, centros culturales, de salud, recreación, entre otros), los cuales no responden a una estrategia articulada."
+      ],
+      [
+          "indice_calificacion"=> "1.6.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con alianzas y/o acuerdos con diferentes entidades para la ejecución de sus proyectos. Sin embargo, no hace seguimiento sistemático a sus resultados."
+      ],
+      [
+          "indice_calificacion"=> "1.6.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con alianzas y/o acuerdos con diferentes entidades para la ejecución de sus proyectos, con la participación de los diferentes estamentos de la comunidad educativa y sectores de la comunidad general."
+      ],
+      [
+          "indice_calificacion"=> "1.6.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente el impacto de sus alianzas y/o acuerdos con entidades externas, y realiza los ajustes pertinentes en función de los resultados obtenidos, fortaleciendo el trabajo colaborativo y los beneficios para la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "1.6.4",
+        "valor"=> 1,
+        "descripcion"=> "Las relaciones con el sector productivo son esporádicas y se limitan a aportes puntuales, como el préstamo de espacios o la entrega de donaciones, sin un enfoque articulado con los procesos formativos."
+      ],
+      [
+          "indice_calificacion"=> "1.6.4",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha establecido alianzas con el sector productivo, con objetivos y metodologías definidas, aunque los sistemas de seguimiento y evaluación no están plenamente implementados."
+      ],
+      [
+          "indice_calificacion"=> "1.6.4",
+        "valor"=> 3,
+        "descripcion"=> "Las alianzas con el sector productivo tienen objetivos y metodologías claras orientadas al fortalecimiento de las competencias de los estudiantes. Se realizan procesos periódicos de seguimiento y evaluación."
+      ],
+      [
+          "indice_calificacion"=> "1.6.4",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa sistemáticamente el impacto de las alianzas con el sector productivo en el desarrollo de competencias de los estudiantes, y toma decisiones de mejora con base en los resultados obtenidos."
+      ],
+      [
+          "indice_calificacion"=> "2.1.1",
+        "valor"=> 1,
+        "descripcion"=> "El plan de estudios está formulado parcialmente y no responde a las necesidades del contexto ni a lo estipulado en el PEI."
+      ],
+      [
+          "indice_calificacion"=> "2.1.1",
+        "valor"=> 2,
+        "descripcion"=> "El plan de estudios responde a los lineamientos y refrentes conceptuales del orden nacional, contempla parcialmente las necesidades del contexto, aunque su implementación aún presenta inconsistencias."
+      ],
+      [
+          "indice_calificacion"=> "2.1.1",
+        "valor"=> 3,
+        "descripcion"=> "El plan de estudios está estructurado de forma coherente con el PEI y el contexto institucional, promueve la inclusión y fortalece el desarrollo de competencias para la vida; se aplica de manera articulada en todas las sedes y niveles."
+      ],
+      [
+          "indice_calificacion"=> "2.1.1",
+        "valor"=> 4,
+        "descripcion"=> "El plan de estudios es revisado, evaluado y ajustado periódicamente en función de los resultados académicos, las necesidades del entorno y los referentes de orden nacional."
+      ],
+      [
+          "indice_calificacion"=> "2.1.2",
+        "valor"=> 1,
+        "descripcion"=> "Las prácticas pedagógicas carecen de un enfoque metodológico común y se desarrollan de forma dispersa según criterios individuales de los docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.1.2",
+        "valor"=> 2,
+        "descripcion"=> "Existe un enfoque metodológico definido institucionalmente, aunque su apropiación e implementación es parcial entre los docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.1.2",
+        "valor"=> 3,
+        "descripcion"=> "El enfoque metodológico institucional está orientado al aprendizaje activo, colaborativo, significativo e inclusivo, y se aplica de manera articulada en los distintos niveles y sedes."
+      ],
+      [
+          "indice_calificacion"=> "2.1.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa sistemáticamente el enfoque metodológico, lo ajusta según los resultados y promueve su apropiación a través de procesos de formación docente."
+      ],
+      [
+          "indice_calificacion"=> "2.1.3",
+        "valor"=> 1,
+        "descripcion"=> "No se cuenta con una estrategia pedagógica institucional claramente definida en el Proyecto Educativo Institucional, lo que dificulta la coherencia entre los procesos de enseñanza y aprendizaje.\n"
+      ],
+      [
+          "indice_calificacion"=> "2.1.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido una estrategia pedagógica en el PEI, coherente con la misión, la visión y los principios institucionales, pero ésta todavía no es aplicada de manera articulada en las diferentes sedes, niveles y grados.\n"
+      ],
+      [
+          "indice_calificacion"=> "2.1.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución ha definido una estrategia pedagógica en coherencia con el PEI, que propicia procesos de enseñanza centrados en el desarrollo de competencias y la atención a la diversidad, la cual se aplica de manera articulada en las diferentes sedes, niveles y grados."
+      ],
+      [
+          "indice_calificacion"=> "2.1.3",
+        "valor"=> 4,
+        "descripcion"=> "La estrategia pedagógica es objeto de seguimiento, evaluación y ajuste periódico, con base en resultados de aprendizaje(pruebas internas y externas) y en el análisis de las prácticas pedagógicas.\n"
+      ],
+      [
+          "indice_calificacion"=> "2.1.4",
+        "valor"=> 1,
+        "descripcion"=> "La institución no ha establecido una ruta de seguimiento y control a las horas efectivas de clase recibidas por los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.1.4",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha establecido una ruta de seguimiento y control a las horas efectivas de clase recibidas por los estudiantes, pero no se aplica de manera sistemática y articulada para responder a las necesidades pedagógicas y garantizar el aprendizaje efectivo."
+      ],
+      [
+          "indice_calificacion"=> "2.1.4",
+        "valor"=> 3,
+        "descripcion"=> "La ruta de seguimiento y control a las horas efectivas de clase recibidas por los estudiantes, hacen parte de un sistema de mejoramiento institucional que se implementa en todas las sedes y es aplicado por los docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.1.4",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente el cumplimiento de la ruta establecida para el seguimiento a las horas efectivas de clase recibidas por los estudiantes y realiza los ajustes pertinentes para mejorar el uso del tiempo pedagógico y la calidad de los procesos formativos."
+      ],
+      [
+          "indice_calificacion"=> "2.1.5",
+        "valor"=> 1,
+        "descripcion"=> "La institución cuenta con un SIEE formulado, pero su aplicación es limitada y no siempre orienta adecuadamente los procesos de evaluación del aprendizaje."
+      ],
+      [
+          "indice_calificacion"=> "2.1.5",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un Sistema Institucional de Evaluación de los Estudiantes que ha sido socializado a la comunidad educativa; se aplica parcialmente y algunos docentes lo integran en sus prácticas de aula."
+      ],
+      [
+          "indice_calificacion"=> "2.1.5",
+        "valor"=> 3,
+        "descripcion"=> "El SIEE se aplica de forma coherente y sistemática, a través del cual se orientan los procesos de evaluación formativa del aprendizaje de los estudiantes, la promoción escolar y el mejoramiento institucional, en atención a la normatividad vigente. "
+      ],
+      [
+          "indice_calificacion"=> "2.1.5",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa periódicamente la implementación del SIEE, realizando ajustes en función del desarrollo de competencias básicas y socioemocionales de los estudiantes. "
+      ],
+      [
+          "indice_calificacion"=> "2.2.1",
+        "valor"=> 1,
+        "descripcion"=> "La asignación de tareas escolares no responde a criterios institucionales definidos y varía según las prácticas individuales de cada docente."
+      ],
+      [
+          "indice_calificacion"=> "2.2.1",
+        "valor"=> 2,
+        "descripcion"=> "Existen orientaciones institucionales para la funcionalidad pedagógica de las tareas escolares, pero su aplicación es parcial y no siempre está articulada con los planes de aula de cada docente."
+      ],
+      [
+          "indice_calificacion"=> "2.2.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución implementa estrategias claras y objetivas sobre la funcionalidad pedagógica de las tareas escolares, con el propósito de fortalecer los aprendizajes de los estudiantes y son aplicadas por todos los docentes; estas se encuentran definidas en el SIEE. "
+      ],
+      [
+          "indice_calificacion"=> "2.2.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa periódicamente la funcionalidad de las estrategias para las tareas escolares y su impacto en los aprendizajes de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.2.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución cuenta con una estrategia para el uso del tiempo destinado a los aprendizajes, pero ésta no se encuentra articulada con la planeación pedagógica. La organización y división del tiempo es deficiente, lo que se traduce en frecuentes improvisaciones."
+      ],
+      [
+          "indice_calificacion"=> "2.2.2",
+        "valor"=> 2,
+        "descripcion"=> "Existe una estrategia institucional sobre el uso del tiempo para los aprendizajes, que se aplica parcialmente en algunas sedes, grados o niveles, sin garantizar su implementación integral ni coherencia en toda la institución."
+      ],
+      [
+          "indice_calificacion"=> "2.2.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con estrategia para el uso apropiado de los tiempos destinados a los aprendizajes, articulada con la planeación pedagógica, la cual es implementada de manera flexible de acuerdo con las características y necesidades de los estudiantes. No obstante, hay pocas oportunidades para complementarlo con actividades extracurriculares y de refuerzo.\n"
+      ],
+      [
+          "indice_calificacion"=> "2.2.2",
+        "valor"=> 4,
+        "descripcion"=> "La estrategia de distribución del tiempo curricular y extracurricular es apropiada y se utiliza efectivamente. Además, es revisada y evaluada periódicamente; se ajusta con base en los resultados académicos, a las necesidades identificadas, garantizando el máximo aprovechamiento del tiempo escolar."
+      ],
+      [
+          "indice_calificacion"=> "2.2.3",
+        "valor"=> 1,
+        "descripcion"=> "Las opciones didácticas son implementadas de manera individual y aislada por los docentes, sin una articulación clara con el enfoque metodológico institucional."
+      ],
+      [
+          "indice_calificacion"=> "2.2.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un enfoque metodológico que orienta las opciones didácticas empleadas por los docentes en las distintas áreas, asignaturas y proyectos transversales. No obstante, su apropiación es parcial y su aplicación no siempre es coherente entre las diferentes sedes o niveles educativos."
+      ],
+      [
+          "indice_calificacion"=> "2.2.3",
+        "valor"=> 3,
+        "descripcion"=> "Las prácticas pedagógicas de los docentes se fundamentan en opciones didácticas comunes y diferenciadas, apropiadas para cada grupo poblacional, en concordancia con el plan de estudios y las características del contexto. Estas opciones son conocidas, compartidas y valoradas por la comunidad educativa.\n"
+      ],
+      [
+          "indice_calificacion"=> "2.2.3",
+        "valor"=> 4,
+        "descripcion"=> "\nLa institución evalúa de forma periódica la pertinencia, coherencia y articulación de las opciones didácticas con el enfoque metodológico, las prácticas pedagógicas y el plan de estudios. Los resultados de esta evaluación son utilizados para diseñar e implementar estrategias de mejoramiento continuo."
+      ],
+      [
+          "indice_calificacion"=> "2.3.1",
+        "valor"=> 1,
+        "descripcion"=> "Los ambientes de aprendizaje presentan limitaciones físicas, pedagógicas, tecnológicas y de comunicación que afectan el proceso educativo, privilegiando una comunicación vertical con el docente."
+      ],
+      [
+          "indice_calificacion"=> "2.3.1",
+        "valor"=> 2,
+        "descripcion"=> "Se han realizado adecuaciones en algunos ambientes de aprendizaje, aunque aún no responden de manera integral a las necesidades pedagógicas y de inclusión. Los docentes realizan esfuerzos coordinados para mejorar la comunicación recíproca, las relaciones horizontales y la negociación con los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.3.1",
+        "valor"=> 3,
+        "descripcion"=> "Los ambientes de aprendizaje se diseñan y organizan para favorecer el proceso de enseñanza-aprendizaje, promover la participación, el trabajo colaborativo y atender a la diversidad, a partir de la comunicación, el vínculo afectivo y la valoración de las diferencias entre los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.3.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa continuamente sus ambientes de aprendizaje y las relaciones de aula, con el fin de optimizar su funcionalidad, accesibilidad, pertinencia pedagógica y una comunicación horizontal."
+      ],
+      [
+          "indice_calificacion"=> "2.3.2",
+        "valor"=> 1,
+        "descripcion"=> "La motivación de los estudiantes hacia el aprendizaje depende de iniciativas individuales de algunos docentes, sin estrategias institucionales definidas."
+      ],
+      [
+          "indice_calificacion"=> "2.3.2",
+        "valor"=> 2,
+        "descripcion"=> "La institución dispone de estrategias orientadas a fomentar la motivación hacia el aprendizaje en los estudiantes, aunque su implementación aún es parcial."
+      ],
+      [
+          "indice_calificacion"=> "2.3.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución desarrolla e implementa estrategias para fomentar el interés, la curiosidad y el compromiso de los estudiantes con su aprendizaje."
+      ],
+      [
+          "indice_calificacion"=> "2.3.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente las estrategias de motivación hacia el aprendizaje y realiza ajustes para mejorar el desempeño, la permanencia y el bienestar de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.3.3",
+        "valor"=> 1,
+        "descripcion"=> "Los docentes cuentan con una herramienta de planeación de carácter general; sin embargo, no está articulada con el enfoque metodológico institucional ni cuenta con los referentes conceptuales establecidos por el Ministerio de Educación Nacional."
+      ],
+      [
+          "indice_calificacion"=> "2.3.3",
+        "valor"=> 2,
+        "descripcion"=> "Los planes de aula que desarrollan\nel plan de estudio presentan una secuencia didáctica articulada con la estrategia pedagócia y el enfoque metodólogico institucional. Sin embargo, éstos no son aplicados por todos los docentes en todas las sedes y niveles educativos."
+      ],
+      [
+          "indice_calificacion"=> "2.3.3",
+        "valor"=> 3,
+        "descripcion"=> "Los planes de aula, que desarrollan el plan de estudio, presentan una secuencia didáctica articulada con la estrategia pedagógica y el enfoque metodológico institucional, los cuales son accesibles para todo el estudiantado y contribuyen a minimizar las barreras al aprendizaje."
+      ],
+      [
+          "indice_calificacion"=> "2.3.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa periódicamente su estrategia de planeación de clases, y utiliza los\nresultados para implementar medidas de ajuste y mejoramiento que contribuyen a la consolidación\nde conjuntos articulados y ordenados de actividades para desarrollar las competencias de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.3.4",
+        "valor"=> 1,
+        "descripcion"=> "Los docentes aplican estrategias para evaluar los desempeños de los estudiantes de forma aislada; dichas estrategias no son comunicadas a los padres de familia ni consideran el proceso de retroalimentación propio de la evaluación formativa."
+      ],
+      [
+          "indice_calificacion"=> "2.3.4",
+        "valor"=> 2,
+        "descripcion"=> "Las estrategias de evaluación y retroalimenatación del desempeño de los estudiantes son diseñadas teniendo en cuenta los niveles de competencia a alcanzar en cada grado y nivel; son conocidas por la comunidad educativa y son aplicados por algunos docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.3.4",
+        "valor"=> 3,
+        "descripcion"=> "La evaluación en el aula se desarrolla con criterios claros, acordes con el SIEE, e incluye la retroalimentación como herramienta de la evualuación formativa para el mejoramiento del aprendizaje."
+      ],
+      [
+          "indice_calificacion"=> "2.3.4",
+        "valor"=> 4,
+        "descripcion"=> "Los procesos de evaluación formativa en el aula son objeto de reflexión y ajuste continuo, con base en el análisis de resultados de evaluaciones internas y externas, con la participación de docentes y estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.1",
+        "valor"=> 1,
+        "descripcion"=> "El seguimiento que se hace a los desempeños de los estudiantes es aislado e individual, y no se generan acciones concretas para el fortalecimiento de las competencias."
+      ],
+      [
+          "indice_calificacion"=> "2.4.1",
+        "valor"=> 2,
+        "descripcion"=> "El seguimiento a los desempeños académicos de los estudiantes se realiza parcialmente y depende de iniciativas individuales de los docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución educativa cuenta con un proceso de seguimiento y retroalimentación sistemático a los desempeños de los estudiantes y se aplica de manera oportuna en todos los grados. Además, es conocido por los estudiantes y padres de familia."
+      ],
+      [
+          "indice_calificacion"=> "2.4.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa periódicamente su proceso de seguimiento a los desempeños de los estudiantes y realiza los ajustes pertinentes, en el marco de la evaluación formativa."
+      ],
+      [
+          "indice_calificacion"=> "2.4.2",
+        "valor"=> 1,
+        "descripcion"=> "Los resultados de las evaluaciones externas (pruebas SABER y exámenes de Estado) son conocidos por los docentes, pero éstos no se utilizan para diseñar e implementar acciones de mejoramiento."
+      ],
+      [
+          "indice_calificacion"=> "2.4.2",
+        "valor"=> 2,
+        "descripcion"=> "El análisis de los resultados de los estudiantes en las evaluaciones externas (pruebas SABER y exámenes de Estado) brinda información a los docentes para fortalecer los aprendizajes de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.2",
+        "valor"=> 3,
+        "descripcion"=> "Las conclusiones de los análisis de los resultados de los estudiantes en las evaluaciones externas (pruebas SABER y exámenes de Estado) son fuente de información para la construcción de los planes de mejoramiento por área y por grado y es aplicado por todos los docentes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.2",
+        "valor"=> 4,
+        "descripcion"=> "La institución realiza seguimiento a los planes de mejoramiento por área y grado presentados por los docentes, con el fin de fortalecer los aprendizajes no alcanzados por los estudiantes, evidenciados en los resultados de las pruebas externas."
+      ],
+      [
+          "indice_calificacion"=> "2.4.3",
+        "valor"=> 1,
+        "descripcion"=> "La institución tiene algunas estrategias para controlar el ausentismo, pero éstas se aplican esporádicamente en algunas sedes, y sin indagar sus causas."
+      ],
+      [
+          "indice_calificacion"=> "2.4.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con una estrategia para el control, análisis y tratamiento de las causas de ausentismo de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.3",
+        "valor"=> 3,
+        "descripcion"=> "La estrategia institucional de control, análisis y tratamiento del ausentismo de estudiantes, contempla la participación activa de padres, docentes y estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y evalúa periódicamente su estrategia de control y tratamiento del ausentismo de estudiantes en función de los resultados de la misma, e implementa los ajustes pertinentes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.4",
+        "valor"=> 1,
+        "descripcion"=> "Las acciones de apoyo pedagógico a estudiantes con dificultades de aprendizaje se desarrollan de manera aislada, sin estructurarse en estrategias institucionales claramente definidas."
+      ],
+      [
+          "indice_calificacion"=> "2.4.4",
+        "valor"=> 2,
+        "descripcion"=> "Se han implementado algunas acciones de apoyo pedagógico, aunque de forma aislada y sin articulación con los planes de aula."
+      ],
+      [
+          "indice_calificacion"=> "2.4.4",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con estrategias organizadas de apoyo pedagógico, articuladas con el PEI, el plan de estudios y las necesidades de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "2.4.4",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa sistemáticamente el impacto de las estrategias de apoyo pedagógico y realiza ajustes para garantizar una atención oportuna, equitativa e inclusiva."
+      ],
+      [
+          "indice_calificacion"=> "3.1.1",
+        "valor"=> 1,
+        "descripcion"=> "El proceso de matrícula se desarrolla sin una planificación institucional unificada y con variaciones entre las sedes, lo que genera dificultades en la organización escolar."
+      ],
+      [
+          "indice_calificacion"=> "3.1.1",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido lineamientos básicos para el proceso de matrícula, aunque su aplicación no es totalmente articulada ni eficiente en todas las sedes."
+      ],
+      [
+          "indice_calificacion"=> "3.1.1",
+        "valor"=> 3,
+        "descripcion"=> "El proceso de matrícula se ejecuta de manera articulada, oportuna y transparente, garantizando el acceso y la permanencia de todos los estudiantes en igualdad de condiciones."
+      ],
+      [
+          "indice_calificacion"=> "3.1.1",
+        "valor"=> 4,
+        "descripcion"=> "El proceso de matrícula se evalúa y ajusta anualmente, incorporando mejoras que aseguren su eficiencia, cobertura, inclusión y alineación con la proyección institucional."
+      ],
+      [
+          "indice_calificacion"=> "3.1.2",
+        "valor"=> 1,
+        "descripcion"=> "La información académica, incluidos los registros de calificaciones y la emisión de boletines, se gestiona de forma manual o dispersa, lo que dificulta su actualización, consulta y uso oportuno para la toma de decisiones."
+      ],
+      [
+          "indice_calificacion"=> "3.1.2",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con un sistema básico de información académica que permite registrar calificaciones y emitir boletines, aunque su uso es parcial, presenta inconsistencias y no se articula plenamente con otros procesos de gestión."
+      ],
+      [
+          "indice_calificacion"=> "3.1.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución dispone de un sistema de información académica organizado, confiable y actualizado, que integra el registro, archivo y consulta de calificaciones, la generación de boletines escolares y la disponibilidad de información para docentes, estudiantes y familias."
+      ],
+      [
+          "indice_calificacion"=> "3.1.2",
+        "valor"=> 4,
+        "descripcion"=> "El sistema de información académica es evaluado periódicamente para garantizar su funcionalidad, seguridad y pertinencia. Además, se ajusta para mejorar la gestión de calificaciones, la elaboración de boletines y la disponibilidad de datos que fortalezcan la planeación y el seguimiento académico."
+      ],
+      [
+          "indice_calificacion"=> "3.2.1",
+        "valor"=> 1,
+        "descripcion"=> "El mantenimiento, adecuación y embellecimiento de la planta física se realiza de forma esporádica y reactiva ante necesidades urgentes, sin una programación institucional. La falta de planificación genera deficiencias en el uso de los espacios y situaciones de hacinamiento en algunas sedes."
+      ],
+      [
+          "indice_calificacion"=> "3.2.1",
+        "valor"=> 2,
+        "descripcion"=> "Existen acciones básicas para el mantenimiento, adecuación y embellecimiento de la infraestructura, y se identifican necesidades prioritarias para optimizar su uso. Sin embargo, persisten limitaciones que ocasionan sobreocupación de espacios y dificultades para garantizar ambientes adecuados para todos los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "3.2.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución implementa un plan organizado de mantenimiento preventivo, adecuación y embellecimiento de la planta física, asegurando el uso eficiente de los espacios y evitando el hacinamiento. Este plan se desarrolla con criterios técnicos y participación de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "3.2.1",
+        "valor"=> 4,
+        "descripcion"=> "El plan de mantenimiento, adecuación y embellecimiento de la planta física se revisa y evalúa periódicamente, integrando acciones de optimización y reorganización de espacios para prevenir hacinamiento. Los resultados orientan decisiones para garantizar ambientes dignos, seguros y acordes con las necesidades pedagógicas y de bienestar."
+      ],
+      [
+          "indice_calificacion"=> "3.2.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución cuenta con recursos pedagógicos limitados y desactualizados. La adquisición, distribución, uso y mantenimiento de materiales y suministros no responde a un plan definido, lo que limita su aprovechamiento y actualización oportuna."
+      ],
+      [
+          "indice_calificacion"=> "3.2.2",
+        "valor"=> 2,
+        "descripcion"=> "Se han establecido lineamientos básicos para la adquisición y dotación de recursos didácticos, así como para el suministro de materiales. Sin embargo, su aplicación es parcial y no garantiza un mantenimiento regular ni un uso planificado."
+      ],
+      [
+          "indice_calificacion"=> "3.2.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con un plan institucional para la adquisición, dotación y suministro de recursos para el aprendizaje. Este plan contempla criterios de calidad, pertinencia y equidad, e incluye procedimientos para el mantenimiento preventivo y el uso responsable de los recursos educativos."
+      ],
+      [
+          "indice_calificacion"=> "3.2.2",
+        "valor"=> 4,
+        "descripcion"=> "El plan de dotación, suministro, mantenimiento y uso de recursos es revisado y evaluado periódicamente. La institución realiza los ajustes necesarios para garantizar la disponibilidad, calidad y aprovechamiento pedagógico de los materiales, en coherencia con los objetivos del PEI y las necesidades de la comunidad educativa."
+      ],
+            [
+                "indice_calificacion"=> "3.2.3",
+                "valor"=> 1,
+                "descripcion"=> "La institución cuenta con algunos planes de acción para atender accidentes o desastres naturales, pero estos se aplican únicamente en algunas sedes o frente a ciertos riesgos. Además, no existe un proceso de monitoreo ni evaluación sistemática del estado de la infraestructura física para prevenir situaciones que afecten la seguridad escolar."
+            ],
+            [
+                "indice_calificacion"=> "3.2.3",
+                "valor"=> 2,
+                "descripcion"=> "La institución ha definido un programa básico de seguridad escolar que incluye acciones para la prevención y atención de accidentes y desastres. Sin embargo, su aplicación es parcial y no integra de forma sistemática la revisión del estado de la infraestructura física."
+            ],
+            [
+                "indice_calificacion"=> "3.2.3",
+                "valor"=> 3,
+                "descripcion"=> "La institución implementa un programa integral de seguridad escolar que articula acciones preventivas y protocolos de atención frente a accidentes, emergencias y desastres, complementados con un plan de mantenimiento y verificación periódica del estado de la infraestructura física."
+            ],
+            [
+                "indice_calificacion"=> "3.2.3",
+                "valor"=> 4,
+                "descripcion"=> "El programa de seguridad escolar es evaluado y ajustado periódicamente, considerando la gestión de riesgos, el estado de la infraestructura física y la participación de la comunidad educativa. Los resultados orientan acciones para fortalecer una cultura institucional de prevención, autocuidado y respuesta oportuna ante emergencias."
+            ],
+      [
+          "indice_calificacion"=> "3.3.1",
+        "valor"=> 1,
+        "descripcion"=> "Las estrategias de acceso y permanencia como el PAE o transporte escolar no están garantizadas en todas las sedes y se aplican de forma limitada."
+      ],
+      [
+          "indice_calificacion"=> "3.3.1",
+        "valor"=> 2,
+        "descripcion"=> "Se han implementado parcialmente programas de acceso y permanencia, aunque su cobertura o seguimiento es insuficiente."
+      ],
+      [
+          "indice_calificacion"=> "3.3.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución gestiona y articula de manera eficiente las estrategias de acceso y permanencia, garantizando equidad, permanencia y condiciones adecuadas para el aprendizaje."
+      ],
+      [
+          "indice_calificacion"=> "3.3.1",
+        "valor"=> 4,
+        "descripcion"=> "La cobertura, calidad e impacto de las estrategias de acceso y permanencia son monitoreados y ajustados con enfoque de mejora continua e inclusión."
+      ],
+      [
+          "indice_calificacion"=> "3.4.1",
+        "valor"=> 1,
+        "descripcion"=> "La asignación académica y de funciones no responde a los perfiles requeridos ni a criterios institucionales definidos."
+      ],
+      [
+          "indice_calificacion"=> "3.4.1",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido criterios para la asignación académica y de funciones, aunque no siempre se ajustan a los perfiles profesionales y formativos."
+      ],
+      [
+          "indice_calificacion"=> "3.4.1",
+        "valor"=> 3,
+        "descripcion"=> "La asignación académica y de funciones se realiza de forma técnica y transparente, considerando los perfiles, competencias y necesidades institucionales."
+      ],
+      [
+          "indice_calificacion"=> "3.4.1",
+        "valor"=> 4,
+        "descripcion"=> "La institución revisa y ajusta periódicamente la asignación académica y funcional, promoviendo una distribución equitativa y eficiente del talento humano."
+      ],
+      [
+          "indice_calificacion"=> "3.4.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución no cuenta con un programa de formación institucional estructurado y las actividades de capacitación son esporádicas o individuales."
+      ],
+      [
+          "indice_calificacion"=> "3.4.2",
+        "valor"=> 2,
+        "descripcion"=> "Se desarrollan acciones formativas con base en necesidades identificadas, aunque no están articuladas a un plan institucional ni se hace seguimiento sistemático."
+      ],
+      [
+          "indice_calificacion"=> "3.4.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución implementa un programa institucional de formación y actualización docente y administrativa, en coherencia con el PEI y las prioridades del contexto."
+      ],
+      [
+          "indice_calificacion"=> "3.4.2",
+        "valor"=> 4,
+        "descripcion"=> "El programa de formación es evaluado periódicamente, se ajusta en función de su impacto, y promueve procesos de desarrollo profesional continuo."
+      ],
+      [
+          "indice_calificacion"=> "3.4.3",
+        "valor"=> 1,
+        "descripcion"=> "El personal manifiesta escaso sentido de pertenencia institucional y su vinculación con los procesos escolares es limitada."
+      ],
+      [
+          "indice_calificacion"=> "3.4.3",
+        "valor"=> 2,
+        "descripcion"=> "Se desarrollan acciones para fortalecer el sentido de pertenencia del personal, aunque aún no se evidencia de forma generalizada."
+      ],
+      [
+          "indice_calificacion"=> "3.4.3",
+        "valor"=> 3,
+        "descripcion"=> "El personal vinculado demuestra compromiso con los valores y metas institucionales, y participa activamente en los procesos de mejoramiento institucional."
+      ],
+      [
+          "indice_calificacion"=> "3.4.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa las acciones de integración, bienestar y reconocimiento al personal, y las ajusta para promover identidad institucional y compromiso sostenido."
+      ],
+      [
+          "indice_calificacion"=> "3.4.4",
+        "valor"=> 1,
+        "descripcion"=> "La evaluación del desempeño se realiza de manera informal y no cuenta con criterios institucionales claros ni seguimiento. No existe articulación con el plan de mejoramiento institucional."
+      ],
+      [
+          "indice_calificacion"=> "3.4.4",
+        "valor"=> 2,
+        "descripcion"=> "Se han definido criterios básicos para la evaluación del desempeño, aunque su aplicación es parcial, carece de retroalimentación efectiva y no siempre está armonizada con el plan de mejoramiento o con los lineamientos de la Guía 31 del MEN."
+      ],
+      [
+          "indice_calificacion"=> "3.4.4",
+        "valor"=> 3,
+        "descripcion"=> "La evaluación del desempeño se aplica de forma técnica y participativa, alineada con los lineamientos de la Guía 31 del MEN y articulada al plan de mejoramiento institucional, y se utiliza para identificar necesidades de formación y fortalecer la calidad de la gestión educativa."
+      ],
+      [
+          "indice_calificacion"=> "3.4.4",
+        "valor"=> 4,
+        "descripcion"=> "Los resultados de la evaluación del desempeño, armonizados con el plan de mejoramiento institucional y en coherencia con la Guía 31 del MEN, son analizados, socializados y utilizados como base para definir acciones de desarrollo profesional y mejora continua."
+      ],
+      [
+          "indice_calificacion"=> "3.4.5",
+        "valor"=> 1,
+        "descripcion"=> "La institución no cuenta con procedimientos ni protocolos claros para la prevención, mediación y solución de conflictos entre el personal, por lo que los desacuerdos suelen gestionarse de forma improvisada o reactiva, generando tensiones en el clima laboral."
+      ],
+      [
+          "indice_calificacion"=> "3.4.5",
+        "valor"=> 2,
+        "descripcion"=> "Existen lineamientos básicos para la convivencia y el manejo de conflictos entre el personal, pero su aplicación es parcial y depende de iniciativas individuales de directivos o líderes, sin un seguimiento sistemático."
+      ],
+      [
+          "indice_calificacion"=> "3.4.5",
+        "valor"=> 3,
+        "descripcion"=> "La institución dispone de estrategias claras para la mediación y solución de conflictos entre el personal, y éstos se resuelven a través del diálogo y la negociación permanente. Esto contribuye a mantener un ambiente de respeto, cooperación y buen clima laboral."
+      ],
+      [
+          "indice_calificacion"=> "3.4.5",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa periódicamente la efectividad de las estrategias de convivencia y manejo de conflictos del personal, ajusta los procedimientos con base en los resultados y fomenta una cultura de respeto, diálogo y corresponsabilidad que fortalece la armonía y la productividad institucional."
+      ],
+      [
+          "indice_calificacion"=> "3.5.1",
+        "valor"=> 1,
+        "descripcion"=> "La elaboración y ejecución del presupuesto del FSE se realiza sin participación ni articulación con el direccionamiento estratégico."
+      ],
+      [
+          "indice_calificacion"=> "3.5.1",
+        "valor"=> 2,
+        "descripcion"=> "El presupuesto se formula con base en necesidades generales, pero requiere mayor articulación con los planes institucionales."
+      ],
+      [
+          "indice_calificacion"=> "3.5.1",
+        "valor"=> 3,
+        "descripcion"=> "El presupuesto del FSE se formula, ejecuta y monitorea de manera técnica, participativa y en función de los objetivos institucionales."
+      ],
+      [
+          "indice_calificacion"=> "3.5.1",
+        "valor"=> 4,
+        "descripcion"=> "El manejo del presupuesto del FSE es evaluado anualmente, y sus ajustes responden a la eficiencia, la equidad y la sostenibilidad de la gestión institucional."
+      ],
+      [
+          "indice_calificacion"=> "3.5.2",
+        "valor"=> 1,
+        "descripcion"=> "Los registros contables de ingresos y egresos se llevan de forma básica, desactualizada o fragmentada, sin procedimientos claros para el recaudo ni para la ejecución de gastos, lo que limita el seguimiento y la toma de decisiones financieras."
+      ],
+      [
+          "indice_calificacion"=> "3.5.2",
+        "valor"=> 2,
+        "descripcion"=> "Existen procedimientos básicos para registrar y controlar ingresos y egresos, aunque su aplicación es parcial y no siempre se articula con la planeación financiera institucional ni se socializa de manera suficiente con la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "3.5.2",
+        "valor"=> 3,
+        "descripcion"=> "Hay procesos claros para el recaudo de ingresos y la realización de gastos; estos son conocidos por la comunidad educativa y su funcionamiento es coherente con la planeación financiera de la institución. La contabilidad se lleva de forma actualizada y cumple con los requisitos normativos."
+      ],
+      [
+          "indice_calificacion"=> "3.5.2",
+        "valor"=> 4,
+        "descripcion"=> "La contabilidad institucional, que incluye la gestión transparente de ingresos y egresos, es auditada y evaluada periódicamente. Los resultados orientan ajustes para optimizar la administración de recursos y fortalecer la confianza de la comunidad en la gestión financiera."
+      ],
+      [
+          "indice_calificacion"=> "3.5.3",
+        "valor"=> 1,
+        "descripcion"=> "Los procesos de contratación se realizan de manera informal o reactiva, sin un procedimiento institucional claramente definido ni un ajuste riguroso a los lineamientos legales vigentes.\n"
+      ],
+      [
+          "indice_calificacion"=> "3.5.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución ha definido lineamientos básicos de contratación de acuerdo con su manual institucional y la normativa, pero su aplicación es parcial y no siempre garantiza principios de transparencia, equidad y planeación."
+      ],
+      [
+          "indice_calificacion"=> "3.5.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con un proceso de contratación estructurado, ajustado a su manual institucional y a los requerimientos de ley. Este proceso asegura la planeación, selección y ejecución de contratos con criterios de pertinencia, transparencia y eficiencia."
+      ],
+      [
+          "indice_calificacion"=> "3.5.3",
+        "valor"=> 4,
+        "descripcion"=> "El proceso de contratación se evalúa y ajusta periódicamente para garantizar su alineación con el manual institucional, el cumplimiento de la normativa vigente y la coherencia con la planeación estratégica y financiera de la institución."
+      ],
+      [
+          "indice_calificacion"=> "3.5.4",
+        "valor"=> 1,
+        "descripcion"=> "Los informes financieros presentados por la institución a las autoridades competentes no siempre se hacen de manera oportuna y no son conocidos por la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "3.5.4",
+        "valor"=> 2,
+        "descripcion"=> "Existen procedimientos básicos de control fiscal, aunque su aplicación no es sistemática ni los da a conocer a la\ncomunidad educativa. "
+      ],
+      [
+          "indice_calificacion"=> "3.5.4",
+        "valor"=> 3,
+        "descripcion"=> "La institución desarrolla mecanismos de control fiscal eficaces, articulados al proceso de planeación, ejecución y evaluación institucional. Éstos son parte del proceso de control interno y sirven para tomar decisiones y realizar seguimiento al manejo de los recursos."
+      ],
+      [
+          "indice_calificacion"=> "3.5.4",
+        "valor"=> 4,
+        "descripcion"=> "El control fiscal es parte de una cultura institucional de transparencia, se evalúa periódicamente y sus resultados orientan decisiones de mejora."
+      ],
+      [
+          "indice_calificacion"=> "4.1.1",
+        "valor"=> 1,
+        "descripcion"=> "La atención a poblaciones diversas se realiza de manera asistencial, aislada y sin un enfoque pedagógico diferencial ni articulación con los procesos institucionales. Las acciones no se visibilizan ni se socializan con la comunidad."
+      ],
+      [
+          "indice_calificacion"=> "4.1.1",
+        "valor"=> 2,
+        "descripcion"=> "Existen lineamientos básicos para la atención educativa a grupos poblacionales o en situación de vulnerabilidad, pero su aplicación es parcial y depende de iniciativas individuales, sin seguimiento integral ni amplia divulgación."
+      ],
+      [
+          "indice_calificacion"=> "4.1.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución trabaja articuladamente para diseñar y aplicar estrategias pedagógicas pertinentes que permitan integrar y atender a personas pertenecientes a grupos étnicos o en situación de vulnerabilidad. Estas estrategias se socializan y se dan a conocer a toda la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.1.1",
+        "valor"=> 4,
+        "descripcion"=> "Las estrategias de atención educativa a grupos poblacionales o en situación de vulnerabilidad se evalúan y ajustan periódicamente, articulándose de forma efectiva al PEI, al plan de estudios y a la gestión institucional, garantizando inclusión, equidad y participación."
+      ],
+      [
+          "indice_calificacion"=> "4.1.2",
+        "valor"=> 1,
+        "descripcion"=> "No se realizan acciones institucionales sistemáticas para identificar ni atender las necesidades, intereses y expectativas de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "4.1.2",
+        "valor"=> 2,
+        "descripcion"=> "Se han desarrollado mecanismos parciales para recoger información sobre las necesidades y expectativas estudiantiles, aunque sin seguimiento integral."
+      ],
+      [
+          "indice_calificacion"=> "4.1.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con mecanismos que le permiten identificar, analizar y atender de forma sistemática las necesidades, expectativas e intereses de los estudiantes, integrándolos en los procesos educativos y de gestión, y dándolos a conocer de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.1.2",
+        "valor"=> 4,
+        "descripcion"=> "Los mecanismos de atención a las expectativas de los estudiantes se evalúan y ajustan regularmente para mejorar la pertinencia de la oferta educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.1.3",
+        "valor"=> 1,
+        "descripcion"=> "La institución cuenta con algunas iniciativas para apoyar a los estudiantes en la formulación de sus proyectos de vida; sin embargo, estas no se encuentran articuladas con otros procesos."
+      ],
+      [
+          "indice_calificacion"=> "4.1.3",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con programas concertados con el cuerpo docente para acompañar a los estudiantes en la construcción de sus proyectos de vida. Estos programas se articulan con la identificación de sus necesidades y expectativas, así como con las oportunidades que ofrece el entorno para su desarrollo integral."
+      ],
+      [
+          "indice_calificacion"=> "4.1.3",
+        "valor"=> 3,
+        "descripcion"=> "La institución manifiesta de forma programática su interés en la proyección personal y el futuro de los estudiantes; este programa es reconocido, apoyado y enriquecido por toda la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.1.3",
+        "valor"=> 4,
+        "descripcion"=> "La institución evalúa y fortalece continuamente los procesos relacionados con los proyectos de vida de sus estudiantes, demostrando así un compromiso por cualificar este aspecto dentro de su formación integral."
+      ],
+      [
+          "indice_calificacion"=> "4.2.1",
+        "valor"=> 1,
+        "descripcion"=> "La institución brinda a los padres de familia talleres y charlas sobre diferentes temáticas, aunque carecen de una programación clara y estructurada."
+      ],
+      [
+          "indice_calificacion"=> "4.2.1",
+        "valor"=> 2,
+        "descripcion"=> "La escuela de padres cuenta con una programación básica, aunque su ejecución es irregular y con baja participación."
+      ],
+      [
+          "indice_calificacion"=> "4.2.1",
+        "valor"=> 3,
+        "descripcion"=> "La escuela de padres desarrolla actividades formativas articuladas al PEI y a las necesidades de las familias, con participación representativa."
+      ],
+      [
+          "indice_calificacion"=> "4.2.1",
+        "valor"=> 4,
+        "descripcion"=> "La escuela de padres es evaluada y fortalecida de manera continua, consolidándose como un espacio de formación, participación y corresponsabilidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.2.2",
+        "valor"=> 1,
+        "descripcion"=> "La institución tiene iniciativas de servicio a la comunidad, aunque no están organizadas como parte de un plan institucional."
+      ],
+      [
+          "indice_calificacion"=> "4.2.2",
+        "valor"=> 2,
+        "descripcion"=> "La institución cuenta con estrategias de comunicación que favorecen el conocimiento recíproco con la comunidad; las actividades se planifican de manera conjunta, aun cuando no guarden una relación directa con el PEI."
+      ],
+      [
+          "indice_calificacion"=> "4.2.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución desarrolla una oferta organizada de servicios para la comunidad, en coherencia con el PEI y las necesidades del entorno."
+      ],
+      [
+          "indice_calificacion"=> "4.2.2",
+        "valor"=> 4,
+        "descripcion"=> "La oferta de servicios a la comunidad es evaluada, fortalecida y ampliada continuamente, fomentando el compromiso social de la institución."
+      ],
+      [
+          "indice_calificacion"=> "4.2.3",
+        "valor"=> 1,
+        "descripcion"=> "El servicio social estudiantil se desarrolla como un requisito formal, sin orientación ni articulación con procesos de formación ciudadana."
+      ],
+      [
+          "indice_calificacion"=> "4.2.3",
+        "valor"=> 2,
+        "descripcion"=> "El servicio social estudiantil cuenta con lineamientos básicos y se ejecuta parcialmente como una estrategia pedagógica que responde a las necesidades de la comunidad."
+      ],
+      [
+          "indice_calificacion"=> "4.2.3",
+        "valor"=> 3,
+        "descripcion"=> "El servicio social estudiantil se desarrolla como una experiencia significativa que promueve la participación, la ciudadanía y la proyección social de los estudiantes, y este contribuye a la solución de las necesidades de la comunidad."
+      ],
+      [
+          "indice_calificacion"=> "4.2.3",
+        "valor"=> 4,
+        "descripcion"=> "El programa de servicio social estudiantil es monitoreado, evaluado y ajustado periódicamente, fortaleciendo su impacto en la comunidad y en la formación integral de los estudiantes."
+      ],
+      [
+          "indice_calificacion"=> "4.3.1",
+        "valor"=> 1,
+        "descripcion"=> "La participación de los estudiantes es limitada y no existen mecanismos efectivos para garantizar su representación y protagonismo."
+      ],
+      [
+          "indice_calificacion"=> "4.3.1",
+        "valor"=> 2,
+        "descripcion"=> "Existen espacios de participación estudiantil, aunque su funcionamiento no es constante ni articulado a la gestión institucional."
+      ],
+      [
+          "indice_calificacion"=> "4.3.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución promueve activamente la participación de los estudiantes en procesos decisorios, pedagógicos y de convivencia."
+      ],
+      [
+          "indice_calificacion"=> "4.3.1",
+        "valor"=> 4,
+        "descripcion"=> "La participación estudiantil es monitoreada y fortalecida sistemáticamente como expresión del ejercicio de la ciudadanía escolar."
+      ],
+      [
+          "indice_calificacion"=> "4.4.1",
+        "valor"=> 1,
+        "descripcion"=> "La prevención de riesgos físicos requiere la definición de estrategias institucionales claras y la implementación de protocolos específicos."
+      ],
+      [
+          "indice_calificacion"=> "4.4.1",
+        "valor"=> 2,
+        "descripcion"=> "Se han definido algunas acciones preventivas frente a riesgos físicos, aunque su implementación es parcial y poco sistemática."
+      ],
+      [
+          "indice_calificacion"=> "4.4.1",
+        "valor"=> 3,
+        "descripcion"=> "La institución cuenta con un plan integral de prevención de riesgos físicos, socializado y puesto en práctica por toda la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.4.1",
+        "valor"=> 4,
+        "descripcion"=> "El plan de prevención de riesgos físicos es evaluado y actualizado de forma periódica, fortaleciendo la seguridad y el bienestar de todos los miembros de la comunidad educativa."
+      ],
+      [
+          "indice_calificacion"=> "4.4.2",
+        "valor"=> 1,
+        "descripcion"=> "Se han implementado acciones para prevenir riesgos psicosociales, aunque no están articuladas ni se aplican en todas las sedes."
+      ],
+      [
+          "indice_calificacion"=> "4.4.2",
+        "valor"=> 2,
+        "descripcion"=> "La institución detecta factores de riesgo como ETS, embarazo adolescente y violencia, y desarrolla acciones preventivas basadas en sus diagnósticos y en los de otras entidades."
+      ],
+      [
+          "indice_calificacion"=> "4.4.2",
+        "valor"=> 3,
+        "descripcion"=> "La institución, con apoyo de entidades externas, implementa programas para sensibilizar a estudiantes y comunidad sobre riesgos y fortalecer la cultura de autocuidado y prevención, con participación activa y seguimiento a los factores de riesgo detectados."
+      ],
+      [
+          "indice_calificacion"=> "4.4.2",
+        "valor"=> 4,
+        "descripcion"=> "Las estrategias de prevención de riesgos psicosociales son evaluadas y mejoradas periódicamente, fortaleciendo el ambiente escolar y el desarrollo integral de los estudiantes."
+      ]
+    ];
         foreach ($notasCalificaciones as $notaCalificacion) {
             NotaCalificacion::firstOrCreate(
                 [
@@ -1812,5 +1324,5 @@ Además, desarrolla programas de prevención de accidentes.',
                 $notaCalificacion // Datos a insertar/actualizar
             );
         }
-    }
+}
 }
