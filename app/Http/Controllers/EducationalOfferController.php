@@ -150,6 +150,10 @@ class EducationalOfferController extends Controller
             $levelSchedules = $request->input('level_schedules');
             $sede = Sede::where('id',$sedeEducationalData['sede_id'])->firstOrFail();
             // Procesar cada nivel y su horario
+            if (!is_array($levelSchedules) || count($levelSchedules) === 0) {
+                return redirect()->back()->with('flash_error_message', 'Error al vincular la oferta educativa: Debes seleccionar almenos un nivel educativo e ingresar almenos un horario');
+            }
+
             foreach ($levelSchedules as $index => $levelSchedule) {
                 $levelInfo = $levelSchedule['level_info'];
                 $schedules = data_get($levelSchedule, 'adult_schedules',
