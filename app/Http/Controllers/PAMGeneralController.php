@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\PamExport;
-use App\Http\Requests\StorePamRowRequest;
-use App\Models\PamAccion;
-use App\Models\PamAvance;
-use App\Models\PamComponente;
-use App\Models\PamMeta;
-use App\Models\PamObjetivoEstrategico;
-use App\Models\PamRow;
+use App\Exports\PamGeneralExport;
+use App\Http\Requests\StorePamGeneralRowRequest;
+use App\Models\Pam;
+use App\Models\PamGeneralAccion;
+use App\Models\PamGeneralAvance;
+use App\Models\PamGeneralComponente;
+use App\Models\PamGeneralMeta;
+use App\Models\PamGeneralObjetivoEstrategico;
+use App\Models\PamGeneralRow;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,26 +22,21 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
-class PAMController extends Controller {
-
-    // --------------------
-    // Vistas
-    // --------------------
-
+class PAMGeneralController extends Controller {
     /**
-     * Mostrar la vista principal del PAM
+     * Mostrar la vista principal del PAMGeneral
      *
      */
-    public function index(int $pamId): View {
-        return view('pam.index');
+    public function index() {
+        $pams = Pam::paginate(10);
+
+        return view('pamGeneral.index', [
+            'pams' => $pams,
+        ]);
     }
 
-    /**
-     * Mostrar la vista del formulario de creación
-     *
-     */
-    public function create(int $pamId): View {
-        return view('pam.pam_form', ['pamGeneralId' => $pamId]);
+    public function create() {
+        return view('pamGeneral.create');
     }
 
     /**
@@ -49,67 +45,12 @@ class PAMController extends Controller {
      * @param int $id
      */
     public function show($id): View {
-        return view('pam.edit', compact('id'));
+        return view('pamGeneral.edit', compact('id'));
     }
 
     // --------------------
     //  Manejo de datos
     // --------------------
-
-    /**
-     * Obtiene todos los registros PAM, cargando todas sus relaciones anidadas.
-     */
-    public function all(int $pamId): JsonResponse {
-        try {
-            // Carga todas las acciones con sus relaciones completas y anidadas
-            $actions = PamAccion::where('pam_id', $pamId)->with([
-                'user',
-                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
-                'indicador.meta.objetivoEstrategico.metaPlanDesarrollo'
-            ])->get();
-
-            // Aplanar la estructura de datos para el frontend
-            $flattenedData = $actions->map(function ($accion) {
-                $objetivoEstrategico = $accion?->indicador?->meta?->objetivoEstrategico ?? null;
-                $subproceso = $objetivoEstrategico?->metaPlanDesarrollo?->first()->subproceso ?? null;
-                $proceso = $subproceso?->proceso ?? null;
-                $componente = $proceso?->componente ?? null;
-
-                // Obtener la descripción de la primera MetaPlanDesarrollo si existe
-                $metaPlanDesarrolloDescripcion = $objetivoEstrategico && $objetivoEstrategico->metaPlanDesarrollo->isNotEmpty()
-                    ? $objetivoEstrategico->metaPlanDesarrollo->first()->descripcion
-                    : null;
-
-                return [
-                    'id' => $accion->id,
-                    'componente' => $componente->descripcion ?? null,
-                    'proceso' => $proceso->descripcion ?? null,
-                    'subproceso' => $subproceso->descripcion ?? null,
-                    'objetivo_estrategico' => $objetivoEstrategico->descripcion ?? null,
-                    'meta_plan_desarrollo' => $metaPlanDesarrolloDescripcion,
-                    'meta' => $accion->indicador->meta->descripcion ?? null,
-                    'indicador' => $accion->indicador->descripcion ?? null,
-                    'accion' => $accion->descripcion,
-                    'responsable' => $accion->user ? ['name' => $accion->user->name] : null,
-                    'recursos' => $accion->recursos,
-                    'fecha_inicio' => $accion->fecha_inicio ? Carbon::parse($accion->fecha_inicio)->format('d/m/Y') : null,
-                    'fecha_final' => $accion->fecha_final ? Carbon::parse($accion->fecha_final)->format('d/m/Y') : null,
-                ];
-            });
-
-            return response()->json([
-                'success' => true,
-                'data' => $flattenedData,
-                'message' => 'Datos del plan de desarrollo obtenidos correctamente'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al obtener los datos: ' . $e->getMessage()
-            ], 500);
-        }
-    }
 
     /**
      * Obtener un registro específico para edición
@@ -120,7 +61,7 @@ class PAMController extends Controller {
     public function edit($id) {
         try {
             // Carga la acción con todas sus relaciones anidadas en el nuevo orden
-            $accion = PamAccion::with([
+            $accion = PamGeneralAccion::with([
                 'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
                 'indicador.meta.objetivoEstrategico.metaPlanDesarrollo',
                 'user'
@@ -129,7 +70,7 @@ class PAMController extends Controller {
             if (!$accion) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Registro PAM no encontrado.'
+                    'message' => 'Registro PAMGeneral no encontrado.'
                 ], 404);
             }
 
@@ -178,7 +119,7 @@ class PAMController extends Controller {
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al cargar el registro PAM: ' . $e->getMessage()
+                'message' => 'Error al cargar el registro PAMGeneral: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -188,111 +129,14 @@ class PAMController extends Controller {
      *
      * @param Request $request Datos del formulario
      */
-    public function store(Request $request, int $pamGeneralId): JsonResponse {
-        // Reglas de validación para la estructura anidada
-        $validator = Validator::make($request->all(), [
-            'componentes' => 'required|array|min:1',
-            'componentes.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos' => 'required|array|min:1',
-            'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.descripcion' => 'required',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores' => 'required|array|min:1',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion' => 'required|array',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.user_id' => 'required|exists:users,id',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.responsable_nombre' => 'required|string|max:255',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.recursos_descripcion' => 'required|string|max:1000',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio' => 'required|date',
-            'componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_final' => 'required|date|after_or_equal:componentes.*.procesos.*.subprocesos.*.metas_plan_desarrollo.*.objetivos.*.metas.*.indicadores.*.accion.fecha_inicio',
-        ]);
+    public function store(Request $request) {
+        $pamData = $request->input('pam');
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error de validación',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        Pam::create($pamData);
 
-        DB::beginTransaction();
-        try {
-            $createdPamIds = []; // Para almacenar los IDs de los PAMs creados si se crean múltiples
-
-            foreach ($request->input('componentes') as $compData) {
-                $componente = PamComponente::create([
-                    'descripcion' => $compData['descripcion'],
-                    'nombre' => $compData['descripcion'],
-                ]);
-
-                foreach ($compData['procesos'] as $procData) {
-                    $proceso = $componente->procesos()->create(['descripcion' => $procData['descripcion']]);
-
-                    foreach ($procData['subprocesos'] as $subprocData) {
-                        $subproceso = $proceso->subprocesos()->create(['descripcion' => $subprocData['descripcion']]);
-
-                        // Nuevo orden: Crear Objetivo Estratégico bajo Subproceso
-                        foreach ($subprocData['metas_plan_desarrollo'][0]['objetivos'] as $objData) {
-                            $objetivoEstrategico = PamObjetivoEstrategico::create(['descripcion' => $objData['descripcion']]);
-
-                            // Crear Meta Plan Desarrollo bajo Objetivo Estratégico,
-                            // pero también asignando subproceso_id
-                            foreach ($subprocData['metas_plan_desarrollo'] as $metaPlanData) {
-                                $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->create([
-                                    'descripcion' => $metaPlanData['descripcion'],
-                                    'subproceso_id' => $subproceso->id // Asignar manualmente subproceso_id
-                                ]);
-                            }
-
-                            // Crear Meta bajo Objetivo Estratégico
-                            foreach ($objData['metas'] as $metaData) {
-                                $meta = $objetivoEstrategico->metas()->create(['descripcion' => $metaData['descripcion']]);
-
-                                foreach ($metaData['indicadores'] as $indicadorData) {
-                                    $indicador = $meta->indicadores()->create(['descripcion' => $indicadorData['descripcion']]);
-
-                                    // La acción es un objeto único por indicador
-                                    if (isset($indicadorData['accion'])) {
-                                        $accionData = $indicadorData['accion'];
-                                        $accion = $indicador->accion()->create([
-                                            'descripcion' => $accionData['descripcion'],
-                                            'pam_id' => $pamGeneralId,
-                                            'user_id' => $accionData['user_id'],
-                                            'nombre_responsable' => $accionData['responsable_nombre'],
-                                            'recursos' => $accionData['recursos_descripcion'],
-                                            'fecha_inicio' => $accionData['fecha_inicio'],
-                                            'fecha_final' => $accionData['fecha_final'],
-                                        ]);
-                                        $createdPamIds[] = $accion->id; // Almacena el ID de la acción final
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            DB::commit();
-            return response()->json([
-                'success' => true,
-                'message' => 'Registro(s) PAM creado(s) correctamente',
-                'ids' => $createdPamIds
-            ], 201);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al crear el registro PAM: ' . $e->getMessage()
-            ], 500);
-        }
+        return redirect()
+            ->route('pams.index')
+            ->with('flash_success_message', 'Pam creado correctamente.');
     }
 
     /**
@@ -302,7 +146,7 @@ class PAMController extends Controller {
      */
     public function destroy(int $id): JsonResponse {
         try {
-            $pam = PamAccion::findOrFail($id);
+            $pam = Pam::findOrFail($id);
             $pam->delete();
 
             return response()->json([
@@ -365,11 +209,11 @@ class PAMController extends Controller {
         DB::beginTransaction();
         try {
             // 1. Recupera la acción existente usando el ID proporcionado
-            $accion = PamAccion::find($id);
+            $accion = PamGeneralAccion::find($id);
             if (!$accion) {
                 // Si la acción no se encuentra, revierte y retorna un error 404
                 DB::rollBack();
-                return response()->json(['success' => false, 'message' => 'Acción PAM no encontrada.'], 404);
+                return response()->json(['success' => false, 'message' => 'Acción PAMGeneral no encontrada.'], 404);
             }
 
             // 2. Accede a los datos de entrada de la solicitud, asumiendo una única rama de la jerarquía
@@ -391,7 +235,7 @@ class PAMController extends Controller {
             $meta = $indicador->meta;
             $objetivoEstrategico = $meta->objetivoEstrategico;
             
-            // La relación de PamMetaPlanDesarrollo con PamObjetivoEstrategico es uno a muchos,
+            // La relación de PamGeneralMetaPlanDesarrollo con PamGeneralObjetivoEstrategico es uno a muchos,
             // pero en tu 'store' parece que se crea una 'meta_plan_desarrollo' por 'objetivo'.
             // Tomamos la primera o ajusta si sabes qué 'meta_plan_desarrollo' específica actualizar.
             $metaPlanDesarrollo = $objetivoEstrategico->metaPlanDesarrollo()->first();
@@ -431,7 +275,7 @@ class PAMController extends Controller {
             // Actualizar Subproceso
             $subproceso->update(['descripcion' => $subprocData['descripcion']]);
 
-            // Actualizar Objetivo Estratégico (se actualiza directamente ya que PamObjetivoEstrategico
+            // Actualizar Objetivo Estratégico (se actualiza directamente ya que PamGeneralObjetivoEstrategico
             // se crea directamente en el 'store' sin una relación directa padre con Subproceso,
             // pero 'metas_plan_desarrollo' lo referencia).
             $objetivoEstrategico->update([
@@ -471,7 +315,7 @@ class PAMController extends Controller {
             // 7. Retorna una respuesta de éxito
             return response()->json([
                 'success' => true,
-                'message' => 'Registro PAM actualizado correctamente',
+                'message' => 'Registro PAMGeneral actualizado correctamente',
                 'id' => $accion->id // Retorna el ID de la acción actualizada
             ], 200); // Código 200 para "OK"
 
@@ -481,7 +325,7 @@ class PAMController extends Controller {
             // Retorna una respuesta de error con el mensaje de la excepción
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el registro PAM: ' . $e->getMessage()
+                'message' => 'Error al actualizar el registro PAMGeneral: ' . $e->getMessage()
             ], 500); // Código 500 para "Internal Server Error"
         }
     }
@@ -507,8 +351,8 @@ class PAMController extends Controller {
 
             DB::beginTransaction();
 
-            // Crear el registro PamAvance
-            $avance = PamAvance::create([
+            // Crear el registro PamGeneralAvance
+            $avance = PamGeneralAvance::create([
                 'fecha_avance' => $validatedData['fecha_avance'],
                 'meta_id' => $validatedData['meta_id'],
                 'accion_id' => $validatedData['accion_id'],
@@ -531,7 +375,7 @@ class PAMController extends Controller {
                     $filePath = $file->storeAs('avances_adjuntos', $fileName, 'public');
 
                     // Guardar la información del archivo en la tabla 'pam_avance_archivos'.
-                    // Se utiliza la relación definida en el modelo PamAvance para crear el registro.
+                    // Se utiliza la relación definida en el modelo PamGeneralAvance para crear el registro.
                     $avance->archivosAdjuntos()->create([
                         'nombre_original' => $file->getClientOriginalName(), // Nombre original del archivo subido por el usuario
                         'ruta_archivo' => $filePath, // Ruta donde se almacenó el archivo en el servidor
@@ -572,10 +416,10 @@ class PAMController extends Controller {
      * @param int $accionId
      */
     public function getAvancesPorAccion(int $accionId) {
-        $avances = PamAvance::where('accion_id', $accionId)
-            ->with(['meta', 'accion', 'archivosAdjuntos'])
-            ->orderBy('fecha_avance', 'desc')
-            ->get();
+        $avances = PamGeneralAvance::where('accion_id', $accionId)
+                            ->with(['meta', 'accion', 'archivosAdjuntos'])
+                            ->orderBy('fecha_avance', 'desc')
+                            ->get();
 
         // 3. Transform the data for frontend (optional, but good for consistent display)
         $formattedAvances = $avances->map(function ($avance) {
@@ -600,12 +444,12 @@ class PAMController extends Controller {
     }
 
     /**
-     * Exportar PAM a Excel
+     * Exportar PAMGeneral a Excel
      */
     public function export() {
         $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
-        return Excel::download(new PamExport, $fileName);
+        return Excel::download(new PamGeneralExport, $fileName);
     }
 
     // --------------------
@@ -613,7 +457,7 @@ class PAMController extends Controller {
     // --------------------
 
     public function getMetas(Request $request): JsonResponse {
-        $query = PamMeta::query();
+        $query = PamGeneralMeta::query();
 
         // Puedes agregar lógica de filtrado si deseas un término de búsqueda inicial
         // Aunque el frontend ya maneja el filtrado, esto es útil si quieres
@@ -634,12 +478,12 @@ class PAMController extends Controller {
 
         $metaId = (int) $request->input('meta_id');
 
-        // Start the query on PamAccion
-        $query = PamAccion::query();
+        // Start the query on PamGeneralAccion
+        $query = PamGeneralAccion::query();
 
         // Join with the 'indicadores' table and then filter by the meta_id
         // Assuming:
-        // - PamAccion has an 'indicador_id' foreign key
+        // - PamGeneralAccion has an 'indicador_id' foreign key
         // - Your 'indicadores' table has a 'meta_id' foreign key
         // - 'indicadores' is the name of your indicators table
         // - 'indicador_id' is the column in pam_acciones that links to indicadores.id

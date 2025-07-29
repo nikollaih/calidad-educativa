@@ -43,4 +43,5 @@ class PamComponente extends Model
     {
         return $this->hasMany(PamProceso::class, 'componente_id');
     }
+
 }

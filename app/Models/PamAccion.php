@@ -43,6 +43,7 @@ class PamAccion extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'pam_id',
         'user_id',
         'indicador_id',
         'nombre_responsable',
@@ -71,6 +72,10 @@ class PamAccion extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function pam() {
+        return $this->belongsTo(Pam::class, 'pam_id');
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Http\Controllers\PermissionController;
 use \App\Http\Controllers\InstitutionController;
 use \App\Http\Controllers\EducationalOfferController;
 use App\Http\Controllers\PAMController;
+use App\Http\Controllers\PAMGeneralController;
 use App\Http\Controllers\PMI\PMIController;
 use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
@@ -104,22 +105,32 @@ Route::middleware(['auth'])->group(function () {
         // Vistas ------------------
         // Visualiza formulario para crear filas del pam
         // Visualiza el index del pam
-        Route::get('/pam-form', [PamController::class, 'create'])->name('pam.create');
-        Route::get('/pam-form/{id}', [PamController::class, 'show'])->name('pam.show');
-        Route::get('/index', [PamController::class, 'index'])->name('pam.index');
+        Route::get('/{pamId}/pam-form', [PAMController::class, 'create'])->name('pam.create');
+        Route::get('/pam-form/{id}', [PAMController::class, 'show'])->name('pam.show');
+        Route::get('/{pamId}/index', [PAMController::class, 'index'])->name('pam.index');
 
-        Route::get('/get-pam', [PamController::class, 'all'])->name('pam.all');
+        Route::get('/{pamId}/get-pam', [PAMController::class, 'all'])->name('pam.all');
         // Ruta para obtener un registro específico
-        Route::get('/get-pam/{id}', [PamController::class, 'edit'])->name('pam.edit');
-        Route::get('/get-metas', [PamController::class, 'getMetas'])->name('pam.get-metas');
-        Route::get('/get-acciones', [PamController::class, 'getAcciones'])->name('pam.get-acciones');
-        Route::get('/get-avances-by-accion/{accionId}', [PamController::class, 'getAvancesPorAccion'])->name('pam.get-acciones');
-        Route::get('/export', [PamController::class, 'export'])->name('pam.export');
+        Route::get('/get-pam/{id}', [PAMController::class, 'edit'])->name('pam.edit');
+        Route::get('/get-metas', [PAMController::class, 'getMetas'])->name('pam.get-metas');
+        Route::get('/get-acciones', [PAMController::class, 'getAcciones'])->name('pam.get-acciones');
+        Route::get('/get-avances-by-accion/{accionId}', [PAMController::class, 'getAvancesPorAccion'])->name('pam.get-acciones');
+        Route::get('/export', [PAMController::class, 'export'])->name('pam.export');
         // Ruta para actualizar un registro específico
-        Route::put('/update-pam/{id}', [PamController::class, 'update'])->name('pam.update');
-        Route::delete('/{id}', [PamController::class, 'destroy'])->name('pam.destroy');
-        Route::post('/pam-row-store', [PamController::class, 'store'])->name('pam.store');
-        Route::post('/store-advance', [PamController::class, 'storeAvance'])->name('pam.store-avance');
+        Route::put('/update-pam/{id}', [PAMController::class, 'update'])->name('pam.update');
+        Route::delete('/{id}', [PAMController::class, 'destroy'])->name('pam.destroy');
+        Route::post('/{pamGeneralId}/pam-row-store', [PAMController::class, 'store'])->name('pam.store');
+        Route::post('/store-advance', [PAMController::class, 'storeAvance'])->name('pam.store-avance');
+    });
+    Route::prefix('pams')->group(function () {
+        // Vistas ------------------
+        // Visualiza formulario para crear filas del pam
+        // Visualiza el index del pam
+        Route::get('/create', [PAMGeneralController::class, 'create'])->name('pams.create');
+        Route::get('/index', [PAMGeneralController::class, 'index'])->name('pams.index');
+
+        Route::delete('/{id}', [PAMGeneralController::class, 'destroy'])->name('pams.destroy');
+        Route::post('/store', [PAMGeneralController::class, 'store'])->name('pams.store');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);

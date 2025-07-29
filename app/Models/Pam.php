@@ -23,25 +23,20 @@ class Pam extends Model {
      */
     protected $fillable = [
         'consecutivo',
-        'estado'
+        'estado',
+        'anio_inicio',
+        'anio_fin',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'estado' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime'
-    ];
-
-    /**
-     * Relación con las filas del PAM (one-to-many)
-     */
-    public function rows() {
-        return $this->hasMany(PamRow::class, 'pam_id');
-    }
+    // /**
+    //  * The attributes that should be cast.
+    //  *
+    //  * @var array
+    //  */
+    // protected $casts = [
+    //     'estado' => 'integer',
+    //     'created_at' => 'datetime',
+    //     'updated_at' => 'datetime',
+    //     'deleted_at' => 'datetime'
+    // ];
 }
