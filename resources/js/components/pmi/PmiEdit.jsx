@@ -9,8 +9,9 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
     const groupedData = {};
 
     pmi.factores_criticos?.forEach((fc) => {
-        const gestion = fc.grupo_calificacion?.padre?.nombre || 'Sin gestión';
-        const componente = fc.grupo_calificacion?.nombre || 'Sin componente';
+        console.log(fc);
+        const gestion = fc.calificacion.grupo?.padre?.nombre || 'Sin gestión';
+        const componente = fc.calificacion?.nombre || 'Sin componente';
 
         if (!groupedData[gestion]) groupedData[gestion] = {};
         if (!groupedData[gestion][componente]) groupedData[gestion][componente] = [];

@@ -11,14 +11,14 @@ class FactorCritico extends Model
 
     protected $fillable = [
         'autoevaluacion_id',
-        'grupo_calificacion_id',
+        'calificacion_indice',
         'descripcion',
         'pmi_id',
         'valor',
     ];
 
-    public function grupoCalificacion() {
-        return $this->belongsTo(GrupoCalificacion::class, 'grupo_calificacion_id', 'id');
+    public function calificacion() {
+        return $this->belongsTo(Calificacion::class, 'calificacion_indice', 'indice');
     }
     public function pmi(){
         return $this->belongsTo(Pmi::class, 'pmi_id', 'id');

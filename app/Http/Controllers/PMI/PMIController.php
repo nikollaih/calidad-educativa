@@ -94,7 +94,7 @@ class PMIController extends Controller
     public function edit(Request $request, int $institucionId , int $pmi){
          $pmi = PMI::where('id', $pmi)
              ->with(
-                 'factoresCriticos.grupoCalificacion.padre'
+                 'factoresCriticos.calificacion.grupo.padre'
              )
              ->first();
         return view('pmi.edit',

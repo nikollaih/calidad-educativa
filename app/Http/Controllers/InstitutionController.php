@@ -11,6 +11,7 @@ use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
 use App\Models\Calificacion;
 use App\Models\FactorCritico;
+use App\Models\FactorCriticoCalificacion;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
@@ -64,20 +65,17 @@ class InstitutionController extends Controller
     }
     public function fortalezasDebilidades(int $autoevaluacionId = null)
     {
-        $autoevaluacion = Autoevaluacion::with('notas', 'notas.calificacion', 'notas.calificacion.grupo', 'notas.calificacion.grupo.padre')
-            ->where('id', $autoevaluacionId)->first();
-        $factoresCriticosRegistrados = FactorCritico::with('grupoCalificacion')
-            ->get();
-        $factoresCriticosFormateados = [];
+        $autoevaluacion = Autoevaluacion::with(
+                'notas',
+                'notas.calificacion',
+                'notas.calificacion.grupo',
+                'notas.calificacion.grupo.padre',
+                'factoresCriticos'
+        )
+            ->where('id', $autoevaluacionId)
+            ->first();
 
-        foreach ($factoresCriticosRegistrados as $factor) {
-            $grupoNombre = $factor->grupoCalificacion->nombre ?? 'Sin grupo';
-            $factoresCriticosFormateados[$grupoNombre][] = [
-                'texto' => $factor->descripcion,
-                'valor' => $factor->valor,
-                'autoevaluacion_id' => $factor->autoevaluacion_id,
-            ];
-        }
+        $factoresCriticosRegistrados = $autoevaluacion->factoresCriticos()->get();
 
 
         if(empty($autoevaluacion)){
@@ -230,6 +228,7 @@ class InstitutionController extends Controller
 
         // Identificar oportunidades de mejora (calificaciones con valor 1 o no calificadas)
         $oportunidadesMejora = collect();
+        $factoresCriticosPorDefecto = collect();
         foreach ($grupos as $grupo) {
             // Incluir grupos con promedio bajo (menor a 3) como oportunidad de mejora general
 
@@ -258,6 +257,8 @@ class InstitutionController extends Controller
                 }
 
                 foreach ($calificacionesMejora as $nota) {
+                    $factorCritico = FactorCriticoCalificacion::where('indice_calificacion',$nota['indice_calificacion'])->first();
+                    $factoresCriticosPorDefecto->push($factorCritico);
                     $oportunidadesMejora['Calificaciones específicas - ' . $nombreGrupo]->push([
                         'nombre' => $nota['nombre_calificacion'],
                         'indice' => $nota['indice_calificacion'],
@@ -266,6 +267,36 @@ class InstitutionController extends Controller
                 }
             }
         }
+        if($autoevaluacion->alias_estado != 'VALIDACION'){
+            // Recolectar los registros válidos que vamos a mantener
+            $idsParaMantener = [];
+            foreach ($factoresCriticosPorDefecto as $factorPorDefecto) {
+                $factorCriticoExistente = $factoresCriticosRegistrados->where('calificacion_indice',$factorPorDefecto->indice_calificacion)->first();
+                if ($factorCriticoExistente  != null) {
+                    $idsParaMantener[] = $factorCriticoExistente->id;
+                } else {
+                    // Buscar si ya existe uno igual
+                    $factorCreado = FactorCritico::create(
+                        [
+                            'calificacion_indice' => $factorPorDefecto->indice_calificacion,
+                            'autoevaluacion_id' => $autoevaluacionId,
+                            'descripcion' => $factorPorDefecto->descripcion,
+                            'valor' => 1,
+                        ],
+                    );
+                    $idsParaMantener[] = $factorCreado->id;
+                }
+            }
+            FactorCritico::where('autoevaluacion_id',  $autoevaluacionId)
+                ->whereNotIn('id', $idsParaMantener)
+                ->delete();
+            $autoevaluacion->refresh();
+            $autoevaluacion->fresh();
+        }
+
+        $factoresCriticos = FactorCritico::with('calificacion')
+            ->where('autoevaluacion_id', $autoevaluacionId)
+            ->get();
         return view('institutional_profile.institution.resultados.form',
        [
             'fortalezas' => $fortalezas,
@@ -273,61 +304,41 @@ class InstitutionController extends Controller
             'gestiones' => $gestiones,
             'autoevaluacionId' => $autoevaluacion->id,
             'institucionId' => $autoevaluacion->institucion_id,
-            'factoresCriticosExistentes' => $factoresCriticosFormateados,
+            'factoresCriticosPorDefecto' => $factoresCriticos,
             'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
         ]);
     }
-    public function sincronizarFactoresCriticos(Request $request){
-        $factoresPorGrupo = $request->input('factores');
-
+    public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId){
+        $factores = $request->input('factores');
         // Recolectar los registros válidos que vamos a mantener
         $idsParaMantener = [];
-        foreach ($factoresPorGrupo as $grupoNombre => $factores) {
-            $grupo = GrupoCalificacion::where('nombre', $grupoNombre)->first();
+        foreach ($factores as $factor) {
+            $descripcion = $factor['descripcion'] ?? null;
+            $valor = (int) $factor['valor'];
+            $autoevaluacionId = (int) $factor['autoevaluacion_id'];
+            $calificacionIndice = $factor['calificacion_indice'];
 
-            if (!$grupo) {
-                // Si el grupo no existe, omitir
-                continue;
-            }
-            foreach ($factores as $factor) {
-                $descripcion = $factor['descripcion'] ?? null;
-                $valor = (int) $factor['valor'];
-                $autoevaluacionId = (int) $factor['autoevaluacion_id'];
+            // Buscar si ya existe uno igual
+            $factorCritico = FactorCritico::updateOrCreate(
+                [
+                    'calificacion_indice' => $calificacionIndice,
+                ],
+                [
+                    'autoevaluacion_id' => $autoevaluacionId,
+                    'descripcion' => $descripcion,
+                    'valor' => $valor,
+                ]
+            );
 
-                // Buscar si ya existe uno igual
-                $factorCritico = FactorCritico::updateOrCreate(
-                    [
-                        'autoevaluacion_id' => $autoevaluacionId,
-                        'grupo_calificacion_id' => $grupo->id,
-                        'descripcion' => $descripcion,
-                        'valor' => $valor,
-                    ],
-                    [
-                    ]
-                );
-
-                $idsParaMantener[] = $factorCritico->id;
-            }
-        }
-        // Si se encontró al menos un autoevaluacion_id, eliminar lo demás de esa(s) evaluación(es)
-        $autoevaluacionIds = collect($factoresPorGrupo)
-            ->flatten(1)
-            ->pluck('autoevaluacion_id')
-            ->unique()
-            ->map(fn($id) => (int) $id);
-
-        if ($autoevaluacionIds->isNotEmpty()) {
-            FactorCritico::whereIn('autoevaluacion_id', $autoevaluacionIds)
-                ->whereNotIn('id', $idsParaMantener)
-                ->delete();
-
-            // Redirigir usando el primer autoevaluacion_id
-            return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionIds->first()])
-                ->with('flash_success_message', "Resultados actualizados correctamente");
+            $idsParaMantener[] = $factorCritico->id;
         }
 
-        // Si no hay autoevaluaciones válidas, puedes redirigir a algún lugar alternativo o mostrar un error
-        return redirect()->back()->withErrors('No se pudo sincronizar: no se encontró ningún autoevaluacion_id válido.');
+        FactorCritico::where('autoevaluacion_id', $autoevaluacionId)
+            ->whereNotIn('id', $idsParaMantener)
+            ->delete();
+        // Redirigir usando el primer autoevaluacion_id
+        return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionId])
+            ->with('flash_success_message', "Resultados actualizados correctamente");
 
     }
     public function autoevaluaciones(int $institution = null)

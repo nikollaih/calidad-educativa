@@ -60,8 +60,9 @@ class DatabaseSeeder extends Seeder
         //$this->call(EducationalModelSeeder::class);
         //$this->call(EducationalOfferLevelSeeder::class);
         //$this->call(GrupoCalificacionSeeder::class);
-        $this->call(CalificacionSeeder::class);
-        $this->call(NotaCalificacionSeeder::class);
+        //$this->call(CalificacionSeeder::class);
+        //$this->call(NotaCalificacionSeeder::class);
+        $this->call(FactorCriticoCalificacionSeeder::class);
         //$this->call(RelacionInstitucionPeiSeeder::class);
         //$this->call(MunicipalitySeeder::class);
     }
