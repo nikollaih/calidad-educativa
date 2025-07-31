@@ -616,6 +616,7 @@ class InstitutionController extends Controller
             'resena_historica' => $institucionData->resenaHistorica ?? null,
             'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
             'institucionId' => $institucion,
+            'institucionNombre' => $institucionData->nombre,
         ]);
     }
 
@@ -633,6 +634,7 @@ class InstitutionController extends Controller
         return view('institutional_profile.institution.pei.update_pei', [
             'institucionData' => new UpdatePeiResource($institucionData),
             'institucionId' => $institucion,
+            'institucionNombre' => $institucionData->nombre,
         ]);
     }
 

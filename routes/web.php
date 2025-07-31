@@ -131,6 +131,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/{id}', [PAMGeneralController::class, 'destroy'])->name('pams.destroy');
         Route::post('/store', [PAMGeneralController::class, 'store'])->name('pams.store');
+        Route::get('/{id}/edit', [PAMGeneralController::class, 'edit'])->name('pams.edit');
+        Route::put('/{id}', [PAMGeneralController::class, 'update'])->name('pams.update');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
