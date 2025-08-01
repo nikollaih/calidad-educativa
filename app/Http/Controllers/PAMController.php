@@ -52,6 +52,15 @@ class PAMController extends Controller {
         return view('pam.edit', compact('id'));
     }
 
+    /**
+     * Mostrar la vista del formulario de edición
+     *
+     * @param int $id
+     */
+    public function vistaCompleta($id): View {
+        return view('pam.vista_completa', compact('id'));
+    }
+
     // --------------------
     //  Manejo de datos
     // --------------------

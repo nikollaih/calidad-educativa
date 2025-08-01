@@ -16,6 +16,7 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
+use App\Http\Controllers\UnidadMetaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [PAMController::class, 'destroy'])->name('pam.destroy');
         Route::post('/{pamGeneralId}/pam-row-store', [PAMController::class, 'store'])->name('pam.store');
         Route::post('/store-advance', [PAMController::class, 'storeAvance'])->name('pam.store-avance');
+        Route::get('/{pamGeneralId}/tabla-completa-pam', [PAMController::class, 'vistaCompleta'])->name('pam.vista-completa');
     });
     Route::prefix('pams')->group(function () {
         // Vistas ------------------
@@ -142,6 +144,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('municipios', MunicipioController::class);
     // Rutas relacionadas a modelos educacionales
     Route::resource('modelos-educacionales', ModeloEducacionalController::class);
+    // Rutas relacionadas a unidades de meta
+    Route::resource('unidades-meta', UnidadMetaController::class);
     // Rutas relacionadas a modelos pedagogicos
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a ajustes

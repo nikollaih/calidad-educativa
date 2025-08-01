@@ -349,6 +349,12 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
           onClick={openCrearAvance}
         />
         <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable}/>
+        <CNavigationButton
+          label="Vista completa"
+          to="tabla-completa-pam"
+          icon="fas fa-table"
+          target="_blank"
+        />
       </div>
       <div className="card shadow-sm">
         <div className="card-body p-0">
@@ -356,28 +362,21 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
             <table className="table table-hover table-bordered mb-0">
               <thead className="sticky-top" style={{ backgroundColor: '#f8f9fa' }}>
                 <tr>
-                  <th width="10%" className="align-middle">COMPONENTE</th>
-                  <th width="10%" className="align-middle">PROCESO</th>
-                  <th width="10%" className="align-middle">SUBPROCESO</th>
-                  <th width="10%" className="align-middle">META DEL PLAN</th>
-                  <th width="12%" className="align-middle">OBJETIVO ESTRATÉGICO</th>
-                  <th width="8%" className="align-middle">META</th>
-                  <th width="8%" className="align-middle">INDICADOR</th>
-                  <th width="8%" className="align-middle">ACCIÓN</th>
-                  <th width="8%" className="align-middle">RESPONSABLE</th>
-                  <th width="6%" className="align-middle">RECURSOS</th>
-                  <th width="5%" className="align-middle">FECHA INICIO</th>
-                  <th width="5%" className="align-middle">FECHA FIN</th>
+                  <th width="10%" className="align-middle">OBJETIVO ESTRATÉGICO</th>
+                  <th width="10%" className="align-middle">META</th>
+                  <th width="15%" className="align-middle">INDICADOR</th>
+                  <th width="10%" className="align-middle">ACCIÓN</th>
+                  <th width="10%" className="align-middle">RESPONSABLE</th>
+                  <th width="10%" className="align-middle">RECURSOS</th>
+                  <th width="10%" className="align-middle">FECHA INICIO</th>
+                  <th width="10%" className="align-middle">FECHA FIN</th>
+                  <th width="10%" className="align-middle">PORCENTAJE DE AVANCE</th>
                   <th width="5%" className="align-middle text-center">ACCIONES</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, index) => (
                   <tr key={row.id || index} className="align-middle">
-                    <td className="py-3">{row.componente || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.proceso || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.subproceso || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.metaPlanDesarrollo || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.objetivoEstrategico || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.indicador || <span className="text-muted">Sin información</span>}</td>
@@ -386,6 +385,7 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
                     <td className="py-3">{row.recursos || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaInicio || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.porcentaje_avance || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
                         <button

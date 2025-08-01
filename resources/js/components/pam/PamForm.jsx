@@ -116,6 +116,8 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     });
   };
 
+  
+
   // Cargar datos cuando el componente se monta o el ID cambia
   useEffect(() => {
     const fetchData = async () => {
@@ -887,7 +889,16 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               onInput={(e) => updateDescription(meta.id, e.target.value)}
             />
           </div>
-          {meta.descripcion && (
+          <div>
+            <label className="form-label fw-bold">Valor de meta:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={meta.valor_meta}
+              onInput={(e) => updateValorMeta(meta.id, e.target.value)}
+            />
+          </div>
+          {meta.descripcion && meta.number_meta && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
