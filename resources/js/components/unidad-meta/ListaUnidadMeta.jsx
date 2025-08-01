@@ -149,7 +149,7 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="codigo" class="form-label">
-                                            Código de la unidad de meta
+                                            Código de la unidad de meta <span className="text-danger">*</span>
                                         </label>
                                         <input
                                             type="text"
@@ -163,16 +163,16 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
                                     </div>
                                     <div class="mb-3">
                                         <label for="descripcion" class="form-label">
-                                            Descripción de la unidad de meta
+                                            Descripción de la unidad de meta <span className="text-danger">*</span>
                                         </label>
-                                        <input
-                                            type="text"
+                                        <textarea
                                             class="form-control"
                                             id="descripcion"
                                             value={descripcion}
                                             onInput={(e) => setDescripcion(e.target.value)}
                                             required
-                                        />
+                                            rows="3"
+                                        ></textarea>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

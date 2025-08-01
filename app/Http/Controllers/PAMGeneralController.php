@@ -85,7 +85,23 @@ class PAMGeneralController extends Controller {
      */
     public function store(Request $request) {
         $pamData = $request->input('pam');
-        // Generar consecutivo unico
+
+        // Obtiene el último consecutivo
+        $lastPam = Pam::latest('id')->first();
+
+        $nextConsecutivo = 1;
+        if ($lastPam) {
+            $lastConsecutivoNum = (int) $lastPam->consecutivo;
+            $nextConsecutivo = $lastConsecutivoNum + 1;
+
+            // Manejo de reinicio si se llega a 99 y quieres volver a 01 o un límite
+            if ($nextConsecutivo > 99) {
+                $nextConsecutivo = 1; // O maneja un error si no quieres que se reinicie
+            }
+        }
+
+        // Formatear a 2 dígitos con ceros a la izquierda
+        $pamData['consecutivo'] = str_pad($nextConsecutivo, 2, '0', STR_PAD_LEFT);
 
         Pam::create($pamData);
 
@@ -132,5 +148,3 @@ class PAMGeneralController extends Controller {
         return redirect()->route('pams.index')->with('success', 'Pam actualizado correctamente.');
     }
 }
-
-
