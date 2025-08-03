@@ -564,20 +564,30 @@
                                         <thead>
                                         <tr>
                                             <th>NIVELES EDUCATIVOS</th>
-                                            <th>DOCUMENTO JORNADA</th>
+                                            <th>DOCUMENTO EDUCATIVOS</th>
                                             <th>JORNADA</th>
+                                            <th>DOCUMENTO JORNADA</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @foreach ($sede->levelSedeEducational as $levelSede)
                                             <tr>
-                                                <td>
+                                                <td class="text-wrap" style="max-width: 200px;">
                                                     {{ $levelSede->educationalLevel->name }}
+                                                </td>
+                                                <td>
                                                     @if($levelSede->educationalLevel->document_id)
                                                         <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">
                                                             <i class="fas fa-eye"></i> Ver Anexo
                                                         </a>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($levelSede?->schedules)
+                                                        @foreach($levelSede->schedules as $schedule)
+                                                            {{$schedule->name}}
+                                                        @endforeach
                                                     @endif
                                                 </td>
                                                 <td>
@@ -589,13 +599,6 @@
                                                                 </a>
                                                                 @if(!$loop->last) @endif
                                                             @endif
-                                                        @endforeach
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($levelSede?->schedules)
-                                                        @foreach($levelSede->schedules as $schedule)
-                                                            {{$schedule->name}}
                                                         @endforeach
                                                     @endif
                                                 </td>

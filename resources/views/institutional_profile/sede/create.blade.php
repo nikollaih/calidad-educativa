@@ -28,6 +28,11 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
+                        Modelos educativos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">
                         Inventario tecnologico
                     </button>
@@ -42,11 +47,7 @@
                         Mobiliario
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab">
-                        Modelos educativos
-                    </button>
-                </li>
+
                 <!-- Agrega más pestañas si es necesario -->
             </ul>
 
