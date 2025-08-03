@@ -122,7 +122,7 @@ export default function Ver({  gruposCalificaciones = [],
                                 } else {
                                     leyenda = 'Existencia';
                                 }
-                                return `PROM: ${promedio} - ${leyenda}`;
+                                return `Promedio: ${promedio} - ${leyenda}`;
                             }
                         }
                     },
@@ -245,10 +245,13 @@ export default function Ver({  gruposCalificaciones = [],
             </div>
             <form>
 
-                <div className="mb-4 d-flex row">
-                    <label className="form-label" htmlFor="anio-vigencia">Año de
-                        Vigencia: {autoevaluacion?.anio_vigencia}</label>
-                    <label className="form-label" htmlFor="estado">Estado: {autoevaluacion?.alias_estado}</label>
+                <div className="mb-1 d-flex justify-content-end gap-4">
+                    <label className="form-label" htmlFor="anio-vigencia">
+                        Año de Vigencia: {autoevaluacion?.anio_vigencia}
+                    </label>
+                    <label className="form-label" htmlFor="estado">
+                        Estado: {autoevaluacion?.alias_estado}
+                    </label>
                 </div>
 
                 <div className="mb-4">
@@ -261,12 +264,14 @@ export default function Ver({  gruposCalificaciones = [],
                                     type="button"
                                     role="tab"
                                 >
-                                    <span>{grupo.nombre}</span>
-                                    {grupo.hijos?.length > 0 && (
-                                        <span className="badge bg-dark ms-2">
-                                            Promedio: {calcularPromedioGrupo(grupo)}
-                                    </span>
-                                    )}
+                                    <div>
+                                        <div>{grupo.nombre}</div>
+                                        {grupo.hijos?.length > 0 && (
+                                            <div className="badge bg-dark mt-1">
+                                                Promedio: {calcularPromedioGrupo(grupo)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </button>
                             </li>
                         ))}

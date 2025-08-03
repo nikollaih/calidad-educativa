@@ -103,10 +103,15 @@ export default function Editar({  editarUrl = '#',
             <form method="POST" action={editarUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
 
-                <div class="mb-4 d-flex row">
-                    <label className="form-label" htmlFor="anio-vigencia">Año de Vigencia: {autoevaluacion?.anio_vigencia}</label>
-                    <label className="form-label" htmlFor="estado">Estado: {autoevaluacion?.alias_estado}</label>
+                <div className="mb-1 d-flex justify-content-end gap-4">
+                    <label className="form-label" htmlFor="anio-vigencia">
+                        Año de Vigencia: {autoevaluacion?.anio_vigencia}
+                    </label>
+                    <label className="form-label" htmlFor="estado">
+                        Estado: {autoevaluacion?.alias_estado}
+                    </label>
                 </div>
+
                 <div class="mb-4">
                     <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
@@ -117,12 +122,14 @@ export default function Editar({  editarUrl = '#',
                                     type="button"
                                     role="tab"
                                 >
-                                    <span>{grupo.nombre}</span>
-                                    {grupo.hijos?.length > 0 && (
-                                        <span class="badge bg-dark ms-2">
-                                            Total: {calcularPromedioGrupo(grupo)}
-                                    </span>
-                                    )}
+                                    <div>
+                                        <div>{grupo.nombre}</div>
+                                        {grupo.hijos?.length > 0 && (
+                                            <div className="badge bg-dark mt-1">
+                                                Promedio: {calcularPromedioGrupo(grupo)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </button>
                             </li>
                         ))}
