@@ -163,7 +163,11 @@ export default function AutoevaluacionResultados({
                                             calificaciones.length > 0 && (
                                                 <div key={grupoNombre} className="mb-3">
                                                     <strong className="block mb-1">{grupoNombre}:</strong>
-                                                    <p className="pl-4 mb-0">{calificaciones.join(' - ')}</p>
+                                                    <ul className="pl-6 list-disc">
+                                                        {calificaciones.map((calificacion, index) => (
+                                                            <li key={index}>{calificacion}</li>
+                                                        ))}
+                                                    </ul>
                                                 </div>
                                             )
                                     )}
@@ -179,7 +183,11 @@ export default function AutoevaluacionResultados({
                                             calificaciones.length > 0 && (
                                                 <div key={grupoNombre} className="mb-3">
                                                     <strong className="block mb-1">{grupoNombre}:</strong>
-                                                    <p className="pl-4 mb-0">{calificaciones.join(' - ')}</p>
+                                                    <ul className="pl-6 list-disc">
+                                                        {calificaciones.map((calificacion, index) => (
+                                                            <li key={index}>{calificacion}</li>
+                                                        ))}
+                                                    </ul>
                                                 </div>
                                             )
                                     )}
