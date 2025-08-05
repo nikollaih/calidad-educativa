@@ -75,7 +75,7 @@ const VerAvance = ({ accionId, onClose }) => {
                                                 <th>Fecha</th>
                                                 <th>Cantidad</th>
                                                 <th>Observación</th>
-                                                <th>Acción Relacionada</th>
+                                                {/* <th>Acción Relacionada</th> */}
                                                 <th>Archivos Adjuntos</th>
                                             </tr>
                                         </thead>
@@ -85,7 +85,7 @@ const VerAvance = ({ accionId, onClose }) => {
                                                     <td>{avance.fecha_avance}</td>
                                                     <td>{avance.cantidad_ejecutada}</td>
                                                     <td>{avance.observacion || 'N/A'}</td>
-                                                    <td>{avance.accion_descripcion}</td>
+                                                    {/* <td>{avance.accion_descripcion}</td> */}
                                                     <td>
                                                         {avance.archivos_adjuntos && avance.archivos_adjuntos.length > 0 ? (
                                                             <div className="d-flex flex-wrap gap-2">
@@ -108,7 +108,7 @@ const VerAvance = ({ accionId, onClose }) => {
                                                             </div>
                                                         ) : (
                                                             <span className="text-muted">
-                                                                <i className="fas fa-minus"></i> Sin archivos
+                                                                Sin archivos
                                                             </span>
                                                         )}
                                                     </td>

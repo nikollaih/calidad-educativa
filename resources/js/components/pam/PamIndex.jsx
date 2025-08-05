@@ -81,6 +81,7 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
             accion: item.accion || '',
             responsable: item.responsable || '',
             recursos: item.recursos || '',
+            dias_restantes: item.dias_restantes || '',
             fechaInicio: item.fecha_inicio ? item.fecha_inicio : '',
             fechaTerminacion: item.fecha_final ? item.fecha_final : ''
           }));
@@ -231,89 +232,6 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
     }
   };
 
-  const handleCellChange = (index, field, value) => {
-    // Sanitizar el valor (eliminar etiquetas HTML potencialmente peligrosas)
-    const sanitizedValue = value.replace(/<[^>]*>?/gm, '');
-    
-    // Actualizar el estado
-    setRows(prevRows => {
-      const newRows = [...prevRows];
-      newRows[index] = {
-        ...newRows[index],
-        [field]: sanitizedValue === '&nbsp;' ? '' : sanitizedValue
-      };
-      return newRows;
-    });
-  };
-
-  const saveChanges = async () => {
-    setIsLoading(true);
-    try {
-      // Preparar datos para enviar al backend
-      const dataToSend = rows.map(row => ({
-        id: row.id,
-        componente: row.componente,
-        proceso: row.proceso,
-        subproceso: row.subproceso,
-        meta_plan_desarrollo: row.metaPlanDesarrollo,
-        objetivo_estrategico: row.objetivoEstrategico,
-        meta: row.meta,
-        indicador: row.indicador,
-        accion: row.accion,
-        recursos: row.recursos,
-        fecha_inicio: row.fechaInicio,
-        fecha_final: row.fechaTerminacion
-      }));
-
-      const response = await fetch('/save-pam', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': getCsrfToken(),
-          'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Error al guardar los cambios');
-      }
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        alert('Cambios guardados exitosamente');
-        // Si el backend devuelve los datos actualizados, actualizamos el estado
-        if (result.data) {
-          const updatedData = result.data.map(item => ({
-            id: item.id,
-            componente: item.componente || '',
-            proceso: item.proceso || '',
-            subproceso: item.subproceso || '',
-            metaPlanDesarrollo: item.meta_plan_desarrollo || '',
-            objetivoEstrategico: item.objetivo_estrategico || '',
-            meta: item.meta || '',
-            indicador: item.indicador || '',
-            accion: item.accion || '',
-            responsable: '',
-            recursos: item.recursos || '',
-            fechaInicio: item.fecha_inicio ? item.fecha_inicio : '',
-            fechaTerminacion: item.fecha_final ? item.fecha_final : ''
-          }));
-          setRows(updatedData);
-        }
-      } else {
-        throw new Error(result.message || 'Error al guardar');
-      }
-    } catch (err) {
-      console.error('Error al guardar:', err);
-      setError(err.message);
-      alert('Error al guardar: ' + err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -364,12 +282,14 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
                 <tr>
                   <th width="10%" className="align-middle">OBJETIVO ESTRATÉGICO</th>
                   <th width="10%" className="align-middle">META</th>
+                  <th width="10%" className="align-middle">VALOR DE META</th>
                   <th width="15%" className="align-middle">INDICADOR</th>
                   <th width="10%" className="align-middle">ACCIÓN</th>
                   <th width="10%" className="align-middle">RESPONSABLE</th>
                   <th width="10%" className="align-middle">RECURSOS</th>
                   <th width="10%" className="align-middle">FECHA INICIO</th>
                   <th width="10%" className="align-middle">FECHA FIN</th>
+                  <th width="10%" className="align-middle">DIAS RESTANTES</th>
                   <th width="10%" className="align-middle">PORCENTAJE DE AVANCE</th>
                   <th width="5%" className="align-middle text-center">ACCIONES</th>
                 </tr>
@@ -378,14 +298,16 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
                 {rows.map((row, index) => (
                   <tr key={row.id || index} className="align-middle">
                     <td className="py-3">{row.objetivoEstrategico || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.meta || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.meta.descripcion || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.meta.valor_meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.indicador || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.accion || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.responsable?.name || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.recursos || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaInicio || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.porcentaje_avance || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.dias_restantes || <span className="text-muted">Sin información</span>}</td>
+                    <td className="py-3">{row.meta.porcentaje_meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
                         <button

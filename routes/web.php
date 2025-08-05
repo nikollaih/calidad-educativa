@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
     Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
+    Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
     Route::patch('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
@@ -139,7 +140,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
     });
-
     // Rutas relacionadas a municipios
     Route::resource('municipios', MunicipioController::class);
     // Rutas relacionadas a modelos educacionales

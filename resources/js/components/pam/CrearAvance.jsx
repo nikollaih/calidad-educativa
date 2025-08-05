@@ -264,7 +264,7 @@ const CrearAvance = ({ onClose }) => {
       const result = await response.json();
       console.log('Server response:', result);
       setSubmitMessage({ type: 'success', text: result.message || 'Avance guardado exitosamente!' });
-      setTimeout(closeModal, 2000);
+      window.location.reload();
     } catch (error) {
       console.error('Error al guardar el avance:', error);
       setSubmitMessage({ type: 'error', text: error.message || 'Error al guardar el avance. Inténtalo de nuevo.' });

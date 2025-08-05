@@ -73,6 +73,8 @@ class PAMController extends Controller {
             // Carga todas las acciones con sus relaciones completas y anidadas
             $actions = PamAccion::where('pam_id', $pamId)->with([
                 'user',
+                'indicador.meta.unidadMeta',
+                'indicador.meta.avances',
                 'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
                 'indicador.meta.objetivoEstrategico.metaPlanDesarrollo'
             ])->get();
@@ -89,6 +91,13 @@ class PAMController extends Controller {
                     ? $objetivoEstrategico->metaPlanDesarrollo->first()->descripcion
                     : null;
 
+                $valorMeta = optional($accion->indicador->meta)->valor_meta ?? 0;
+                $totalAvance = optional($accion->indicador->meta->avances)->sum('cantidad_ejecutada') ?? 0;
+                
+                $porcentajeMeta = ($valorMeta > 0) 
+                    ? round(($totalAvance / $valorMeta) * 100, 2) . '%' 
+                    : '0%';
+
                 return [
                     'id' => $accion->id,
                     'componente' => $componente->descripcion ?? null,
@@ -96,9 +105,16 @@ class PAMController extends Controller {
                     'subproceso' => $subproceso->descripcion ?? null,
                     'objetivo_estrategico' => $objetivoEstrategico->descripcion ?? null,
                     'meta_plan_desarrollo' => $metaPlanDesarrolloDescripcion,
-                    'meta' => $accion->indicador->meta->descripcion ?? null,
+                    'meta' => [
+                        'descripcion' => $accion->indicador->meta->descripcion ?? null,
+                        'valor_meta' => $totalAvance . '/' . $valorMeta,
+                        'unidad_meta_id' => $accion->indicador->meta->unidad_meta_id ?? null,
+                        'unidad_meta' => $accion->indicador->meta->unidadMeta->descripcion ?? null,
+                        'porcentaje_meta' => $porcentajeMeta,
+                    ],
                     'indicador' => $accion->indicador->descripcion ?? null,
                     'accion' => $accion->descripcion,
+                    'dias_restantes' => $accion->fecha_final ? Carbon::parse($accion->fecha_final)->diffInDays(Carbon::now()) . ' días restantes' : null,
                     'responsable' => $accion->user ? ['name' => $accion->user->name] : null,
                     'recursos' => $accion->recursos,
                     'fecha_inicio' => $accion->fecha_inicio ? Carbon::parse($accion->fecha_inicio)->format('d/m/Y') : null,
@@ -233,7 +249,7 @@ class PAMController extends Controller {
 
         DB::beginTransaction();
         try {
-            $createdPamIds = []; // Para almacenar los IDs de los PAMs creados si se crean múltiples
+            $createdPamIds = [];
 
             foreach ($request->input('componentes') as $compData) {
                 $componente = PamComponente::create([
@@ -262,7 +278,11 @@ class PAMController extends Controller {
 
                             // Crear Meta bajo Objetivo Estratégico
                             foreach ($objData['metas'] as $metaData) {
-                                $meta = $objetivoEstrategico->metas()->create(['descripcion' => $metaData['descripcion']]);
+                                $meta = $objetivoEstrategico->metas()->create([
+                                    'descripcion' => $metaData['descripcion'],
+                                    'valor_meta' => $metaData['valor_meta'] ?? null,
+                                    'unidad_meta_id' => $metaData['unidad_meta_id'] ?? null,
+                                ]);
 
                                 foreach ($metaData['indicadores'] as $indicadorData) {
                                     $indicador = $meta->indicadores()->create(['descripcion' => $indicadorData['descripcion']]);
@@ -456,7 +476,9 @@ class PAMController extends Controller {
 
             // Actualizar Meta (que está bajo Objetivo Estratégico)
             $meta->update([
-                'descripcion' => $metaData['descripcion']
+                'descripcion' => $metaData['descripcion'],
+                'valor_meta' => $metaData['valor_meta'] ?? null,
+                'unidad_meta_id' => $metaData['unidad_meta_id'] ?? null,
             ]);
 
             // Actualizar Indicador (que está bajo Meta)

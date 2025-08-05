@@ -38,6 +38,8 @@ class PamMeta extends Model
      */
     protected $fillable = [
         'descripcion',
+        'valor_meta',
+        'unidad_meta_id',
         'objetivo_estrategico_id',
     ];
 
@@ -52,8 +54,17 @@ class PamMeta extends Model
         return $this->belongsTo(PamObjetivoEstrategico::class, 'objetivo_estrategico_id');
     }
 
+    public function unidadMeta()
+    {
+        return $this->belongsTo(UnidadMeta::class, 'unidad_meta_id');
+    }
+
     public function indicadores()
     {
         return $this->hasMany(PamIndicador::class, 'meta_id');
+    }
+
+    public function avances() {
+        return $this->hasMany(PamAvance::class, 'meta_id');
     }
 }

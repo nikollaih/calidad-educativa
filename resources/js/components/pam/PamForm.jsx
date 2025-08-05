@@ -12,6 +12,8 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   const [originalData, setOriginalData] = useState(null); // No se usa directamente en el renderizado, pero se mantiene para referencia
   const [users, setUsers] = useState([]);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
+  const [unidadesMeta, setUnidadesMeta] = useState([]); // NUEVO: Estado para almacenar las unidades de meta
+  const [isUnidadesMetaLoading, setIsUnidadesMetaLoading] = useState(false);
 
   /**
    * Helper para encontrar y actualizar un campo específico de un elemento anidado de forma inmutable.
@@ -116,7 +118,55 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     });
   };
 
-  
+  // Función específica para actualizar el campo 'valor_meta' de una meta.
+  const updateValorMeta = (metaId, value) => {
+    setFormData(prevFormData => {
+      const newComponents = prevFormData.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj => ({
+                ...obj,
+                metas: obj.metas.map(meta =>
+                  meta.id === metaId ? { ...meta, valor_meta: value } : meta
+                )
+              }))
+            }))
+          }))
+        }))
+      }));
+      return { componentes: newComponents };
+    });
+  };
+
+  // Función específica para actualizar el campo 'unidad_meta_id' de una meta.
+  const updateUnidadMetaId = (metaId, newUnidadId) => {
+    setFormData(prevFormData => {
+      const newComponents = prevFormData.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj => ({
+                ...obj,
+                metas: obj.metas.map(meta =>
+                  meta.id === metaId ? { ...meta, unidad_meta_id: newUnidadId } : meta
+                )
+              }))
+            }))
+          }))
+        }))
+      }));
+      return { componentes: newComponents };
+    });
+  };
 
   // Cargar datos cuando el componente se monta o el ID cambia
   useEffect(() => {
@@ -177,6 +227,8 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                                   {
                                     id: data.meta_id || `meta-${Date.now() + 5}`,
                                     descripcion: data.meta_descripcion || '',
+                                    valor_meta: data.valor_meta || '',
+                                    unidad_meta_id: data.unidad_meta_id || '',
                                     indicadores: [
                                       {
                                         id: data.indicador_id || `indicador-${Date.now() + 6}`,
@@ -273,6 +325,36 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     fetchUsers();
   }, []); // Se ejecuta una sola vez al montar el componente
 
+  useEffect(() => {
+      const fetchUnidadesMeta = async () => {
+        setIsUnidadesMetaLoading(true);
+        try {
+          const response = await fetch('/get-unidades-meta');
+          if (!response.ok) {
+            throw new Error(`Error fetching unidades de meta: ${response.statusText}`);
+          }
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setUnidadesMeta(data);
+          } else {
+            console.error("Unexpected response format for unidades de meta:", data);
+            setUnidadesMeta([]);
+          }
+        } catch (error) {
+          console.error("Failed to fetch unidades de meta:", error);
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudieron cargar las unidades de meta.',
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+          });
+        } finally {
+          setIsUnidadesMetaLoading(false);
+        }
+      };
+
+      fetchUnidadesMeta();
+    }, []);
 
   // --- Funciones para agregar elementos (ahora agregan a arrays específicos) ---
 
@@ -536,33 +618,27 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     try {
       // Prepara los datos para enviar: ¡Ahora enviamos la estructura completa anidada!
       const dataToSend = {
-        id: isEditing ? id : null, // Solo envía ID si está editando
+        id: isEditing ? id : null,
         componentes: formData.componentes.map(comp => ({
-          // id: comp.id,
           descripcion: comp.descripcion,
           procesos: comp.procesos.map(proc => ({
-            // id: proc.id,
             descripcion: proc.descripcion,
             subprocesos: proc.subprocesos.map(subproc => ({
-              // id: subproc.id,
               descripcion: subproc.descripcion,
               metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
-                // id: metaPlan.id,
                 descripcion: metaPlan.descripcion,
                 objetivos: metaPlan.objetivos.map(obj => ({
-                  // id: obj.id,
                   descripcion: obj.descripcion,
                   metas: obj.metas.map(meta => ({
-                    // id: meta.id,
                     descripcion: meta.descripcion,
+                    valor_meta: meta.valor_meta, // Se envía el valor numérico
+                    unidad_meta_id: meta.unidad_meta_id, // Se envía el ID de la unidad
                     indicadores: meta.indicadores.map(indicador => ({
-                      // id: indicador.id,
                       descripcion: indicador.descripcion,
-                      accion: indicador.accion ? { // Asegúrate de que accion exista
-                        // id: indicador.accion.id,
+                      accion: indicador.accion ? {
                         descripcion: indicador.accion.descripcion,
-                        user_id: indicador.accion.responsable?.id, // Envía solo el ID del responsable
-                        responsable_nombre: indicador.accion.responsable?.descripcion, // Mantiene la descripción si es necesaria
+                        user_id: indicador.accion.responsable?.id,
+                        responsable_nombre: indicador.accion.responsable?.descripcion,
                         recursos_descripcion: indicador.accion.recursos?.descripcion,
                         fecha_inicio: indicador.accion.fechas?.fecha_inicio,
                         fecha_final: indicador.accion.fechas?.fecha_final
@@ -575,7 +651,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           }))
         }))
       };
-
+      
       const url = isEditing ? `/pam/${pamGeneralId}/update-pam/${id}` : `/pam/${pamGeneralId}/pam-row-store`;
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -617,8 +693,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         route('/pam');
       }
 
-
-    } catch (error) {
+     } catch (error) {
       console.error('Error al guardar:', error);
       Swal.fire({
         title: 'Error',
@@ -898,7 +973,29 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               onInput={(e) => updateValorMeta(meta.id, e.target.value)}
             />
           </div>
-          {meta.descripcion && meta.number_meta && (
+
+          {/* Selector de Unidad de Meta */}
+          <div className="mt-3">
+            <label className="form-label fw-bold">Unidad de Meta:</label>
+            <select
+              className="form-select"
+              value={meta.unidad_meta_id || ''}
+              onChange={(e) => updateUnidadMetaId(meta.id, e.target.value)}
+              required
+              disabled={isUnidadesMetaLoading}
+            >
+              <option value="">
+                {isUnidadesMetaLoading ? 'Cargando unidades...' : 'Seleccione una unidad'}
+              </option>
+              {unidadesMeta.map((unidad) => (
+                <option key={unidad.id} value={unidad.id}>
+                  {`${unidad.codigo} - ${unidad.descripcion}`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {meta.descripcion && meta.valor_meta && meta.unidad_meta_id && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
@@ -908,7 +1005,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               </button>
             </div>
           )}
-          {meta.indicadores.map(indicador => renderIndicador(indicador, meta.id))}
+          {meta.indicadores && meta.indicadores.map(indicador => renderIndicador(indicador, meta.id))}
         </div>
       </div>
     );
