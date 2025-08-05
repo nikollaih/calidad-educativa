@@ -136,12 +136,14 @@ export default function Crear({  agregarUrl = '#',
                                     type="button"
                                     role="tab"
                                 >
-                                    <span>{grupo.nombre}</span>
-                                    {grupo.hijos?.length > 0 && (
-                                        <span class="badge bg-dark ms-2">
-                                            Total: {calcularPromedioGrupo(grupo)}
-                                    </span>
-                                    )}
+                                    <div>
+                                        <div>{grupo.nombre}</div>
+                                        {grupo.hijos?.length > 0 && (
+                                            <div className="badge bg-dark mt-1">
+                                                Promedio: {calcularPromedioGrupo(grupo)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </button>
                             </li>
                         ))}
