@@ -16,6 +16,7 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
+use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIMetaController;
 
 /*
@@ -44,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
     Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
+    Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
     Route::patch('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
@@ -122,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [PAMController::class, 'destroy'])->name('pam.destroy');
         Route::post('/{pamGeneralId}/pam-row-store', [PAMController::class, 'store'])->name('pam.store');
         Route::post('/store-advance', [PAMController::class, 'storeAvance'])->name('pam.store-avance');
+        Route::get('/{pamGeneralId}/tabla-completa-pam', [PAMController::class, 'vistaCompleta'])->name('pam.vista-completa');
     });
     Route::prefix('pams')->group(function () {
         // Vistas ------------------
@@ -132,6 +135,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/{id}', [PAMGeneralController::class, 'destroy'])->name('pams.destroy');
         Route::post('/store', [PAMGeneralController::class, 'store'])->name('pams.store');
+        Route::get('/{id}/edit', [PAMGeneralController::class, 'edit'])->name('pams.edit');
+        Route::put('/{id}', [PAMGeneralController::class, 'update'])->name('pams.update');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
@@ -141,6 +146,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('municipios', MunicipioController::class);
     // Rutas relacionadas a modelos educacionales
     Route::resource('modelos-educacionales', ModeloEducacionalController::class);
+    // Rutas relacionadas a unidades de meta
+    Route::resource('unidades-meta', UnidadMetaController::class);
     // Rutas relacionadas a modelos pedagogicos
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a ajustes

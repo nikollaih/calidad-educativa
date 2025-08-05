@@ -96,7 +96,6 @@
                                         <i class="menu-icon fa-solid fa-cogs"></i>
                                         <div data-i18n="Roles"> Roles</div>
                                     </a>
-
                                 </li>
                                 <li class="menu-item">
                                     <a href="{{ url('permissions')}}" class="menu-link">
@@ -109,38 +108,38 @@
                         </li>
                         <li class="menu-item">
 
-                                @if ($municipios)
-                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            @if ($municipios)
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon fa-solid fa-university"></i>
+                                <div data-i18n="Instituciones">Instituciones</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <ul>
+                                    <li class="menu-item">
+                                        <a href="{{ url('institutional_profile/institution')}}"
+                                            class="menu-link"
+                                        >
+                                            <i class="menu-icon fas fa-globe-americas"></i>
+                                            <div data-i18n="Todos"> Todos</div>
+                                        </a>
+                                    </li>
+                                    @foreach ($municipios as $municipio)
+                                        <li class="menu-item">
+                                            <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id)}}"
+                                                class="menu-link"
+                                            >
+                                                <i class="menu-icon fas fa-map-marker-alt"></i>
+                                                <div data-i18n="{{$municipio->nombre}}"> {{$municipio->nombre}}</div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
                                     <i class="menu-icon fa-solid fa-university"></i>
                                     <div data-i18n="Instituciones">Instituciones</div>
                                 </a>
-                                <ul class="menu-sub">
-                                    <ul>
-                                        <li class="menu-item">
-                                            <a href="{{ url('institutional_profile/institution')}}"
-                                               class="menu-link"
-                                            >
-                                                <i class="menu-icon fas fa-globe-americas"></i>
-                                                <div data-i18n="Todos"> Todos</div>
-                                            </a>
-                                        </li>
-                                        @foreach ($municipios as $municipio)
-                                            <li class="menu-item">
-                                                <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id)}}"
-                                                   class="menu-link"
-                                                >
-                                                    <i class="menu-icon fas fa-map-marker-alt"></i>
-                                                    <div data-i18n="{{$municipio->nombre}}"> {{$municipio->nombre}}</div>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
-                                        <i class="menu-icon fa-solid fa-university"></i>
-                                        <div data-i18n="Instituciones">Instituciones</div>
-                                    </a>
-                                @endif
+                            @endif
                             </ul>
 
                         </li>
@@ -179,6 +178,20 @@
                                         <i class="menu-icon fas fa-chalkboard-teacher"></i>
                                         <div data-i18n="Estrategias pedagógicas"> Estrategias pedagógicas</div>
                                     </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon fas fa-clipboard-list"></i>
+                                        <div data-i18n="PAM"> PAM</div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a href="{{ url('unidades-meta')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-bullseye"></i>
+                                                <div data-i18n="Unidades de Meta"> Unidades de meta</div>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
 

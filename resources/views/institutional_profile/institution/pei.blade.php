@@ -76,9 +76,9 @@
                 <div class="card mb-4">
                     <div class="card-body ">
                         <h5 class="card-header">
-                            <!-- <center>
-                                <h2>PROYECTO EDUCATIVO INSTITUCIONAL (PEI)</h2>
-                            </center> -->
+                            <center>
+                                <h2>{{ $institucionNombre ?? 'Nombre de la institución'}}</h2>
+                            </center>
                         </h5>
                         <div class="col-md-12">
                             <div class="card text-center mb-3">

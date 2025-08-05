@@ -29,6 +29,8 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
     public function collection() {
         return PamAccion::with([
             'indicador.meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente',
+            'indicador.meta.unidadMeta',
+            'indicador.meta.avances',
             'user'
         ])->get();
     }
@@ -46,6 +48,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'Meta Plan Desarrollo',
             'Objetivo Estratégico',
             'Meta',
+            'Valor de meta',
             'Indicador',
             'Acción',
             'Responsable',
@@ -53,6 +56,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'Recursos',
             'Fecha Inicio',
             'Fecha Final',
+            'Porcentaje de avance',
             'Creado el',
         ];
     }
@@ -64,6 +68,12 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
      * @return array
      */
     public function map($accion): array {
+        $valorMeta = optional($accion->indicador->meta)->valor_meta ?? 0;
+        $totalAvance = optional($accion->indicador->meta->avances)->sum('cantidad_ejecutada') ?? 0;
+
+        $porcentajeMeta = ($valorMeta > 0) 
+            ? round(($totalAvance / $valorMeta) * 100, 2) . '%' 
+            : '0%';
         return [
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->componente->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->descripcion ?? 'N/A',
@@ -71,6 +81,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->descripcion ?? 'N/A',
             $accion->indicador->meta->descripcion ?? 'N/A',
+            $totalAvance . '/' . $valorMeta,
             $accion->indicador->descripcion ?? 'N/A',
             $accion->descripcion,
             $accion->nombre_responsable,
@@ -78,6 +89,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $accion->recursos,
             Carbon::parse($accion->fecha_inicio)->format('Y-m-d'),
             Carbon::parse($accion->fecha_final)->format('Y-m-d'),
+            $porcentajeMeta,
             $accion->created_at->format('Y-m-d H:i:s'),
         ];
     }

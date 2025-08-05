@@ -15,19 +15,13 @@ const CreatePAM = ({createUrl='', csrfToken='' }) => {
         <div className="container py-4">
             <form method="POST" action={createUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
-                <h5 className="mb-2">Ingresa un consecutivo al PAM</h5>
-                <input
-                    class="form-control mb-2"
-                    type="text"
-                    name="pam[consecutivo]"
-                />
                 <h5 className="mb-2">Ingresa una descripción del PAM</h5>
                 <textarea
                     class="form-control mb-2"
                     type="text"
                     name="pam[descripcion]"
                 ></textarea>
-                <h5 className="mb-2">Seleccionar años de ejecución del PAM<span className="text-danger">*</span></h5>
+                <h5 className="mb-2">Seleccionar años de ejecución del PAM <span className="text-danger">*</span></h5>
                 <div className="row mb-4">
                     <div className="col">
                         <label htmlFor="anioInicio" className="form-label">Año de inicio</label>

@@ -45,7 +45,7 @@ const handleNewFile = (fieldName, e) => {
     { value: 1, label: 'Inicial' },
     { value: 2, label: 'Resignificacion' },
     { value: 3, label: 'Ajuste' },
-    { value: 4, label: 'Error' },
+    { value: 4, label: 'Corrección' },
   ];
 
   return (
@@ -454,6 +454,7 @@ export default function ActualizarPei({
   editarUrl = '#',
   institucionId = [],
   institucionData = {},
+  institucionNombre = 'Nombre de la institución',
   csrfToken = '',
 }) {
   // Definir el orden deseado de las gestiones
@@ -558,7 +559,7 @@ export default function ActualizarPei({
   return (
     <div className="container mt-5 bg-white p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="mb-0">Ajustes al PEI</h2>
+        <h2 className="mb-0">Ajustes al PEI - {institucionNombre}</h2>
       </div>
 
       <div className="mb-4">
@@ -601,7 +602,7 @@ export default function ActualizarPei({
                               className="btn btn-sm btn-outline-primary me-2"
                               onClick={() => setCurrentModal({ gestionIndex: index, hijoIndex, formData: {...otrosCampos}, documentos, nombre_gestion })}
                             >
-                              <i className="fas fa-edit me-1"></i> Ajustes
+                              <i className="fas fa-edit me-1"></i> Actualizar
                             </button>
                             <button 
                               className="btn btn-sm btn-outline-secondary"

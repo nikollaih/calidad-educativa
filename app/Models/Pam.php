@@ -23,6 +23,7 @@ class Pam extends Model {
      */
     protected $fillable = [
         'consecutivo',
+        'descripcion',
         'estado',
         'anio_inicio',
         'anio_fin',

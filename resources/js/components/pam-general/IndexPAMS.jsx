@@ -94,6 +94,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                 <thead>
                     <tr>
                         <th>CONSECUTIVO</th>
+                        <th>DESCRIPCIÓN</th>
                         <th>VIGENCIA</th>
                         <th>FECHA DE CREACIÓN</th>
                         <th>ACCIONES</th>
@@ -104,6 +105,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                         pams.map((pam) => (
                             <tr key={pam.id}>
                                 <td>{pam.consecutivo}</td>
+                                <td>{pam.descripcion || <span className="text-muted">Sin descripción</span>}</td>
                                 <td>{pam.anio_inicio} - {pam.anio_fin}</td>
                                 <td>{formatFecha(pam.created_at)}</td>
                                 <td>
