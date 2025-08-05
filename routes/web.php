@@ -16,6 +16,7 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
+use App\Http\Controllers\PMI\PMIMetaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,7 +148,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('ajustes', AjustesController::class);
     Route::get('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'editFactorCritico'])
         ->name('pmi.edit-factor-critico');
+
     Route::resource('/{institucionId}/pmi', PMIController::class);
+    Route::resource('metas-pmi', PMIMetaController::class);
 
 });
 

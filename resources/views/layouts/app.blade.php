@@ -151,6 +151,12 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
+                                    <a  href="{{ url('metas-pmi')}}"  class="menu-link">
+                                        <i class="menu-icon fas fa-bullseye"></i>
+                                        <div data-i18n="PMI - Metas"> PMI - Metas</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
                                     <a href="{{ url('municipios')}}" class="menu-link">
                                         <i class="menu-icon fas fa-map"></i>
                                         <div data-i18n="Municipios"> Municipios</div>
