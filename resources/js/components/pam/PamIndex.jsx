@@ -6,13 +6,13 @@ import CrearAvance from './CrearAvance';
 import CBackButton from '../shared/CBackButton';
 import VerAvance from './VerAvance';
 
-const PamIndex = ({ pamGeneralId, csrfToken }) => {
+const PamIndex = ({ pamGeneralId }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCrearAvance, setShowCrearAvance] = useState(false);
-    const [showAvancesModal, setShowAvancesModal] = useState(false);
-    const [selectedAccionId, setSelectedAccionId] = useState(null);
+  const [showAvancesModal, setShowAvancesModal] = useState(false);
+  const [selectedAccionId, setSelectedAccionId] = useState(null);
 
 
   // Función para obtener el token CSRF
@@ -101,6 +101,17 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
     fetchData();
   }, []);
 
+  // useEffect para recargar la página automáticamente cuando hay un error
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const deleteRow = async (id, index) => {
     try {
       const result = await Swal.fire({
@@ -159,7 +170,6 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
     }
   };
 
-  // Function for "Exportar tabla" (example)
   // Function for "Exportar tabla" 
   const handleExportTable = async () => {
     try {
@@ -176,7 +186,7 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
       });
 
       // Realizar la petición para exportar
-      const response = await fetch('/pam/export', {
+      const response = await fetch(`/pam/${pamGeneralId}/export`, {
         method: 'GET',
         headers: {
           'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -231,7 +241,6 @@ const PamIndex = ({ pamGeneralId, csrfToken }) => {
       });
     }
   };
-
 
   if (isLoading) {
     return (

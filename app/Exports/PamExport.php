@@ -21,6 +21,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  */
 class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize {
 
+    // Comentario agregado: Se añade una propiedad privada para almacenar el ID
+    private $pamGeneralId;
+
+    // Comentario agregado: Se añade un constructor para recibir el ID al crear la clase
+    public function __construct(int $pamGeneralId) {
+        $this->pamGeneralId = $pamGeneralId;
+    }
+
     /**
      * Obtiene la colección completa de acciones PAM con todas sus relaciones
      * 
@@ -32,7 +40,9 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'indicador.meta.unidadMeta',
             'indicador.meta.avances',
             'user'
-        ])->get();
+        ])
+        ->where('pam_id', $this->pamGeneralId)
+        ->get();
     }
 
     /**

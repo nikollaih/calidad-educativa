@@ -32,7 +32,9 @@ class PAMController extends Controller {
      *
      */
     public function index(int $pamId): View {
-        return view('pam.index');
+        return view('pam.index', [
+            'pamGeneralId' => $pamId,
+        ]);
     }
 
     /**
@@ -633,10 +635,10 @@ class PAMController extends Controller {
     /**
      * Exportar PAM a Excel
      */
-    public function export() {
+    public function export(int $pamGeneralId) {
         $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
-        return Excel::download(new PamExport, $fileName);
+        return Excel::download(new PamExport($pamGeneralId), $fileName);
     }
 
     // --------------------

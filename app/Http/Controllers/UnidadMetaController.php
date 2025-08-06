@@ -23,7 +23,6 @@ class UnidadMetaController extends Controller {
         try {
             $unidadesMeta = UnidadMeta::all();
 
-            // Retornar la colección de unidades de meta como respuesta JSON
             return response()->json($unidadesMeta, 200);
 
         } catch (\Exception $e) {
@@ -41,12 +40,28 @@ class UnidadMetaController extends Controller {
 
     public function store(Request $request) {
         $request->validate([
-            'codigo' => 'required|string',
             'descripcion' => 'nullable|string',
         ]);
 
-        $unidadMeta = UnidadMeta::create([
-            'codigo' => $request->codigo,
+        // Obtiene el último codigo
+        $lastUnidadMeta = UnidadMeta::latest('id')->first();
+
+        $nextConsecutivo = 1;
+        if ($lastUnidadMeta) {
+            $lastConsecutivoNum = (int) $lastUnidadMeta->codigo;
+            $nextConsecutivo = $lastConsecutivoNum + 1;
+
+            // Manejo de reinicio si se llega a 99 y quieres volver a 01 o un límite
+            if ($nextConsecutivo > 99) {
+                $nextConsecutivo = 1; // O maneja un error si no quieres que se reinicie
+            }
+        }
+
+        // Formatear a 2 dígitos con ceros a la izquierda
+        $codigo = str_pad($nextConsecutivo, 2, '0', STR_PAD_LEFT);
+
+        UnidadMeta::create([
+            'codigo' => $codigo,
             'descripcion' => $request->descripcion
         ]);
 
@@ -59,20 +74,17 @@ class UnidadMetaController extends Controller {
 
     public function update(Request $request, int $unidadMetaId) {
         $request->validate([
-            'codigo' => 'required|string',
             'descripcion' => 'nullable|string',
         ]);
 
         $unidadMeta = UnidadMeta::findOrFail($unidadMetaId);
         // Actualizar nombre del rol
         $unidadMeta->update([
-            'codigo' => $request->codigo,
             'descripcion' => $request->descripcion
         ]);
 
         return redirect()->route('unidades-meta.index')->with('flash_success_message', 'Unidad de meta actualizado correctamente.');
     }
-
 
     public function destroy(int $unidadMetaId) {
         $unidadMeta = UnidadMeta::findOrFail($unidadMetaId);
