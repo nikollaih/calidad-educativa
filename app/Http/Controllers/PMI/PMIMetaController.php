@@ -4,18 +4,13 @@ namespace App\Http\Controllers\PMI;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\AutoevaluacionService;
-use App\Http\Services\PmiIndicadorService;
 use App\Models\PMI\PmiActividad;
-use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiMeta;
 use Illuminate\Http\Request;
 
 class PMIMetaController extends Controller
 {
-    public function __construct(
-        private PmiIndicadorService $pmiIndicadorService,
-    ){}
-
+/*
     public function index() {
         $metas = PmiMeta::paginate(20);
         return view('pmi.metas.index', [

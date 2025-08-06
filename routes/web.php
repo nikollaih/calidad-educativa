@@ -1,14 +1,14 @@
 <?php
 
-use \App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Municipio;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-use \App\Http\Controllers\InstitutionController;
-use \App\Http\Controllers\EducationalOfferController;
+use App\Http\Controllers\InstitutionController;
+use App\Http\Controllers\EducationalOfferController;
 use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PAMGeneralController;
 use App\Http\Controllers\PMI\PMIController;
@@ -17,7 +17,7 @@ use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
 use App\Http\Controllers\UnidadMetaController;
-use App\Http\Controllers\PMI\PMIMetaController;
+use App\Http\Controllers\PMI\PMIObjetivoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -157,7 +157,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('pmi.edit-factor-critico');
 
     Route::resource('/{institucionId}/pmi', PMIController::class);
-    Route::resource('metas-pmi', PMIMetaController::class);
+    Route::resource('objetivo-pmi', PMIObjetivoController::class);
 
 });
 

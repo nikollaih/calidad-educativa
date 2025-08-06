@@ -12,9 +12,10 @@ class PmiMeta extends Model
         'descripcion',
         'unidad_medida',
         'valor_requerido',
+        'objetivo_id',
     ];
 
-    public function indicadores(){
-        return $this->hasMany(PmiIndicador::class, 'meta_id');
+    public function actividades(){
+        return $this->hasMany(PmiActividad::class, 'meta_id');
     }
 }

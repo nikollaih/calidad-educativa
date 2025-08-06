@@ -150,7 +150,7 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a  href="{{ url('metas-pmi')}}"  class="menu-link">
+                                    <a   class="menu-link">
                                         <i class="menu-icon fas fa-bullseye"></i>
                                         <div data-i18n="PMI - Metas"> PMI - Metas</div>
                                     </a>
@@ -189,6 +189,20 @@
                                             <a href="{{ url('unidades-meta')}}" class="menu-link">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Unidades de Meta"> Unidades de meta</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon fas fa-shapes"></i>
+                                        <div data-i18n="PMI"></div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a  href="{{ url('objetivo-pmi')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-bullseye"></i>
+                                                <div data-i18n="Objetivos"> Objetivos</div>
                                             </a>
                                         </li>
                                     </ul>
