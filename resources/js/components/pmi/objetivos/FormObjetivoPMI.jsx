@@ -170,6 +170,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                 name="descripcion"
                                 value={objetivo.descripcion}
                                 onChange={handleObjetivoChange}
+                                disabled={!editable}
                                 required
                             />
                         </div>
@@ -180,9 +181,12 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 <div className="card mb-4">
                     <div className="card-header d-flex justify-content-between align-items-center">
                         <h5>Meta</h5>
-                        <button type="button" className="btn btn-sm btn-primary" onClick={addMeta}>
-                            Agregar Meta
-                        </button>
+                        { editable && (
+                            <button type="button" className="btn btn-sm btn-primary" onClick={addMeta}>
+                                Agregar Meta
+                            </button>
+                        )}
+
                     </div>
                     <div className="card-body">
                         {metas.map((meta, i) => {
@@ -193,14 +197,17 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                 <div key={i} className="mb-4 border-bottom pb-3">
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                         <h6>Meta #{i + 1}</h6>
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm btn-danger"
-                                            onClick={() => removeMeta(i)}
-                                            disabled={metas.length <= 1}
-                                        >
-                                            Eliminar
-                                        </button>
+                                        { editable && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => removeMeta(i)}
+                                                disabled={metas.length <= 1}
+                                            >
+                                                Eliminar
+                                            </button>
+                                        )}
+
                                     </div>
 
                                     <div className="mb-3">
@@ -211,6 +218,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                             name="descripcion"
                                             value={meta.descripcion}
                                             onChange={(e) => handleMetaChange(i, e)}
+                                            disabled={!editable}
                                             required
                                         />
                                     </div>
@@ -224,6 +232,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                                 className="form-control"
                                                 value={meta.unidad_medida}
                                                 onChange={(e) => handleMetaChange(i, e)}
+                                                disabled={!editable}
                                                 required
                                             />
                                         </div>
@@ -237,6 +246,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                                 className="form-control"
                                                 value={meta.valor_requerido}
                                                 onChange={(e) => handleMetaChange(i, e)}
+                                                disabled={!editable}
                                                 required
                                             />
                                         </div>
@@ -264,14 +274,17 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                                         >
                                                             Actividad #{j + 1}
                                                         </label>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-sm btn-outline-danger ms-auto"
-                                                            onClick={() => removeActividad(i, j)}
-                                                            disabled={meta.actividades.length <= 1}
-                                                        >
-                                                            Eliminar
-                                                        </button>
+                                                        { editable && (
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-sm btn-outline-danger ms-auto"
+                                                                onClick={() => removeActividad(i, j)}
+                                                                disabled={meta.actividades.length <= 1}
+                                                            >
+                                                                Eliminar
+                                                            </button>
+                                                        )}
+
                                                     </div>
                                                     <textarea
                                                         id={`actividad-desc-${i}-${j}`}
@@ -279,6 +292,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                                         name="descripcion"
                                                         value={actividad.descripcion}
                                                         onChange={(e) => handleActividadChange(i, j, e)}
+                                                        disabled={!editable}
                                                         required
                                                     />
                                                     <div className="row">
@@ -296,6 +310,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                                                 step="0.1"
                                                                 value={actividad.peso}
                                                                 onChange={(e) => handleActividadChange(i, j, e)}
+                                                                disabled={!editable}
                                                                 required
                                                             />
                                                         </div>
@@ -311,13 +326,13 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                             );
                                         })}
 
-                                        <button
+                                        { editable && (<button
                                             type="button"
                                             className="btn btn-sm btn-outline-primary"
                                             onClick={() => addActividad(i)}
                                         >
                                             Agregar Actividad
-                                        </button>
+                                        </button>)}
                                     </div>
                                 </div>
                             );
@@ -374,13 +389,16 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                         ))}
                     </div>
                 ))}
-                <button
-                    type="submit"
-                    className="btn btn-success"
-                    disabled={!pesoValido}
-                >
-                    Guardar Meta
-                </button>
+                { editable && (
+                    <button
+                        type="submit"
+                        className="btn btn-success"
+                        disabled={!pesoValido}
+                    >
+                        Guardar Meta
+                    </button>
+                ) }
+
             </form>
         </div>
     );

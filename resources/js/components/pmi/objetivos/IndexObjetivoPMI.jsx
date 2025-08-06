@@ -31,7 +31,7 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
                         <td>{objetivo.descripcion}</td>
                         <td>
                             <a
-                                href={`/objetivo-pmi/${objetivo.id}/edit`}
+                                href={`/objetivo-pmi/${objetivo.id}`}
                                 className="btn btn-primary btn-sm me-2"
                             >
                                 Ver detalles
