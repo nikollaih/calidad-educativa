@@ -23,4 +23,8 @@ class FactorCritico extends Model
     public function pmi(){
         return $this->belongsTo(Pmi::class, 'pmi_id', 'id');
     }
+    public function objetivos()
+    {
+        return $this->hasMany(PmiObjetivoVinculado::class, 'factor_id', 'id');
+    }
 }

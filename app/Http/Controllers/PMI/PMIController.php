@@ -5,9 +5,11 @@ namespace App\Http\Controllers\PMI;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
+use App\Http\Services\PMI\PmiObjetivoVinculadoService;
 use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
 use App\Models\Pmi;
+use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
@@ -18,6 +20,7 @@ class PMIController extends Controller
     public function __construct(
         private AdjuntoService $adjuntoService,
         private AutoevaluacionService $autoevaluacionService,
+        private PmiObjetivoVinculadoService $objetivoVinculadoService,
     ){}
 
     public function index( int $institucionId = null) {
@@ -94,7 +97,8 @@ class PMIController extends Controller
     public function edit(Request $request, int $institucionId , int $pmi){
          $pmi = PMI::where('id', $pmi)
              ->with(
-                 'factoresCriticos.calificacion.grupo.padre'
+                 'factoresCriticos.calificacion.grupo.padre',
+                 'factoresCriticos.objetivos.metas.actividades'
              )
              ->first();
         return view('pmi.edit',
@@ -105,6 +109,7 @@ class PMIController extends Controller
 
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
+        $objetivos = PmiObjetivo::with('metas.actividades')->get();
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
             ->with('calificacion.grupo.padre')
             ->firstOrFail();
@@ -113,8 +118,23 @@ class PMIController extends Controller
                 'factorCritico' => $factorCritico,
                 'institucionId' => $institucionId,
                 'pmiId' => $pmi,
+                'objetivos' => $objetivos,
             ]);
 
     }
+    public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
+        $factorCritico = FactorCritico::where('id', $factorCriticoId)
+            ->with('calificacion.grupo.padre')
+            ->first();
 
+        if (!$factorCritico) {
+            return redirect()
+                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                ->with('flash_error_message', 'Factor critico no encontrado.');
+        }
+        $this->objetivoVinculadoService
+            ->syncObjetivosVinculados( objetivosArray: $request->input('objetivos'), idFactorCritico: $factorCritico->id );
+
+        return $request;
+    }
 }

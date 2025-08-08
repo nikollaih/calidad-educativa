@@ -395,7 +395,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                         className="btn btn-success"
                         disabled={!pesoValido}
                     >
-                        Guardar Meta
+                        Guardar Objetivo
                     </button>
                 ) }
 
