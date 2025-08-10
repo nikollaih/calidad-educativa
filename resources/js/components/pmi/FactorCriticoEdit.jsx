@@ -11,14 +11,15 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
     const [originalData, setOriginalData] = useState(null);
 
     useEffect(() => {
-        console.log('factor critico', factorCritico);
-        console.log('pmiId', pmiId);
-        console.log('institucionId', institucionId);
-        console.log('objetivosGenerales', objetivosGenerales);
-    });
+        if(factorCritico.objetivos.length > 0){
+             console.log('primera carga');
 
-    useEffect(() => { console.log(formData); }, [formData]);
+            setFormData(prev => ({
+                objetivos: factorCritico.objetivos
+            }));
+        }
 
+    },[]);
     /**
      * Helper para encontrar y actualizar un campo específico de un elemento anidado
      */

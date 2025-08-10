@@ -111,7 +111,10 @@ class PMIController extends Controller
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
         $objetivos = PmiObjetivo::with('metas.actividades')->get();
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
-            ->with('calificacion.grupo.padre')
+            ->with([
+                'calificacion.grupo.padre',
+                'objetivos.metas.actividades'
+            ])
             ->firstOrFail();
         return view('pmi.editFactorCritico',
             [
@@ -129,12 +132,14 @@ class PMIController extends Controller
 
         if (!$factorCritico) {
             return redirect()
-                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
                 ->with('flash_error_message', 'Factor critico no encontrado.');
         }
         $this->objetivoVinculadoService
             ->syncObjetivosVinculados( objetivosArray: $request->input('objetivos'), idFactorCritico: $factorCritico->id );
 
-        return $request;
+        return redirect()
+            ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+            ->with('flash_success_message', 'Factor critico actualizad correctamente.');
     }
 }
