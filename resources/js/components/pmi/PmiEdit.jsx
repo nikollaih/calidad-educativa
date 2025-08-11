@@ -147,7 +147,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                         </td>
                                     ) : null}
 
-                                    {(row.objetivo != null)&&(index === 0 || tableRows[index - 1].objetivo !== row.objetivo) ? (
+                                    {(index === 0 || tableRows[index - 1].objetivo !== row.objetivo) ? (
                                         <td
                                             rowSpan={getRowSpan(index, "objetivo")}
                                             className="align-middle"
@@ -155,9 +155,9 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                         >
                                             {row?.objetivo?.descripcion || "Sin descripción"}
                                         </td>
-                                    ) : <td>Sin objetivo</td>}
+                                    ) : null}
 
-                                    {(row.meta != null) && (index === 0 || tableRows[index - 1].meta !== row.meta) ? (
+                                    {(index === 0 || tableRows[index - 1].meta !== row.meta) ? (
                                         <td
                                             rowSpan={getRowSpan(index, "meta")}
                                             className="align-middle"
@@ -165,7 +165,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                         >
                                             <div className="fw-semibold">{row?.meta?.descripcion || "Sin descripción"}</div>
                                             <small className="text-muted">
-                                                Valor: {row.meta.valor_requerido || "N/A"} {row.meta.unidad_medida || ""}
+                                                Valor: {row?.meta?.valor_requerido || "N/A"} {row?.meta?.unidad_medida || ""}
                                             </small>
                                         </td>
                                     ) : <td>Sin meta</td>}
