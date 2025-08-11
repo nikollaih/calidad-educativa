@@ -168,7 +168,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                                 Valor: {row?.meta?.valor_requerido || "N/A"} {row?.meta?.unidad_medida || ""}
                                             </small>
                                         </td>
-                                    ) : <td>Sin meta</td>}
+                                    ) : null}
 
                                     <td>
                                         {row.actividad ? (
