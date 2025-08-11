@@ -18,14 +18,24 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
     });
 
     // Construir filas planas
+// Construir filas planas (tolerante a vacíos)
+// Construir filas planas (tolerante a vacíos)
     const buildRows = () => {
         const rows = [];
+
         Object.entries(groupedData).forEach(([gestion, componentes]) => {
             Object.entries(componentes).forEach(([componente, factores]) => {
                 factores.forEach(fc => {
-                    fc.objetivos?.forEach(obj => {
-                        obj.metas?.forEach(meta => {
-                            (meta.actividades?.length ? meta.actividades : [null]).forEach(actividad => {
+                    // Si no hay objetivos, ponemos null para que igual salga fila
+                    const objetivos = fc.objetivos?.length ? fc.objetivos : [null];
+
+                    objetivos.forEach(obj => {
+                        const metas = obj?.metas?.length ? obj.metas : [null];
+
+                        metas.forEach(meta => {
+                            const actividades = meta?.actividades?.length ? meta.actividades : [null];
+
+                            actividades.forEach(actividad => {
                                 rows.push({
                                     gestion,
                                     componente,
@@ -40,6 +50,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                 });
             });
         });
+
         return rows;
     };
 
@@ -72,7 +83,6 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                         </div>
                     </div>
                 </div>
-
                 <div className="card-body p-0">
                     <div className="table-responsive" style={{ maxHeight: "600px", overflowY: "auto" }}>
                         <table className="table table-bordered mb-0">
@@ -137,28 +147,28 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                         </td>
                                     ) : null}
 
-                                    {index === 0 || tableRows[index - 1].objetivo !== row.objetivo ? (
+                                    {(row.objetivo != null)&&(index === 0 || tableRows[index - 1].objetivo !== row.objetivo) ? (
                                         <td
                                             rowSpan={getRowSpan(index, "objetivo")}
                                             className="align-middle"
                                             style={{ verticalAlign: "middle" }}
                                         >
-                                            {row.objetivo.descripcion || "Sin descripción"}
+                                            {row?.objetivo?.descripcion || "Sin descripción"}
                                         </td>
-                                    ) : null}
+                                    ) : <td>Sin objetivo</td>}
 
-                                    {index === 0 || tableRows[index - 1].meta !== row.meta ? (
+                                    {(row.meta != null) && (index === 0 || tableRows[index - 1].meta !== row.meta) ? (
                                         <td
                                             rowSpan={getRowSpan(index, "meta")}
                                             className="align-middle"
                                             style={{ verticalAlign: "middle" }}
                                         >
-                                            <div className="fw-semibold">{row.meta.descripcion || "Sin descripción"}</div>
+                                            <div className="fw-semibold">{row?.meta?.descripcion || "Sin descripción"}</div>
                                             <small className="text-muted">
                                                 Valor: {row.meta.valor_requerido || "N/A"} {row.meta.unidad_medida || ""}
                                             </small>
                                         </td>
-                                    ) : null}
+                                    ) : <td>Sin meta</td>}
 
                                     <td>
                                         {row.actividad ? (
