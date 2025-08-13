@@ -14,6 +14,7 @@ use App\Http\Controllers\PAMGeneralController;
 use App\Http\Controllers\PMI\PMIController;
 use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
+use App\Http\Controllers\ComponenteController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
 use App\Http\Controllers\UnidadMetaController;
@@ -44,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
     Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
+    Route::get('/get-componentes', [ComponenteController::class, 'all'])->name('componentes.all');
     Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
@@ -146,6 +148,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('modelos-educacionales', ModeloEducacionalController::class);
     // Rutas relacionadas a unidades de meta
     Route::resource('unidades-meta', UnidadMetaController::class);
+    // Rutas relacionadas a componentes
+    Route::resource('componentes', ComponenteController::class);
     // Rutas relacionadas a modelos pedagogicos
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a ajustes

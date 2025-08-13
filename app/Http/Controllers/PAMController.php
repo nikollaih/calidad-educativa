@@ -102,14 +102,14 @@ class PAMController extends Controller {
 
                 return [
                     'id' => $accion->id,
-                    'componente' => $componente->descripcion ?? null,
+                    'componente' => $componente->componente?->descripcion ?? null,
                     'proceso' => $proceso->descripcion ?? null,
                     'subproceso' => $subproceso->descripcion ?? null,
                     'objetivo_estrategico' => $objetivoEstrategico->descripcion ?? null,
                     'meta_plan_desarrollo' => $metaPlanDesarrolloDescripcion,
                     'meta' => [
                         'descripcion' => $accion->indicador->meta->descripcion ?? null,
-                        'valor_meta' => $totalAvance . '/' . $valorMeta,
+                        'valor_meta' => $valorMeta,
                         'unidad_meta_id' => $accion->indicador->meta->unidad_meta_id ?? null,
                         'unidad_meta' => $accion->indicador->meta->unidadMeta->descripcion ?? null,
                         'porcentaje_meta' => $porcentajeMeta,
@@ -173,6 +173,7 @@ class PAMController extends Controller {
 
             $data = [
                 'componente_id' => $componente->id ?? null,
+                'componente' => $componente->componente?->id ?? null,
                 'componente_descripcion' => $componente->descripcion ?? '',
                 'proceso_id' => $proceso->id ?? null,
                 'proceso_descripcion' => $proceso->descripcion ?? '',
@@ -219,7 +220,7 @@ class PAMController extends Controller {
         // Reglas de validación para la estructura anidada
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
-            'componentes.*.descripcion' => 'required|string|max:1000',
+            // 'componentes.*.id' => 'required|integer',
             'componentes.*.procesos' => 'required|array|min:1',
             'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
@@ -255,8 +256,7 @@ class PAMController extends Controller {
 
             foreach ($request->input('componentes') as $compData) {
                 $componente = PamComponente::create([
-                    'descripcion' => $compData['descripcion'],
-                    'nombre' => $compData['descripcion'],
+                    'componente_id' => $compData['componente_id'],
                 ]);
 
                 foreach ($compData['procesos'] as $procData) {

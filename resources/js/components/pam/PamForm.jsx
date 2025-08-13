@@ -14,6 +14,8 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [unidadesMeta, setUnidadesMeta] = useState([]); // NUEVO: Estado para almacenar las unidades de meta
   const [isUnidadesMetaLoading, setIsUnidadesMetaLoading] = useState(false);
+  const [componentes, setComponentes] = useState([]); // NUEVO: Estado para almacenar los componentes
+  const [isComponentesLoading, setIsComponentesLoading] = useState(false);
 
   /**
    * Helper para encontrar y actualizar un campo específico de un elemento anidado de forma inmutable.
@@ -168,6 +170,33 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     });
   };
 
+  // Función específica para actualizar el campo 'componente_id' de una meta.
+  const updateComponenteId = (componenteId, newComponenteId) => {
+    setFormData(prevFormData => {
+      // Mapea sobre la lista de componentes para encontrar y actualizar el que coincida
+      const newComponents = prevFormData.componentes.map(comp => {
+        // Comprobamos si el 'id' del componente actual coincide con el que queremos actualizar
+        if (comp.id === componenteId) {
+          // Si coincide, devolvemos un nuevo objeto con el 'id' actualizado
+          // Mantenemos el resto de las propiedades del componente original
+          return {
+            ...comp,
+            id: newComponenteId
+          };
+        }
+        // Si no coincide, devolvemos el componente sin cambios
+        return comp;
+      });
+
+      // Devolvemos el estado completo, incluyendo la lista de componentes actualizada
+      // Esto es importante para no perder otras propiedades de formData si las hubiera
+      return {
+        ...prevFormData,
+        componentes: newComponents
+      };
+    });
+  };
+
   // Cargar datos cuando el componente se monta o el ID cambia
   useEffect(() => {
     const fetchData = async () => {
@@ -205,7 +234,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           const mappedData = {
             componentes: [
               {
-                id: data.componente_id || `componente-${Date.now()}`,
+                id: data.componente || `componente-${Date.now()}`,
                 descripcion: data.componente_descripcion || '',
                 procesos: [
                   {
@@ -325,38 +354,116 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     fetchUsers();
   }, []); // Se ejecuta una sola vez al montar el componente
 
+  // Obtiene las unidades de meta
   useEffect(() => {
-      const fetchUnidadesMeta = async () => {
-        setIsUnidadesMetaLoading(true);
-        try {
-          const response = await fetch('/get-unidades-meta');
-          if (!response.ok) {
-            throw new Error(`Error fetching unidades de meta: ${response.statusText}`);
-          }
-          const data = await response.json();
-          if (Array.isArray(data)) {
-            setUnidadesMeta(data);
-          } else {
-            console.error("Unexpected response format for unidades de meta:", data);
-            setUnidadesMeta([]);
-          }
-        } catch (error) {
-          console.error("Failed to fetch unidades de meta:", error);
-          Swal.fire({
-            title: 'Error',
-            text: 'No se pudieron cargar las unidades de meta.',
-            icon: 'error',
-            confirmButtonText: 'Entendido'
-          });
-        } finally {
-          setIsUnidadesMetaLoading(false);
+    const fetchUnidadesMeta = async () => {
+      setIsUnidadesMetaLoading(true);
+      try {
+        const response = await fetch('/get-unidades-meta');
+        if (!response.ok) {
+          throw new Error(`Error fetching unidades de meta: ${response.statusText}`);
         }
-      };
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setUnidadesMeta(data);
+        } else {
+          console.error("Unexpected response format for unidades de meta:", data);
+          setUnidadesMeta([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch unidades de meta:", error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar las unidades de meta.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      } finally {
+        setIsUnidadesMetaLoading(false);
+      }
+    };
 
-      fetchUnidadesMeta();
-    }, []);
+    fetchUnidadesMeta();
+  }, []);
 
-  // --- Funciones para agregar elementos (ahora agregan a arrays específicos) ---
+  // Obtiene los componentes
+  useEffect(() => {
+    const fetchComponentes = async () => {
+      setIsComponentesLoading(true);
+      try {
+        const response = await fetch('/get-componentes');
+        if (!response.ok) {
+          throw new Error(`Error fetching componentes: ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setComponentes(data);
+        } else {
+          console.error("Unexpected response format for componentes:", data);
+          setComponentes([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch componentes:", error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar las componentes.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      } finally {
+        setIsComponentesLoading(false);
+      }
+    };
+
+    fetchComponentes();
+  }, []);
+
+// useEffect para monitorear el estado y agregar el indicador automáticamente
+  useEffect(() => {
+  // Se crea una copia profunda para evitar mutaciones directas del estado
+  const newComponents = JSON.parse(JSON.stringify(formData.componentes));
+
+  newComponents.forEach(comp => {
+    comp.procesos.forEach(proc => {
+      proc.subprocesos.forEach(subproc => {
+        subproc.metas_plan_desarrollo.forEach(metaPlan => {
+          metaPlan.objetivos.forEach(obj => {
+            obj.metas.forEach(meta => {
+              // Se busca la unidad de meta seleccionada
+              const unidadSeleccionada = unidadesMeta.find(unidad => unidad.id == meta.unidad_meta_id);
+              const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.descripcion : '';
+
+              // Se crea la nueva descripción del indicador
+              const newDescription = `${meta.valor_meta} ${unidadDescripcion}`;
+
+              // Comentamos lo que modificamos: Se agrega la lógica para manejar ambos escenarios.
+              // Escenario 1: No hay indicadores, se agregan automáticamente
+              if (
+                meta.descripcion &&
+                meta.valor_meta &&
+                meta.unidad_meta_id &&
+                (!meta.indicadores || meta.indicadores.length === 0)
+              ) {
+                // Si cumple la condición y no hay indicadores, se agrega uno
+                addIndicador(meta.id);
+              }
+              // Escenario 2: Ya existen indicadores, se actualiza la descripción
+              else if (
+                meta.indicadores &&
+                meta.indicadores.length > 0 &&
+                meta.indicadores[0].descripcion !== newDescription
+              ) {
+                // Si la descripción del indicador es diferente a la nueva, se actualiza
+                updateIndicatorDescription(meta.id, newDescription);
+              }
+            });
+          });
+        });
+      });
+    });
+  });
+
+}, [formData, unidadesMeta]);
 
   const addComponente = () => {
     setFormData(prev => ({
@@ -451,6 +558,13 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   };
 
   const addIndicador = (metaId) => {
+    const metaAfectada = formData.componentes.flatMap(comp => comp.procesos.flatMap(proc => proc.subprocesos.flatMap(subproc => subproc.metas_plan_desarrollo.flatMap(metaPlan => metaPlan.objetivos.flatMap(obj => obj.metas)))))
+    .find(meta => meta.id === metaId);
+
+    // Se busca la unidad de meta en el array de unidadesMeta usando el id
+    const unidadSeleccionada = unidadesMeta.find(unidad => unidad.id == metaAfectada.unidad_meta_id);
+    const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.descripcion : '';
+    
     setFormData(prev => ({
       ...prev,
       componentes: prev.componentes.map(comp => ({
@@ -469,7 +583,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                       ...meta,
                       indicadores: [...meta.indicadores, {
                         id: `indicador-${Date.now()}`,
-                        descripcion: '',
+                        descripcion: `${meta.valor_meta} ${unidadDescripcion}`,
                         accion: { // Inicializa la acción aquí
                           id: `accion-${Date.now()}`,
                           descripcion: '',
@@ -479,6 +593,40 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                         }
                       }]
                     }
+                    : meta
+                )
+              }))
+            }))
+          }))
+        }))
+      }))
+    }));
+  };
+
+  // La función `addIndicador` se mantiene, pero se usa una nueva función para actualizar.
+  const updateIndicatorDescription = (metaId, newDescription) => {
+    setFormData(prev => ({
+      ...prev,
+      componentes: prev.componentes.map(comp => ({
+        ...comp,
+        procesos: comp.procesos.map(proc => ({
+          ...proc,
+          subprocesos: proc.subprocesos.map(subproc => ({
+            ...subproc,
+            metas_plan_desarrollo: subproc.metas_plan_desarrollo.map(metaPlan => ({
+              ...metaPlan,
+              objetivos: metaPlan.objetivos.map(obj => ({
+                ...obj,
+                metas: obj.metas.map(meta =>
+                  meta.id === metaId
+                    ? {
+                        ...meta,
+                        indicadores: meta.indicadores.map(indicador => ({
+                          // Comentamos lo que modificamos: Se actualiza la descripción del primer indicador si existe.
+                          ...indicador,
+                          descripcion: newDescription,
+                        })),
+                      }
                     : meta
                 )
               }))
@@ -566,7 +714,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
 
     // Validación de campos obligatorios para la primera jerarquía completa
     const requiredFields = {
-      componente: firstComponent.descripcion,
+      componente: firstComponent.id,
       proceso: firstProceso.descripcion,
       subproceso: firstSubproceso.descripcion,
       meta_plan_desarrollo: firstMetaPlan.descripcion,
@@ -620,7 +768,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
       const dataToSend = {
         id: isEditing ? id : null,
         componentes: formData.componentes.map(comp => ({
-          descripcion: comp.descripcion,
+          componente_id: comp.id,
           procesos: comp.procesos.map(proc => ({
             descripcion: proc.descripcion,
             subprocesos: proc.subprocesos.map(subproc => ({
@@ -908,11 +1056,12 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <textarea
               className="form-control"
               rows="3"
+              disabled
               value={indicador.descripcion}
               onInput={(e) => updateDescription(indicador.id, e.target.value)}
             />
           </div>
-          {indicador.descripcion && !indicador.accion && (
+          {/* {indicador.descripcion && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
@@ -921,7 +1070,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 Agregar Acción
               </button>
             </div>
-          )}
+          )} */}
         </div>
         {renderAccion(indicador)}
       </div>
@@ -995,7 +1144,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             </select>
           </div>
 
-          {meta.descripcion && meta.valor_meta && meta.unidad_meta_id && (
+          {/* {meta.descripcion && meta.valor_meta && meta.unidad_meta_id && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"
@@ -1004,7 +1153,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 Agregar Indicador
               </button>
             </div>
-          )}
+          )} */}
           {meta.indicadores && meta.indicadores.map(indicador => renderIndicador(indicador, meta.id))}
         </div>
       </div>
@@ -1178,14 +1327,24 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-body">
           <div>
             <label className="form-label fw-bold">Descripción:</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={componente.descripcion}
-              onInput={(e) => updateDescription(componente.id, e.target.value)}
-            />
+            <select
+              className="form-select"
+              value={componente.id || ''}
+              onChange={(e) => updateComponenteId(componente.id, e.target.value)}
+              required
+              disabled={isComponentesLoading}
+            >
+              <option value="">
+                {isComponentesLoading ? 'Cargando componentes...' : 'Seleccione un componente'}
+              </option>
+              {componentes.map((componente) => (
+                <option key={componente.id} value={componente.id}>
+                  {`${componente.descripcion}`}
+                </option>
+              ))}
+            </select>
           </div>
-          {componente.descripcion && (
+          {componente.id && (
             <div className="mt-3">
               <button
                 className="btn btn-primary mt-2"

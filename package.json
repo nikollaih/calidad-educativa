@@ -20,6 +20,7 @@
         "chart.js": "^4.4.9",
         "preact": "^10.26.5",
         "preact-router": "^4.1.2",
+        "react-select": "^5.10.2",
         "sweetalert2": "^11.22.1"
     }
 }
