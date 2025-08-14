@@ -179,24 +179,26 @@ class PAMController extends Controller {
                 'componente_id' => $componente->id ?? null,
                 'componente' => $componente->componente?->id ?? null,
                 'componente_descripcion' => $componente->descripcion ?? '',
-                'proceso_id' => $proceso->id ?? null,
+                'proceso_id' => 'proceso_id' . $proceso->id ?? null,
                 'proceso_descripcion' => $proceso->descripcion ?? '',
-                'subproceso_id' => $subproceso->id ?? null,
+                'subproceso_id' => 'subproceso_id' . $subproceso->id ?? null,
                 'subproceso_descripcion' => $subproceso->descripcion ?? '',
 
                 // Ahora objetivo_estrategico_id es directo de subproceso
-                'objetivo_estrategico_id' => $objetivo->id ?? null,
+                'objetivo_estrategico_id' => 'objetivo_id' .$objetivo->id ?? null,
                 'objetivo_estrategico_descripcion' => $objetivo->descripcion ?? '',
 
                 // Meta Plan Desarrollo ahora es hijo de Objetivo Estratégico (y también tiene subproceso_id)
-                'meta_plan_desarrollo_id' => $firstMetaPlanDesarrollo->id ?? null,
+                'meta_plan_desarrollo_id' => 'meta_plan_id' . $firstMetaPlanDesarrollo->id ?? null,
                 'meta_plan_desarrollo_descripcion' => $firstMetaPlanDesarrollo->descripcion ?? '',
 
-                'meta_id' => $accion->indicador->meta->id ?? null,
+                'meta_id' => 'meta_id' . $accion->indicador->meta->id ?? null,
                 'meta_descripcion' => $accion->indicador->meta->descripcion ?? '',
-                'indicador_id' => $accion->indicador->id ?? null,
+                'valor_meta' => $accion->indicador->meta->valor_meta ?? '',
+                'unidad_meta_id' => $accion->indicador->meta->unidad_meta_id ?? null,
+                'indicador_id' => 'indicador_id' . $accion->indicador->id ?? null,
                 'indicador_descripcion' => $accion->indicador->descripcion ?? '',
-                'accion_id' => $accion->id,
+                'accion_id' => 'accion_id' . $accion->id,
                 'accion_descripcion' => $accion->descripcion,
                 'user_id' => $accion->user_id,
                 'responsable_nombre' => $accion->user->name ?? $accion->nombre_responsable,
@@ -360,8 +362,7 @@ class PAMController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse {
-        dd($id, $request->all());
+    public function update(Request $request, int $id): JsonResponse {
         // Reglas de validación para la estructura anidada.
         // Son idénticas a las del método 'store' para asegurar consistencia.
         $validator = Validator::make($request->all(), [
@@ -447,18 +448,10 @@ class PAMController extends Controller {
                 ], 500);
             }
 
-            dd($procData['descripcion'],
-                $subprocData['descripcion'],
-                $metaPlanData['descripcion'],
-                $objData['descripcion'],
-                $metaData['descripcion'],
-                $indicadorData['descripcion'],
-                $accionData['descripcion']);
             // 5. Realiza las actualizaciones de cada modelo con los datos de la solicitud
             // Actualizar Componente
             $componente->update([
-                'descripcion' => $compData['descripcion'],
-                'nombre' => $compData['descripcion'], // Consistente con el 'store'
+                'componente_id' => $compData['componente_id'], // Consistente con el 'store'
             ]);
 
             // Actualizar Proceso
