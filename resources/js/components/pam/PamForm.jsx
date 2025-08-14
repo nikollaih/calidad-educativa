@@ -431,10 +431,11 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             obj.metas.forEach(meta => {
               // Se busca la unidad de meta seleccionada
               const unidadSeleccionada = unidadesMeta.find(unidad => unidad.id == meta.unidad_meta_id);
-              const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.descripcion : '';
+              const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.unidad_parcial : '';
+              const unidadDescripcion2 = unidadSeleccionada ? unidadSeleccionada.unidad_total : '';
 
               // Se crea la nueva descripción del indicador
-              const newDescription = `${meta.valor_meta} ${unidadDescripcion}`;
+              const newDescription = `0 ${unidadDescripcion} de ${meta.valor_meta} ${unidadDescripcion2}`;
 
               // Comentamos lo que modificamos: Se agrega la lógica para manejar ambos escenarios.
               // Escenario 1: No hay indicadores, se agregan automáticamente
@@ -1138,7 +1139,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               </option>
               {unidadesMeta.map((unidad) => (
                 <option key={unidad.id} value={unidad.id}>
-                  {`${unidad.codigo} - ${unidad.descripcion}`}
+                  {`${unidad.unidad_parcial}`}
                 </option>
               ))}
             </select>

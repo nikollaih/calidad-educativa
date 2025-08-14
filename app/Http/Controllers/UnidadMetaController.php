@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UnidadMeta;
+use App\Models\Indicador;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -11,7 +11,7 @@ use Spatie\Permission\Models\Permission;
 class UnidadMetaController extends Controller {
 
     public function index() {
-        $unidadMeta = UnidadMeta::get();
+        $unidadMeta = Indicador::get();
         return view('unidadMeta.index', ['unidadMeta' => $unidadMeta]);
     }
 /**
@@ -21,7 +21,7 @@ class UnidadMetaController extends Controller {
      */
     public function all(): JsonResponse {
         try {
-            $unidadesMeta = UnidadMeta::all();
+            $unidadesMeta = Indicador::all();
 
             return response()->json($unidadesMeta, 200);
 
@@ -40,54 +40,37 @@ class UnidadMetaController extends Controller {
 
     public function store(Request $request) {
         $request->validate([
-            'descripcion' => 'nullable|string',
+            'unidad_parcial' => 'required|string',
+            'unidad_total' => 'required|string',
         ]);
 
-        // Obtiene el último codigo
-        $lastUnidadMeta = UnidadMeta::latest('id')->first();
-
-        $nextConsecutivo = 1;
-        if ($lastUnidadMeta) {
-            $lastConsecutivoNum = (int) $lastUnidadMeta->codigo;
-            $nextConsecutivo = $lastConsecutivoNum + 1;
-
-            // Manejo de reinicio si se llega a 99 y quieres volver a 01 o un límite
-            if ($nextConsecutivo > 99) {
-                $nextConsecutivo = 1; // O maneja un error si no quieres que se reinicie
-            }
-        }
-
-        // Formatear a 2 dígitos con ceros a la izquierda
-        $codigo = str_pad($nextConsecutivo, 2, '0', STR_PAD_LEFT);
-
-        UnidadMeta::create([
-            'codigo' => $codigo,
-            'descripcion' => $request->descripcion
-        ]);
+        Indicador::create($request->all());
 
         return redirect()->route('unidades-meta.index')->with('flash_success_message', 'Unidad de meta creado correctamente.');
     }
 
-    public function edit(UnidadMeta $unidadMeta) {
+    public function edit(Indicador $unidadMeta) {
         return view('unidades-meta.edit', compact('unidadMeta'));
     }
 
     public function update(Request $request, int $unidadMetaId) {
         $request->validate([
-            'descripcion' => 'nullable|string',
+            'unidad_parcial' => 'required|string',
+            'unidad_total' => 'required|string',
         ]);
 
-        $unidadMeta = UnidadMeta::findOrFail($unidadMetaId);
+        $unidadMeta = Indicador::findOrFail($unidadMetaId);
         // Actualizar nombre del rol
         $unidadMeta->update([
-            'descripcion' => $request->descripcion
+            'unidad_parcial' => $request->unidad_parcial,
+            'unidad_total' => $request->unidad_total
         ]);
 
         return redirect()->route('unidades-meta.index')->with('flash_success_message', 'Unidad de meta actualizado correctamente.');
     }
 
     public function destroy(int $unidadMetaId) {
-        $unidadMeta = UnidadMeta::findOrFail($unidadMetaId);
+        $unidadMeta = Indicador::findOrFail($unidadMetaId);
         $unidadMeta->delete();
         return redirect()->route('unidades-meta.index')->with('flash_success_message', 'Unidad de meta eliminado correctamente.');
     }

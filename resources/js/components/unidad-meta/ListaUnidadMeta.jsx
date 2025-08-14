@@ -1,98 +1,122 @@
-import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { h } from "preact";
+import { useState } from "preact/hooks";
 
-export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = '' }) {
+export default function ListaUnidadMeta({
+    agregarUrl,
+    unidadesMeta,
+    csrfToken = "",
+}) {
     const [showModal, setShowModal] = useState(false);
-    const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
+    const [modalMode, setModalMode] = useState("agregar"); // 'agregar' o 'editar'
     const [currentUnidadMeta, setCurrentUnidadMeta] = useState(null);
-    const [descripcion, setDescripcion] = useState(''); // Ya existente
+    const [unidadParcial, setDescripcion] = useState(""); // Se convierte en "unidad parcial"
+    // Agregado: Estado para la nueva "unidad total"
+    const [unidadTotal, setUnidadTotal] = useState("");
 
     const handleAgregarClick = () => {
-        setModalMode('agregar');
-        setDescripcion('');  // Limpiar descripción
+        setModalMode("agregar");
+        setDescripcion(""); // Limpiar "unidad parcial"
+        // Agregado: Limpiar "unidad total"
+        setUnidadTotal("");
         setCurrentUnidadMeta(null);
         setShowModal(true);
     };
 
     const handleEditarClick = (unidadMeta) => {
-        setModalMode('editar');
-        setDescripcion(unidadMeta.descripcion || '');
+        setModalMode("editar");
+        setDescripcion(unidadMeta.unidad_parcial || "");
+        // Agregado: Cargar el valor de "unidad total" al editar
+        setUnidadTotal(unidadMeta.unidad_total || "");
         setCurrentUnidadMeta(unidadMeta);
         setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setCodigo('');       // Limpiar al cerrar
-        setDescripcion('');  // Limpiar al cerrar
+        // Eliminado: Ya no se usa 'codigo'
+        setDescripcion(""); // Limpiar "unidad parcial"
+        // Agregado: Limpiar "unidad total"
+        setUnidadTotal("");
         setCurrentUnidadMeta(null);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validar que ambos campos no estén vacíos
-        if (!descripcion.trim()) {
-            alert('Por favor, completa ambos campos: Código y Descripción.');
+        // Modificado: Validar que ambos campos (unidad parcial y unidad total) no estén vacíos
+        if (!unidadParcial.trim() || !unidadTotal.trim()) {
+            alert(
+                "Por favor, completa ambos campos: Unidad Parcial y Unidad Total."
+            );
             return; // Detiene el envío del formulario
         }
 
-        const form = document.createElement('form');
-        form.method = 'POST';
+        const form = document.createElement("form");
+        form.method = "POST";
 
-        const tokenInput = document.createElement('input');
-        tokenInput.type = 'hidden';
-        tokenInput.name = '_token';
+        const tokenInput = document.createElement("input");
+        tokenInput.type = "hidden";
+        tokenInput.name = "_token";
         tokenInput.value = csrfToken;
         form.appendChild(tokenInput);
 
-        // Input para la descripción
-        const descripcionInput = document.createElement('input');
-        descripcionInput.type = 'hidden';
-        descripcionInput.name = 'descripcion';
-        descripcionInput.value = descripcion;
-        form.appendChild(descripcionInput);
+        // Input para la descripción (Unidad Parcial)
+        const unidadParcialInput = document.createElement("input");
+        unidadParcialInput.type = "hidden";
+        unidadParcialInput.name = "unidad_parcial";
+        unidadParcialInput.value = unidadParcial;
+        form.appendChild(unidadParcialInput);
 
-        if (modalMode === 'agregar') {
+        // Agregado: Input para la unidad total
+        const unidadTotalInput = document.createElement("input");
+        unidadTotalInput.type = "hidden";
+        unidadTotalInput.name = "unidad_total";
+        unidadTotalInput.value = unidadTotal;
+        form.appendChild(unidadTotalInput);
+
+        if (modalMode === "agregar") {
             form.action = agregarUrl; // Usar la URL de agregar
         } else {
             // Editar unidadMeta existente
             form.action = `/unidades-meta/${currentUnidadMeta.id}`; // Usar la URL de edición
-            const methodInput = document.createElement('input');
-            methodInput.type = 'hidden';
-            methodInput.name = '_method';
-            methodInput.value = 'PUT'; // Laravel reconocerá esto como un PUT
+            const methodInput = document.createElement("input");
+            methodInput.type = "hidden";
+            methodInput.name = "_method";
+            methodInput.value = "PUT"; // Laravel reconocerá esto como un PUT
             form.appendChild(methodInput);
         }
 
-        
         document.body.appendChild(form);
         form.submit();
     };
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Unidades de meta</h2>
+            <h2 class="mb-4">Indicadores</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar unidad de meta
+                Agregar indicador
             </button>
 
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Descripción</th>
+                        {/* Eliminado: La columna 'Código' */}
+                        <th>Unidad parcial</th>
+                        <th>Unidad total</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {unidadesMeta.map((unidadMeta) => (
                         <tr key={unidadMeta.id}>
-                            <td>{unidadMeta.codigo}</td>
-                            <td>{unidadMeta.descripcion}</td>
+                            {/* Eliminado: La celda 'código' */}
+                            <td>{unidadMeta.unidad_parcial}</td>
+                            <td>{unidadMeta.unidad_total}</td>
                             <td>
                                 <button
-                                    onClick={() => handleEditarClick(unidadMeta)}
+                                    onClick={() =>
+                                        handleEditarClick(unidadMeta)
+                                    }
                                     className="btn btn-warning btn-sm me-2"
                                 >
                                     Editar
@@ -100,16 +124,31 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
                                 <form
                                     action={`/unidades-meta/${unidadMeta.id}`}
                                     method="POST"
-                                    style={{display: 'inline'}}
+                                    style={{ display: "inline" }}
                                     onSubmit={(e) => {
-                                        if (!confirm('¿Estás seguro de que quieres eliminar esta unidad de meta?')) {
+                                        if (
+                                            !confirm(
+                                                "¿Estás seguro de que quieres eliminar esta unidad de meta?"
+                                            )
+                                        ) {
                                             e.preventDefault();
                                         }
                                     }}
                                 >
-                                    <input type="hidden" name="_token" value={csrfToken}/>
-                                    <input type="hidden" name="_method" value="DELETE"/>
-                                    <button type="submit" className="btn btn-danger btn-sm">
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        value={csrfToken}
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="_method"
+                                        value="DELETE"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="btn btn-danger btn-sm"
+                                    >
                                         Eliminar
                                     </button>
                                 </form>
@@ -121,12 +160,17 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
 
             {/* Modal */}
             {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div
+                    class="modal d-block"
+                    style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    {modalMode === 'agregar' ? 'Agregar unidad de meta' : 'Editar unidad de meta'}
+                                    {modalMode === "agregar"
+                                        ? "Agregar unidad de meta"
+                                        : "Editar unidad de meta"}
                                 </h5>
                                 <button
                                     type="button"
@@ -136,15 +180,47 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
                             </div>
                             <form onSubmit={handleSubmit}>
                                 <div class="modal-body">
+                                    {/* Agregado: Campo para Unidad Parcial (era 'unidadParcial') */}
                                     <div class="mb-3">
-                                        <label for="descripcion" class="form-label">
-                                            Descripción de la unidad de meta <span className="text-danger">*</span>
+                                        <label
+                                            for="unidadParcial"
+                                            class="form-label"
+                                        >
+                                            Unidad parcial{" "}
+                                            <span className="text-danger">
+                                                *
+                                            </span>
                                         </label>
                                         <textarea
                                             class="form-control"
-                                            id="descripcion"
-                                            value={descripcion}
-                                            onInput={(e) => setDescripcion(e.target.value)}
+                                            id="unidadParcial"
+                                            value={unidadParcial}
+                                            onInput={(e) =>
+                                                setDescripcion(e.target.value)
+                                            }
+                                            required
+                                            rows="3"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* Agregado: Nuevo campo para Unidad Total */}
+                                    <div class="mb-3">
+                                        <label
+                                            for="unidadTotal"
+                                            class="form-label"
+                                        >
+                                            Unidad total{" "}
+                                            <span className="text-danger">
+                                                *
+                                            </span>
+                                        </label>
+                                        <textarea
+                                            class="form-control"
+                                            id="unidadTotal"
+                                            value={unidadTotal}
+                                            onInput={(e) =>
+                                                setUnidadTotal(e.target.value)
+                                            }
                                             required
                                             rows="3"
                                         ></textarea>
@@ -161,9 +237,15 @@ export default function ListaUnidadMeta({ agregarUrl, unidadesMeta, csrfToken = 
                                     <button
                                         type="submit"
                                         class="btn btn-primary"
-                                        disabled={!descripcion.trim()}
+                                        // Modificado: Deshabilitar si ambos campos están vacíos
+                                        disabled={
+                                            !unidadParcial.trim() ||
+                                            !unidadTotal.trim()
+                                        }
                                     >
-                                        {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
+                                        {modalMode === "agregar"
+                                            ? "Agregar"
+                                            : "Guardar Cambios"}
                                     </button>
                                 </div>
                             </form>

@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UnidadMeta extends Model {
+/**
+ * Se cambia nombre al modelo ya que solamente cambia el nombre pero sigue siendo el mismo concepto
+ */
+class Indicador extends Model {
     use HasFactory;
 
     /**
@@ -21,7 +24,7 @@ class UnidadMeta extends Model {
      * @var array<int, string>
      */
     protected $fillable = [
-        'codigo',
-        'descripcion',
+        'unidad_parcial',
+        'unidad_total',
     ];
 }

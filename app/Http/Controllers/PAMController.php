@@ -116,7 +116,11 @@ class PAMController extends Controller {
                     ],
                     'indicador' => $accion->indicador->descripcion ?? null,
                     'accion' => $accion->descripcion,
-                    'dias_restantes' => $accion->fecha_final ? Carbon::parse($accion->fecha_final)->diffInDays(Carbon::now()) . ' días restantes' : null,
+                    'dias_restantes' => $accion->fecha_final 
+                        ? (Carbon::parse($accion->fecha_final)->isFuture() 
+                            ? Carbon::parse($accion->fecha_final)->diffInDays(Carbon::now()) . ' días restantes' 
+                            : 'Finalizado')
+                        : null,
                     'responsable' => $accion->user ? ['name' => $accion->user->name] : null,
                     'recursos' => $accion->recursos,
                     'fecha_inicio' => $accion->fecha_inicio ? Carbon::parse($accion->fecha_inicio)->format('d/m/Y') : null,
@@ -357,11 +361,12 @@ class PAMController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request, $id): JsonResponse {
+        dd($id, $request->all());
         // Reglas de validación para la estructura anidada.
         // Son idénticas a las del método 'store' para asegurar consistencia.
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
-            'componentes.*.descripcion' => 'required|string|max:1000',
+            // 'componentes.*.id' => 'required|integer',
             'componentes.*.procesos' => 'required|array|min:1',
             'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
