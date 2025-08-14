@@ -1,14 +1,14 @@
 <?php
 
-use \App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Municipio;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-use \App\Http\Controllers\InstitutionController;
-use \App\Http\Controllers\EducationalOfferController;
+use App\Http\Controllers\InstitutionController;
+use App\Http\Controllers\EducationalOfferController;
 use App\Http\Controllers\PAMController;
 use App\Http\Controllers\PAMGeneralController;
 use App\Http\Controllers\PMI\PMIController;
@@ -18,6 +18,7 @@ use App\Http\Controllers\ComponenteController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
 use App\Http\Controllers\UnidadMetaController;
+use App\Http\Controllers\PMI\PMIObjetivoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);
     });
+
     // Rutas relacionadas a municipios
     Route::resource('municipios', MunicipioController::class);
     // Rutas relacionadas a modelos educacionales
@@ -155,9 +157,14 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
+
+    Route::post('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'actualizarFactorCritico'])
+        ->name('pmi.actualizar-factor-critico');
     Route::get('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'editFactorCritico'])
         ->name('pmi.edit-factor-critico');
+
     Route::resource('/{institucionId}/pmi', PMIController::class);
+    Route::resource('objetivo-pmi', PMIObjetivoController::class);
 
 });
 

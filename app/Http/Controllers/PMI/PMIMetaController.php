@@ -3,52 +3,42 @@
 namespace App\Http\Controllers\PMI;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
-use App\Http\Services\PMI\PmiObjetivoVinculadoService;
-use App\Models\Autoevaluacion;
-use App\Models\FactorCritico;
-use App\Models\Pmi;
-use App\Models\PMI\PmiObjetivo;
+use App\Models\PMI\PmiActividad;
+use App\Models\PMI\PmiMeta;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
-class PMIController extends Controller
+class PMIMetaController extends Controller
 {
-    public function __construct(
-        private AdjuntoService $adjuntoService,
-        private AutoevaluacionService $autoevaluacionService,
-        private PmiObjetivoVinculadoService $objetivoVinculadoService,
-    ){}
-
-    public function index( int $institucionId = null) {
-        $pmis = Pmi::whereHas('autoevaluacion', function ($query) use ($institucionId) {
-            $query->where('institucion_id', $institucionId);
-        })->paginate(20);
-
-        return view('pmi.index', [
-            'institucionId' => $institucionId,
-            'pmis' => $pmis,
+/*
+    public function index() {
+        $metas = PmiMeta::paginate(20);
+        return view('pmi.metas.index', [
+            'metas' => $metas,
         ]);
     }
-    public function create(int $institucionId = null) {
 
-        $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
-            ->where('alias_estado', 'VALIDACION')
-            ->whereDoesntHave('pmi')
-            ->whereDoesntHave('institucion.autoevaluaciones.pmi', function ($query) {
-                $query->whereColumn('autoevaluacions.anio_vigencia', '>=', 'pmis.anio_inicio')
-                    ->whereColumn('autoevaluacions.anio_vigencia', '<', 'pmis.anio_fin');
-            })
-            ->get();
-        return view('pmi.create',
-        [
-            'autoevaluaciones' => $autoevaluaciones,
-            'institucionId' => $institucionId,
-        ]);
+    public function create() {
+        return view('pmi.metas.create');
     }
+    public function edit(int $metas_pmi){
+        $meta = PmiMeta::with('indicadores.actividades')->findOrFail($metas_pmi);
+        return view('pmi.metas.edit', ['meta' =>  $meta]);
+    }
+    public function store(Request $request) {
+        $input =  $request->all();
+        $metaData['descripcion'] = $input['descripcion'];
+        $metaData['unidad_medida'] = $input['unidad_medida'];
+        $metaData['valor_requerido'] = $input['valor_requerido'];
+        $indicadores = $input['indicadores'];
+        $meta = PmiMeta::create($metaData);
+        $this->pmiIndicadorService->syncIndicadores($indicadores, $meta->id);
+
+        return redirect()
+            ->route('metas-pmi.index')
+            ->with('flash_success_message', 'Meta creada correctamente.');
+    }
+    /*
     public function store(Request $request, int $institucionId = null) {
         try {
             // Validación manual
@@ -97,8 +87,7 @@ class PMIController extends Controller
     public function edit(Request $request, int $institucionId , int $pmi){
          $pmi = PMI::where('id', $pmi)
              ->with(
-                 'factoresCriticos.calificacion.grupo.padre',
-                 'factoresCriticos.objetivos.metas.actividades'
+                 'factoresCriticos.calificacion.grupo.padre'
              )
              ->first();
         return view('pmi.edit',
@@ -109,37 +98,16 @@ class PMIController extends Controller
 
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
-        $objetivos = PmiObjetivo::with('metas.actividades')->get();
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
-            ->with([
-                'calificacion.grupo.padre',
-                'objetivos.metas.actividades'
-            ])
+            ->with('calificacion.grupo.padre')
             ->firstOrFail();
         return view('pmi.editFactorCritico',
             [
                 'factorCritico' => $factorCritico,
                 'institucionId' => $institucionId,
                 'pmiId' => $pmi,
-                'objetivos' => $objetivos,
             ]);
 
     }
-    public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
-        $factorCritico = FactorCritico::where('id', $factorCriticoId)
-            ->with('calificacion.grupo.padre')
-            ->first();
-
-        if (!$factorCritico) {
-            return redirect()
-                ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-                ->with('flash_error_message', 'Factor critico no encontrado.');
-        }
-        $this->objetivoVinculadoService
-            ->syncObjetivosVinculados( objetivosArray: $request->input('objetivos'), idFactorCritico: $factorCritico->id );
-
-        return redirect()
-            ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-            ->with('flash_success_message', 'Factor critico actualizad correctamente.');
-    }
+*/
 }

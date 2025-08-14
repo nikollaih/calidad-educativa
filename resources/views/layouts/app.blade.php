@@ -193,6 +193,20 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon fas fa-shapes"></i>
+                                        <div data-i18n="PMI"></div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a  href="{{ url('objetivo-pmi')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-bullseye"></i>
+                                                <div data-i18n="Objetivos"> Objetivos</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
 
                         </li>

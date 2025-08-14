@@ -1,91 +1,52 @@
-import React, { useEffect } from 'react';
-import {useState} from "preact/hooks";
+import React from "react";
+import { useState } from "preact/hooks";
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
-import {h} from "preact";
+import { h } from "preact";
 
 const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
-    const [pmi, setPmi] = useState(pmiData.pmiData);
-    // Agrupar los datos correctamente
-    const groupedData = {};
+    const [pmi] = useState(pmiData.pmiData);
 
-    pmi.factores_criticos?.forEach((fc) => {
-        console.log(fc);
-        const gestion = fc.calificacion.grupo?.padre?.nombre || 'Sin gestión';
-        const componente = fc.calificacion?.nombre || 'Sin componente';
+    // Agrupar datos
+    const groupedData = {};
+    pmi.factores_criticos?.forEach(fc => {
+        const gestion = fc.calificacion.grupo?.padre?.nombre || "Sin gestión";
+        const componente = fc.calificacion?.nombre || "Sin componente";
 
         if (!groupedData[gestion]) groupedData[gestion] = {};
         if (!groupedData[gestion][componente]) groupedData[gestion][componente] = [];
-
         groupedData[gestion][componente].push(fc);
     });
 
-    // Crear las filas de la tabla con la lógica de fusión correcta
-    const renderTableRows = () => {
+    // Construir filas planas
+// Construir filas planas (tolerante a vacíos)
+// Construir filas planas (tolerante a vacíos)
+    const buildRows = () => {
         const rows = [];
 
         Object.entries(groupedData).forEach(([gestion, componentes]) => {
-            const gestionRowSpan = Object.values(componentes).reduce(
-                (sum, factores) => sum + factores.length,
-                0
-            );
-
-            let isFirstRowOfGestion = true;
-
             Object.entries(componentes).forEach(([componente, factores]) => {
-                const componenteRowSpan = factores.length;
+                factores.forEach(fc => {
+                    // Si no hay objetivos, ponemos null para que igual salga fila
+                    const objetivos = fc.objetivos?.length ? fc.objetivos : [null];
 
-                factores.forEach((fc, factorIndex) => {
-                    rows.push(
-                        <tr key={fc.id}>
-                            {isFirstRowOfGestion && (
-                                <td
-                                    rowSpan={gestionRowSpan}
-                                    className="align-middle bg-light fw-bold border-end"
-                                    style={{ verticalAlign: 'middle' }}
-                                >
-                                    {gestion}
-                                </td>
-                            )}
-                            {factorIndex === 0 && (
-                                <td
-                                    rowSpan={componenteRowSpan}
-                                    className="align-middle border-end"
-                                    style={{ verticalAlign: 'middle' }}
-                                >
-                                    <div class="d-flex">
-                                        <small className="text-muted px-1">
-                                            {fc.grupo_calificacion?.indice}
-                                        </small>
-                                        <div className="fw-semibold text-primary">
-                                            {componente}
-                                        </div>
-                                    </div>
-                                </td>
-                            )}
-                            <td className="p-3 d-flex justify-content-between align-items-center">
-                                {fc.descripcion || (
-                                    <span className="text-muted fst-italic">
-                                        Sin descripción
-                                    </span>
-                                )}
-                                <i class="fas fa-edit text-warning fs-4 cursor-pointer"
-                                   onClick={() => (window.location.href = `edit/factor-critico/${fc.id}`)}
-                                ></i>
-                            </td>
-                            <td></td> {/* OBJETIVO */}
-                            <td></td> {/* META */}
-                            <td></td> {/* INDICADORES */}
-                            <td></td> {/* MEDIDA DEL INDICADOR */}
-                            <td></td> {/* ACTIVIDADES */}
-                            <td></td> {/* RECURSO ($) */}
-                            <td></td> {/* RESPONSABLE */}
-                        </tr>
-                    );
+                    objetivos.forEach(obj => {
+                        const metas = obj?.metas?.length ? obj.metas : [null];
 
-                    // Solo marcar como false después de la primera fila
-                    if (isFirstRowOfGestion) {
-                        isFirstRowOfGestion = false;
-                    }
+                        metas.forEach(meta => {
+                            const actividades = meta?.actividades?.length ? meta.actividades : [null];
+
+                            actividades.forEach(actividad => {
+                                rows.push({
+                                    gestion,
+                                    componente,
+                                    factorCritico: fc,
+                                    objetivo: obj,
+                                    meta,
+                                    actividad
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -93,52 +54,175 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
         return rows;
     };
 
+    const tableRows = buildRows();
+
+    // Calcular rowSpans para cada bloque
+    const getRowSpan = (index, key) => {
+        const current = tableRows[index][key];
+        let span = 0;
+        for (let i = index; i < tableRows.length; i++) {
+            if (tableRows[i][key] === current) span++;
+            else break;
+        }
+        return span;
+    };
+
     return (
         <div className="container-fluid mt-4">
             <div className="card shadow-sm">
-                <div className="card-header  text-black">
-                    <div class="d-flex justify-content-between">
+                <div className="card-header text-black">
+                    <div className="d-flex justify-content-between">
                         <div>
-                            <h5 className="mb-0">Plan de mejoramiento institucional
-                            </h5>
-                            <small>Período: {pmi?.anio_inicio} - {pmi?.anio_fin}</small>
+                            <h5 className="mb-0">Plan de mejoramiento institucional</h5>
+                            <small>
+                                Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
+                            </small>
                         </div>
                         <div>
                             <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" />
                         </div>
                     </div>
-
                 </div>
-
                 <div className="card-body p-0">
-                    <div className="table-responsive" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                    <div className="table-responsive" style={{ maxHeight: "600px", overflowY: "auto" }}>
                         <table className="table table-bordered mb-0">
                             <thead className="table-dark">
                             <tr>
-                                <th style={{ width: '25%' }} className="text-center">
-                                    Gestión
-                                </th>
-                                <th style={{ width: '30%' }} className="text-center">
-                                    Componente
-                                </th>
-                                <th style={{ width: '45%' }} className="text-center">
-                                    Factor Crítico
-                                </th>
+                                <th className="text-center">Gestión</th>
+                                <th className="text-center">Componente</th>
+                                <th className="text-center">Factor Crítico</th>
                                 <th className="text-center">Objetivo</th>
                                 <th className="text-center">Meta</th>
-                                <th className="text-center">Indicadores</th>
-                                <th className="text-center">Medida del Indicador</th>
-                                <th className="text-center">Actividades</th>
+                                <th className="text-center">Actividad</th>
                                 <th className="text-center">Recurso ($)</th>
                                 <th className="text-center">Responsable</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {renderTableRows()}
+                            {tableRows.map((row, index) => (
+                                <tr key={`${index}-${row.actividad?.id || "na"}`}>
+                                    {index === 0 || tableRows[index - 1].gestion !== row.gestion ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "gestion")}
+                                            className="align-middle fw-bold"
+                                            style={{ verticalAlign: "middle" }}
+                                        >
+                                            {row.gestion}
+                                        </td>
+                                    ) : null}
+
+                                    {index === 0 || tableRows[index - 1].componente !== row.componente ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "componente")}
+                                            className="align-middle"
+                                            style={{ verticalAlign: "middle" }}
+                                        >
+                                            {row.componente}
+                                        </td>
+                                    ) : null}
+
+                                    {index === 0 || tableRows[index - 1].factorCritico !== row.factorCritico ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "factorCritico")}
+                                            className="align-middle"
+                                            style={{ verticalAlign: "middle" }}
+                                        >
+                                            <div className="d-flex justify-content-between align-items-center p-2">
+                                                <div>
+                                                    <small className="text-muted px-1">
+                                                        {row.factorCritico.grupo_calificacion?.indice}
+                                                    </small>
+                                                    <div className="fw-semibold text-primary">
+                                                        {row.factorCritico.descripcion || (
+                                                            <span className="text-muted fst-italic">Sin descripción</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <i
+                                                    className="fas fa-edit text-warning fs-4 cursor-pointer"
+                                                    onClick={() => (window.location.href = `edit/factor-critico/${row.factorCritico.id}`)}
+                                                ></i>
+                                            </div>
+                                        </td>
+                                    ) : null}
+
+                                    {(index === 0 || tableRows[index - 1].objetivo !== row.objetivo) ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "objetivo")}
+                                            className="align-middle"
+                                            style={{ verticalAlign: "middle" }}
+                                        >
+                                            {row?.objetivo?.descripcion || "Sin descripción"}
+                                        </td>
+                                    ) : null}
+
+                                    {(index === 0 || tableRows[index - 1].meta !== row.meta) ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "meta")}
+                                            className="align-middle"
+                                            style={{ verticalAlign: "middle" }}
+                                        >
+                                            <div className="fw-semibold">{row?.meta?.descripcion || "Sin descripción"}</div>
+                                            <small className="text-muted">
+                                                Valor: {row?.meta?.valor_requerido || "N/A"} {row?.meta?.unidad_medida || ""}
+                                            </small>
+                                        </td>
+                                    ) : null}
+
+                                    <td>
+                                        {row.actividad ? (
+                                            <>
+                                                <div className="fw-semibold">
+                                                    {row.actividad.descripcion || "Sin descripción"}
+                                                </div>
+                                                <small className="text-muted">
+                                                    Peso: {row.actividad.peso || "N/A"}%
+                                                    {row.actividad.fecha_inicio && (
+                                                        <span>
+                                                                {" "}
+                                                            | Inicio:{" "}
+                                                            {new Date(row.actividad.fecha_inicio).toLocaleDateString("es-CO")}
+                                                            </span>
+                                                    )}
+                                                    {row.actividad.fecha_fin && (
+                                                        <span>
+                                                                {" "}
+                                                            | Fin:{" "}
+                                                            {new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")}
+                                                            </span>
+                                                    )}
+                                                </small>
+                                            </>
+                                        ) : (
+                                            <span className="text-muted fst-italic">Sin actividades</span>
+                                        )}
+                                    </td>
+
+                                    <td className="text-center">
+                                        {row.actividad?.recursos ? (
+                                            <span className="fw-bold text-success">
+                                                    ${new Intl.NumberFormat("es-CO").format(row.actividad.recursos)}
+                                                </span>
+                                        ) : (
+                                            <span className="text-muted">$0</span>
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        {row.actividad?.responsables ? (
+                                            <span className="badge bg-secondary">{row.actividad.responsables}</span>
+                                        ) : (
+                                            <span className="text-muted fst-italic">Sin asignar</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
+
                 <div className="card-footer text-muted small">
                     Total de factores críticos: {pmi?.factores_criticos?.length || 0}
                 </div>

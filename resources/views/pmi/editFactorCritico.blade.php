@@ -13,6 +13,8 @@
     <div
         data-component="FactorCriticoEdit"
         data-factor-critico='@json($factorCritico)'
+        data-objetivos-generales='@json($objetivos)'
+        data-agregar-url="{{ route('pmi.actualizar-factor-critico',['institucionId'=>$institucionId,'pmi'=>$pmiId,'factorCriticoId'=>$factorCritico->id])  }}"
         data-pmi-id="{{$pmiId}}"
         data-institucion-id="{{$institucionId}}"
         data-csrf-token="{{ csrf_token() }}"

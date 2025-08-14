@@ -280,7 +280,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="form-check">
-                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="nocturno" value="nocturno">
+                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="nocturno" value="Nocturno">
                                 <label class="form-check-label fw-bold" for="nocturno">
                                     Nocturno
                                 </label>
@@ -289,15 +289,15 @@
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
                                 <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="nocturno">
+                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Nocturno">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="nocturno">
+                                <input type="time" class="form-control adult-hora-fin" data-schedule="Nocturno">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="nocturno" placeholder="Detalles del horario nocturno..."></textarea>
+                                <textarea class="form-control adult-notes" rows="2" data-schedule="Nocturno" placeholder="Detalles del horario nocturno..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="form-check">
-                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="sabatino" value="sabatino">
+                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="sabatino" value="Sabatino">
                                 <label class="form-check-label fw-bold" for="sabatino">
                                     Sabatino
                                 </label>
@@ -317,15 +317,15 @@
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
                                 <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="sabatino">
+                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Sabatino">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="sabatino">
+                                <input type="time" class="form-control adult-hora-fin" data-schedule="Sabatino">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="sabatino" placeholder="Detalles del horario sabatino..."></textarea>
+                                <textarea class="form-control adult-notes" rows="2" data-schedule="Sabatino" placeholder="Detalles del horario sabatino..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -336,7 +336,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="form-check">
-                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="dominical" value="dominical">
+                                <input class="form-check-input adult-schedule-checkbox" type="checkbox" id="dominical" value="Dominical">
                                 <label class="form-check-label fw-bold" for="dominical">
                                     Dominical
                                 </label>
@@ -345,15 +345,15 @@
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
                                 <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="dominical">
+                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Dominical">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="dominical">
+                                <input type="time" class="form-control adult-hora-fin" data-schedule="Dominical">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="dominical" placeholder="Detalles del horario dominical..."></textarea>
+                                <textarea class="form-control adult-notes" rows="2" data-schedule="Dominical" placeholder="Detalles del horario dominical..."></textarea>
                             </div>
                         </div>
                     </div>

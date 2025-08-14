@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Models\PMI;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PmiActividad extends Model
+class PmiActividadVinculada extends Model
 {
     use HasFactory;
     protected $fillable = [
         'descripcion',
-        'indicador_id',
-        'id',
         'peso',
-        'meta_id'
+        'responsables',
+        'recursos',
+        'fecha_inicio',
+        'fecha_fin',
+        'meta_id',
     ];
-
 }

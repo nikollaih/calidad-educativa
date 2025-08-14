@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Models\PMI;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PmiMeta extends Model
+class PmiMetaVinculada extends Model
 {
     use HasFactory;
     protected $fillable = [
         'descripcion',
+        'objetivo_id',
         'unidad_medida',
         'valor_requerido',
-        'objetivo_id',
     ];
-
     public function actividades(){
-        return $this->hasMany(PmiActividad::class, 'meta_id');
+        return $this->hasMany(PmiActividadVinculada::class, 'meta_id','id');
     }
 }

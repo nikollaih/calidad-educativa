@@ -8,6 +8,7 @@ namespace App\Models\Enums;
 enum EducationalOfferScheduleEnum: string {
     case Morning           = 'Mañana';
     case Afternoon         = 'Tarde';
+    case RotatingDay       = 'Jornada rotativa';
     case Unique            = 'Jornada única';
     case AdultEducation    = 'Educación adultos';
 

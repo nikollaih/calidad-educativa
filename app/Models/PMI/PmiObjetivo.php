@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class PmiObjetivo extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'descripcion',
+    ];
+    public function metas(){
+        return $this->hasMany(PmiMeta::class, 'objetivo_id');
+    }
 }
