@@ -18,6 +18,7 @@ use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
 use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIObjetivoController;
+use App\Http\Controllers\PMI\IndicadoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/{institucionId}/pmi', PMIController::class);
     Route::resource('objetivo-pmi', PMIObjetivoController::class);
+    Route::resource('indicadores-pmi',IndicadoresController::class);
 
 });
 
