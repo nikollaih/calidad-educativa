@@ -307,7 +307,7 @@ const PamIndex = ({ pamGeneralId }) => {
                   <tr key={row.id || index} className="align-middle">
                     <td className="py-3">{row.objetivoEstrategico || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3" style={{ minWidth: "150px" }}>{row.meta.descripcion || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.meta.valor_meta || <span className="text-muted">Sin información</span>}</td>
+                    <td className="text-center py-3">{row.meta.valor_meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.indicador || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3" style={{ minWidth: "120px" }}>{row.accion || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.responsable?.name || <span className="text-muted">Sin información</span>}</td>
@@ -315,7 +315,7 @@ const PamIndex = ({ pamGeneralId }) => {
                     <td className="py-3">{row.fechaInicio || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.dias_restantes || <span className="text-muted">Sin información</span>}</td>
-                    <td className="py-3">{row.meta.porcentaje_meta || <span className="text-muted">Sin información</span>}</td>
+                    <td className="text-center py-3">{row.meta.porcentaje_meta || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center gap-2">
                         <button
