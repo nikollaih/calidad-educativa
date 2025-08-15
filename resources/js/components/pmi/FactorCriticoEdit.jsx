@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { route } from 'preact-router';
 import Swal from 'sweetalert2';
+import TextMultipleTags from "@/components/shared/TextMultipleTags.jsx";
 
 const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1, institucionId = -1, objetivosGenerales, agregarUrl = '' }) => {
     const [formData, setFormData] = useState({
@@ -12,14 +13,16 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
 
     useEffect(() => {
         if(factorCritico.objetivos.length > 0){
-             console.log('primera carga');
-
+             console.log('primera carga',factorCritico);
             setFormData(prev => ({
                 objetivos: factorCritico.objetivos
             }));
         }
 
     },[]);
+    useEffect(() => {
+        console.log(formData);
+    },[formData]);
     /**
      * Helper para encontrar y actualizar un campo específico de un elemento anidado
      */
@@ -90,6 +93,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                                     id: generateUniqueId(),
                                     descripcion: actividad.descripcion,
                                     peso: actividad.peso,
+                                    accumulated: actividad.accumulated,
                                     responsables: '',
                                     fecha_inicio: '',
                                     fecha_fin: '',
@@ -201,6 +205,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
             id: `actividad-virtual-${Date.now()}`,
             descripcion: '',
             peso: 0,
+            accumulated: 0,
             responsables: '',
             recursos: '',
             fecha_inicio: '',
@@ -301,20 +306,28 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Responsables:</label>
+                            <label className="form-label fw-bold">Sumará a la meta:</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
-                                value={actividad.responsables}
-                                onChange={(e) => updateField(actividad.id, 'responsables', e.target.value)}
-                                placeholder="Nombre de los  Responsables"
-                                required={true}
-
+                                value={actividad.accumulated}
+                                onChange={(e) => updateField(actividad.id, 'accumulated', parseFloat(e.target.value) || 0)}
+                                placeholder="0"
+                                min="0"
+                                step="0.01"
+                                disabled={true}
                             />
                         </div>
-                    </div>
-
-                    <div className="row mt-3">
+                        <div className="col-md-6">
+                            <label className="form-label fw-bold">Responsables:</label>
+                            <TextMultipleTags
+                                initialValue={actividad.responsables}
+                                label={"Responsables"}
+                                onTagsChange={(joinedTags) => {
+                                    updateField(actividad.id, 'responsables', joinedTags)
+                                }}
+                            />
+                        </div>
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Recursos:</label>
                             <input
@@ -339,7 +352,11 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                             />
                         </div>
 
-                        <div className="col-md-6">
+
+                    </div>
+
+                    <div className="row mt-3">
+                       <div className="col-md-6">
                             <label className="form-label fw-bold">Fecha de Inicio:</label>
                             <input
                                 type="date"
@@ -528,6 +545,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`} value={actividad.id} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`} value={actividad.descripcion} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`} value={actividad.peso} />
+                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][accumulated]`} value={actividad.accumulated} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`} value={actividad.responsables} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`} value={actividad.recursos} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_inicio]`} value={actividad.fecha_inicio} />

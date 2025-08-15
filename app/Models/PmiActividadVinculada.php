@@ -11,6 +11,7 @@ class PmiActividadVinculada extends Model
     protected $fillable = [
         'descripcion',
         'peso',
+        'accumulated',
         'responsables',
         'recursos',
         'fecha_inicio',

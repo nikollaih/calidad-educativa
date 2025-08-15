@@ -13,7 +13,8 @@ class PmiActividad extends Model
         'indicador_id',
         'id',
         'peso',
-        'meta_id'
+        'meta_id',
+        'accumulated',
     ];
 
 }

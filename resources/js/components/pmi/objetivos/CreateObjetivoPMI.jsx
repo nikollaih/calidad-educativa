@@ -16,7 +16,8 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
             valor_requerido: '',
             actividades: [{
                 descripcion: '',
-                peso: 100 // Por defecto 100% si solo hay una actividad
+                peso: 100, // Por defecto 100% si solo hay una actividad
+                accumulated: 0,
             }]
         }
     ]);
@@ -114,7 +115,8 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
 
         newMeta[metaIndex].actividades.push({
             descripcion: '',
-            peso: nuevoPeso
+            peso: nuevoPeso,
+            accumulated:0,
         });
 
         // Ajustar pesos existentes si es necesario
@@ -292,13 +294,29 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                                                 onChange={(e) => handleActividadChange(i, j, e)}
                                                                 required
                                                             />
-                                                        </div>
-                                                        <div className="col-md-6 d-flex align-items-end">
                                                             <small className="text-muted">
                                                                 {j === meta.actividades.length - 1 ? (
                                                                     <span>Peso restante: {pesoRestante}%</span>
                                                                 ) : null}
                                                             </small>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <label htmlFor={`actividad-accumulated-${i}-${j}`} className="form-label">
+                                                                Sumará a la meta*
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                id={`actividad-accumulated-${i}-${j}`}
+                                                                className="form-control"
+                                                                name="accumulated"
+                                                                min="0"
+                                                                max="100"
+                                                                step="0.1"
+                                                                value={actividad.accumulated}
+                                                                onChange={(e) => handleActividadChange(i, j, e)}
+                                                                required
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -350,17 +368,17 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                     type="hidden"
                                     name={`metas[${i}][actividades][${j}][descripcion]`}
                                     value={actividad.descripcion}
-                                    onChange={(e) => handleActividadChange(i, j, e)}
                                     className="form-control"
                                 />
                                 <input
                                     type="hidden"
                                     name={`metas[${i}][actividades][${j}][peso]`}
                                     value={actividad.peso}
-                                    onChange={(e) => handleActividadChange(i, j, e)}
-                                    className="form-control"
-                                    min="0"
-                                    max="100"
+                                />
+                                <input
+                                    type="hidden"
+                                    name={`metas[${i}][actividades][${j}][accumulated]`}
+                                    value={actividad.accumulated}
                                 />
                             </div>
                         ))}
