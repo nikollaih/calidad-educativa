@@ -1,19 +1,19 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
 
-const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
+const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' , factoresCriticos=[], unidadesMedida=[]}) => {
     // Estado para el objetivo
     const [objetivo, setObjetivo] = useState({
         descripcion: '',
-
+        factor_id: "",
     });
 
     // Estado para los metaes
     const [metas, setMetas] = useState([
         {
             descripcion: '',
-            unidad_medida: '',
-            valor_requerido: '',
+            indicador_id: "",
             actividades: [{
                 descripcion: '',
                 peso: 100, // Por defecto 100% si solo hay una actividad
@@ -24,15 +24,9 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
 
     // Validar suma de pesos
     const [pesoValido, setPesoValido] = useState(true);
-
-    // Verificar que la suma de pesos sea 100% para cada meta
-    useEffect(() => {
-        const valid = metas.every(meta => {
-            const totalPeso = meta.actividades.reduce((sum, act) => sum + (Number(act.peso) || 0), 0);
-            return totalPeso === 100;
-        });
-        setPesoValido(valid);
-    }, [metas]);
+    useEffect(()=>{
+        console.log(unidadesMedida)
+    },[])
 
     useEffect(() => {
         console.log(objetivo);
@@ -52,7 +46,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
     // Manejar cambios en los metas
     const handleMetaChange = (index, e) => {
         const { name, value } = e.target;
-        console.log(index,e,value,name);
         const newMeta = [...metas];
         newMeta[index] = {
             ...newMeta[index],
@@ -92,6 +85,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
             ...prev,
             {
                 descripcion: '',
+                indicador_id: '',
                 actividades: [{
                     descripcion: '',
                     peso: 100
@@ -110,24 +104,9 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
     // Agregar actividad a un meta
     const addActividad = (metaIndex) => {
         const newMeta = [...metas];
-        const pesoRestante = calcularPesoRestante(metaIndex, -1);
-        const nuevoPeso = pesoRestante > 0 ? pesoRestante : 0;
-
         newMeta[metaIndex].actividades.push({
             descripcion: '',
-            peso: nuevoPeso,
-            accumulated:0,
         });
-
-        // Ajustar pesos existentes si es necesario
-        if (pesoRestante <= 0) {
-            const actividades = newMeta[metaIndex].actividades;
-            const factor = 100 / (actividades.length);
-            actividades.forEach(act => {
-                act.peso = Math.round(factor * 10) / 10; // Redondear a 1 decimal
-            });
-        }
-
         setMetas(newMeta);
     };
 
@@ -138,11 +117,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
             // Eliminar la actividad
             newMeta[metaIndex].actividades = newMeta[metaIndex]
                 .actividades.filter((_, i) => i !== actividadIndex);
-
-            // Redistribuir el peso si solo queda una actividad
-            if (newMeta[metaIndex].actividades.length === 1) {
-                newMeta[metaIndex].actividades[0].peso = 100;
-            }
 
             setMetas(newMeta);
         }
@@ -170,20 +144,35 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                             />
                         </div>
                     </div>
-                </div>
+                    <div className="card-body">
+                            <label htmlFor="descripcion" className="form-label">Factor critico asociado al objetivo*</label>
+                            <CAutocompleteFromArray
+                                data={factoresCriticos}
+                                fieldName={"factor_id"}
+                                searchFields={['descripcion', 'indice_calificacion']}
+                                labelFields={['indice_calificacion', 'descripcion']}
+                                onSelect={(factor) => {
+                                    setObjetivo(prev => ({
+                                        ...prev,
+                                        ['factor_id']: factor.id
+                                    }));
+                                }}
+                            />
 
-                {/* Sección de Meta */}
-                <div className="card mb-4">
-                    <div className="card-header d-flex justify-content-between align-items-center">
-                        <h5>Meta</h5>
-                        <button type="button" className="btn btn-sm btn-primary" onClick={addMeta}>
-                            Agregar Meta
+                </div>
+        </div>
+
+    {/* Sección de Meta */
+    }
+    <div className="card mb-4">
+        <div className="card-header d-flex justify-content-between align-items-center">
+            <h5>Meta</h5>
+            <button type="button" className="btn btn-sm btn-primary" onClick={addMeta}>
+            Agregar Meta
                         </button>
                     </div>
                     <div className="card-body">
                         {metas.map((meta, i) => {
-                            const totalPeso = meta.actividades.reduce((sum, act) => sum + (Number(act.peso) || 0), 0);
-                            const pesoValidoMeta = totalPeso === 100;
 
                             return (
                                 <div key={i} className="mb-4 border-bottom pb-3">
@@ -213,27 +202,19 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
                                             <label htmlFor="unidad_medida" className="form-label">Unidad de Medida*</label>
-                                            <input
-                                                type="text"
-                                                id={`meta-unid-${i}`}
-                                                name="unidad_medida"
-                                                className="form-control"
-                                                value={meta.unidad_medida}
-                                                onChange={(e) => handleMetaChange(i, e)}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="col-md-6 mb-3">
-                                            <label htmlFor="valor_requerido" className="form-label">Valor Requerido*</label>
-                                            <input
-                                                type="number"
-                                                id={`meta-valor-${i}`}
-                                                name="valor_requerido"
-                                                className="form-control"
-                                                value={meta.valor_requerido}
-                                                onChange={(e) => handleMetaChange(i, e)}
-                                                required
+                                            <CAutocompleteFromArray
+                                                data={unidadesMedida}
+                                                fieldName={"indicador_id"}
+                                                searchFields={['unidad_total', 'unidad_parcial']}
+                                                labelFields={['unidad_parcial']}
+                                                onSelect={(unidadMedida) => {
+                                                    const newMeta = [...metas];
+                                                    newMeta[i] = {
+                                                        ...newMeta[i],
+                                                        ['indicador_id']: unidadMedida.id
+                                                    };
+                                                    setMetas(newMeta);
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -243,9 +224,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                     <div className="ps-3">
                                         <div className="d-flex justify-content-between align-items-center mb-3">
                                             <h6>Actividades</h6>
-                                            <div className={`badge ${pesoValidoMeta ? 'bg-success' : 'bg-danger'}`}>
-                                                Peso total: {totalPeso}%
-                                            </div>
                                         </div>
 
                                         {meta.actividades.map((actividad, j) => {
@@ -277,48 +255,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                                         onChange={(e) => handleActividadChange(i, j, e)}
                                                         required
                                                     />
-                                                    <div className="row">
-                                                        <div className="col-md-6">
-                                                            <label htmlFor={`actividad-peso-${i}-${j}`} className="form-label">
-                                                                Peso (%)*
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                id={`actividad-peso-${i}-${j}`}
-                                                                className="form-control"
-                                                                name="peso"
-                                                                min="0"
-                                                                max="100"
-                                                                step="0.1"
-                                                                value={actividad.peso}
-                                                                onChange={(e) => handleActividadChange(i, j, e)}
-                                                                required
-                                                            />
-                                                            <small className="text-muted">
-                                                                {j === meta.actividades.length - 1 ? (
-                                                                    <span>Peso restante: {pesoRestante}%</span>
-                                                                ) : null}
-                                                            </small>
-                                                        </div>
-
-                                                        <div className="col-md-6">
-                                                            <label htmlFor={`actividad-accumulated-${i}-${j}`} className="form-label">
-                                                                Sumará a la meta*
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                id={`actividad-accumulated-${i}-${j}`}
-                                                                className="form-control"
-                                                                name="accumulated"
-                                                                min="0"
-                                                                max="100"
-                                                                step="0.1"
-                                                                value={actividad.accumulated}
-                                                                onChange={(e) => handleActividadChange(i, j, e)}
-                                                                required
-                                                            />
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             );
                                         })}
@@ -337,12 +273,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                     </div>
                 </div>
 
-                {!pesoValido && (
-                    <div className="alert alert-danger mb-4">
-                        <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                        La suma de los pesos de las actividades debe ser exactamente 100% para cada meta.
-                    </div>
-                )}
             <form method="POST" action={agregarUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
                 {metas.map((meta, i) => (
@@ -354,13 +284,8 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                         />
                         <input
                             type="hidden"
-                            name={`metas[${i}][unidad_medida]`}
-                            value={meta.unidad_medida}
-                        />
-                        <input
-                            type="hidden"
-                            name={`metas[${i}][valor_requerido]`}
-                            value={meta.valor_requerido}
+                            name={`metas[${i}][indicador_id]`}
+                            value={meta.indicador_id}
                         />
                         {meta.actividades.map((actividad, j) => (
                             <div key={j}>
@@ -370,21 +295,12 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                     value={actividad.descripcion}
                                     className="form-control"
                                 />
-                                <input
-                                    type="hidden"
-                                    name={`metas[${i}][actividades][${j}][peso]`}
-                                    value={actividad.peso}
-                                />
-                                <input
-                                    type="hidden"
-                                    name={`metas[${i}][actividades][${j}][accumulated]`}
-                                    value={actividad.accumulated}
-                                />
                             </div>
                         ))}
                     </div>
                 ))}
                 <input type="hidden" name="descripcion" value={objetivo.descripcion} />
+                <input type="hidden" name="factor_id" value={objetivo.factor_id} />
                 <button
                     type="submit"
                     className="btn btn-success"

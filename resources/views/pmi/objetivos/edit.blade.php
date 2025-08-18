@@ -9,6 +9,8 @@
         data-csrf-token="{{ csrf_token() }}"
         data-agregar-url="{{ route('objetivo-pmi.store') }}"
         data-objetivo-existente='@json($objetivo->toArray())'
+        data-factores-criticos='@json($factoresCriticos)'
+        data-unidades-medida='@json($unidadesMedida)'
     >
     </div>
 @endsection

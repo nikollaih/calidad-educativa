@@ -11,6 +11,7 @@ class PmiObjetivo extends Model
 
     protected $fillable = [
         'descripcion',
+        'factor_id',
     ];
     public function metas(){
         return $this->hasMany(PmiMeta::class, 'objetivo_id');

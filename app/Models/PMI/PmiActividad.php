@@ -10,11 +10,8 @@ class PmiActividad extends Model
     use HasFactory;
     protected $fillable = [
         'descripcion',
-        'indicador_id',
         'id',
-        'peso',
         'meta_id',
-        'accumulated',
     ];
 
 }

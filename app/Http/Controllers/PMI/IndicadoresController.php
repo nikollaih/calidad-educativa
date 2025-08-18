@@ -59,7 +59,12 @@ class IndicadoresController extends Controller
     public function destroy(int $id)
     {
         $indicadorToDel = PmiIndicador::find($id);
+
+
         if( $indicadorToDel ) {
+            if($indicadorToDel->metas->count() > 0) {
+                return redirect()->route('indicadores-pmi.index')->with('flash_error_message', 'El indicador tiene metas vinculadas.');
+            }
             $indicadorToDel->delete();
             return redirect()->route('indicadores-pmi.index')->with('flash_success_message', 'Indicador eliminado correctamente.');
         }

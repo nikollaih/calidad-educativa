@@ -18,11 +18,9 @@ class PmiMetaService {
                 $cannotCreateOrUpdate = !is_array($meta) ||
                     empty($meta) ||
                     empty($meta['descripcion']) ||
-                    empty($meta['unidad_medida']) ||
-                    empty($meta['valor_requerido']);
+                    empty($meta['indicador_id']);
 
                 if ($cannotCreateOrUpdate) {
-                    dd('ayay');
                     continue;
                 }
                 $meta['objetivo_id'] = $objetivoId;

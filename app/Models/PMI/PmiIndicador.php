@@ -13,5 +13,6 @@ class PmiIndicador extends Model
         'unidad_total',
         'unidad_parcial',
     ];
-
-}
+    public function metas(){
+        return $this->hasMany(PmiMeta::class, 'indicador_id');
+    }}
