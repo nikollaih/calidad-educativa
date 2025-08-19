@@ -197,6 +197,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                         <div className=" mb-3">
                                             <label htmlFor="unidad_medida" className="form-label">Unidad de Medida*</label>
                                             <CAutocompleteFromArray
+                                                isEditable={editable}
                                                 data={unidadesMedida}
                                                 initialValue={meta.indicador_id}
                                                 fieldName={"indicador_id"}

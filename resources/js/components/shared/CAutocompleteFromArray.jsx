@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 
 const CAutocompleteFromArray = ({
+                                    isEditable=true,
                                     data = [],
                                     onSelect,
                                     fieldName = '',
@@ -90,12 +91,13 @@ const CAutocompleteFromArray = ({
                 onFocus={handleFocus}
                 class="w-100 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-400"
                 placeholder="Buscar o seleccionar..."
+                disabled={!isEditable}
             />
 
             {/* Input oculto para enviar el valor real */}
             <input type="hidden" name={fieldName} value={selectedValue} />
 
-            {isOpen && filtered.length > 0 && (
+            {isOpen && isEditable && filtered.length > 0 && (
                 <ul class="absolute z-10 w-full max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg mt-1">
                     {filtered.map((item) => {
                         const label = labelFields

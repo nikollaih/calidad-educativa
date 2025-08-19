@@ -192,10 +192,19 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                             {(row?.meta?.valor_requerido !== undefined && row?.meta?.indicador !== undefined) ? (
                                                 <div >
                                                     {/* Columna de fracción */}
-                                                    <div className="text-center" >
-                                                        <div>{row?.meta?.indicador}</div>
-                                                        <hr className="my-1" />
-                                                        <div>{row?.meta?.valor_requerido}</div>
+                                                    <div className="text-center">
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <small>{row?.meta?.indicador_info?.unidad_parcial}</small>
+                                                            <div>{row?.meta?.indicador}</div>
+                                                        </div>
+
+                                                        <hr className="my-1"/>
+
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <small>{row?.meta?.indicador_info?.unidad_total}</small>
+                                                            <div>{row?.meta?.valor_requerido}</div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             ) : (
