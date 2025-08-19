@@ -56,7 +56,7 @@ class PamMeta extends Model
 
     public function unidadMeta()
     {
-        return $this->belongsTo(UnidadMeta::class, 'unidad_meta_id');
+        return $this->belongsTo(Indicador::class, 'unidad_meta_id');
     }
 
     public function indicadores()

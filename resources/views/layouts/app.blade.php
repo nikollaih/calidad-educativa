@@ -182,7 +182,13 @@
                                         <li class="menu-item">
                                             <a href="{{ url('unidades-meta')}}" class="menu-link">
                                                 <i class="menu-icon fas fa-bullseye"></i>
-                                                <div data-i18n="Unidades de Meta"> Unidades de meta</div>
+                                                <div data-i18n="Indicadores"> Indicadores</div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="{{ url('componentes')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-bullseye"></i>
+                                                <div data-i18n="Componentes"> Componentes</div>
                                             </a>
                                         </li>
                                     </ul>

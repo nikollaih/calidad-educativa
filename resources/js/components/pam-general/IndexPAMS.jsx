@@ -85,7 +85,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
     // Renderiza el JSX del componente.
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">LISTADO DE PAMS</h2>
+            <h1 class="mb-4">PLAN DE APOYO AL MEJORAMIENTO</h1>
+            <h2 class="mb-4">HISTORICO</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
                 Agregar nuevo registro
             </button>
@@ -93,9 +94,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
             <table class="table">
                 <thead>
                     <tr>
-                        <th>CONSECUTIVO</th>
-                        <th>DESCRIPCIÓN</th>
                         <th>VIGENCIA</th>
+                        <th>DESCRIPCIÓN</th>
                         <th>FECHA DE CREACIÓN</th>
                         <th>ACCIONES</th>
                     </tr>
@@ -104,9 +104,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                     {pams.length > 0 ? (
                         pams.map((pam) => (
                             <tr key={pam.id}>
-                                <td>{pam.consecutivo}</td>
-                                <td>{pam.descripcion || <span className="text-muted">Sin descripción</span>}</td>
                                 <td>{pam.anio_inicio} - {pam.anio_fin}</td>
+                                <td>{pam.descripcion || <span className="text-muted">Sin descripción</span>}</td>
                                 <td>{formatFecha(pam.created_at)}</td>
                                 <td>
                                     <a href={`/pams/${pam.id}/edit`} className="btn btn-warning btn-sm me-2" >
@@ -114,7 +113,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                     </a>
 
                                     <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
-                                        Registros
+                                        Gestionar
                                     </a>
                                     
                                     <button 

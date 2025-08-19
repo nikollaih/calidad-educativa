@@ -29,19 +29,23 @@ class PamComponente extends Model
      */
     protected $table = 'pam_componentes';
 
+    protected $with = ['componente'];
+
     /**
      * Los atributos que se pueden asignar masivamente.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'nombre',
-        'descripcion',
+        'componente_id',
     ];
 
-    public function procesos()
-    {
+    public function procesos() {
         return $this->hasMany(PamProceso::class, 'componente_id');
+    }
+
+    public function componente() {
+        return $this->belongsTo(Componente::class, 'componente_id');
     }
 
 }

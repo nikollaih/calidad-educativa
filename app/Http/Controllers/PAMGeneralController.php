@@ -28,7 +28,8 @@ class PAMGeneralController extends Controller {
      *
      */
     public function index() {
-        $pams = Pam::paginate(10);
+        // Ordenar los registros por fecha de creación descendente
+        $pams = Pam::orderBy('created_at', 'desc')->paginate(10);
 
         return view('pamGeneral.index', [
             'pams' => $pams,

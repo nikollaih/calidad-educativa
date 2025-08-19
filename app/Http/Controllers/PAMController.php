@@ -102,21 +102,25 @@ class PAMController extends Controller {
 
                 return [
                     'id' => $accion->id,
-                    'componente' => $componente->descripcion ?? null,
+                    'componente' => $componente->componente?->descripcion ?? null,
                     'proceso' => $proceso->descripcion ?? null,
                     'subproceso' => $subproceso->descripcion ?? null,
                     'objetivo_estrategico' => $objetivoEstrategico->descripcion ?? null,
                     'meta_plan_desarrollo' => $metaPlanDesarrolloDescripcion,
                     'meta' => [
                         'descripcion' => $accion->indicador->meta->descripcion ?? null,
-                        'valor_meta' => $totalAvance . '/' . $valorMeta,
+                        'valor_meta' => $valorMeta,
                         'unidad_meta_id' => $accion->indicador->meta->unidad_meta_id ?? null,
                         'unidad_meta' => $accion->indicador->meta->unidadMeta->descripcion ?? null,
                         'porcentaje_meta' => $porcentajeMeta,
                     ],
                     'indicador' => $accion->indicador->descripcion ?? null,
                     'accion' => $accion->descripcion,
-                    'dias_restantes' => $accion->fecha_final ? Carbon::parse($accion->fecha_final)->diffInDays(Carbon::now()) . ' días restantes' : null,
+                    'dias_restantes' => $accion->fecha_final 
+                        ? (Carbon::parse($accion->fecha_final)->isFuture() 
+                            ? Carbon::parse($accion->fecha_final)->diffInDays(Carbon::now()) . ' días restantes' 
+                            : 'Finalizado')
+                        : null,
                     'responsable' => $accion->user ? ['name' => $accion->user->name] : null,
                     'recursos' => $accion->recursos,
                     'fecha_inicio' => $accion->fecha_inicio ? Carbon::parse($accion->fecha_inicio)->format('d/m/Y') : null,
@@ -173,25 +177,28 @@ class PAMController extends Controller {
 
             $data = [
                 'componente_id' => $componente->id ?? null,
+                'componente' => $componente->componente?->id ?? null,
                 'componente_descripcion' => $componente->descripcion ?? '',
-                'proceso_id' => $proceso->id ?? null,
+                'proceso_id' => 'proceso_id' . $proceso->id ?? null,
                 'proceso_descripcion' => $proceso->descripcion ?? '',
-                'subproceso_id' => $subproceso->id ?? null,
+                'subproceso_id' => 'subproceso_id' . $subproceso->id ?? null,
                 'subproceso_descripcion' => $subproceso->descripcion ?? '',
 
                 // Ahora objetivo_estrategico_id es directo de subproceso
-                'objetivo_estrategico_id' => $objetivo->id ?? null,
+                'objetivo_estrategico_id' => 'objetivo_id' .$objetivo->id ?? null,
                 'objetivo_estrategico_descripcion' => $objetivo->descripcion ?? '',
 
                 // Meta Plan Desarrollo ahora es hijo de Objetivo Estratégico (y también tiene subproceso_id)
-                'meta_plan_desarrollo_id' => $firstMetaPlanDesarrollo->id ?? null,
+                'meta_plan_desarrollo_id' => 'meta_plan_id' . $firstMetaPlanDesarrollo->id ?? null,
                 'meta_plan_desarrollo_descripcion' => $firstMetaPlanDesarrollo->descripcion ?? '',
 
-                'meta_id' => $accion->indicador->meta->id ?? null,
+                'meta_id' => 'meta_id' . $accion->indicador->meta->id ?? null,
                 'meta_descripcion' => $accion->indicador->meta->descripcion ?? '',
-                'indicador_id' => $accion->indicador->id ?? null,
+                'valor_meta' => $accion->indicador->meta->valor_meta ?? '',
+                'unidad_meta_id' => $accion->indicador->meta->unidad_meta_id ?? null,
+                'indicador_id' => 'indicador_id' . $accion->indicador->id ?? null,
                 'indicador_descripcion' => $accion->indicador->descripcion ?? '',
-                'accion_id' => $accion->id,
+                'accion_id' => 'accion_id' . $accion->id,
                 'accion_descripcion' => $accion->descripcion,
                 'user_id' => $accion->user_id,
                 'responsable_nombre' => $accion->user->name ?? $accion->nombre_responsable,
@@ -219,7 +226,7 @@ class PAMController extends Controller {
         // Reglas de validación para la estructura anidada
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
-            'componentes.*.descripcion' => 'required|string|max:1000',
+            // 'componentes.*.id' => 'required|integer',
             'componentes.*.procesos' => 'required|array|min:1',
             'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
@@ -255,8 +262,7 @@ class PAMController extends Controller {
 
             foreach ($request->input('componentes') as $compData) {
                 $componente = PamComponente::create([
-                    'descripcion' => $compData['descripcion'],
-                    'nombre' => $compData['descripcion'],
+                    'componente_id' => $compData['componente_id'],
                 ]);
 
                 foreach ($compData['procesos'] as $procData) {
@@ -356,12 +362,12 @@ class PAMController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse {
+    public function update(Request $request, int $id): JsonResponse {
         // Reglas de validación para la estructura anidada.
         // Son idénticas a las del método 'store' para asegurar consistencia.
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
-            'componentes.*.descripcion' => 'required|string|max:1000',
+            // 'componentes.*.id' => 'required|integer',
             'componentes.*.procesos' => 'required|array|min:1',
             'componentes.*.procesos.*.descripcion' => 'required|string|max:1000',
             'componentes.*.procesos.*.subprocesos' => 'required|array|min:1',
@@ -442,18 +448,10 @@ class PAMController extends Controller {
                 ], 500);
             }
 
-            dd($procData['descripcion'],
-                $subprocData['descripcion'],
-                $metaPlanData['descripcion'],
-                $objData['descripcion'],
-                $metaData['descripcion'],
-                $indicadorData['descripcion'],
-                $accionData['descripcion']);
             // 5. Realiza las actualizaciones de cada modelo con los datos de la solicitud
             // Actualizar Componente
             $componente->update([
-                'descripcion' => $compData['descripcion'],
-                'nombre' => $compData['descripcion'], // Consistente con el 'store'
+                'componente_id' => $compData['componente_id'], // Consistente con el 'store'
             ]);
 
             // Actualizar Proceso

@@ -85,13 +85,13 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             ? round(($totalAvance / $valorMeta) * 100, 2) . '%' 
             : '0%';
         return [
-            $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->componente->descripcion ?? 'N/A',
+            $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->componente->componente?->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->proceso->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->subproceso->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->metaPlanDesarrollo->first()->descripcion ?? 'N/A',
             $accion->indicador->meta->objetivoEstrategico->descripcion ?? 'N/A',
             $accion->indicador->meta->descripcion ?? 'N/A',
-            $totalAvance . '/' . $valorMeta,
+            $valorMeta,
             $accion->indicador->descripcion ?? 'N/A',
             $accion->descripcion,
             $accion->nombre_responsable,
@@ -112,7 +112,7 @@ class PamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
      */
 public function styles(Worksheet $sheet)
     {
-        $columns = range('A', 'Q');
+        $columns = range('A', 'P');
         $columnWidth = 20;
 
         // Agrega ancho fijo a las columnas seleccionadas y desactiva autoajuste
