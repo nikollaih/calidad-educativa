@@ -92,6 +92,7 @@ const CAutocompleteFromArray = ({
                 class="w-100 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-400"
                 placeholder="Buscar o seleccionar..."
                 disabled={!isEditable}
+                title={selectedValue ? displayValue : ''}  // 👈 Tooltip solo si hay un valor seleccionado
             />
 
             {/* Input oculto para enviar el valor real */}

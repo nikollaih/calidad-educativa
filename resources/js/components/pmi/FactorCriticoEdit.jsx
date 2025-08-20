@@ -119,7 +119,7 @@ const FactorCriticoEdit = ({
 
         setFormData(prev => ({
             ...prev,
-            objetivos: [...prev.objetivos, newObjetivo]
+            objetivos: [newObjetivo,...prev.objetivos]
         }));
     };
 
@@ -157,6 +157,7 @@ const FactorCriticoEdit = ({
                 peso: actividad.peso ?? 0,
                 accumulated: actividad.accumulated ?? 0,
                 responsables: '',
+                recursos:'',
                 fecha_inicio: '',
                 fecha_fin: '',
                 meta_id: metaSeleccionada.id
@@ -250,16 +251,26 @@ const FactorCriticoEdit = ({
                     <div className="row">
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Peso:</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={actividad.peso}
-                                onChange={(e) => updateField(actividad.id, 'peso', parseFloat(e.target.value) || 0)}
-                                placeholder="0"
-                                min="0"
-                                max="100"
-                                step="0.01"
-                            />
+                            <div className="input-group">
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    value={actividad.peso}
+                                    onChange={(e) =>
+                                        updateField(
+                                            actividad.id,
+                                            "peso",
+                                            parseFloat(e.target.value) || 0
+                                        )
+                                    }
+                                    placeholder="0"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                />
+                                <span className="input-group-text">%</span>
+                            </div>
+
                         </div>
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Sumará a la meta:</label>
@@ -277,7 +288,7 @@ const FactorCriticoEdit = ({
                             <label className="form-label fw-bold">Responsables:</label>
                             <TextMultipleTags
                                 initialValue={actividad.responsables}
-                                label={"Responsables"}
+                                label={""}
                                 onTagsChange={(joinedTags) => {
                                     updateField(actividad.id, 'responsables', joinedTags)
                                 }}
@@ -285,23 +296,12 @@ const FactorCriticoEdit = ({
                         </div>
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Recursos:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={
-                                    actividad.recursos === null || actividad.recursos === undefined || actividad.recursos === ''
-                                        ? ''
-                                        : new Intl.NumberFormat('es-CO').format(actividad.recursos)
-                                }
-                                onChange={(e) => {
-                                    const raw = e.target.value.replace(/\D+/g, '');
-                                    const numberValue = raw === '' ? '' : parseInt(raw, 10);
-                                    updateField(actividad.id, 'recursos', numberValue);
+                            <TextMultipleTags
+                                initialValue={actividad.recursos}
+                                label={""}
+                                onTagsChange={(joinedTags) => {
+                                    updateField(actividad.id, 'recursos', joinedTags)
                                 }}
-                                placeholder="Ejm: 12.000"
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                required={true}
                             />
                         </div>
                     </div>

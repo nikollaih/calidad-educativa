@@ -51,7 +51,7 @@ const TextMultipleTags = ({
 
     return (
         <div class="mb-3">
-            <label for={name} class="form-label">{label}</label>
+            {label && (<label htmlFor={name} className="form-label">{label}</label>)}
             <div class={containerClass} style="min-height: 58px;">
                 {tags.map((tag, index) => (
                     <span class={spanClass}>

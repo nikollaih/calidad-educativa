@@ -165,20 +165,6 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                             <form onSubmit={handleSubmit}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label htmlFor="unidad_total" className="form-label">
-                                            Nombre de la unidad total
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="unidad_total"
-                                            value={unidadTotal}
-                                            onInput={(e) => setUnidadTotal(e.target.value)}
-                                            required
-                                            autoFocus
-                                        />
-                                    </div>
-                                    <div className="mb-3">
                                         <label htmlFor="nombre" className="form-label">
                                             Nombre de la unidad parcial
                                         </label>
@@ -192,6 +178,21 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                             autoFocus
                                         />
                                     </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="unidad_total" className="form-label">
+                                            Nombre de la unidad total
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="unidad_total"
+                                            value={unidadTotal}
+                                            onInput={(e) => setUnidadTotal(e.target.value)}
+                                            required
+                                            autoFocus
+                                        />
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button

@@ -246,8 +246,9 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
 
                                     <td className="text-center">
                                         {row.actividad?.recursos ? (
-                                            <span className="fw-bold text-success">
-                                                    ${new Intl.NumberFormat("es-CO").format(row.actividad.recursos)}
+
+                                            <span className=" ">
+                                                    {row.actividad.recursos}
                                                 </span>
                                         ) : (
                                             <div>Sin recursos</div>
@@ -256,13 +257,9 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
 
                                     <td>
                                         {row.actividad?.responsables ? (
-                                            <TextMultipleTags
-                                                label={" "}
-                                                spanClass={" p-2   d-flex align-items-center"}
-                                                containerClass={" d-flex flex-wrap gap-2 p-2"}
-                                                initialValue={row.actividad.responsables}
-                                                isEditable={false}
-                                            />
+                                            <span className=" ">
+                                                    {row.actividad.responsables}
+                                                </span>
                                         ) : (
                                             <div>Sin asignar</div>
                                         )}
