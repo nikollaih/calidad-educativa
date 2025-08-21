@@ -35,7 +35,7 @@ const FactorCriticoEdit = ({
     }, []);
 
     useEffect(() => {
-        // console.log('formData', formData);
+        //console.log('formData', formData);
     }, [formData]);
 
     /**
@@ -155,7 +155,7 @@ const FactorCriticoEdit = ({
                 id: `actividad-virtual-${uniqueId()}`,
                 descripcion: actividad.descripcion,
                 peso: actividad.peso ?? 0,
-                accumulated: actividad.accumulated ?? 0,
+                afecta_indicador: actividad.afecta_indicador ?? 0,
                 responsables: '',
                 recursos:'',
                 fecha_inicio: '',
@@ -273,17 +273,19 @@ const FactorCriticoEdit = ({
 
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Sumará a la meta:</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={actividad.accumulated}
-                                onChange={(e) => updateField(actividad.id, 'accumulated', parseFloat(e.target.value) || 0)}
-                                placeholder="0"
-                                min="0"
-                                step="0.01"
-                            />
+                            <div className="d-flex justify-content-center align-items-center h-100">
+                                <label className="form-label fw-bold  m-0 px-2">Sumará a la meta:</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    checked={actividad.afecta_indicador}
+                                    onChange={(e) =>
+                                        updateField(actividad.id, "afecta_indicador", e.target.checked ? 1 : 0)
+                                    }
+                                />
+                            </div>
                         </div>
+
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Responsables:</label>
                             <TextMultipleTags
@@ -548,7 +550,7 @@ const FactorCriticoEdit = ({
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`} value={actividad.id} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`} value={actividad.descripcion} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`} value={actividad.peso} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][accumulated]`} value={actividad.accumulated} />
+                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][afecta_indicador]`} value={actividad.afecta_indicador} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`} value={actividad.responsables} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`} value={actividad.recursos} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_inicio]`} value={actividad.fecha_inicio} />

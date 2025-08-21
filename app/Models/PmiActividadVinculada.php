@@ -17,5 +17,9 @@ class PmiActividadVinculada extends Model
         'fecha_inicio',
         'fecha_fin',
         'meta_id',
+        'afecta_indicador',
+    ];
+    protected $casts = [
+        'afecta_indicador' => 'boolean',
     ];
 }
