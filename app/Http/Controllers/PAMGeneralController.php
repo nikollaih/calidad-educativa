@@ -97,7 +97,7 @@ class PAMGeneralController extends Controller {
 
             // Manejo de reinicio si se llega a 99 y quieres volver a 01 o un límite
             if ($nextConsecutivo > 99) {
-                $nextConsecutivo = 1; // O maneja un error si no quieres que se reinicie
+                $nextConsecutivo = 1;
             }
         }
 

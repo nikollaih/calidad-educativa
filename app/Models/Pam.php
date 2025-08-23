@@ -28,16 +28,4 @@ class Pam extends Model {
         'anio_inicio',
         'anio_fin',
     ];
-
-    // /**
-    //  * The attributes that should be cast.
-    //  *
-    //  * @var array
-    //  */
-    // protected $casts = [
-    //     'estado' => 'integer',
-    //     'created_at' => 'datetime',
-    //     'updated_at' => 'datetime',
-    //     'deleted_at' => 'datetime'
-    // ];
 }
