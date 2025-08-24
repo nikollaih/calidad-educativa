@@ -10,9 +10,16 @@ use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
+use App\Models\PMI\ActividadEstadoEnum;
 use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
+use App\Models\PmiActividadAvance;
+use App\Models\PmiActividadAvanceFiles;
+use App\Models\PmiActividadVinculada;
+use App\Models\PmiMetaVinculada;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -35,6 +42,19 @@ class PMIController extends Controller
             'pmis' => $pmis,
         ]);
     }
+    public function actividadesByPmi(Request $request, int $pmiId = null) {
+        $actividades = PmiActividadVinculada::whereHas('meta', function ($query) use ($pmiId) {
+            $query->whereHas('objetivo', function ($query) use ($pmiId) {
+                $query->whereHas('factor', function ($query) use ($pmiId) {
+                    $query->where('pmi_id', $pmiId);
+                });
+            });
+        })
+        ->with('meta.indicadorInfo')
+        ->get();
+        return response()->json($actividades);
+    }
+
     public function create(int $institucionId = null) {
 
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
@@ -133,6 +153,73 @@ class PMIController extends Controller
                 'indicadores' => $indicadores,
             ]);
 
+    }
+    public function storeActividadAvance(Request $request){
+        $pmi = Pmi::where('id', $request->input('pmi_id'))->first();
+        $actividad = PmiActividadVinculada::with('meta')->where('id', $request->input('actividad_id'))->first();
+
+
+        if(empty($pmi)){
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
+        }
+        if(empty($actividad)){
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
+        }
+        DB::beginTransaction();
+        try {
+            $avance = PmiActividadAvance::create($request->all());
+            $actividad->accumulated = $avance->porcentaje_ejecutado;
+
+            if($avance->porcentaje_ejecutado == 100){
+                $actividad->slug_estado= ActividadEstadoEnum::COMPLETADA->value;
+            }
+
+            $actividad->save();
+            if($avance->suma_al_indicador !== 0 ){
+                $meta  = $actividad->meta;
+                $meta->indicador += $avance->suma_al_indicador;
+                $meta->save();
+            }
+            // Procesar los archivos
+            if ($request->hasFile('adjuntos')) {
+                foreach ($request->file('adjuntos') as $file) {
+                    if (!$file->isValid()) {
+                        Log::error("Archivo inválido", [
+                            'nombre' => $file->getClientOriginalName(),
+                            'error' => $file->getError()
+                        ]);
+                    }
+
+                    $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto(
+                        adjunto: $file,
+                        ruta: 'pmi/actividades/avances/'. $avance->pmi_id . '/' . $avance->id,
+                        disk: 'public');
+                    if($storeAdjuntoResponse->success){
+
+                        $adjuntoId = $storeAdjuntoResponse->data->id;
+
+                        PmiActividadAvanceFiles:: create([
+                            'avance_id' => $avance->id,
+                            'file_id' => $adjuntoId,
+                        ]);
+                    }else{
+                        return redirect()->back()->with('flash_error_message', $storeAdjuntoResponse->msg);
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_success_message', 'Avance guardado correctamente.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
     public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
         $factorCritico = FactorCritico::where('id', $factorCriticoId)

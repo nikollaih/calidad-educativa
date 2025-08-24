@@ -21,7 +21,6 @@ const FactorCriticoEdit = ({
         objetivos: [], // Array de objetivos
     });
     const [isEditing, setIsEditing] = useState(false);
-    const [originalData, setOriginalData] = useState(null);
 
     // Mapa objetivoId -> metaId seleccionada en el select
     const [selectedMetaByObjetivo, setSelectedMetaByObjetivo] = useState({});

@@ -1,15 +1,24 @@
-import React from "react";
 import { useState } from "preact/hooks";
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import { h } from "preact";
-import TextMultipleTags from "@/components/shared/TextMultipleTags.jsx";
+import CrearAvancePMI from "@/components/pmi/CrearAvancePMI.jsx";
+const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1}) => {
+    const [pmi] = useState(pmiData);
+    const [showCrearAvance, setShowCrearAvance] = useState(false);
+    const [selectedActividad, setSelectedActividad] = useState({});
 
-const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
-    const [pmi] = useState(pmiData.pmiData);
-
+    // Function to open the modal
+    const openCrearAvance = () => {
+        setShowCrearAvance(true);
+    };
+    // Function to close the modal
+    const closeCrearAvance = () => {
+        setShowCrearAvance(false);
+        // setSelectedPamId(null);
+    };
     // Agrupar datos
     const groupedData = {};
-    pmi.factores_criticos?.forEach(fc => {
+    pmi?.factores_criticos?.forEach(fc => {
         const gestion = fc.calificacion.grupo?.padre?.nombre || "Sin gestión";
         const componente = fc.calificacion?.nombre || "Sin componente";
 
@@ -80,7 +89,6 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                             </small>
                         </div>
                         <div class="d-flex gap-3">
-                            <CNavigationButton label="Agregar avance" to="#" icon="fas fa-plus" />
                             <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" />
                         </div>
                     </div>
@@ -98,7 +106,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                 <th className="text-center">Indicador</th>
                                 <th className="text-center">Actividad</th>
                                 <th className="text-center">Recurso ($)</th>
-                                <th className="text-center">Responsable</th>
+                                <th className="text-center">Responsables</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -216,29 +224,39 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
 
                                     <td>
                                         {row.actividad ? (
-                                            <>
-                                                <div className="fw-semibold">
-                                                    {row.actividad.descripcion || "Sin descripción"}
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div className="fw-semibold">
+                                                        {row.actividad.descripcion || "Sin descripción"}
+                                                    </div>
+                                                    <div className="d-flex flex-column">
+                                                        <small className="text-muted">
+                                                            <strong>Peso:</strong> {row.actividad.peso || "N/A"}%
+                                                        </small>
+                                                        <small className="text-muted">
+                                                            <strong>Inicio:</strong>{" "}
+                                                            {row.actividad.fecha_inicio &&
+                                                                new Date(row.actividad.fecha_inicio).toLocaleDateString("es-CO")}
+                                                        </small>
+                                                        <small className="text-muted">
+                                                            <strong>Fin:</strong>{" "}
+                                                            {row.actividad.fecha_fin &&
+                                                                new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")}
+                                                        </small>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex flex-column">
-                                                    <small className="text-muted">
-                                                        <strong>Peso:</strong>  {row.actividad.peso || "N/A"}%
 
-                                                    </small>
-                                                    <small className="text-muted">
-                                                        <strong>Inicio:</strong>
-                                                        {row.actividad.fecha_inicio && (
-                                                            new Date(row.actividad.fecha_inicio).toLocaleDateString("es-CO")
-                                                         )}
-                                                    </small>
-                                                    <small className="text-muted">
-                                                        <strong>Fin:</strong>
-                                                        {row.actividad.fecha_fin && (
-                                                            new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")
-                                                        )}
-                                                    </small>
+                                                <div className="ms-3">
+                                                    <CNavigationButton
+                                                        label="Agregar avance"
+                                                        to="#"
+                                                        icon="fas fa-plus"
+                                                        onClick={()=>{setSelectedActividad(row.actividad);openCrearAvance()}}
+                                                    />
                                                 </div>
-                                            </>
+                                            </div>
+
+
                                         ) : (
                                             <div >Sin actividades</div>
                                         )}
@@ -275,6 +293,13 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                     Total de factores críticos: {pmi?.factores_criticos?.length || 0}
                 </div>
             </div>
+            {/* Render the CrearAvance when showCrearAvance is true */}
+            {Boolean(showCrearAvance) && (
+                <CrearAvancePMI pmiId={pmi.id}
+                                onClose={closeCrearAvance}
+                                csrfToken={csrfToken}
+                                actividad={selectedActividad}/>
+            )}
         </div>
     );
 };

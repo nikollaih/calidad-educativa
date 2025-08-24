@@ -3,7 +3,6 @@ import { h } from 'preact';
 import Swal from 'sweetalert2';
 import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
-import CBackButton from '../shared/CBackButton';
 import VerAvance from './VerAvance';
 
 const PamIndex = ({ pamGeneralId }) => {
@@ -29,7 +28,7 @@ const PamIndex = ({ pamGeneralId }) => {
       setShowAvancesModal(false);
       setSelectedAccionId(null);
   };
-  
+
   // Function to open the modal
   const openCrearAvance = (pamId) => {
     // setSelectedPamId(pamId);
@@ -60,13 +59,13 @@ const PamIndex = ({ pamGeneralId }) => {
             'X-Requested-With': 'XMLHttpRequest'
           }
         });
-        
+
         if (!response.ok) {
           throw new Error(`Error HTTP! Estado: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.success && Array.isArray(result.data)) {
           // Mapear los datos de la API al formato esperado por el frontend
           const mappedData = result.data.map(item => ({
@@ -85,7 +84,7 @@ const PamIndex = ({ pamGeneralId }) => {
             fechaInicio: item.fecha_inicio ? item.fecha_inicio : '',
             fechaTerminacion: item.fecha_final ? item.fecha_final : ''
           }));
-          
+
           setRows(mappedData);
         } else {
           throw new Error(result.message || 'Formato de datos inesperado');
@@ -128,7 +127,7 @@ const PamIndex = ({ pamGeneralId }) => {
 
       if (result.isConfirmed) {
         setIsLoading(true);
-        
+
         // Hacer petición DELETE al servidor
         const response = await fetch(`/pam/${id}`, {
           method: 'DELETE',
@@ -170,7 +169,7 @@ const PamIndex = ({ pamGeneralId }) => {
     }
   };
 
-  // Function for "Exportar tabla" 
+  // Function for "Exportar tabla"
   const handleExportTable = async () => {
     try {
       // Mostrar loading
@@ -202,25 +201,25 @@ const PamIndex = ({ pamGeneralId }) => {
 
       // Obtener el blob del archivo
       const blob = await response.blob();
-      
+
       // Crear nombre del archivo con timestamp
       const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
       const filename = `pam_export_${timestamp}.xlsx`;
-      
+
       // Crear enlace de descarga
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = filename;
-      
+
       // Ejecutar descarga
       document.body.appendChild(link);
       link.click();
-      
+
       // Limpiar
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       // Mostrar mensaje de éxito
       Swal.fire({
         icon: 'success',
@@ -231,7 +230,7 @@ const PamIndex = ({ pamGeneralId }) => {
 
     } catch (error) {
       console.error('Error al exportar:', error);
-      
+
       // Mostrar mensaje de error
       Swal.fire({
         icon: 'error',
@@ -325,14 +324,14 @@ const PamIndex = ({ pamGeneralId }) => {
                         >
                             <i className="fas fa-eye"></i>
                         </button>
-                        <a 
+                        <a
                           href={`/pam/pam-form/${row.id}`}
                           className="btn btn-sm btn-primary"
                           title="Editar registro"
                         >
                           <i className="fas fa-edit"></i>
                         </a>
-                        <button 
+                        <button
                           className="btn btn-sm btn-danger"
                           onClick={() => deleteRow(row.id)}
                           disabled={isLoading}
