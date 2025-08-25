@@ -24,6 +24,8 @@ class PmiActividadVinculadasService {
                 }
                 $actividad['meta_id'] = $metaId;
 
+                $actividad['afecta_indicador'] = $actividad['afecta_indicador'] ? 1 : 0;
+
                 $actividadId = (isset($actividad['id']) && strpos($actividad['id'], 'virtual') === false)
                     ? $actividad['id']
                     : null;
