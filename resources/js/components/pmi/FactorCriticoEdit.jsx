@@ -285,7 +285,7 @@ const FactorCriticoEdit = ({
                                 />
                             </div>
                         </div>
-                        { actividad.afecta_indicador  &&
+                        { Boolean(actividad.afecta_indicador)  &&
                             (
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold">Valor que aporta a la meta:</label>
