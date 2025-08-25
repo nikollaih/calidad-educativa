@@ -171,13 +171,23 @@ class PMIController extends Controller
         }
         DB::beginTransaction();
         try {
-            $avance = PmiActividadAvance::create($request->all());
-            $actividad->accumulated = $avance->porcentaje_ejecutado;
+            $avanceData = $request->all();
+
+            $accumulated = $actividad->afecta_indicador
+                ? round(($actividad->accumulated + $avanceData['suma_al_indicador']) / $actividad->max_suma_indicador * 100)
+                : 100;
+
+            $actividad->accumulated = $accumulated;
+            $avanceData['porcentaje_ejecutado'] = $accumulated;
+            $avance = PmiActividadAvance::create($avanceData);
 
             if($avance->porcentaje_ejecutado == 100){
                 $actividad->slug_estado= ActividadEstadoEnum::COMPLETADA->value;
             }
-
+            if($actividad->slug_estado == ActividadEstadoEnum::SIN_INICIAR->value){
+                $actividad->slug_estado= ActividadEstadoEnum::EN_PROGRESO->value;
+            }
+            $avance->save();
             $actividad->save();
             if($avance->suma_al_indicador !== 0 ){
                 $meta  = $actividad->meta;
@@ -220,6 +230,15 @@ class PMIController extends Controller
             DB::rollBack();
             return $e->getMessage();
         }
+    }
+    public function avancesActividadByActividadId(Request $request, int $actividadId = null)
+    {
+        $avances = PmiActividadAvance::with('actividad', 'adjuntos')
+            ->where('actividad_id', $actividadId)
+            ->get();
+
+        return response()->json($avances);
+
     }
     public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
         $factorCritico = FactorCritico::where('id', $factorCriticoId)

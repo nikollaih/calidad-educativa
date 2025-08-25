@@ -2,18 +2,28 @@ import { useState } from "preact/hooks";
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import { h } from "preact";
 import CrearAvancePMI from "@/components/pmi/CrearAvancePMI.jsx";
+import VerAvancesPMI from "@/components/pmi/VerAvancesPMI.jsx";
 const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1}) => {
     const [pmi] = useState(pmiData);
     const [showCrearAvance, setShowCrearAvance] = useState(false);
+    const [showVerAvances, setShowVerAvances] = useState(false);
     const [selectedActividad, setSelectedActividad] = useState({});
 
     // Function to open the modal
     const openCrearAvance = () => {
         setShowCrearAvance(true);
     };
+    // Function to open the modal
+    const openVerAvances = () => {
+        setShowVerAvances(true);
+    };
     // Function to close the modal
     const closeCrearAvance = () => {
         setShowCrearAvance(false);
+        // setSelectedPamId(null);
+    };
+    const closeVerAvance = () => {
+        setShowVerAvances(false);
         // setSelectedPamId(null);
     };
     // Agrupar datos
@@ -96,17 +106,18 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                 <div className="card-body p-0">
                     <div className="table-responsive" style={{ maxHeight: "600px", overflowY: "auto" }}>
                         <table className="table table-bordered mb-0">
-                            <thead className="table-dark">
+                            <thead className="table-dark" style={{ position: "sticky", top: 0, zIndex: 10 }}>
                             <tr>
                                 <th className="text-center">Gestión</th>
                                 <th className="text-center">Componente</th>
                                 <th className="text-center">Factor Crítico</th>
-                                <th className="text-center">Objetivo</th>
+                                <th className="text-center">Objective</th>
                                 <th className="text-center">Meta</th>
                                 <th className="text-center">Indicador</th>
                                 <th className="text-center">Actividad</th>
                                 <th className="text-center">Recurso ($)</th>
                                 <th className="text-center">Responsables</th>
+                                <th className="text-center">% Completitud</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -231,6 +242,12 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                     </div>
                                                     <div className="d-flex flex-column">
                                                         <small className="text-muted">
+                                                            <strong>Estado:</strong> {row.actividad.slug_estado || "N/A"}
+                                                        </small>
+                                                        <small className="text-muted">
+                                                            <strong>Porcentaje de completitud:</strong> {row.actividad?.accumulated}%
+                                                        </small>
+                                                        <small className="text-muted">
                                                             <strong>Peso:</strong> {row.actividad.peso || "N/A"}%
                                                         </small>
                                                         <small className="text-muted">
@@ -244,21 +261,38 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                                 new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")}
                                                         </small>
                                                     </div>
-                                                </div>
-
-                                                <div className="ms-3">
-                                                    <CNavigationButton
-                                                        label="Agregar avance"
-                                                        to="#"
-                                                        icon="fas fa-plus"
-                                                        onClick={()=>{setSelectedActividad(row.actividad);openCrearAvance()}}
-                                                    />
+                                                    <div className=" d-flex">
+                                                        {row.actividad?.slug_estado != 'Completada' && (
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-sm btn-primary me-2"
+                                                                onClick={() => {
+                                                                    setSelectedActividad(row.actividad);
+                                                                    openCrearAvance();
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus me-1"></i>
+                                                                Agregar avance
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-secondary"
+                                                            onClick={() => {
+                                                                setSelectedActividad(row.actividad);
+                                                                openVerAvances();
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-eye me-1"></i>
+                                                            Ver avances
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
 
                                         ) : (
-                                            <div >Sin actividades</div>
+                                            <div>Sin actividades</div>
                                         )}
                                     </td>
 
@@ -282,7 +316,22 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                             <div>Sin asignar</div>
                                         )}
                                     </td>
+                                    <td>
+                                        {row.actividad?.accumulated ? (
+                                            <div className="d-flex flex-column text-center">
+                                              <span className="fw-bold">
+                                                {row.actividad?.accumulated}%
+                                              </span>
+                                                <span className="small text-muted">
+                                                ( {row.actividad.slug_estado} )
+                                              </span>
+                                            </div>
+                                        ) : (
+                                            <div>Sin porcentaje de completitud</div>
+                                        )}
+                                    </td>
                                 </tr>
+
                             ))}
                             </tbody>
                         </table>
@@ -298,6 +347,10 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                 <CrearAvancePMI pmiId={pmi.id}
                                 onClose={closeCrearAvance}
                                 csrfToken={csrfToken}
+                                actividad={selectedActividad}/>
+            )}
+            {Boolean(showVerAvances) && (
+                <VerAvancesPMI  onClose={closeVerAvance}
                                 actividad={selectedActividad}/>
             )}
         </div>

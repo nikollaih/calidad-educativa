@@ -34,7 +34,7 @@ const FactorCriticoEdit = ({
     }, []);
 
     useEffect(() => {
-        //console.log('formData', formData);
+        console.log('formData', formData);
     }, [formData]);
 
     /**
@@ -154,6 +154,7 @@ const FactorCriticoEdit = ({
                 id: `actividad-virtual-${uniqueId()}`,
                 descripcion: actividad.descripcion,
                 peso: actividad.peso ?? 0,
+                max_suma_indicador: actividad.max_suma_indicador ?? 0,
                 afecta_indicador: actividad.afecta_indicador ?? 0,
                 responsables: '',
                 recursos:'',
@@ -284,6 +285,20 @@ const FactorCriticoEdit = ({
                                 />
                             </div>
                         </div>
+                        { actividad.afecta_indicador  &&
+                            (
+                                <div className="col-md-6">
+                                    <label className="form-label fw-bold">Valor que aporta a la meta:</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={actividad.max_suma_indicador}
+                                            onChange={(e) =>
+                                                updateField(actividad.id, "max_suma_indicador", e.target.value)
+                                            }
+                                        />
+                                </div>
+                            )}
 
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Responsables:</label>
@@ -549,6 +564,7 @@ const FactorCriticoEdit = ({
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`} value={actividad.id} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`} value={actividad.descripcion} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`} value={actividad.peso} />
+                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][max_suma_indicador]`} value={actividad.max_suma_indicador} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][afecta_indicador]`} value={actividad.afecta_indicador} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`} value={actividad.responsables} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`} value={actividad.recursos} />

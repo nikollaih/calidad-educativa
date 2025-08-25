@@ -5,7 +5,7 @@ import {h} from "preact";
 import CMultiFileUploader from "@/components/shared/CMultiFileUploader.jsx";
 
 
-const CrearAvance = ({
+const CrearAvancePMI = ({
                          pmiId= undefined,
                          onClose,
                          csrfToken='',
@@ -210,27 +210,6 @@ const CrearAvance = ({
                             {selectedActivity && (
                                 <>
                                     <div className="d-flex  gap-2">
-                                        <div className="mb-3 w-100">
-                                            <label
-                                                htmlFor="porcentaje_ejecutado"
-                                                className="form-label"
-                                            >
-                                                Porcentaje de la tarea completado:
-                                            </label>
-                                            <div class="input-group">
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    id="porcentaje_ejecutado"
-                                                    name="porcentaje_ejecutado"
-                                                    value={formData.porcentaje_ejecutado}
-                                                    onChange={handleChange}
-                                                    min="0"
-                                                    required
-                                                />
-                                                <span className="input-group-text">%</span>
-                                            </div>
-                                        </div>
 
                                         {Boolean(selectedActivity?.afecta_indicador) && (
                                             <div className="mb-3 w-100 ml-1">
@@ -355,4 +334,4 @@ const CrearAvance = ({
     );
 };
 
-export default CrearAvance;
+export default CrearAvancePMI;
