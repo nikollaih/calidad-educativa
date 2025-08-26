@@ -86,6 +86,17 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
         }
         return span;
     };
+    // --- Calcular % completitud total por meta ---
+    const calcularCompletitudMeta = (meta) => {
+        if (!meta?.actividades?.length) return 0;
+
+        return meta.actividades.reduce((total, act) => {
+            const peso = act.peso || 0;          // en %
+            const avance = act.accumulated || 0; // en %
+            return total + (peso * avance) / 100;
+        }, 0).toFixed(2); // redondeamos a 2 decimales
+    };
+
 
     return (
         <div className="container-fluid mt-4">
@@ -229,6 +240,15 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                             ) : (
                                                 <div>Sin indicador</div>
                                             )}
+
+                                            <div className="card mt-5 shadow-sm border-0" style={{ maxWidth: "16rem" }}>
+                                                <div className="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                                                    <small className="text-muted">Completitud total</small>
+                                                    <span className="fw-bold text-success">
+                                                      {calcularCompletitudMeta(row?.meta)}%
+                                                    </span>
+                                                </div>
+                                            </div>
 
                                         </td>
                                     ) : null}
