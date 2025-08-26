@@ -100,10 +100,25 @@ const CrearAvancePMI = ({
     // --- Maneja los cambios del formulario ---
     const handleChange = (e) => {
         const { name, value, files } = e.target;
+
         if (name === "archivos_adjuntos") {
             setFormData((prevData) => ({
                 ...prevData,
                 [name]: prevData.archivos_adjuntos.concat(Array.from(files)),
+            }));
+        } else if (name === "suma_al_indicador" && selectedActivity) {
+            // límite dinámico
+            const min = 0;
+            const max = selectedActivity.max_suma_indicador - selectedActivity.indicador_acumulado;
+            let val = Number(value);
+
+            // forzar dentro de rango
+            if (val < min) val = min;
+            if (val > max) val = max;
+
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: val,
             }));
         } else {
             setFormData((prevData) => ({
@@ -111,6 +126,30 @@ const CrearAvancePMI = ({
                 [name]: value,
             }));
         }
+    };
+
+// --- Valida antes de enviar ---
+    const handleSubmit = (e) => {
+        // evita que se mande automáticamente
+        e.preventDefault();
+
+        if (!formData.fecha_avance) {
+            setSubmitMessage({ type: "error", text: "Debes seleccionar la fecha de avance." });
+            return;
+        }
+
+        if (selectedActivity?.afecta_indicador && (!formData.suma_al_indicador || formData.suma_al_indicador <= 0)) {
+            setSubmitMessage({ type: "error", text: "Debes ingresar un valor válido en 'Unidades avanzadas'." });
+            return;
+        }
+
+        if (!formData.descripcion.trim()) {
+            setSubmitMessage({ type: "error", text: "Debes ingresar una observación o descripción." });
+            return;
+        }
+
+        // si pasa todas las validaciones, envía el formulario real
+        e.target.submit();
     };
 
     // --- Código modificado: Maneja la selección del componente `Select` para las Actividades ---
@@ -176,6 +215,7 @@ const CrearAvancePMI = ({
                                     name="fecha_avance"
                                     value={formData.fecha_avance}
                                     onChange={handleChange}
+                                    max={new Date().toISOString().split("T")[0]}  // 👈 límite: hoy
                                     required
                                 />
                             </div>
@@ -217,7 +257,7 @@ const CrearAvancePMI = ({
                                                     htmlFor="unidades"
                                                     className="form-label"
                                                 >
-                                                    Unidades que sumará al indicador  :
+                                                    Unidades avanzadas (quedan {selectedActivity?.max_suma_indicador - selectedActivity?.indicador_acumulado} unidades por avanzar)  :
                                                 </label>
                                                 <input
                                                     type="number"
@@ -227,6 +267,7 @@ const CrearAvancePMI = ({
                                                     value={formData.suma_al_indicador}
                                                     onChange={handleChange}
                                                     min="0"
+                                                    max={selectedActivity?.max_suma_indicador - selectedActivity?.indicador_acumulado}
                                                     required
                                                 />
                                                 <small>({String(selectedActivity.meta.indicador_info.unidad_parcial)})</small>
@@ -289,6 +330,8 @@ const CrearAvancePMI = ({
                                         method="POST"
                                         action="/pmi/guardar-avance-actividad"
                                         encType="multipart/form-data"
+                                        onSubmit={handleSubmit}
+
                                     >
                                         <input type="hidden" name="_token" value={csrfToken} />
                                         <input type="hidden" name="pmi_id" value={pmiId} />

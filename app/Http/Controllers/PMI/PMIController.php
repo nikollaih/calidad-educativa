@@ -169,15 +169,59 @@ class PMIController extends Controller
                 ->withInput()
                 ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
         }
+
+        $fechaAvance = $request->input('fecha_avance');
+        if (empty($fechaAvance) || !strtotime($fechaAvance)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'La fecha del avance es inválida.');
+        }
+
+        if ($fechaAvance > date('Y-m-d')) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'La fecha del avance no puede ser mayor a hoy.');
+        }
+
+        // 2. Validar suma al indicador
+        $maxPermitido = $actividad->max_suma_indicador - $actividad->indicador_acumulado;
+        $suma = (int) $request->input('suma_al_indicador');
+
+        if ($suma < 0) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'El valor de unidades no puede ser negativo.');
+        }
+
+        if ($suma > $maxPermitido) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', "El valor de unidades no puede ser mayor a $maxPermitido.");
+        }
+        $avanceData = $request->all();
+
+        $cantidadTotalAvanzada = $actividad->indicador_acumulado + $avanceData['suma_al_indicador'];
+
+        Log::info("cantidad todal avanzada" . $cantidadTotalAvanzada);
+
+        if($cantidadTotalAvanzada > $actividad->max_suma_indicador){
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', "El valor del avance total no puede se mayor a " . $actividad->max_suma_indicador . " actualmente es" . $cantidadTotalAvanzada);
+        }
+        Log::info("afecta al indicador?" . $actividad->afecta_indicador);
+        Log::info("nuevo acumulado" . $cantidadTotalAvanzada >0 ? $cantidadTotalAvanzada : 1 / $actividad->max_suma_indicador);
+
+        $accumulated = $actividad->afecta_indicador
+            ? ( $cantidadTotalAvanzada / $actividad->max_suma_indicador) * 100
+            : 100;
+        Log::info("accumulated " . $accumulated);
         DB::beginTransaction();
         try {
-            $avanceData = $request->all();
 
-            $accumulated = $actividad->afecta_indicador
-                ? round(($actividad->accumulated + $avanceData['suma_al_indicador']) / $actividad->max_suma_indicador * 100)
-                : 100;
 
             $actividad->accumulated = $accumulated;
+            $actividad->indicador_acumulado = $cantidadTotalAvanzada;
             $avanceData['porcentaje_ejecutado'] = $accumulated;
             $avance = PmiActividadAvance::create($avanceData);
 
