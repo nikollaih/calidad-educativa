@@ -42,6 +42,7 @@ export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPag
                     <th>Años Vigencia</th>
                     <th>FECHA DE CREACIÓN</th>
                     <th>DESCRIPCIÓN</th>
+                    <th>ESTADO</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
@@ -51,6 +52,7 @@ export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPag
                         <td>{pmi.anio_inicio} - {pmi.anio_fin}</td>
                         <td>{formatFecha(pmi.created_at)}</td>
                         <td>{pmi.descripcion}</td>
+                        <td>{pmi.estado}</td>
                         <td>
                             <a
                                 href={`/${institucionId}/pmi/${pmi.id}/edit`}
@@ -58,13 +60,28 @@ export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPag
                             >
                                 Ver detalles
                             </a>
-
                             <a
                                 href={`/${institucionId}/pmi/${pmi.id}/edit`}
                                 className="btn btn-warning btn-sm me-2"
                             >
                                 Editar
                             </a>
+
+                            { Boolean(pmi.estado == "Proceso") && (
+                                <form
+                                    action={`/${institucionId}/pmi/${pmi.id}/presentar`}
+                                    method="POST"
+                                    style={{ display: 'inline' }} // Para que el botón no baje de línea
+                                >
+                                    <input type="hidden" name="_token" value={csrfToken} />
+                                    <button type="submit"
+                                            className="btn btn-success btn-sm"
+                                            alt
+                                    >
+                                        Presentar PMI
+                                    </button>
+                                </form>
+                            )}
 
                         </td>
                     </tr>

@@ -11,6 +11,7 @@ use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
 use App\Models\PMI\ActividadEstadoEnum;
+use App\Models\PMI\Enums\PmiEstadoEnum;
 use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
 use App\Models\PmiActividadAvance;
@@ -130,6 +131,20 @@ class PMIController extends Controller
                 'institucionId' => $institucionId,
             ]);
 
+    }
+    public function presentarPmi(Request $request, int $institucionId , int $pmiId)
+    {
+        $pmi = Pmi::find($pmiId);
+        if(empty($pmi)){
+            return  redirect()
+                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
+                ->with('flash_error_message', 'Pmi critico no encontrado.');
+        }
+        $pmi->estado = PmiEstadoEnum::Presentado->value;
+        $pmi->save();
+        return  redirect()
+            ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
+            ->with('flash_success_message', 'Pmi presentado correctamente.');
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
@@ -285,6 +300,18 @@ class PMIController extends Controller
 
     }
     public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
+
+        $pmiOwner = Pmi::find($pmi);
+        if(!$pmiOwner){
+            return redirect()
+                ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                ->with('flash_error_message', 'El pmi asociado no fue encontrado.');
+        }
+        if($pmiOwner->estado == PmiEstadoEnum::Presentado->value){
+            return redirect()
+                ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                ->with('flash_error_message', 'No se pueden editar los factores criticos de un pmi presentado.');
+        }
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
             ->with('calificacion.grupo.padre')
             ->first();

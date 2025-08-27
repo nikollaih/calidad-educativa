@@ -171,11 +171,12 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                         )}
                                                     </div>
                                                 </div>
-
+                                                { Boolean(pmi?.estado == "Proceso") && (
                                                 <i
                                                     className="fas fa-edit text-warning fs-4 cursor-pointer"
                                                     onClick={() => (window.location.href = `edit/factor-critico/${row.factorCritico.id}`)}
                                                 ></i>
+                                                )}
                                             </div>
                                         </td>
                                     ) : null}
@@ -282,7 +283,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                         </small>
                                                     </div>
                                                     <div className=" d-flex">
-                                                        {row.actividad?.slug_estado != 'Completada' && (
+                                                        {Boolean(row.actividad?.slug_estado != 'Completada' && pmi.estado == "Presentado") && (
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-sm btn-primary me-2"

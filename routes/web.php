@@ -168,6 +168,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('pmi.actualizar-factor-critico');
     Route::get('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'editFactorCritico'])
         ->name('pmi.edit-factor-critico');
+    Route::post('/{institucionId}/pmi/{pmiId}/presentar', [PMIController::class, 'presentarPmi'])
+        ->name('pmi.presentar-pmi');
 
     Route::resource('/{institucionId}/pmi', PMIController::class);
     Route::resource('objetivo-pmi', PMIObjetivoController::class);

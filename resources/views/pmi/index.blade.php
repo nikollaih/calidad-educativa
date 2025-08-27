@@ -14,6 +14,7 @@
         data-component="IndexPMI"
         data-agregar-url="{{route('pmi.create',$institucionId)}}"                                                                                                                                                                                                                                                                                                                                                      rl
         data-institucion-id="{{$institucionId}}"
+        data-csrf-token="{{csrf_token()}}"
         data-pmis-paginated='@json($pmis)'
     >
 
