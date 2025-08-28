@@ -589,6 +589,27 @@ const FactorCriticoEdit = ({
                     });
                     return;
                 }
+
+                // ✅ validar fechas de actividades
+                for (const actividad of meta.actividades || []) {
+                    if (!actividad.fecha_inicio || !actividad.fecha_fin) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Fechas incompletas',
+                            text: `La actividad "${actividad.descripcion}" de la meta "${meta.descripcion}" debe tener fecha de inicio y de fin.`,
+                        });
+                        return;
+                    }
+
+                    if (new Date(actividad.fecha_inicio) > new Date(actividad.fecha_fin)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error en fechas',
+                            text: `La actividad "${actividad.descripcion}" de la meta "${meta.descripcion}" tiene la fecha de inicio posterior a la de fin.`,
+                        });
+                        return;
+                    }
+                }
             }
         }
 
