@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-// import { useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 
 export default function CMultiFileUploader({ onFilesAdded, onFilesDelete }) {
     const [files, setFiles] = useState([]);
