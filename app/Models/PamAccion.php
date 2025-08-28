@@ -64,7 +64,6 @@ class PamAccion extends Model
     ];
 
     /**
-     * Get the user that owns the PamAccion.
      * Define la relación de "pertenece a" con el modelo User.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -79,7 +78,6 @@ class PamAccion extends Model
     }
 
     /**
-     * Get the indicador that owns the PamAccion.
      * Define la relación de "pertenece a" con el modelo PamIndicador.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

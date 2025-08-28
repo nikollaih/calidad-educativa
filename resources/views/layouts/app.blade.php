@@ -174,6 +174,12 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
+                                    <a href="{{ url('redes-aprendizajes')}}" class="menu-link">
+                                        <i class="menu-icon fas fa-graduation-cap"></i>
+                                        <div data-i18n="Redes de aprendizaje"> Redes de aprendizaje</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon fas fa-clipboard-list"></i>
                                         <div data-i18n="PAM"> PAM</div>
@@ -220,6 +226,12 @@
                             <a href="{{ url('pams/index')}}" class="menu-link">
                                 <i class="menu-icon fa-solid fa-table"></i>
                                 <div data-i18n="PAM"> PAM</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ url('red-actividades')}}" class="menu-link">
+                                <i class="menu-icon fa fa-graduation-cap"></i>
+                                <div data-i18n="Redes pedagogicas"> Redes pedagogicas</div>
                             </a>
                         </li>
                     </ul>

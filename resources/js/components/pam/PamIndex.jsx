@@ -291,7 +291,7 @@ const PamIndex = ({ pamGeneralId }) => {
                   <th className="align-middle" style={{ minWidth: "150px" }}>META</th>
                   <th className="align-middle">VALOR DE META</th>
                   <th className="align-middle" style={{ minWidth: "150px" }}>INDICADOR</th>
-                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIÓN</th>
+                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIONES</th>
                   <th className="align-middle">RESPONSABLE</th>
                   <th className="align-middle">RECURSOS</th>
                   <th className="align-middle">FECHA INICIO</th>
@@ -325,7 +325,7 @@ const PamIndex = ({ pamGeneralId }) => {
                             <i className="fas fa-eye"></i>
                         </button>
                         <a
-                          href={`/pam/pam-form/${row.id}`}
+                          href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
                           className="btn btn-sm btn-primary"
                           title="Editar registro"
                         >
@@ -355,7 +355,7 @@ const PamIndex = ({ pamGeneralId }) => {
         </div>
         {/* Render the CrearAvance when showCrearAvance is true */}
         {showCrearAvance && (
-          <CrearAvance onClose={closeCrearAvance} />
+          <CrearAvance onClose={closeCrearAvance} pamGeneralId={pamGeneralId} />
         )}
         {showAvancesModal && (
             <VerAvance

@@ -11,6 +11,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState(null); // No se usa directamente en el renderizado, pero se mantiene para referencia
+  const [pamGeneralIdEdit, setPamGeneralIdEdit] = useState(null);
   const [users, setUsers] = useState([]);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [unidadesMeta, setUnidadesMeta] = useState([]); // NUEVO: Estado para almacenar las unidades de meta
@@ -249,6 +250,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         const result = await response.json();
 
         if (result.success && result.data) {
+          pamGeneralId = new URLSearchParams(window.location.search).get('pam');
+          setPamGeneralIdEdit(pamGeneralId);
+          
           const data = result.data;
           setIsEditing(true);
           setOriginalData(data); // Guarda los datos originales para referencia
@@ -461,7 +465,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 const unidadDescripcion2 = unidadSeleccionada ? unidadSeleccionada.unidad_total : '';
 
                 // Se crea la nueva descripción del indicador
-                const newDescription = `0 ${unidadDescripcion} de ${meta.valor_meta} ${unidadDescripcion2}`;
+                const newDescription = `(0) ${unidadDescripcion} de (${meta.valor_meta}) ${unidadDescripcion2}`;
 
                 // Comentamos lo que modificamos: Se agrega la lógica para manejar ambos escenarios.
                 // Escenario 1: No hay indicadores, se agregan automáticamente
@@ -1430,7 +1434,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   return (
     <div className="container py-4">
       <div className='mb-2'>
-          <CNavigationButton />
+          <CNavigationButton to={ isEditing ? '/pam/' + pamGeneralIdEdit + '/index' : '/pam/' + pamGeneralId + '/index'} />
       </div>
       <div className="card shadow">
         <div className="card-header bg-white">
@@ -1467,7 +1471,15 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => window.history.back()}
+              onClick={() => {
+                // Valida si isEditing es verdadero
+                const url = isEditing
+                  ? '/pam/' + pamGeneralIdEdit + '/index'
+                  : '/pam/' + pamGeneralId + '/index';
+
+                // Navega a la URL construida
+                window.location.href = url;
+              }}
             >
               <i className="bi bi-arrow-left"></i> Volver al listado
             </button>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PamExport;
 use App\Http\Requests\StorePamRowRequest;
+use App\Models\Indicador;
 use App\Models\PamAccion;
 use App\Models\PamAvance;
 use App\Models\PamComponente;
@@ -526,7 +527,6 @@ class PAMController extends Controller {
             $validatedData = $request->validate([
                 'fecha_avance' => ['required', 'date'],
                 'meta_id' => ['required', 'integer', 'exists:pam_metas,id'],
-                'accion_id' => ['required', 'integer', 'exists:pam_acciones,id'],
                 'cantidad_ejecutada' => ['required', 'integer', 'min:0'],
                 'observacion' => ['nullable', 'string', 'max:1000'],
                 'archivos_adjuntos.*' => [
@@ -538,36 +538,54 @@ class PAMController extends Controller {
 
             DB::beginTransaction();
 
+            $metaId = $validatedData['meta_id'];
+
+            $meta = PamMeta::with('indicador.accionHasOne')->find($metaId);
+
             // Crear el registro PamAvance
             $avance = PamAvance::create([
                 'fecha_avance' => $validatedData['fecha_avance'],
                 'meta_id' => $validatedData['meta_id'],
-                'accion_id' => $validatedData['accion_id'],
+                'accion_id' => $meta?->Indicador?->accionHasOne?->id,
                 'cantidad_ejecutada' => $validatedData['cantidad_ejecutada'],
                 'observacion' => $validatedData['observacion'],
+            ]);
+
+            // Actualiza el indicador aumentando la cantidad ejecutada
+            $oldIndicador = $meta?->Indicador?->descripcion;
+            $newIndicador = preg_replace_callback(
+                 // Patrón de búsqueda: encuentra el primer número entre paréntesis
+                '/\((\d+)\)/',
+                function ($matches) use ($avance) {
+                    // Obtenemos el número encontrado en el primer grupo de captura
+                    $oldValue = (int) $matches[1];
+                    // Sumamos la cantidad ejecutada
+                    $newValue = $oldValue + $avance->cantidad_ejecutada;
+                    // Retornamos la nueva cadena para el reemplazo
+                    return "({$newValue})";
+                },
+                $oldIndicador,
+                1
+            );
+
+            // Actualiza indicador
+            $meta?->Indicador?->update([
+                'descripcion' => $newIndicador,
             ]);
 
             // Verificar si la solicitud contiene archivos en el campo 'archivos_adjuntos'
             if ($request->hasFile('archivos_adjuntos')) {
                 // Iterar sobre cada archivo adjunto recibido
                 foreach ($request->file('archivos_adjuntos') as $file) {
-                    // Generar un nombre único para el archivo para evitar colisiones
-                    // Se usa time() para la marca de tiempo, uniqid() para una cadena única,
-                    // y getClientOriginalExtension() para mantener la extensión original.
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-                    // Almacenar el archivo en el disco 'public' dentro del subdirectorio 'avances_adjuntos'.
-                    // El disco 'public' generalmente mapea a 'storage/app/public' y necesita un enlace simbólico
-                    // a 'public/storage' para ser accesible vía web.
                     $filePath = $file->storeAs('avances_adjuntos', $fileName, 'public');
 
-                    // Guardar la información del archivo en la tabla 'pam_avance_archivos'.
-                    // Se utiliza la relación definida en el modelo PamAvance para crear el registro.
                     $avance->archivosAdjuntos()->create([
-                        'nombre_original' => $file->getClientOriginalName(), // Nombre original del archivo subido por el usuario
-                        'ruta_archivo' => $filePath, // Ruta donde se almacenó el archivo en el servidor
-                        'tipo_mime' => $file->getClientMimeType(), // Tipo MIME del archivo (ej. application/pdf)
-                        'tamano' => $file->getSize(), // Tamaño del archivo en bytes
+                        'nombre_original' => $file->getClientOriginalName(),
+                        'ruta_archivo' => $filePath,
+                        'tipo_mime' => $file->getClientMimeType(),
+                        'tamano' => $file->getSize(),
                     ]);
                 }
             }
@@ -608,7 +626,6 @@ class PAMController extends Controller {
             ->orderBy('fecha_avance', 'desc')
             ->get();
 
-        // 3. Transform the data for frontend (optional, but good for consistent display)
         $formattedAvances = $avances->map(function ($avance) {
             return [
                 'id' => $avance->id,
@@ -646,50 +663,22 @@ class PAMController extends Controller {
     public function getMetas(Request $request): JsonResponse {
         $query = PamMeta::query();
 
-        // Puedes agregar lógica de filtrado si deseas un término de búsqueda inicial
-        // Aunque el frontend ya maneja el filtrado, esto es útil si quieres
-        // un filtrado del lado del servidor para grandes volúmenes de datos.
+        $pamGeneralId = (int) $request->input('pam_general_id');
+
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
             $query->where('descripcion', 'like', '%' . $searchTerm . '%');
         }
 
-        // Selecciona solo los campos 'id' y 'nombre' para optimizar la respuesta
-        // Cambia 'nombre' al nombre real de tu columna descriptiva en la tabla 'metas'
-        $metas = $query->select('id', 'descripcion')->get();
+        $metas = $query->whereHas('indicador', function ($q) use ($pamGeneralId) {
+            $q->whereHas('accionHasOne', function ($q) use ($pamGeneralId) {
+                $q->where('pam_id', $pamGeneralId);
+            });
+        })->select('id', 'descripcion')->get();
 
         return response()->json($metas);
     }
 
-    public function getAcciones(Request $request): JsonResponse {
-
-        $metaId = (int) $request->input('meta_id');
-
-        // Start the query on PamAccion
-        $query = PamAccion::query();
-
-        // Join with the 'indicadores' table and then filter by the meta_id
-        // Assuming:
-        // - PamAccion has an 'indicador_id' foreign key
-        // - Your 'indicadores' table has a 'meta_id' foreign key
-        // - 'indicadores' is the name of your indicators table
-        // - 'indicador_id' is the column in pam_acciones that links to indicadores.id
-        $query->whereHas('indicador', function ($q) use ($metaId) {
-            $q->where('meta_id', $metaId);
-        });
-
-
-        // You can add server-side filtering by search term here if needed
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
-        }
-
-        // Select only the 'id' and 'descripcion' fields for optimized response
-        $acciones = $query->select('id', 'descripcion')->get();
-
-        return response()->json($acciones);
-    }
 }
 
 
