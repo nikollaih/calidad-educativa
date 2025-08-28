@@ -325,7 +325,7 @@ const PamIndex = ({ pamGeneralId }) => {
                             <i className="fas fa-eye"></i>
                         </button>
                         <a
-                          href={`/pam/pam-form/${row.id}`}
+                          href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
                           className="btn btn-sm btn-primary"
                           title="Editar registro"
                         >
@@ -355,7 +355,7 @@ const PamIndex = ({ pamGeneralId }) => {
         </div>
         {/* Render the CrearAvance when showCrearAvance is true */}
         {showCrearAvance && (
-          <CrearAvance onClose={closeCrearAvance} />
+          <CrearAvance onClose={closeCrearAvance} pamGeneralId={pamGeneralId} />
         )}
         {showAvancesModal && (
             <VerAvance

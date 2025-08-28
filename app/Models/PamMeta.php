@@ -64,6 +64,11 @@ class PamMeta extends Model
         return $this->hasMany(PamIndicador::class, 'meta_id');
     }
 
+    public function indicador()
+    {
+        return $this->hasOne(PamIndicador::class, 'meta_id');
+    }
+
     public function avances() {
         return $this->hasMany(PamAvance::class, 'meta_id');
     }

@@ -60,8 +60,14 @@ class PamIndicador extends Model
     {
         return $this->belongsTo(PamMeta::class, 'meta_id');
     }
+
     public function accion()
     {
         return $this->hasMany(PamAccion::class, 'indicador_id');
+    }
+
+    public function accionHasOne()
+    {
+        return $this->hasOne(PamAccion::class, 'indicador_id');
     }
 }

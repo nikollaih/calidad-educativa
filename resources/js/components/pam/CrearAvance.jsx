@@ -2,20 +2,17 @@
 import { useState, useEffect } from "preact/hooks";
 import Select from "react-select";
 
-const CrearAvance = ({ onClose }) => {
+const CrearAvance = ({ onClose, pamGeneralId }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [formData, setFormData] = useState({
         fecha_avance: "",
         meta_id: "",
-        accion_id: "",
         cantidad_ejecutada: "",
         observacion: "",
         archivos_adjuntos: [],
     });
     const [metasOptions, setMetasOptions] = useState([]);
-    const [accionesOptions, setAccionesOptions] = useState([]);
     const [loadingMetas, setLoadingMetas] = useState(true);
-    const [loadingAcciones, setLoadingAcciones] = useState(false);
     const [submitMessage, setSubmitMessage] = useState(null);
 
     // --- CSRF Token State ---
@@ -28,16 +25,13 @@ const CrearAvance = ({ onClose }) => {
         setFormData({
             fecha_avance: "",
             meta_id: "",
-            accion_id: "",
             cantidad_ejecutada: "",
             observacion: "",
             archivos_adjuntos: [],
         });
         setSubmitMessage(null);
         setMetasOptions([]);
-        setAccionesOptions([]);
         setLoadingMetas(true);
-        setLoadingAcciones(false);
         if (onClose) {
             onClose();
         }
@@ -67,7 +61,7 @@ const CrearAvance = ({ onClose }) => {
     useEffect(() => {
         const fetchMetas = async () => {
             try {
-                const response = await fetch("/pam/get-metas");
+                const response = await fetch("/pam/get-metas?pam_general_id=" + pamGeneralId);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -89,37 +83,6 @@ const CrearAvance = ({ onClose }) => {
             setLoadingMetas(true);
         }
     }, [isOpen, loadingMetas]);
-
-    // --- Carga las opciones para 'acciones' basado en la 'meta_id' seleccionada ---
-    useEffect(() => {
-        const fetchAcciones = async (metaId) => {
-            setLoadingAcciones(true);
-            try {
-                const response = await fetch(
-                    `/pam/get-acciones?meta_id=${metaId}`
-                );
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // Código modificado:
-                // No se necesita mapear a un formato específico.
-                setAccionesOptions(data);
-            } catch (error) {
-                console.error("Error al cargar las acciones:", error);
-                setAccionesOptions([]);
-            } finally {
-                setLoadingAcciones(false);
-            }
-        };
-
-        if (formData.meta_id) {
-            fetchAcciones(formData.meta_id);
-        } else {
-            setAccionesOptions([]);
-            setFormData((prevData) => ({ ...prevData, accion_id: "" }));
-        }
-    }, [formData.meta_id]);
 
     // --- Maneja los cambios del formulario ---
     const handleChange = (e) => {
@@ -143,16 +106,6 @@ const CrearAvance = ({ onClose }) => {
             ...prevData,
             // Se usa el valor de la propiedad 'id' del objeto seleccionado
             meta_id: selectedOption ? selectedOption.id : "",
-            accion_id: "", // Reseteamos la acción al cambiar la meta
-        }));
-    };
-
-    // --- Código modificado: Maneja la selección del componente `Select` para las acciones ---
-    const handleAccionChange = (selectedOption) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            // Se usa el valor de la propiedad 'id' del objeto seleccionado
-            accion_id: selectedOption ? selectedOption.id : "",
         }));
     };
 
@@ -178,7 +131,6 @@ const CrearAvance = ({ onClose }) => {
         if (
             !formData.fecha_avance ||
             !formData.meta_id ||
-            !formData.accion_id ||
             !formData.cantidad_ejecutada
         ) {
             setSubmitMessage({
@@ -201,7 +153,6 @@ const CrearAvance = ({ onClose }) => {
 
         dataToSend.append("fecha_avance", formData.fecha_avance);
         dataToSend.append("meta_id", formData.meta_id);
-        dataToSend.append("accion_id", formData.accion_id);
         dataToSend.append("cantidad_ejecutada", formData.cantidad_ejecutada);
         dataToSend.append("observacion", formData.observacion);
 
@@ -253,8 +204,6 @@ const CrearAvance = ({ onClose }) => {
     // Función para encontrar la opción seleccionada y pasarla a 'value'
     const getSelectedMeta = () =>
         metasOptions.find((option) => option.id === formData.meta_id);
-    const getSelectedAccion = () =>
-        accionesOptions.find((option) => option.id === formData.accion_id);
 
     return (
         <div
@@ -336,39 +285,6 @@ const CrearAvance = ({ onClose }) => {
                                     />
                                 )}
                             </div>
-
-                            {/* Selector de Acción con React-Select (condicionalmente renderizado) */}
-                            {formData.meta_id && (
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Acción:
-                                    </label>
-                                    {loadingAcciones ? (
-                                        <p>Cargando acciones...</p>
-                                    ) : (
-                                        <Select
-                                            options={accionesOptions}
-                                            onChange={handleAccionChange}
-                                            placeholder="Selecciona una acción"
-                                            name="accion_id"
-                                            // Código modificado:
-                                            // Se usa getOptionLabel para que el selector muestre la 'descripcion'
-                                            getOptionLabel={(option) =>
-                                                option.descripcion
-                                            }
-                                            // Se usa getOptionValue para que el valor de la opción sea el 'id'
-                                            getOptionValue={(option) =>
-                                                option.id
-                                            }
-                                            // Se usa la función auxiliar para que el selector sepa cuál opción está seleccionada
-                                            value={getSelectedAccion()}
-                                            noOptionsMessage={() =>
-                                                "No se encontraron acciones"
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            )}
 
                             <div className="mb-3">
                                 <label
