@@ -15,8 +15,6 @@ class PmiActividadVinculadasService {
                 if (!is_array($actividad) ||
                     empty($actividad) ||
                     empty($actividad['descripcion']) ||
-                    empty($actividad['peso']) ||
-                    empty($actividad['recursos']) ||
                     empty($actividad['fecha_inicio']) ||
                     empty($actividad['fecha_fin'])
                 ) {

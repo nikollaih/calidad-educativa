@@ -98,7 +98,7 @@ class PMIController extends Controller
         })
             ->where(function ($query) use ($anioInicio, $anioFin) {
                 $query->where('anio_inicio', '<=', $anioFin)
-                    ->orWhere('anio_fin', '=>', $anioInicio);
+                    ->Where('anio_fin', '=>', $anioInicio);
             })
             ->exists();
 
