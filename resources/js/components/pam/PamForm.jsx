@@ -461,7 +461,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 const unidadDescripcion2 = unidadSeleccionada ? unidadSeleccionada.unidad_total : '';
 
                 // Se crea la nueva descripción del indicador
-                const newDescription = `0 ${unidadDescripcion} de ${meta.valor_meta} ${unidadDescripcion2}`;
+                const newDescription = `(0) ${unidadDescripcion} de (${meta.valor_meta}) ${unidadDescripcion2}`;
 
                 // Comentamos lo que modificamos: Se agrega la lógica para manejar ambos escenarios.
                 // Escenario 1: No hay indicadores, se agregan automáticamente
@@ -1430,7 +1430,8 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   return (
     <div className="container py-4">
       <div className='mb-2'>
-          <CNavigationButton />
+          <CNavigationButton
+          to={'/pam/' + pamGeneralId + '/index'} />
       </div>
       <div className="card shadow">
         <div className="card-header bg-white">

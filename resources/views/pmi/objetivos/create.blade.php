@@ -8,6 +8,8 @@
         data-component="CreateObjetivoPMI"
         data-csrf-token="{{ csrf_token() }}"
         data-agregar-url="{{ route('objetivo-pmi.store') }}"
+        data-factores-criticos='@json($factoresCriticos)'
+        data-unidades-medida='@json($unidadesMedida)'
     >
     </div>
 @endsection

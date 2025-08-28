@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "preact/hooks";
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import { h } from "preact";
+import TextMultipleTags from "@/components/shared/TextMultipleTags.jsx";
 
 const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
     const [pmi] = useState(pmiData.pmiData);
@@ -78,7 +79,8 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
                         </div>
-                        <div>
+                        <div class="d-flex gap-3">
+                            <CNavigationButton label="Agregar avance" to="#" icon="fas fa-plus" />
                             <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" />
                         </div>
                     </div>
@@ -93,6 +95,7 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                 <th className="text-center">Factor Crítico</th>
                                 <th className="text-center">Objetivo</th>
                                 <th className="text-center">Meta</th>
+                                <th className="text-center">Indicador</th>
                                 <th className="text-center">Actividad</th>
                                 <th className="text-center">Recurso ($)</th>
                                 <th className="text-center">Responsable</th>
@@ -163,10 +166,51 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                             className="align-middle"
                                             style={{ verticalAlign: "middle" }}
                                         >
-                                            <div className="fw-semibold">{row?.meta?.descripcion || "Sin descripción"}</div>
-                                            <small className="text-muted">
-                                                Valor: {row?.meta?.valor_requerido || "N/A"} {row?.meta?.unidad_medida || ""}
-                                            </small>
+                                            <div className="">
+                                                {row?.meta?.descripcion || "Sin descripción"}
+                                            </div>
+                                            {( ( row?.meta?.valor_requerido !== undefined && row?.meta?.unidad_medida !==undefined ) && (
+                                                    <div className="d-flex flex-column">
+                                                        <small className="text-muted">
+                                                            <strong>Valor:</strong> {row?.meta?.valor_requerido || "N/A"}
+                                                        </small>
+                                                        <small className="text-muted">
+                                                            <strong>Unidad de
+                                                                medida:</strong> {row?.meta?.unidad_medida || ""}
+                                                        </small>
+                                                    </div>
+                                                )
+                                            )}
+                                        </td>
+                                    ) : null}
+                                    {(index === 0 || tableRows[index - 1].meta !== row.meta) ? (
+                                        <td
+                                            rowSpan={getRowSpan(index, "meta")}
+                                            className="align-middle"
+                                            style={{verticalAlign: "middle"}}
+                                        >
+                                            {(row?.meta?.valor_requerido !== undefined && row?.meta?.indicador !== undefined) ? (
+                                                <div >
+                                                    {/* Columna de fracción */}
+                                                    <div className="text-center">
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <small>{row?.meta?.indicador_info?.unidad_parcial}</small>
+                                                            <div>{row?.meta?.indicador}</div>
+                                                        </div>
+
+                                                        <hr className="my-1"/>
+
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <small>{row?.meta?.indicador_info?.unidad_total}</small>
+                                                            <div>{row?.meta?.valor_requerido}</div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div>Sin indicador</div>
+                                            )}
+
                                         </td>
                                     ) : null}
 
@@ -176,44 +220,48 @@ const FactoresCriticosTable = (pmiData = {}, institucionId = -1) => {
                                                 <div className="fw-semibold">
                                                     {row.actividad.descripcion || "Sin descripción"}
                                                 </div>
-                                                <small className="text-muted">
-                                                    Peso: {row.actividad.peso || "N/A"}%
-                                                    {row.actividad.fecha_inicio && (
-                                                        <span>
-                                                                {" "}
-                                                            | Inicio:{" "}
-                                                            {new Date(row.actividad.fecha_inicio).toLocaleDateString("es-CO")}
-                                                            </span>
-                                                    )}
-                                                    {row.actividad.fecha_fin && (
-                                                        <span>
-                                                                {" "}
-                                                            | Fin:{" "}
-                                                            {new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")}
-                                                            </span>
-                                                    )}
-                                                </small>
+                                                <div class="d-flex flex-column">
+                                                    <small className="text-muted">
+                                                        <strong>Peso:</strong>  {row.actividad.peso || "N/A"}%
+
+                                                    </small>
+                                                    <small className="text-muted">
+                                                        <strong>Inicio:</strong>
+                                                        {row.actividad.fecha_inicio && (
+                                                            new Date(row.actividad.fecha_inicio).toLocaleDateString("es-CO")
+                                                         )}
+                                                    </small>
+                                                    <small className="text-muted">
+                                                        <strong>Fin:</strong>
+                                                        {row.actividad.fecha_fin && (
+                                                            new Date(row.actividad.fecha_fin).toLocaleDateString("es-CO")
+                                                        )}
+                                                    </small>
+                                                </div>
                                             </>
                                         ) : (
-                                            <span className="text-muted fst-italic">Sin actividades</span>
+                                            <div >Sin actividades</div>
                                         )}
                                     </td>
 
                                     <td className="text-center">
                                         {row.actividad?.recursos ? (
-                                            <span className="fw-bold text-success">
-                                                    ${new Intl.NumberFormat("es-CO").format(row.actividad.recursos)}
+
+                                            <span className=" ">
+                                                    {row.actividad.recursos}
                                                 </span>
                                         ) : (
-                                            <span className="text-muted">$0</span>
+                                            <div>Sin recursos</div>
                                         )}
                                     </td>
 
                                     <td>
                                         {row.actividad?.responsables ? (
-                                            <span className="badge bg-secondary">{row.actividad.responsables}</span>
+                                            <span className=" ">
+                                                    {row.actividad.responsables}
+                                                </span>
                                         ) : (
-                                            <span className="text-muted fst-italic">Sin asignar</span>
+                                            <div>Sin asignar</div>
                                         )}
                                     </td>
                                 </tr>

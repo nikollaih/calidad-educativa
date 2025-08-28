@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -13,6 +14,26 @@ class RoleController extends Controller
     {
         $roles = Role::with('permissions')->paginate(10);
         return view('roles.index', compact('roles'));
+    }
+
+    
+    /**
+     * Obtiene todas los roles
+     *
+     * @return JsonResponse
+     */
+    public function all(): JsonResponse {
+        try {
+            // Se carga la relación con el representante para el JSON.
+            $roles = Role::get();
+            return response()->json($roles, 200);
+
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json([
+                'message' => 'Error al obtener los roles: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function create()

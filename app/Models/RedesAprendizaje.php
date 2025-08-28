@@ -17,6 +17,7 @@ class RedesAprendizaje extends Model
         'acto_administrativo_id',
         'representante_id',
         'nombre',
+        'correo',
         'descripcion',
         'numero_contacto',
     ];

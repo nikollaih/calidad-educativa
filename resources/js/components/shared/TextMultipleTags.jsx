@@ -12,23 +12,34 @@ concatenarlos uno a uno con comas
 const TextMultipleTags = ({
                               initialValue = '',
                               name = 'nombre_coordinadores',
-                              isEditable = true
+                              isEditable = true,
+                              label='Nombre del Coordinador/es',
+                              spanClass = 'border p-2 rounded  d-flex align-items-center',
+                              containerClass = 'form-control d-flex flex-wrap gap-2 p-2',
+                              onTagsChange
                           }) => {
     const [tags, setTags] = useState(
         initialValue ? initialValue.split(',').map(tag => tag.trim()).filter(Boolean) : []
     );
     const [inputValue, setInputValue] = useState('');
 
+    const updateTags = (newTags) => {
+        setTags(newTags);
+        if (typeof onTagsChange === 'function') {
+            onTagsChange(newTags.join(','));
+        }
+    };
+
     const addTag = () => {
         const trimmed = inputValue.trim();
         if (trimmed && !tags.includes(trimmed)) {
-            setTags([...tags, trimmed]);
+            updateTags([...tags, trimmed]);
         }
         setInputValue('');
     };
 
     const removeTag = (indexToRemove) => {
-        setTags(tags.filter((_, index) => index !== indexToRemove));
+        updateTags(tags.filter((_, index) => index !== indexToRemove));
     };
 
     const handleKeyDown = (e) => {
@@ -40,10 +51,10 @@ const TextMultipleTags = ({
 
     return (
         <div class="mb-3">
-            <label for={name} class="form-label">Nombre del Coordinador/es</label>
-            <div class="form-control d-flex flex-wrap gap-2 p-2" style="min-height: 58px;">
+            {label && (<label htmlFor={name} className="form-label">{label}</label>)}
+            <div class={containerClass} style="min-height: 58px;">
                 {tags.map((tag, index) => (
-                    <span class="border p-2 rounded  d-flex align-items-center">
+                    <span class={spanClass}>
                         {tag}
                         {( isEditable &&
                         <button

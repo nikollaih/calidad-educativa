@@ -211,6 +211,12 @@
                                                 <div data-i18n="Objetivos"> Objetivos</div>
                                             </a>
                                         </li>
+                                        <li class="menu-item">
+                                            <a  href="{{ url('indicadores-pmi')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-ruler-horizontal"></i>
+                                                <div data-i18n="Indicadores"> Indicadores</div>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -220,6 +226,12 @@
                             <a href="{{ url('pams/index')}}" class="menu-link">
                                 <i class="menu-icon fa-solid fa-table"></i>
                                 <div data-i18n="PAM"> PAM</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ url('red-actividades')}}" class="menu-link">
+                                <i class="menu-icon fa fa-graduation-cap"></i>
+                                <div data-i18n="Redes pedagogicas"> Redes pedagogicas</div>
                             </a>
                         </li>
                     </ul>

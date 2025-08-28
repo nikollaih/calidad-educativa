@@ -11,10 +11,15 @@ class PmiActividadVinculada extends Model
     protected $fillable = [
         'descripcion',
         'peso',
+        'accumulated',
         'responsables',
         'recursos',
         'fecha_inicio',
         'fecha_fin',
         'meta_id',
+        'afecta_indicador',
+    ];
+    protected $casts = [
+        'afecta_indicador' => 'boolean',
     ];
 }

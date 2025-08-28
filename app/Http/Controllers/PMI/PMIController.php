@@ -8,7 +8,9 @@ use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\PMI\PmiObjetivoVinculadoService;
 use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
+use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
+use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -98,7 +100,8 @@ class PMIController extends Controller
          $pmi = PMI::where('id', $pmi)
              ->with(
                  'factoresCriticos.calificacion.grupo.padre',
-                 'factoresCriticos.objetivos.metas.actividades'
+                 'factoresCriticos.objetivos.metas.actividades',
+                 'factoresCriticos.objetivos.metas.indicadorInfo'
              )
              ->first();
         return view('pmi.edit',
@@ -109,19 +112,25 @@ class PMIController extends Controller
 
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
-        $objetivos = PmiObjetivo::with('metas.actividades')->get();
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
             ->with([
                 'calificacion.grupo.padre',
                 'objetivos.metas.actividades'
             ])
             ->firstOrFail();
+        $factorCriticoCalificacion = FactorCriticoCalificacion::where('indice_calificacion',$factorCritico->calificacion_indice)
+            ->firstOrFail();
+
+        $objetivos = PmiObjetivo::with('metas.actividades')->where('factor_id',$factorCriticoCalificacion->id)->get();
+        $indicadores = PmiIndicador::get();
+
         return view('pmi.editFactorCritico',
             [
                 'factorCritico' => $factorCritico,
                 'institucionId' => $institucionId,
                 'pmiId' => $pmi,
                 'objetivos' => $objetivos,
+                'indicadores' => $indicadores,
             ]);
 
     }

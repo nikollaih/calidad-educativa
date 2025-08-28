@@ -5,13 +5,14 @@ namespace App\Models\PMI;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PmiActividad extends Model
+class PmiIndicador extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'descripcion',
         'id',
-        'meta_id',
+        'unidad_total',
+        'unidad_parcial',
     ];
-
-}
+    public function metas(){
+        return $this->hasMany(PmiMeta::class, 'indicador_id');
+    }}
