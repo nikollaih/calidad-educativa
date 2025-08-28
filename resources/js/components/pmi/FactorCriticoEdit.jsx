@@ -222,7 +222,10 @@ const FactorCriticoEdit = ({
 
     // --- Funciones de Renderizado ---
 
-    const renderActividad = (actividad, metaId, restante, sumaPesos) => {
+    const renderActividad = (actividad, metaId, restante, sumaPesos, meta) => {
+        const valorRequeridoAcumulado = calcularSumaIndicadoresMeta(meta);
+        const restanteValorRequerido = meta.valor_requerido - valorRequeridoAcumulado;
+
         return (
             <div key={actividad.id} className="card mt-3 border-info" style={{width: '100%'}}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
@@ -298,7 +301,19 @@ const FactorCriticoEdit = ({
                         {Boolean(actividad.afecta_indicador) &&
                             (
                                 <div className="col-md-6">
-                                    <label className="form-label fw-bold">Valor que aporta a la meta:</label>
+                                    <label className="form-label fw-bold">
+                                        Valor que aporta a la meta:
+                                        {restanteValorRequerido < 0 ? (
+                                            <span className="text-danger fw-bold">
+                                        Excedido por {restanteValorRequerido}
+                                        </span>
+                                        ) : (
+                                            <span className="text-primary fw-bold">
+                                        (Unidades asignables  {restanteValorRequerido})
+                                            </span>
+                                        )}
+                                    </label>
+
                                     <input
                                         type="number"
                                         className="form-control"
@@ -440,7 +455,7 @@ const FactorCriticoEdit = ({
 
                     {/* Renderizar actividades */}
                     {meta.actividades && meta.actividades.map(actividad =>
-                        renderActividad(actividad, meta.id, restante, sumaPesos)
+                        renderActividad(actividad, meta.id, restante, sumaPesos, meta)
                     )}
                 </div>
             </div>
@@ -563,8 +578,20 @@ const FactorCriticoEdit = ({
                     });
                     return; // detener envío
                 }
+
+                // validar valor requerido vs max_suma_indicador
+                const sumaIndicadores = calcularSumaIndicadoresMeta(meta);
+                if (sumaIndicadores > 0 && meta.valor_requerido !== sumaIndicadores) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en valor requerido',
+                        text: `La meta "${meta.descripcion}" tiene un valor requerido de ${meta.valor_requerido}, pero debe ser igual a la suma de los indicadores (${sumaIndicadores}).`,
+                    });
+                    return;
+                }
             }
         }
+
 
         // si pasa todas las validaciones, envía el formulario real
         e.target.submit();
@@ -577,6 +604,12 @@ const FactorCriticoEdit = ({
     // Cuánto falta para llegar a 100
     const calcularRestanteMeta = (meta) => {
         return 100 - calcularSumaPesosMeta(meta);
+    };
+    // Suma los max_suma_indicador de actividades que afectan el indicador
+    const calcularSumaIndicadoresMeta = (meta) => {
+        return (meta.actividades || [])
+            .filter(act => act.afecta_indicador)
+            .reduce((acc, act) => acc + (parseFloat(act.max_suma_indicador) || 0), 0);
     };
 
     return (
