@@ -21,6 +21,8 @@ use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIObjetivoController;
 use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\PMI\IndicadoresController;
+use App\Http\Controllers\RedesActividadesController;
+use App\Http\Controllers\RedesIntegrantesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
     Route::get('/get-componentes', [ComponenteController::class, 'all'])->name('componentes.all');
+    Route::get('/get-roles', [RoleController::class, 'all'])->name('roles.all');
     Route::get('/get-redes-aprendizajes', [RedesAprendizajeController::class, 'all'])->name('redesAprendizajes.all');
     Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
@@ -159,6 +162,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a redes de aprendizaje
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
+    // Rutas relacionadas a las actividades de redes
+    Route::resource('red-actividades', RedesActividadesController::class);
+    // Rutas relacionadas a los integrantes de redes
+    Route::resource('red-integrantes', RedesIntegrantesController::class);
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);

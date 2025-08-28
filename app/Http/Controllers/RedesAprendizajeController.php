@@ -54,9 +54,29 @@ class RedesAprendizajeController extends Controller {
         $request->validate([
             'nombre' => 'required|string',
             'descripcion' => 'nullable|string', 
-            'representante_id' => 'required|exists:users,id', 
+            'representante_id' => [
+                'required',
+                'exists:users,id',
+                // Se ha añadido la regla 'unique' para asegurar que el representante no esté en otra red,
+                // con un mensaje de error personalizado en español.
+                'unique:redes_aprendizaje,representante_id',
+            ],
             'numero_contacto' => 'nullable|string',
+            'correo' => 'required|string',
             'acto_administrativo' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'descripcion.string' => 'La descripción debe ser una cadena de texto.',
+            'representante_id.required' => 'El representante es obligatorio.',
+            'correo.required' => 'El correo es obligatorio.',
+            'representante_id.exists' => 'El representante seleccionado no es válido.',
+            'representante_id.unique' => 'El representante seleccionado ya está relacionado con otra red de aprendizaje.',
+            'numero_contacto.string' => 'El número de contacto debe ser una cadena de texto.',
+            'acto_administrativo.required' => 'El archivo del acto administrativo es obligatorio.',
+            'acto_administrativo.file' => 'El acto administrativo debe ser un archivo.',
+            'acto_administrativo.mimes' => 'El archivo del acto administrativo debe ser de tipo: pdf, doc, docx, jpeg, jpg, png, gif, svg, webp.',
+            'acto_administrativo.max' => 'El tamaño del archivo no debe superar los 10MB.',
         ]);
 
         // Se agrega la lógica para guardar el archivo.
@@ -70,12 +90,13 @@ class RedesAprendizajeController extends Controller {
 
         RedesAprendizaje::create([
             'nombre' => $request?->nombre,
+            'correo' => $request?->correo,
             'descripcion' => $request?->descripcion,
             'representante_id' => $request?->representante_id,
             'numero_contacto' => $request?->numero_contacto,
             'acto_administrativo_id' => $actoAdministrativo?->data?->id,
         ]);
-
+        
         return redirect()->route('redes-aprendizajes.index')->with('flash_success_message', 'Red de Aprendizaje creada correctamente.');
     }
 
@@ -88,6 +109,7 @@ class RedesAprendizajeController extends Controller {
         // MODIFICACION: Se actualizan las reglas de validación. El archivo ahora es opcional.
         $request->validate([
             'nombre' => 'required|string',
+            'correo' => 'required|string',
             'descripcion' => 'nullable|string',
             'representante_id' => 'required|exists:users,id',
             'numero_contacto' => 'nullable|string',
@@ -116,6 +138,7 @@ class RedesAprendizajeController extends Controller {
             $redAprendizaje->update([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
+                'correo' => $request->correo,
                 'representante_id' => $request->representante_id,
                 'numero_contacto' => $request->numero_contacto,
                 'acto_administrativo_id' => $acto_administrativo_id,
@@ -133,6 +156,7 @@ class RedesAprendizajeController extends Controller {
             $redAprendizaje->update([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
+                'correo' => $request->correo,
                 'representante_id' => $request->representante_id,
                 'numero_contacto' => $request->numero_contacto,
             ]);

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div data-component="CBackButton" data-to="{{ route('pam.index', $pamGeneralId) }}"></div>
     <div
         data-component="PamForm"
         data-pam-general-id="{{ $pamGeneralId }}"

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('acto_administrativo_id')->comment('relacion con adjuntos');
             $table->unsignedBigInteger('representante_id')->comment('relacion con users');
             $table->string('nombre');
+            $table->string('correo');
             $table->text('descripcion')->nullable();
             $table->string('numero_contacto', 15);
             $table->timestamps();
@@ -44,7 +45,7 @@ return new class extends Migration
         Schema::create('redes_actividades', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('red_aprendizaje_id');
-            $table->dateTime('fecha');
+            $table->date('fecha');
             $table->text('descripcion')->nullable();
             $table->timestamps();
 
@@ -115,13 +116,15 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('proyectos_actividades_has_adjuntos');
-        Schema::dropIfExists('proyectos_actividades');
-        Schema::dropIfExists('proyectos_transversales');
-        Schema::dropIfExists('redes_actividades_has_adjuntos');
-        Schema::dropIfExists('redes_actividades');
-        Schema::dropIfExists('integrantes');
-        Schema::dropIfExists('redes_aprendizaje');
-    }
+{
+    // Eliminar primero las tablas que tienen claves foráneas hacia otras tablas
+    Schema::dropIfExists('redes_actividades_has_adjuntos');
+    Schema::dropIfExists('proyectos_actividades_has_adjuntos');
+    Schema::dropIfExists('redes_actividades');
+    Schema::dropIfExists('proyectos_actividades');
+    Schema::dropIfExists('redes_integrantes');
+    Schema::dropIfExists('proyecto_integrantes');
+    Schema::dropIfExists('redes_aprendizaje');
+    Schema::dropIfExists('proyectos_transversales');
+}
 };

@@ -15,6 +15,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
     const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null); 
     const [representanteId, setRepresentanteId] = useState(''); // ID del representante seleccionado
     const [numeroContacto, setNumeroContacto] = useState('');
+    // MODIFICACION: Nuevo estado para el correo electrónico
+    const [correoElectronico, setCorreoElectronico] = useState('');
 
     // Estado para la lista de usuarios (representantes)
     const [usuarios, setUsuarios] = useState([]);
@@ -77,6 +79,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         setActoAdministrativoUrl(null); 
         setRepresentanteId('');
         setNumeroContacto('');
+        // MODIFICACION: Limpiar el campo de correo electrónico
+        setCorreoElectronico('');
         setCurrentRedAprendizaje(null);
         setShowModal(true);
     };
@@ -90,6 +94,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         setDescripcion(redAprendizaje.descripcion || '');
         setRepresentanteId(redAprendizaje.representante_id || '');
         setNumeroContacto(redAprendizaje.numero_contacto || '');
+        // MODIFICACION: Llenar el campo de correo electrónico
+        setCorreoElectronico(redAprendizaje.correo || '');
         setActoAdministrativo(null); // No se precarga el archivo
         // MODIFICACION: Cargar la URL del documento existente
         setActoAdministrativoUrl(redAprendizaje.acto_administrativo?.ruta || null); 
@@ -106,24 +112,33 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         setActoAdministrativoUrl(null);
         setRepresentanteId('');
         setNumeroContacto('');
+        // MODIFICACION: Limpiar el campo de correo electrónico
+        setCorreoElectronico('');
         setCurrentRedAprendizaje(null);
     };
 
     const handleSubmit = (e) => {
       // Esta función ahora solo realiza la validación.
       // Si la validación falla, se evita el envío del formulario.
-      if (!nombre.trim() || !representanteId) {
-          showAlert('Por favor, completa los campos obligatorios (Nombre y Representante).');
+      // MODIFICACION: Validar que el campo de correo no esté vacío
+      if (!nombre.trim() || !representanteId || !correoElectronico.trim()) {
+          showAlert('Por favor, completa los campos obligatorios (Nombre, Representante y Correo Electrónico).');
           e.preventDefault(); // Detiene el envío nativo del formulario
           return;
       }
+      // MODIFICACION: Validar el formato del correo electrónico
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(correoElectronico)) {
+          showAlert('Por favor, introduce un correo electrónico válido.');
+          e.preventDefault();
+          return;
+      }
+
       if (modalMode === 'agregar' && !actoAdministrativo) {
           showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
           e.preventDefault(); // Detiene el envío nativo del formulario
           return;
       }
-      // Si la validación es exitosa, no se llama a e.preventDefault()
-      // y el formulario se envía de forma nativa.
     };
     
     // Maneja la acción de eliminar
@@ -173,6 +188,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Representante</th>
+                        {/* MODIFICACION: Nueva columna para el correo electrónico */}
+                        <th>Correo Electrónico</th>
                         <th>Acto Administrativo</th>
                         <th>Acciones</th>
                     </tr>
@@ -183,6 +200,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                             <td>{redAprendizaje.nombre}</td>
                             <td>{redAprendizaje.descripcion ?? 'Sin información'}</td>
                             <td>{redAprendizaje.representante ? redAprendizaje.representante.name : 'N/A'}</td>
+                            {/* MODIFICACION: Celda para mostrar el correo electrónico */}
+                            <td>{redAprendizaje.correo ?? 'Sin información'}</td>
                             <td>
                                 {redAprendizaje.acto_administrativo?.ruta ? (
                                     <a href={`/storage/${redAprendizaje.acto_administrativo.ruta}`} target="_blank">Ver documento</a>
@@ -311,6 +330,19 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                             onInput={(e) => setNumeroContacto(e.target.value)}
                                         />
                                     </div>
+                                    {/* MODIFICACION: Nuevo campo para el correo electrónico */}
+                                    <div class="mb-3">
+                                        <label for="correoElectronico" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            id="correoElectronico"
+                                            name="correo"
+                                            value={correoElectronico}
+                                            onInput={(e) => setCorreoElectronico(e.target.value)}
+                                            required
+                                        />
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button
@@ -323,7 +355,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     <button
                                         type="submit"
                                         class="btn btn-primary"
-                                        disabled={loading || !nombre.trim() || !representanteId || (modalMode === 'agregar' && !actoAdministrativo)}
+                                        // MODIFICACION: Se agregó el campo de correo electrónico a la validación
+                                        disabled={loading || !nombre.trim() || !representanteId || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
                                     >
                                         {loading ? 'Cargando...' : modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
                                     </button>

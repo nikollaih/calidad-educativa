@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Integrante extends Model
+class RedIntegrante extends Model
 {
     use HasFactory;
 
-    protected $table = 'integrantes';
+    protected $table = 'redes_integrantes';
 
     protected $fillable = [
         'red_aprendizaje_id',

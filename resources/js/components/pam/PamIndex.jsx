@@ -291,7 +291,7 @@ const PamIndex = ({ pamGeneralId }) => {
                   <th className="align-middle" style={{ minWidth: "150px" }}>META</th>
                   <th className="align-middle">VALOR DE META</th>
                   <th className="align-middle" style={{ minWidth: "150px" }}>INDICADOR</th>
-                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIÓN</th>
+                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIONES</th>
                   <th className="align-middle">RESPONSABLE</th>
                   <th className="align-middle">RECURSOS</th>
                   <th className="align-middle">FECHA INICIO</th>

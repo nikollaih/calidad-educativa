@@ -228,6 +228,12 @@
                                 <div data-i18n="PAM"> PAM</div>
                             </a>
                         </li>
+                        <li class="menu-item">
+                            <a href="{{ url('red-actividades')}}" class="menu-link">
+                                <i class="menu-icon fa fa-graduation-cap"></i>
+                                <div data-i18n="Redes pedagogicas"> Redes pedagogicas</div>
+                            </a>
+                        </li>
                     </ul>
                 </aside>
                 <div class="layout-page">
