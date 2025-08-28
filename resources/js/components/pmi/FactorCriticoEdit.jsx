@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { route } from 'preact-router';
+import React, {useState, useEffect} from 'react';
+import {route} from 'preact-router';
 import Swal from 'sweetalert2';
 import TextMultipleTags from "@/components/shared/TextMultipleTags.jsx";
 import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
-import { h } from "preact";
+import {h} from "preact";
 
 const uniqueId = (p = 'v-') => `${p}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -43,7 +43,7 @@ const FactorCriticoEdit = ({
     const updateItemField = (items, targetId, fieldName, newValue) => {
         return items.map(item => {
             if (item.id === targetId) {
-                return { ...item, [fieldName]: newValue };
+                return {...item, [fieldName]: newValue};
             }
 
             // Buscar en metas
@@ -103,7 +103,7 @@ const FactorCriticoEdit = ({
         }));
 
         // Reset del select de metas para ese objetivo
-        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivoId]: '' }));
+        setSelectedMetaByObjetivo(prev => ({...prev, [objetivoId]: ''}));
     };
 
     // --- Funciones para agregar elementos ---
@@ -118,7 +118,7 @@ const FactorCriticoEdit = ({
 
         setFormData(prev => ({
             ...prev,
-            objetivos: [newObjetivo,...prev.objetivos]
+            objetivos: [newObjetivo, ...prev.objetivos]
         }));
     };
 
@@ -157,7 +157,7 @@ const FactorCriticoEdit = ({
                 max_suma_indicador: actividad.max_suma_indicador ?? 0,
                 afecta_indicador: actividad.afecta_indicador ?? 0,
                 responsables: '',
-                recursos:'',
+                recursos: '',
                 fecha_inicio: '',
                 fecha_fin: '',
                 meta_id: metaSeleccionada.id
@@ -168,13 +168,13 @@ const FactorCriticoEdit = ({
             ...prev,
             objetivos: prev.objetivos.map(o =>
                 o.id === objetivo.id
-                    ? { ...o, metas: [...(o.metas || []), newMeta] }
+                    ? {...o, metas: [...(o.metas || []), newMeta]}
                     : o
             )
         }));
 
         // Opcional: limpiar el select tras agregar
-        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivo.id]: '' }));
+        setSelectedMetaByObjetivo(prev => ({...prev, [objetivo.id]: ''}));
     };
 
     /**
@@ -222,9 +222,9 @@ const FactorCriticoEdit = ({
 
     // --- Funciones de Renderizado ---
 
-    const renderActividad = (actividad, metaId) => {
+    const renderActividad = (actividad, metaId, restante, sumaPesos) => {
         return (
-            <div key={actividad.id} className="card mt-3 border-info" style={{ width: '100%' }}>
+            <div key={actividad.id} className="card mt-3 border-info" style={{width: '100%'}}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                     <h6 className="mb-0">Actividad</h6>
                     <button
@@ -250,7 +250,18 @@ const FactorCriticoEdit = ({
 
                     <div className="row">
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Peso:</label>
+                            <label className="form-label fw-bold">
+                                Peso:
+                                {restante < 0 ? (
+                                    <span className="text-danger fw-bold">
+                                        Excedido por {Math.abs(restante)}%
+                                    </span>
+                                ) : (
+                                    <span className="text-primary fw-bold">
+                                    (Se ha asignado un  {sumaPesos}%)
+                                </span>
+                                )}
+                            </label>
                             <div className="input-group">
                                 <input
                                     type="number"
@@ -270,7 +281,6 @@ const FactorCriticoEdit = ({
                                 />
                                 <span className="input-group-text">%</span>
                             </div>
-
                         </div>
                         <div className="col-md-6">
                             <div className="d-flex justify-content-center align-items-center h-100">
@@ -285,18 +295,18 @@ const FactorCriticoEdit = ({
                                 />
                             </div>
                         </div>
-                        { Boolean(actividad.afecta_indicador)  &&
+                        {Boolean(actividad.afecta_indicador) &&
                             (
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold">Valor que aporta a la meta:</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            value={actividad.max_suma_indicador}
-                                            onChange={(e) =>
-                                                updateField(actividad.id, "max_suma_indicador", e.target.value)
-                                            }
-                                        />
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={actividad.max_suma_indicador}
+                                        onChange={(e) =>
+                                            updateField(actividad.id, "max_suma_indicador", e.target.value)
+                                        }
+                                    />
                                 </div>
                             )}
 
@@ -351,10 +361,34 @@ const FactorCriticoEdit = ({
     };
 
     const renderMeta = (meta, objetivoId) => {
+        const sumaPesos = calcularSumaPesosMeta(meta);
+        const restante = calcularRestanteMeta(meta);
         return (
-            <div key={meta.id} className="card mt-3 border-warning" style={{ width: '100%' }}>
+            <div key={meta.id} className="card mt-3 border-warning" style={{width: '100%'}}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Meta</h5>
+                    <div class="d-flex">
+                        <h5 className="mb-0 pr-2">Meta</h5>
+                        <div className="mb-2 px-5">
+                            <strong>Peso asignado: </strong>
+                            {sumaPesos}% &nbsp; | &nbsp;
+                            {restante > 0 && (
+                                <span className="text-success">
+                            Restante: {restante}%
+                        </span>
+                            )}
+                            {restante === 0 && (
+                                <span className="text-primary fw-bold">
+                            Completado ✅
+                        </span>
+                            )}
+                            {restante < 0 && (
+                                <span className="text-danger fw-bold">
+                            Excedido por {Math.abs(restante)}%
+                        </span>
+                            )}
+                        </div>
+                    </div>
+
                     <button
                         type="button"
                         className="btn btn-sm btn-outline-danger"
@@ -406,7 +440,7 @@ const FactorCriticoEdit = ({
 
                     {/* Renderizar actividades */}
                     {meta.actividades && meta.actividades.map(actividad =>
-                        renderActividad(actividad, meta.id)
+                        renderActividad(actividad, meta.id, restante, sumaPesos)
                     )}
                 </div>
             </div>
@@ -421,7 +455,7 @@ const FactorCriticoEdit = ({
         const selectedMetaId = selectedMetaByObjetivo[objetivo.id] || '';
 
         return (
-            <div key={objetivo.id} className="card mt-3 border-primary" style={{ width: '100%' }}>
+            <div key={objetivo.id} className="card mt-3 border-primary" style={{width: '100%'}}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                     <h3 className="mb-0">Objetivo</h3>
                     <button
@@ -472,9 +506,9 @@ const FactorCriticoEdit = ({
                                     className="form-control"
                                     value={selectedMetaId}
                                     onChange={(e) =>
-                                        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivo.id]: e.target.value }))
+                                        setSelectedMetaByObjetivo(prev => ({...prev, [objetivo.id]: e.target.value}))
                                     }
-                                    style={{ maxWidth: '100%' }}
+                                    style={{maxWidth: '100%'}}
                                 >
                                     <option value="">-- Seleccione una meta --</option>
                                     {metasParaSelect.map(meta => (
@@ -496,14 +530,15 @@ const FactorCriticoEdit = ({
                                 </button>
                             </div>
                             {metasDisponibles.length === 0 && (
-                                <small className="text-muted d-block mt-1">Este objetivo no tiene metas registradas.</small>
+                                <small className="text-muted d-block mt-1">Este objetivo no tiene metas
+                                    registradas.</small>
                             )}
                             {metasParaSelect.length === 0 && (objetivo.metas || []).length > 0 && (
-                                <small className="text-muted d-block mt-1">Ya agregaste todas las metas disponibles.</small>
+                                <small className="text-muted d-block mt-1">Ya agregaste todas las metas
+                                    disponibles.</small>
                             )}
                         </div>
                     )}
-
 
 
                     {/* Renderizar metas agregadas */}
@@ -513,6 +548,35 @@ const FactorCriticoEdit = ({
                 </div>
             </div>
         );
+    };
+    const handleSubmit = (e) => {
+        // evita que se mande automáticamente
+        e.preventDefault();
+        for (const objetivo of formData.objetivos) {
+            for (const meta of objetivo.metas || []) {
+                const restante = calcularRestanteMeta(meta);
+                if (restante !== 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en pesos',
+                        text: `La meta "${meta.descripcion}" no tiene pesos correctos. Debe sumar 100%, actualmente está en ${100-restante}%.`,
+                    });
+                    return; // detener envío
+                }
+            }
+        }
+
+        // si pasa todas las validaciones, envía el formulario real
+        e.target.submit();
+    };
+    // Calcula la suma de pesos de todas las actividades de una meta
+    const calcularSumaPesosMeta = (meta) => {
+        return (meta.actividades || []).reduce((acc, act) => acc + (parseFloat(act.peso) || 0), 0);
+    };
+
+    // Cuánto falta para llegar a 100
+    const calcularRestanteMeta = (meta) => {
+        return 100 - calcularSumaPesosMeta(meta);
     };
 
     return (
@@ -539,38 +603,68 @@ const FactorCriticoEdit = ({
                         {formData.objetivos.map(objetivo => renderObjetivo(objetivo))}
                     </div>
 
-                    <form method="POST" action={agregarUrl}>
-                        <input type="hidden" name="_token" value={csrfToken} />
+                    <form method="POST"
+                          action={agregarUrl}
+                          onSubmit={handleSubmit}
+
+                    >
+                        <input type="hidden" name="_token" value={csrfToken}/>
 
                         {/* Recorrer objetivos */}
                         {formData.objetivos.map((objetivo, i) => (
                             <React.Fragment key={objetivo.id}>
-                                <input type="hidden" name={`objetivos[${i}][id]`} value={objetivo.id} />
-                                <input type="hidden" name={`objetivos[${i}][descripcion]`} value={objetivo.descripcion} />
-                                <input type="hidden" name={`objetivos[${i}][objetivo_general_id]`} value={objetivo.objetivo_general_id || ''} />
+                                <input type="hidden" name={`objetivos[${i}][id]`} value={objetivo.id}/>
+                                <input type="hidden" name={`objetivos[${i}][descripcion]`}
+                                       value={objetivo.descripcion}/>
+                                <input type="hidden" name={`objetivos[${i}][objetivo_general_id]`}
+                                       value={objetivo.objetivo_general_id || ''}/>
 
                                 {/* Recorrer metas */}
                                 {objetivo.metas && objetivo.metas.map((meta, j) => (
                                     <React.Fragment key={meta.id}>
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][id]`} value={meta.id} />
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][descripcion]`} value={meta.descripcion} />
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][indicador_id]`} value={meta.indicador_id} />
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][valor_requerido]`} value={meta.valor_requerido} />
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][objetivo_id]`} value={meta.objetivo_id} />
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][id]`} value={meta.id}/>
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][descripcion]`}
+                                               value={meta.descripcion}/>
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][indicador_id]`}
+                                               value={meta.indicador_id}/>
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][valor_requerido]`}
+                                               value={meta.valor_requerido}/>
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][objetivo_id]`}
+                                               value={meta.objetivo_id}/>
 
                                         {/* Recorrer actividades */}
                                         {meta.actividades && meta.actividades.map((actividad, k) => (
                                             <React.Fragment key={actividad.id}>
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`} value={actividad.id} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`} value={actividad.descripcion} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`} value={actividad.peso} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][max_suma_indicador]`} value={actividad.max_suma_indicador} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][afecta_indicador]`} value={actividad.afecta_indicador} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`} value={actividad.responsables} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`} value={actividad.recursos} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_inicio]`} value={actividad.fecha_inicio} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_fin]`} value={actividad.fecha_fin} />
-                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][meta_id]`} value={actividad.meta_id} />
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`}
+                                                       value={actividad.id}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`}
+                                                       value={actividad.descripcion}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`}
+                                                       value={actividad.peso}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][max_suma_indicador]`}
+                                                       value={actividad.max_suma_indicador}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][afecta_indicador]`}
+                                                       value={actividad.afecta_indicador}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`}
+                                                       value={actividad.responsables}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`}
+                                                       value={actividad.recursos}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_inicio]`}
+                                                       value={actividad.fecha_inicio}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_fin]`}
+                                                       value={actividad.fecha_fin}/>
+                                                <input type="hidden"
+                                                       name={`objetivos[${i}][metas][${j}][actividades][${k}][meta_id]`}
+                                                       value={actividad.meta_id}/>
                                             </React.Fragment>
                                         ))}
                                     </React.Fragment>
