@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('pmi_metas', function (Blueprint $table) {
+            try{
+                $table->dropColumn('unidad_medida');
+                $table->dropColumn('valor_requerido');
+            }catch (\Illuminate\Database\QueryException $e){}
+
+            $table->unsignedBigInteger('indicador_id')
+                ->nullable(false)
+                ->after('descripcion');
+
+            $table->foreign('indicador_id')
+                ->references('id')
+                ->on('pmi_indicadors')
+                ->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('pmi_metas', function (Blueprint $table) {
+            $table->dropForeign(['indicador_id']);
+            $table->dropColumn('indicador_id');
+        });
+    }
+};

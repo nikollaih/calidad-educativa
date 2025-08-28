@@ -11,7 +11,7 @@ class PmiActividadService {
             // Recorre los registros
             foreach ($actividadesArray as $key => $actividad) {
 
-                if (!is_array($actividad) || empty($actividad) || empty($actividad['descripcion']) || empty($actividad['peso'] )) {
+                if (!is_array($actividad) || empty($actividad) || empty($actividad['descripcion']) ) {
                     continue;
                 }
                 $actividad['meta_id'] = $metaId;
@@ -21,7 +21,7 @@ class PmiActividadService {
                 array_push($ids, $actividadUpdated->id);
             }
             // Elimina los sobrantes
-        PmiActividad::where('meta_id',$metaId)->whereNotIn('id', $ids)->delete();
+            PmiActividad::where('meta_id',$metaId)->whereNotIn('id', $ids)->delete();
     }
 
 }

@@ -14,7 +14,7 @@ class PmiObjetivoVinculado extends Model
         'factor_id',
     ];
     public function factor(){
-        $this->belongsTo(FactorCritico::class, 'factor_id','id');
+      return  $this->belongsTo(FactorCritico::class, 'factor_id','id');
     }
     public function metas(){
         return $this->hasMany(PmiMetaVinculada::class, 'objetivo_id','id');

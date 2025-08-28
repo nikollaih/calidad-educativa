@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { route } from 'preact-router';
 import Swal from 'sweetalert2';
+import TextMultipleTags from "@/components/shared/TextMultipleTags.jsx";
+import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
+import { h } from "preact";
 
-const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1, institucionId = -1, objetivosGenerales, agregarUrl = '' }) => {
+const uniqueId = (p = 'v-') => `${p}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+const FactorCriticoEdit = ({
+                               id,
+                               csrfToken = '',
+                               factorCritico = {},
+                               pmiId = -1,
+                               institucionId = -1,
+                               objetivosGenerales,
+                               agregarUrl = '',
+                               indicadores = []
+                           }) => {
     const [formData, setFormData] = useState({
         objetivos: [], // Array de objetivos
     });
-    const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [originalData, setOriginalData] = useState(null);
+
+    // Mapa objetivoId -> metaId seleccionada en el select
+    const [selectedMetaByObjetivo, setSelectedMetaByObjetivo] = useState({});
 
     useEffect(() => {
-        if(factorCritico.objetivos.length > 0){
-             console.log('primera carga');
-
+        if (factorCritico?.objetivos?.length > 0) {
             setFormData(prev => ({
                 objetivos: factorCritico.objetivos
             }));
         }
+    }, []);
 
-    },[]);
+    useEffect(() => {
+        console.log('formData', formData);
+    }, [formData]);
+
     /**
      * Helper para encontrar y actualizar un campo específico de un elemento anidado
      */
@@ -60,16 +77,15 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
     };
 
     /**
-     * Función para manejar la selección de un objetivo del dropdown
+     * Al seleccionar un objetivo general: setea su descripción e ID,
+     * limpia metas y resetea la meta seleccionada para ese objetivo.
      */
     const handleObjetivoChange = (objetivoId, objetivoGeneralSeleccionadoId) => {
         const objetivoGeneralSeleccionado = objetivosGenerales.find(
-            obj => obj.id === parseInt(objetivoGeneralSeleccionadoId)
+            obj => obj.id === parseInt(objetivoGeneralSeleccionadoId, 10)
         );
 
         if (!objetivoGeneralSeleccionado) return;
-
-        const generateUniqueId = () =>'virtual-unique-id' + Date.now() + Math.random();
 
         setFormData(prevData => ({
             ...prevData,
@@ -79,92 +95,22 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                         ...objetivo,
                         descripcion: objetivoGeneralSeleccionado.descripcion,
                         objetivo_general_id: objetivoGeneralSeleccionado.id,
-                        metas: objetivoGeneralSeleccionado.metas ?
-                            objetivoGeneralSeleccionado.metas.map(meta => ({
-                                id: generateUniqueId(),
-                                descripcion: meta.descripcion,
-                                unidad_medida: meta.unidad_medida,
-                                valor_requerido: meta.valor_requerido,
-                                objetivo_id: objetivoId,
-                                actividades: meta.actividades ? meta.actividades.map(actividad => ({
-                                    id: generateUniqueId(),
-                                    descripcion: actividad.descripcion,
-                                    peso: actividad.peso,
-                                    responsables: '',
-                                    fecha_inicio: '',
-                                    fecha_fin: '',
-                                    meta_id: meta.id
-                                })) : []
-                            })) : objetivo.metas || []
+                        metas: [] // Se agregan con el botón "Agregar meta"
                     };
                 }
                 return objetivo;
             })
         }));
+
+        // Reset del select de metas para ese objetivo
+        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivoId]: '' }));
     };
-
-    // Cargar datos cuando el componente se monta
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-
-                if (!id || isNaN(id)) {
-                    setIsEditing(false);
-                    setIsLoading(false);
-                    return;
-                }
-
-                const response = await fetch(`/pam/get-pam/${id}`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP! Estado: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data) {
-                    const data = result.data;
-                    setIsEditing(true);
-                    setOriginalData(data);
-
-                    // Mapear los datos del backend a la nueva estructura
-                    const mappedData = {
-                        objetivos: data.objetivos || []
-                    };
-                    setFormData(mappedData);
-
-                } else {
-                    throw new Error(result.message || 'Formato de datos inesperado');
-                }
-            } catch (err) {
-                console.error('Error al cargar datos:', err);
-                Swal.fire({
-                    title: 'Error',
-                    text: `No se pudo cargar el registro: ${err.message}`,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    route('/pam');
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [id]);
 
     // --- Funciones para agregar elementos ---
 
     const agregarObjetivo = () => {
         const newObjetivo = {
-            id: `objetivo-virtual-${Date.now()}`,
+            id: `objetivo-virtual-${uniqueId()}`,
             descripcion: '',
             objetivo_general_id: null,
             metas: []
@@ -172,59 +118,69 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
 
         setFormData(prev => ({
             ...prev,
-            objetivos: [...prev.objetivos, newObjetivo]
+            objetivos: [newObjetivo,...prev.objetivos]
         }));
     };
 
-    const addMeta = (objetivoId) => {
+    const addMetaFromSelect = (objetivo) => {
+        const selectedMetaId = selectedMetaByObjetivo[objetivo.id];
+        if (!selectedMetaId) return;
+
+        const objetivoGeneral = objetivosGenerales.find(obj => obj.id === objetivo.objetivo_general_id);
+        const metaSeleccionada = objetivoGeneral?.metas?.find(m => m.id === parseInt(selectedMetaId, 10));
+        if (!metaSeleccionada) return;
+
+        // Evitar agregar duplicados: comparamos por el ID real de la meta origen
+        const yaExiste = (objetivo.metas || []).some(m => m.__source_meta_id === metaSeleccionada.id);
+        if (yaExiste) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Meta ya agregada',
+                text: 'Esta meta ya se encuentra en el listado.',
+                timer: 1800,
+                showConfirmButton: false
+            });
+            return;
+        }
+
         const newMeta = {
-            id: `meta-virtual-${Date.now()}`,
-            descripcion: '',
-            unidad_medida: '',
-            valor_requerido: 0,
-            objetivo_id: objetivoId,
-            actividades: []
+            id: `meta-virtual-${uniqueId()}`,
+            __source_meta_id: metaSeleccionada.id, // solo para control interno (no se envía)
+            descripcion: metaSeleccionada.descripcion,
+            indicador_id: metaSeleccionada.indicador_id ?? '',
+            valor_requerido: metaSeleccionada.valor_requerido ?? 0,
+            objetivo_id: objetivo.id,
+            actividades: (metaSeleccionada.actividades || []).map(actividad => ({
+                id: `actividad-virtual-${uniqueId()}`,
+                descripcion: actividad.descripcion,
+                peso: actividad.peso ?? 0,
+                max_suma_indicador: actividad.max_suma_indicador ?? 0,
+                afecta_indicador: actividad.afecta_indicador ?? 0,
+                responsables: '',
+                recursos:'',
+                fecha_inicio: '',
+                fecha_fin: '',
+                meta_id: metaSeleccionada.id
+            }))
         };
 
         setFormData(prev => ({
             ...prev,
-            objetivos: prev.objetivos.map(objetivo =>
-                objetivo.id === objetivoId
-                    ? { ...objetivo, metas: [...objetivo.metas, newMeta] }
-                    : objetivo
+            objetivos: prev.objetivos.map(o =>
+                o.id === objetivo.id
+                    ? { ...o, metas: [...(o.metas || []), newMeta] }
+                    : o
             )
         }));
-    };
 
-    const addActividad = (metaId) => {
-        const newActividad = {
-            id: `actividad-virtual-${Date.now()}`,
-            descripcion: '',
-            peso: 0,
-            responsables: '',
-            recursos: '',
-            fecha_inicio: '',
-            fecha_fin: '',
-            meta_id: metaId
-        };
-
-        setFormData(prev => ({
-            ...prev,
-            objetivos: prev.objetivos.map(objetivo => ({
-                ...objetivo,
-                metas: objetivo.metas.map(meta =>
-                    meta.id === metaId
-                        ? { ...meta, actividades: [...meta.actividades, newActividad] }
-                        : meta
-                )
-            }))
-        }));
+        // Opcional: limpiar el select tras agregar
+        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivo.id]: '' }));
     };
 
     /**
      * Función para eliminar elementos
      */
-    const removeElement = (type, itemId, parentId = null) => {
+    const removeElement = (type, itemId) => {
         if (!confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
             return;
         }
@@ -242,7 +198,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                         ...prev,
                         objetivos: prev.objetivos.map(objetivo => ({
                             ...objetivo,
-                            metas: objetivo.metas.filter(meta => meta.id !== itemId)
+                            metas: (objetivo.metas || []).filter(meta => meta.id !== itemId)
                         }))
                     };
 
@@ -251,9 +207,9 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                         ...prev,
                         objetivos: prev.objetivos.map(objetivo => ({
                             ...objetivo,
-                            metas: objetivo.metas.map(meta => ({
+                            metas: (objetivo.metas || []).map(meta => ({
                                 ...meta,
-                                actividades: meta.actividades.filter(act => act.id !== itemId)
+                                actividades: (meta.actividades || []).filter(act => act.id !== itemId)
                             }))
                         }))
                     };
@@ -271,6 +227,13 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
             <div key={actividad.id} className="card mt-3 border-info" style={{ width: '100%' }}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                     <h6 className="mb-0">Actividad</h6>
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => removeElement('actividad', actividad.id)}
+                    >
+                        <i className="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
@@ -288,57 +251,78 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                     <div className="row">
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Peso:</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={actividad.peso}
-                                onChange={(e) => updateField(actividad.id, 'peso', parseFloat(e.target.value) || 0)}
-                                placeholder="0"
-                                min="0"
-                                max="100"
-                                step="0.01"
-                                disabled={true}
+                            <div className="input-group">
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    value={actividad.peso}
+                                    onChange={(e) =>
+                                        updateField(
+                                            actividad.id,
+                                            "peso",
+                                            parseFloat(e.target.value) || 0
+                                        )
+                                    }
+                                    placeholder="0"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                />
+                                <span className="input-group-text">%</span>
+                            </div>
+
+                        </div>
+                        <div className="col-md-6">
+                            <div className="d-flex justify-content-center align-items-center h-100">
+                                <label className="form-label fw-bold  m-0 px-2">Sumará a la meta:</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    checked={actividad.afecta_indicador}
+                                    onChange={(e) =>
+                                        updateField(actividad.id, "afecta_indicador", e.target.checked ? 1 : 0)
+                                    }
+                                />
+                            </div>
+                        </div>
+                        { Boolean(actividad.afecta_indicador)  &&
+                            (
+                                <div className="col-md-6">
+                                    <label className="form-label fw-bold">Valor que aporta a la meta:</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={actividad.max_suma_indicador}
+                                            onChange={(e) =>
+                                                updateField(actividad.id, "max_suma_indicador", e.target.value)
+                                            }
+                                        />
+                                </div>
+                            )}
+
+                        <div className="col-md-6">
+                            <label className="form-label fw-bold">Responsables:</label>
+                            <TextMultipleTags
+                                initialValue={actividad.responsables}
+                                label={""}
+                                onTagsChange={(joinedTags) => {
+                                    updateField(actividad.id, 'responsables', joinedTags)
+                                }}
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Responsables:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={actividad.responsables}
-                                onChange={(e) => updateField(actividad.id, 'responsables', e.target.value)}
-                                placeholder="Nombre de los  Responsables"
-                                required={true}
-
+                            <label className="form-label fw-bold">Recursos:</label>
+                            <TextMultipleTags
+                                initialValue={actividad.recursos}
+                                label={""}
+                                onTagsChange={(joinedTags) => {
+                                    updateField(actividad.id, 'recursos', joinedTags)
+                                }}
                             />
                         </div>
                     </div>
 
                     <div className="row mt-3">
-                        <div className="col-md-6">
-                            <label className="form-label fw-bold">Recursos:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={
-                                    actividad.recursos === null || actividad.recursos === undefined || actividad.recursos === ''
-                                        ? ''
-                                        : new Intl.NumberFormat('es-CO').format(actividad.recursos)
-                                }
-                                onChange={(e) => {
-                                    // Solo números
-                                    const raw = e.target.value.replace(/\D+/g, '');
-                                    // Convertir a entero o vacío
-                                    const numberValue = raw === '' ? '' : parseInt(raw, 10);
-                                    updateField(actividad.id, 'recursos', numberValue);
-                                }}
-                                placeholder="Ejm: 12.000"
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                required={true}
-                            />
-                        </div>
-
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Fecha de Inicio:</label>
                             <input
@@ -371,6 +355,13 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
             <div key={meta.id} className="card mt-3 border-warning" style={{ width: '100%' }}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Meta</h5>
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => removeElement('meta', meta.id)}
+                    >
+                        <i className="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
@@ -388,13 +379,16 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                     <div className="row">
                         <div className="col-md-6">
                             <label className="form-label fw-bold">Unidad de Medida:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={meta.unidad_medida}
-                                onChange={(e) => updateField(meta.id, 'unidad_medida', e.target.value)}
-                                placeholder="Ej: Cantidad, Porcentaje, etc."
-                                disabled={true}
+                            <CAutocompleteFromArray
+                                data={indicadores}
+                                isEditable={false}
+                                initialValue={meta.indicador_id}
+                                fieldName={"indicador_id"}
+                                searchFields={['unidad_total', 'unidad_parcial']}
+                                labelFields={['unidad_parcial', 'unidad_total']}
+                                onSelect={(unidadMedida) => {
+                                    updateField(meta.id, 'indicador_id', unidadMedida.id)
+                                }}
                             />
                         </div>
                         <div className="col-md-6">
@@ -403,14 +397,12 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                                 type="number"
                                 className="form-control"
                                 value={meta.valor_requerido}
-                                onChange={(e) => updateField(meta.id, 'valor_requerido', parseInt(e.target.value) || 0)}
+                                onChange={(e) => updateField(meta.id, 'valor_requerido', parseInt(e.target.value, 10) || 0)}
                                 placeholder="0"
                                 min="0"
-                                disabled={true}
                             />
                         </div>
                     </div>
-
 
                     {/* Renderizar actividades */}
                     {meta.actividades && meta.actividades.map(actividad =>
@@ -422,10 +414,23 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
     };
 
     const renderObjetivo = (objetivo) => {
+        // Metas disponibles según objetivo + filtradas para no repetir las ya agregadas
+        const metasDisponibles = objetivosGenerales.find(obj => obj.id === objetivo.objetivo_general_id)?.metas || [];
+        const metasYaAgregadasIds = new Set((objetivo.metas || []).map(m => m.__source_meta_id).filter(Boolean));
+        const metasParaSelect = metasDisponibles.filter(m => !metasYaAgregadasIds.has(m.id));
+        const selectedMetaId = selectedMetaByObjetivo[objetivo.id] || '';
+
         return (
             <div key={objetivo.id} className="card mt-3 border-primary" style={{ width: '100%' }}>
                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                     <h3 className="mb-0">Objetivo</h3>
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => removeElement('objetivo', objetivo.id)}
+                    >
+                        <i className="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
@@ -449,8 +454,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                             ))}
                         </select>
                     </div>
-
-                    {/* Mostrar la descripción completa del objetivo seleccionado */}
+                    {/* Descripción completa del objetivo seleccionado */}
                     {objetivo.descripcion && (
                         <div className="mt-3">
                             <div className="alert alert-info">
@@ -459,8 +463,50 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                             </div>
                         </div>
                     )}
+                    {/* Select de metas + botón agregar */}
+                    {objetivo.objetivo_general_id && (
+                        <div className="mb-3">
+                            <label className="form-label fw-bold">Metas del objetivo:</label>
+                            <div className="d-flex gap-2">
+                                <select
+                                    className="form-control"
+                                    value={selectedMetaId}
+                                    onChange={(e) =>
+                                        setSelectedMetaByObjetivo(prev => ({ ...prev, [objetivo.id]: e.target.value }))
+                                    }
+                                    style={{ maxWidth: '100%' }}
+                                >
+                                    <option value="">-- Seleccione una meta --</option>
+                                    {metasParaSelect.map(meta => (
+                                        <option key={meta.id} value={meta.id}>
+                                            {meta.descripcion.length > 120
+                                                ? meta.descripcion.substring(0, 120) + "..."
+                                                : meta.descripcion}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-primary"
+                                    onClick={() => addMetaFromSelect(objetivo)}
+                                    disabled={!selectedMetaId}
+                                    title={!selectedMetaId ? 'Seleccione una meta' : 'Agregar meta'}
+                                >
+                                    <i className="fas fa-plus-circle"></i> Agregar meta
+                                </button>
+                            </div>
+                            {metasDisponibles.length === 0 && (
+                                <small className="text-muted d-block mt-1">Este objetivo no tiene metas registradas.</small>
+                            )}
+                            {metasParaSelect.length === 0 && (objetivo.metas || []).length > 0 && (
+                                <small className="text-muted d-block mt-1">Ya agregaste todas las metas disponibles.</small>
+                            )}
+                        </div>
+                    )}
 
-                    {/* Renderizar las metas existentes */}
+
+
+                    {/* Renderizar metas agregadas */}
                     {objetivo.metas && objetivo.metas.map(meta =>
                         renderMeta(meta, objetivo.id)
                     )}
@@ -468,17 +514,6 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
             </div>
         );
     };
-
-    if (isLoading) {
-        return (
-            <div className="container py-4 text-center">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Cargando...</span>
-                </div>
-                <p className="mt-2">Cargando datos del registro...</p>
-            </div>
-        );
-    }
 
     return (
         <div className="container py-4">
@@ -497,8 +532,9 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                         className="btn btn-success mb-4"
                         onClick={agregarObjetivo}
                     >
-                        <i className="bi bi-plus-circle"></i> Agregar Objetivo
+                        <i className="fas fa-plus-circle"></i> Agregar Objetivo
                     </button>
+
                     <div id="objetivos-container">
                         {formData.objetivos.map(objetivo => renderObjetivo(objetivo))}
                     </div>
@@ -518,7 +554,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                                     <React.Fragment key={meta.id}>
                                         <input type="hidden" name={`objetivos[${i}][metas][${j}][id]`} value={meta.id} />
                                         <input type="hidden" name={`objetivos[${i}][metas][${j}][descripcion]`} value={meta.descripcion} />
-                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][unidad_medida]`} value={meta.unidad_medida} />
+                                        <input type="hidden" name={`objetivos[${i}][metas][${j}][indicador_id]`} value={meta.indicador_id} />
                                         <input type="hidden" name={`objetivos[${i}][metas][${j}][valor_requerido]`} value={meta.valor_requerido} />
                                         <input type="hidden" name={`objetivos[${i}][metas][${j}][objetivo_id]`} value={meta.objetivo_id} />
 
@@ -528,6 +564,8 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][id]`} value={actividad.id} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][descripcion]`} value={actividad.descripcion} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][peso]`} value={actividad.peso} />
+                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][max_suma_indicador]`} value={actividad.max_suma_indicador} />
+                                                <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][afecta_indicador]`} value={actividad.afecta_indicador} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][responsables]`} value={actividad.responsables} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][recursos]`} value={actividad.recursos} />
                                                 <input type="hidden" name={`objetivos[${i}][metas][${j}][actividades][${k}][fecha_inicio]`} value={actividad.fecha_inicio} />
@@ -545,15 +583,7 @@ const FactorCriticoEdit = ({ id, csrfToken = '', factorCritico = {}, pmiId = -1,
                             className="btn btn-primary me-2"
                             disabled={formData.objetivos.length === 0}
                         >
-                            <i className="bi bi-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}
-                        </button>
-
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            onClick={() => window.location.href = "/pam/index"}
-                        >
-                            <i className="bi bi-arrow-left"></i> Volver al listado
+                            <i className="fas fa-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}
                         </button>
                     </form>
 

@@ -211,6 +211,12 @@
                                                 <div data-i18n="Objetivos"> Objetivos</div>
                                             </a>
                                         </li>
+                                        <li class="menu-item">
+                                            <a  href="{{ url('indicadores-pmi')}}" class="menu-link">
+                                                <i class="menu-icon fas fa-ruler-horizontal"></i>
+                                                <div data-i18n="Indicadores"> Indicadores</div>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>

@@ -33,7 +33,7 @@ class AdjuntoService {
                 $adjuntoCreated = Adjunto::create($adjuntoInfo);
                 return Result::success(msg:'Archivo guardado exitosamente',data: $adjuntoCreated);
              }
-            return Result::error(msg:'Error al guardar el archivo');
+            return Result::error(msg:'Error al guardar el archivo' . $adjuntoInfo['nombre_completo']);
     }
     public  function storeFavicon(UploadedFile $favicon): Result
     {

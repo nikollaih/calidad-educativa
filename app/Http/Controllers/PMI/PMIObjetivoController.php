@@ -5,7 +5,9 @@ namespace App\Http\Controllers\PMI;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\PmiMetaService;
+use App\Models\FactorCriticoCalificacion;
 use App\Models\PMI\PmiActividad;
+use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiMeta;
 use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
@@ -24,7 +26,14 @@ class PMIObjetivoController extends Controller
     }
 
     public function create() {
-        return view('pmi.objetivos.create');
+        $factoresCriticos = FactorCriticoCalificacion::get();
+        $unidadesMedida = PmiIndicador::get();
+        return view('pmi.objetivos.create',
+            [
+                'factoresCriticos' => $factoresCriticos,
+                'unidadesMedida' => $unidadesMedida
+            ]
+        );
     }
     public function edit(int $objetivo_pmi){
         $objetivo = PmiObjetivo::with('metas.actividades')
@@ -34,8 +43,13 @@ class PMIObjetivoController extends Controller
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
+        $factoresCriticos = FactorCriticoCalificacion::get();
+        $unidadesMedida = PmiIndicador::get();
         return view('pmi.objetivos.edit', [
             'objetivo' => $objetivo,
+            'factoresCriticos' => $factoresCriticos,
+            'unidadesMedida' => $unidadesMedida
+
         ]);
     }
     public function show(int $objetivo_pmi)
@@ -47,17 +61,22 @@ class PMIObjetivoController extends Controller
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
+        $factoresCriticos = FactorCriticoCalificacion::get();
+        $unidadesMedida = PmiIndicador::get();
         return view('pmi.objetivos.show', [
             'objetivo' => $objetivo,
+            'factoresCriticos' => $factoresCriticos,
+            'unidadesMedida' => $unidadesMedida
         ]);
     }
     public function store(Request $request) {
         $input =  $request->all();
         $objetivoData['descripcion'] = $input['descripcion'];
+        $objetivoData['factor_id'] = $input['factor_id'];
         $metas = $input['metas'];
         if( isset ($input['id']) && !empty ($input['id'])  ){
             $objetivo = PmiObjetivo::find($input['id']);
-            $objetivo->descripcion = $objetivoData['descripcion'];
+            $objetivo->fill($objetivoData);
             $objetivo->save();
         }else{
             $objetivo = PmiObjetivo::create($objetivoData);

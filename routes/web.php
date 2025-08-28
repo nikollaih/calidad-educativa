@@ -20,6 +20,7 @@ use App\Http\Controllers\ModeloPedagogicoController;
 use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIObjetivoController;
 use App\Http\Controllers\RedesAprendizajeController;
+use App\Http\Controllers\PMI\IndicadoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,14 +162,22 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
-
+    // Ruta que obtiene las actividades de un pmi
+    Route::get('/pmi/get-actividades/{pmiId}',[PMIController::class, 'actividadesByPmi'])->name('pmi.get-actividades');
+    // Ruta que obtiene la lista de avances de una actividad
+    Route::get('/pmi/get-avances-actividad/{actividadId}',[PMIController::class, 'avancesActividadByActividadId'])->name('pmi.get-avances-actividad');
+    // Ruta para registrar un avance de pmi
+    Route::post('/pmi/guardar-avance-actividad', [PMIController::class, 'storeActividadAvance'])->name('pmi.guardar-avance-actividad');
     Route::post('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'actualizarFactorCritico'])
         ->name('pmi.actualizar-factor-critico');
     Route::get('/{institucionId}/pmi/{pmi}/edit/factor-critico/{factorCriticoId}',[PMIController::class, 'editFactorCritico'])
         ->name('pmi.edit-factor-critico');
+    Route::post('/{institucionId}/pmi/{pmiId}/presentar', [PMIController::class, 'presentarPmi'])
+        ->name('pmi.presentar-pmi');
 
     Route::resource('/{institucionId}/pmi', PMIController::class);
     Route::resource('objetivo-pmi', PMIObjetivoController::class);
+    Route::resource('indicadores-pmi',IndicadoresController::class);
 
 });
 

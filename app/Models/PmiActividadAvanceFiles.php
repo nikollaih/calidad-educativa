@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Models\PMI;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PmiActividad extends Model
+class PmiActividadAvanceFiles extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'descripcion',
-        'id',
-        'meta_id',
+        'avance_id',
+        'file_id',
     ];
-
 }

@@ -10,9 +10,8 @@ class PmiMeta extends Model
     use HasFactory;
     protected $fillable = [
         'descripcion',
-        'unidad_medida',
-        'valor_requerido',
         'objetivo_id',
+        'indicador_id'
     ];
 
     public function actividades(){
