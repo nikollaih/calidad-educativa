@@ -48,7 +48,6 @@ class RedesActividadesController extends Controller {
             'redActividades' => $redActividades,
             'integrantes' => $redIntegrantes,
             'isRelatedToRed' => $isRelatedToRed,
-            // 'isRelatedToRed' => false,
         ]);
     }
 

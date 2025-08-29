@@ -27,7 +27,7 @@ export default function ListaRedActividades({
     { id: 1, name: 'Líder' },
     { id: 2, name: 'Integrante' },
     { id: 3, name: 'Aliado' }
-];
+  ];
   // Estado para la lista de redes de aprendizaje
   const [redes, setRedes] = useState(redesAprendizajes);
 
@@ -57,6 +57,9 @@ export default function ListaRedActividades({
   const [currentShareItem, setCurrentShareItem] = useState(null); // NUEVO: Item a compartir
   const [rolesList, setRolesList] = useState([]); // NUEVO: Lista de roles para compartir
   const [selectedRole, setSelectedRole] = useState(''); // NUEVO: Rol seleccionado para compartir
+  // CAMBIO: Estado para la descripción del correo en el modal de compartir
+  const [shareDescription, setShareDescription] = useState('');
+
 
   // Estado para la lista de usuarios (representantes)
   const [usuarios, setUsuarios] = useState([]);
@@ -176,7 +179,7 @@ export default function ListaRedActividades({
     setCurrentIntegrante(integrante);
     setIntegranteNombre(integrante.nombre || '');
     setIntegranteCorreo(integrante.correo || ''); // NUEVO
-    setIntegranteContacto(integrante.numero_contacto || ''); // CAMBIO: Se corrigió la propiedad de contacto
+    setIntegranteContacto(integrante.telefono || ''); // CAMBIO: Se corrigió la propiedad de contacto
     setIntegranteActividad(integrante.actividad_id || '');
     setIntegranteRol(integrante.rol || ''); // NUEVO
     setShowIntegranteModal(true);
@@ -192,131 +195,138 @@ export default function ListaRedActividades({
     setCurrentIntegrante(null);
   };
   
+  // CAMBIO: Función para manejar la eliminación con confirmación
+  const handleDeleteConfirm = (id, type) => {
+    showConfirm('¿Estás seguro de que quieres eliminar este registro? Esta acción es irreversible.', () => handleDelete(id, type));
+  };
+  
   // Maneja la acción de eliminar (se mantiene)
   const handleDelete = async (id, type) => {
-    showConfirm('¿Estás seguro de que quieres eliminar este registro?', async () => {
-        setLoading(true);
-        try {
-            const url = type === 'actividad' ? `red-actividades/${id}` : `/integrantes/${id}`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'X-HTTP-Method-Override': 'DELETE' 
-                },
-                body: JSON.stringify({ _method: 'DELETE', _token: csrfToken }),
-            });
+    setLoading(true);
+    try {
+        const url = type === 'actividad' ? `red-actividades/${id}` : `/red-integrantes/${id}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'X-HTTP-Method-Override': 'DELETE' 
+            },
+            body: JSON.stringify({ _method: 'DELETE', _token: csrfToken }),
+        });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error en el servidor');
-            }
-            // Lógica para actualizar el estado
-            if (type === 'actividad') {
-                window.location.reload(); 
-            } else {
-                window.location.reload();
-            }
-        } catch (error) {
-            showAlert(`Error al eliminar: ${error.message}`);
-        } finally {
-            setLoading(false);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error en el servidor');
         }
-    });
+        // Lógica para actualizar el estado
+        if (type === 'actividad') {
+            handleCloseActividadModal();
+        } else {
+            handleCloseIntegranteModal();
+            // CAMBIO: Guarda el tab activo en localStorage antes de recargar
+            localStorage.setItem('activeTab', 'integrantes');
+        }
+        
+        window.location.reload();
+
+    } catch (error) {
+        showAlert(`Error al eliminar: ${error.message}`);
+    } finally {
+        setLoading(false);
+    }
   };
 
   // CAMBIO: Se modifica la función para realizar envíos de forma nativa
   const handleFormSubmit = async (e, type) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    setLoading(true);
+      setLoading(true);
 
-    let url = '';
-    let formData = new FormData(); // Usamos FormData para manejar los archivos y datos
+      let url = '';
+      let formData = new FormData();
 
       if (type === 'actividad') {
-        // Validación de campos obligatorios
-        if (!actividadFecha.trim() || !actividadDescripcion.trim()) {
-          showAlert('Por favor, completa los campos obligatorios (Fecha y Descripción).');
-          setLoading(false);
-          return;
-        }
-        
-        // CAMBIO: La URL de la petición.
-        url = modalActividadMode === 'editar' ? `/red-actividades/${currentActividad.id}` : agregarUrl;
-
-        // CAMBIO: Se añaden todos los datos al objeto FormData
-        formData.append('_token', csrfToken);
-        formData.append('fecha', actividadFecha);
-        formData.append('descripcion', actividadDescripcion);
-
-        // CAMBIO: Si es edición, se añade el método de sobreescritura
-        if (modalActividadMode === 'editar') {
-          formData.append('_method', 'PUT');
-        }
-        
-        // CAMBIO: Se añaden los archivos al FormData. ¡Esto es lo que soluciona el problema!
-        // Se itera sobre la lista de archivos adjuntos.
-        actividadAdjuntos.forEach((file) => {
-          // Se verifica que sea una instancia de File (un archivo nuevo subido).
-          // Los archivos existentes ya se manejan en el backend.
-          if (file instanceof File) {
-            // Se añade el archivo al FormData con el mismo nombre que espera el backend ('adjuntos[]').
-            formData.append('adjuntos[]', file);
+          if (!actividadFecha.trim() || !actividadDescripcion.trim()) {
+              showAlert('Por favor, completa los campos obligatorios (Fecha y Descripción).');
+              setLoading(false);
+              return;
           }
-        });
-        
+
+          url = modalActividadMode === 'editar' ? `/red-actividades/${currentActividad.id}` : agregarUrl;
+
+          formData.append('_token', csrfToken);
+          formData.append('fecha', actividadFecha);
+          formData.append('descripcion', actividadDescripcion);
+
+          if (modalActividadMode === 'editar') {
+              formData.append('_method', 'PUT');
+          }
+
+          actividadAdjuntos.forEach((file) => {
+              if (file instanceof File) {
+                  formData.append('adjuntos[]', file);
+              }
+          });
+
       } else if (type === 'integrante') {
-        // Validación de campos obligatorios
-        if (!integranteNombre.trim()) {
-          showAlert('Por favor, completa el campo obligatorio (Nombre).');
+          // Validación de campos obligatorios para integrantes
+          if (!integranteNombre.trim() || !integranteCorreo.trim() || !integranteContacto.trim() || !integranteRol) {
+            showAlert('Por favor, asegúrese de que todos los campos obligatorios estén completos.');
+            setLoading(false);
+            return;
+        }
+
+          url = modalIntegranteMode === 'editar' ? `/red-integrantes/${currentIntegrante.id}` : '/red-integrantes';
+
+          formData.append('_token', csrfToken);
+          formData.append('nombre', integranteNombre);
+          formData.append('correo', integranteCorreo);
+          formData.append('telefono', integranteContacto);
+          formData.append('rol', integranteRol);
+
+          if (modalIntegranteMode === 'editar') {
+              formData.append('_method', 'PUT');
+          }
+      }
+
+      try {
+          const response = await fetch(url, {
+              method: 'POST',
+              body: formData,
+          });
+
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Error en el servidor');
+          }
+
+          if (type === 'actividad') {
+              handleCloseActividadModal();
+          } else {
+              handleCloseIntegranteModal();
+              // CAMBIO: Guarda el tab activo en localStorage antes de recargar
+              localStorage.setItem('activeTab', 'integrantes');
+          }
+          
+          window.location.reload();
+      } catch (error) {
+          showAlert(`Error al guardar: ${error.message}`);
+      } finally {
           setLoading(false);
-          return;
-        }
-
-        url = modalIntegranteMode === 'editar' ? `/red-integrantes/${currentIntegrante.id}` : '/red-integrantes';
-
-        // CAMBIO: Se añaden los datos del integrante al FormData
-        formData.append('_token', csrfToken);
-        formData.append('nombre', integranteNombre);
-        formData.append('correo', integranteCorreo);
-        formData.append('numero_contacto', integranteContacto);
-        formData.append('actividad_id', integranteActividad);
-        formData.append('rol', integranteRol);
-
-        // Si es edición, se añade el método PUT
-        if (modalIntegranteMode === 'editar') {
-          formData.append('_method', 'PUT');
-        }
       }
-
-      // CAMBIO: Se realiza la petición con Fetch API en lugar de un submit nativo
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData, // Se envía el objeto FormData directamente
-        // NOTA: No es necesario especificar el 'Content-Type' para FormData,
-        // el navegador lo hace automáticamente y lo configura como 'multipart/form-data'.
-      });
-
-      console.log('response', response);
-      
-
-      console.log('type', type);
-      
-      setLoading(false);
-      // Después de un envío exitoso, se cierran los modales y se actualiza la UI.
-      if (type === 'actividad') {
-        handleCloseActividadModal();
-        window.location.reload();
-      } else {
-        handleCloseIntegranteModal();
-        setActiveTab('integrantes')
-      }
-
-
   };
 
+
+useEffect(() => {
+  // Se lee el tab guardado en localStorage al cargar el componente
+  const savedTab = localStorage.getItem('activeTab');
+  if (savedTab) {
+    setActiveTab(savedTab);
+    // Se elimina el valor de localStorage para que la próxima carga sea normal
+    localStorage.removeItem('activeTab');
+  }
+}, []);
   // CAMBIO: Se llama a la nueva función de envío
   const handleActividadSubmit = (e) => handleFormSubmit(e, 'actividad');
   const handleIntegranteSubmit = (e) => handleFormSubmit(e, 'integrante');
@@ -351,7 +361,8 @@ export default function ListaRedActividades({
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': csrfToken,
         },
-        body: JSON.stringify({ role: selectedRole, _token: csrfToken }),
+        // CAMBIO: Se incluye la descripción en el cuerpo de la petición
+        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken }),
       });
 
       if (!response.ok) {
@@ -362,6 +373,7 @@ export default function ListaRedActividades({
       showAlert('Elemento compartido con éxito.');
       setShowShareModal(false);
       setSelectedRole('');
+      setShareDescription(''); // CAMBIO: Se limpia el estado de la descripción al cerrar el modal
     } catch (error) {
       showAlert(`Error al compartir: ${error.message}`);
     } finally {
@@ -372,16 +384,16 @@ export default function ListaRedActividades({
 
   // Función para renderizar la tabla de actividades
   const renderActividadesTable = () => (
-    <div class="mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <div className="mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Lista de Actividades</h4>
-        <button class="btn btn-primary" onClick={handleAgregarActividadClick}>
+        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
           {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-          <i class="fa fa-plus me-2"></i>Agregar Actividad
+          <i className="fa fa-plus me-2"></i>Agregar Actividad
         </button>
       </div>
-      <table class="table table-striped table-hover">
-        <thead class="bg-primary text-white">
+      <table className="table table-striped table-hover">
+        <thead className="bg-primary text-white">
           <tr>
             <th>Fecha</th>
             <th>Descripción</th>
@@ -402,7 +414,7 @@ export default function ListaRedActividades({
                       onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
                       className="btn btn-info btn-sm me-2"
                     >
-                      <i class="fa fa-eye text-white"></i>
+                      <i className="fa fa-eye text-white"></i>
                     </button>
                   )}
                   {/* NUEVO: Botón de compartir */}
@@ -410,21 +422,21 @@ export default function ListaRedActividades({
                     onClick={() => handleCompartirClick(actividad, 'actividad')}
                     className="btn btn-secondary btn-sm me-2"
                   >
-                    <i class="fa fa-share-alt text-white"></i>
+                    <i className="fa fa-share-alt text-white"></i>
                   </button>
                   {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
                   <button
                     onClick={() => handleEditarActividadClick(actividad)}
                     className="btn btn-warning btn-sm me-2"
                   >
-                    <i class="fa fa-pen-to-square text-white"></i>
+                    <i className="fa fa-pen-to-square text-white"></i>
                   </button>
                   {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(actividad.id, 'actividad')}
+                    onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
                   >
-                    <i class="fa fa-trash-alt text-white"></i>
+                    <i className="fa fa-trash-alt text-white"></i>
                   </button>
                 </td>
               </tr>
@@ -441,17 +453,17 @@ export default function ListaRedActividades({
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
-    <div class="mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <div className="mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Lista de Integrantes</h4>
-        <button class="btn btn-primary" onClick={handleAgregarIntegranteClick}>
+        <button className="btn btn-primary" onClick={handleAgregarIntegranteClick}>
           {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-          <i class="fa fa-plus me-2"></i>Agregar Integrante
+          <i className="fa fa-plus me-2"></i>Agregar Integrante
         </button>
       </div>
 
-      <table class="table table-striped table-hover">
-        <thead class="bg-primary text-white">
+      <table className="table table-striped table-hover">
+        <thead className="bg-primary text-white">
           <tr>
             <th>Nombre</th>
             <th>Contacto</th>
@@ -476,14 +488,14 @@ export default function ListaRedActividades({
                     onClick={() => handleEditarIntegranteClick(integrante)}
                     className="btn btn-warning btn-sm me-2"
                   >
-                    <i class="fa fa-pen-to-square text-white"></i>
+                    <i className="fa fa-pen-to-square text-white"></i>
                   </button>
                   {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(integrante.id, 'integrante')}
+                    onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
                   >
-                    <i class="fa fa-trash-alt text-white"></i>
+                    <i className="fa fa-trash-alt text-white"></i>
                   </button>
                 </td>
               </tr>
@@ -497,7 +509,7 @@ export default function ListaRedActividades({
       </table>
     </div>
   );
-
+  
   return (
     <div className="container mt-4">
       <h2 className="mb-4 text-center">Gestión de Redes de Aprendizaje y Actividades</h2>
@@ -537,10 +549,13 @@ export default function ListaRedActividades({
             <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
               <div className="modal-dialog modal-lg">
                 <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">
-                      {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
-                    </h5>
+                  <div className="modal-header d-flex justify-content-between align-items-center">
+                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                    <div className="d-flex align-items-center me-3">
+                      <h5 className="modal-title me-4">
+                        {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
+                      </h5>
+                    </div>
                     <button
                       type="button"
                       className="btn-close"
@@ -638,10 +653,13 @@ export default function ListaRedActividades({
             <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
               <div className="modal-dialog modal-lg">
                 <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">
-                      {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
-                    </h5>
+                  <div className="modal-header d-flex justify-content-between align-items-center">
+                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                    <div className="d-flex align-items-center me-3">
+                      <h5 className="modal-title me-4">
+                        {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
+                      </h5>
+                    </div>
                     <button
                       type="button"
                       className="btn-close"
@@ -651,7 +669,7 @@ export default function ListaRedActividades({
                   <form onSubmit={handleIntegranteSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="integranteNombre" className="form-label">Nombre<span className="text-danger">*</span></label>
+                        <label htmlFor="integranteNombre" className="form-label">Nombre <span className="text-danger">*</span></label>
                         <input
                           type="text"
                           className="form-control"
@@ -661,7 +679,7 @@ export default function ListaRedActividades({
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico</label>
+                        <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico <span className="text-danger">*</span></label>
                         <input
                           type="email"
                           className="form-control"
@@ -671,7 +689,7 @@ export default function ListaRedActividades({
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteContacto" className="form-label">Número de contacto</label>
+                        <label htmlFor="integranteContacto" className="form-label">Número de contacto <span className="text-danger">*</span></label>
                         <input
                           type="text"
                           className="form-control"
@@ -681,7 +699,7 @@ export default function ListaRedActividades({
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteRol" className="form-label">Rol</label>
+                        <label htmlFor="integranteRol" className="form-label">Rol <span className="text-danger">*</span></label>
                         <select
                             className="form-control"
                             id="integranteRol"
@@ -774,6 +792,18 @@ export default function ListaRedActividades({
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
                           ))}
                         </select>
+                      </div>
+                      {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
+                      <div className="mb-3">
+                        <label htmlFor="shareDescription" className="form-label">Descripción para el correo</label>
+                        <textarea
+                          id="shareDescription"
+                          className="form-control"
+                          rows="3"
+                          value={shareDescription}
+                          onChange={(e) => setShareDescription(e.target.value)}
+                        ></textarea>
+                        <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
                       </div>
                     </div>
                     <div className="modal-footer">
