@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'preact/hooks';
 import { render } from 'preact'; // Needed for external mounting, if applicable
 
-const VerAvance = ({ accionId, onClose }) => {
+const VerAvance = ({ accionId, onClose, meta, valorMeta }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [avances, setAvances] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [totalCantidad, setTotalCantidad] = useState(0);
 
     const closeModal = () => {
         setIsOpen(false);
@@ -31,6 +32,9 @@ const VerAvance = ({ accionId, onClose }) => {
                 }
                 const data = await response.json();
                 setAvances(data);
+                
+                const total = data.reduce((sum, avance) => sum + (avance.cantidad_ejecutada || 0), 0);
+                setTotalCantidad(total);
             } catch (err) {
                 console.error('Error al cargar avances:', err);
                 setError('Error al cargar los avances: ' + err.message);
@@ -60,10 +64,27 @@ const VerAvance = ({ accionId, onClose }) => {
             <div className="modal-dialog modal-xl"> {/* modal-xl for wider content */}
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="viewAdvancesModalLabel">Avances de la Acción</h5>
+                        <div className='d-flex gap-3'>
+                            <h5 className="modal-title" id="viewAdvancesModalLabel">Avances de la Acción</h5>
+                            <div className="d-flex align-items-center">
+                                <h6 className="mb-0 me-3">
+                                    <span className="badge bg-primary text-white">Valor Meta: {valorMeta || 'N/A'}</span>
+                                </h6>
+                                <h6 className="mb-0">
+                                    <span className="badge bg-success text-white">Total Avances: {totalCantidad}</span>
+                                </h6>
+                            </div>
+                        </div>
                         <button type="button" className="btn-close" onClick={closeModal} aria-label="Cerrar"></button>
                     </div>
                     <div className="modal-body">
+                        {/* COMENTARIO: Se agregó un recuadro para la descripción de la meta para manejar textos largos. */}
+                        {meta && (
+                            <div className="alert alert-secondary py-2" role="alert">
+                                <strong>Meta:</strong> {meta}
+                            </div>
+                        )}
+                        
                         {loading && <p>Cargando avances...</p>}
                         {error && <div className="alert alert-danger">{error}</div>}
                         {!loading && !error && (
@@ -91,9 +112,9 @@ const VerAvance = ({ accionId, onClose }) => {
                                                             <div className="d-flex flex-wrap gap-2">
                                                                 {avance.archivos_adjuntos.map(file => (
                                                                     <div key={file.id} className="mb-1">
-                                                                        <a 
-                                                                            href={file.url} 
-                                                                            target="_blank" 
+                                                                        <a
+                                                                            href={file.url}
+                                                                            target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             className="btn btn-sm btn-outline-primary d-flex align-items-center"
                                                                             title={`Descargar ${file.nombre}`}

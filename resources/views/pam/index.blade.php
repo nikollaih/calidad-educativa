@@ -5,6 +5,7 @@
         data-component="PamIndex"
         data-csrf-token="{{ csrf_token() }}"
         data-pam-general-id="{{ $pamGeneralId }}"
+        data-is-in-proceso="{{ json_encode($isInProceso) }}"
     ></div>
     
     @vite('resources/js/app.js')

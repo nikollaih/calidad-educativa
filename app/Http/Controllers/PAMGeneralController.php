@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PamGeneralExport;
 use App\Http\Requests\StorePamGeneralRowRequest;
+use App\Models\Enums\PamEstadoEnum;
 use App\Models\Pam;
 use App\Models\PamGeneralAccion;
 use App\Models\PamGeneralAvance;
@@ -103,6 +104,7 @@ class PAMGeneralController extends Controller {
 
         // Formatear a 2 dígitos con ceros a la izquierda
         $pamData['consecutivo'] = str_pad($nextConsecutivo, 2, '0', STR_PAD_LEFT);
+        $pamData['estado'] = PamEstadoEnum::Proceso->value;
 
         Pam::create($pamData);
 
@@ -147,5 +149,16 @@ class PAMGeneralController extends Controller {
         $pam->update($data);
 
         return redirect()->route('pams.index')->with('success', 'Pam actualizado correctamente.');
+    }
+
+    
+    public function presentarPam(Request $request, int $pamId) {
+        $pam = Pam::findOrFail($pamId);
+        $pam->estado = PamEstadoEnum::Presentado->value;
+        $pam->save();
+
+        return  redirect()
+            ->route('pams.index')
+            ->with('flash_success_message', 'Pam presentado correctamente.');
     }
 }

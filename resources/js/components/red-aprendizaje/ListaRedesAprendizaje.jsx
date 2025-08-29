@@ -176,7 +176,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Redes de Aprendizajes</h2>
+            <h2 class="mb-4">Redes de Aprendizaje</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
                 Agregar red de aprendizaje
             </button>

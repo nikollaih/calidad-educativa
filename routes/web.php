@@ -145,6 +145,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [PAMGeneralController::class, 'store'])->name('pams.store');
         Route::get('/{id}/edit', [PAMGeneralController::class, 'edit'])->name('pams.edit');
         Route::put('/{id}', [PAMGeneralController::class, 'update'])->name('pams.update');
+        Route::post('/{pamId}/presentar', [PAMGeneralController::class, 'presentarPam'])
+        ->name('pam.presentar-pam');
     });
     Route::prefix('pei')->group(function () {
         // Route::get('/autoevaluation'             , [PEIController::class, 'autoevaluation']);

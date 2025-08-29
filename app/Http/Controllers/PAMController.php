@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\PamExport;
 use App\Http\Requests\StorePamRowRequest;
+use App\Models\Enums\PamEstadoEnum;
 use App\Models\Indicador;
+use App\Models\Pam;
 use App\Models\PamAccion;
 use App\Models\PamAvance;
 use App\Models\PamComponente;
@@ -33,8 +35,11 @@ class PAMController extends Controller {
      *
      */
     public function index(int $pamId): View {
+        $isInProceso = Pam::find($pamId)->estado === PamEstadoEnum::Proceso->value;
+
         return view('pam.index', [
             'pamGeneralId' => $pamId,
+            'isInProceso' => $isInProceso,
         ]);
     }
 
@@ -549,28 +554,6 @@ class PAMController extends Controller {
                 'accion_id' => $meta?->Indicador?->accionHasOne?->id,
                 'cantidad_ejecutada' => $validatedData['cantidad_ejecutada'],
                 'observacion' => $validatedData['observacion'],
-            ]);
-
-            // Actualiza el indicador aumentando la cantidad ejecutada
-            $oldIndicador = $meta?->Indicador?->descripcion;
-            $newIndicador = preg_replace_callback(
-                 // Patrón de búsqueda: encuentra el primer número entre paréntesis
-                '/\((\d+)\)/',
-                function ($matches) use ($avance) {
-                    // Obtenemos el número encontrado en el primer grupo de captura
-                    $oldValue = (int) $matches[1];
-                    // Sumamos la cantidad ejecutada
-                    $newValue = $oldValue + $avance->cantidad_ejecutada;
-                    // Retornamos la nueva cadena para el reemplazo
-                    return "({$newValue})";
-                },
-                $oldIndicador,
-                1
-            );
-
-            // Actualiza indicador
-            $meta?->Indicador?->update([
-                'descripcion' => $newIndicador,
             ]);
 
             // Verificar si la solicitud contiene archivos en el campo 'archivos_adjuntos'

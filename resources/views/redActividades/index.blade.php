@@ -10,6 +10,7 @@
         data-component="ListaRedActividades"
         data-csrf-token="{{ csrf_token() }}"
         data-redes-actividades='{!! json_encode($redActividades) !!}'
+        data-is-related-to-red='{!! json_encode($isRelatedToRed) !!}'
         data-integrantes='{!! json_encode($integrantes) !!}'
         data-agregar-url="{{ route('red-actividades.store') }}">
     </div>

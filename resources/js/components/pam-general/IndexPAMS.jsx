@@ -36,7 +36,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
         return `${dia}/${mes}/${anio} ${horaFormateada}`;
     };
 
-    const deleteRow = async (id, index) => {
+    const deleteRow = async (id) => {
         try {
         const result = await Swal.fire({
             title: '¿Estás seguro?',
@@ -82,6 +82,55 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
             );
         }
     };
+
+    // [MODIFICACIÓN] Nueva función para manejar el clic del botón "Presentar PAM".
+    // Muestra un modal de confirmación antes de enviar el formulario.
+    const handlePresentarClick = async (id) => {
+        try {
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                // [MODIFICACIÓN] Mensaje específico para esta acción.
+                text: "Una vez presentado, el estado del PAM no se podrá revertir.",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#6c757d', // Color gris para el botón de cancelar
+                confirmButtonText: 'Sí, presentar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            });
+
+            if (result.isConfirmed) {
+                // [MODIFICACIÓN] En lugar de un formulario, se realiza una petición POST asíncrona.
+                const response = await fetch(`/pams/${id}/presentar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al presentar el registro');
+                }
+
+                await Swal.fire(
+                    '¡Presentado!',
+                    'El registro ha sido presentado exitosamente.',
+                    'success'
+                );
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error al presentar:', error);
+            Swal.fire(
+                'Error',
+                'No se pudo presentar el registro: ' + error.message,
+                'error'
+            );
+        }
+    };
+
     // Renderiza el JSX del componente.
     return (
         <div class="container mt-4">
@@ -95,8 +144,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                 <thead>
                     <tr>
                         <th>VIGENCIA</th>
-                        <th>DESCRIPCIÓN</th>
                         <th>FECHA DE CREACIÓN</th>
+                        <th>ESTADO</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
@@ -105,8 +154,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                         pams.map((pam) => (
                             <tr key={pam.id}>
                                 <td>{pam.anio_inicio} - {pam.anio_fin}</td>
-                                <td>{pam.descripcion || <span className="text-muted">Sin descripción</span>}</td>
                                 <td>{formatFecha(pam.created_at)}</td>
+                                <td>{pam.estado}</td>
                                 <td>
                                     <a href={`/pams/${pam.id}/edit`} className="btn btn-warning btn-sm me-2" >
                                         Editar
@@ -117,12 +166,23 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                     </a>
                                     
                                     <button 
-                                        className="btn btn-sm btn-danger"
+                                        className="btn btn-sm btn-danger me-2" // [MODIFICACIÓN] Agregado margen para separar los botones.
                                         onClick={() => deleteRow(pam.id)}
                                         title="Eliminar PAM"
                                     >
-                                    Eliminar
+                                        Eliminar
                                     </button>
+                                    { Boolean(pam.estado == "Proceso") && (
+                                        // Se cambió el tipo de botón a "button" para que no envíe el formulario.
+                                        <button 
+                                            type="button"
+                                            className="btn btn-success btn-sm"
+                                            onClick={() => handlePresentarClick(pam.id)}
+                                            alt="Presentar PAM"
+                                        >
+                                            Presentar PAM
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))

@@ -5,13 +5,15 @@ import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
 import VerAvance from './VerAvance';
 
-const PamIndex = ({ pamGeneralId }) => {
+const PamIndex = ({ pamGeneralId, isInProceso }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCrearAvance, setShowCrearAvance] = useState(false);
   const [showAvancesModal, setShowAvancesModal] = useState(false);
   const [selectedAccionId, setSelectedAccionId] = useState(null);
+  const [selectedMeta, setSelectedMeta] = useState(null);
+  const [selectedValorMeta, setSelectedValorMeta] = useState(null);
 
 
   // Función para obtener el token CSRF
@@ -19,13 +21,19 @@ const PamIndex = ({ pamGeneralId }) => {
     return document.querySelector('meta[name="csrf-token"]')?.content || '';
   };
 
-  const openAvancesModal = (accionId) => {
+  const openAvancesModal = (accionId, meta, valorMeta) => {
+    console.log(accionId, meta, valorMeta);
+    
       setSelectedAccionId(accionId);
+      setSelectedMeta(meta);
+      setSelectedValorMeta(valorMeta);
       setShowAvancesModal(true);
   };
 
   const closeAvancesModal = () => {
       setShowAvancesModal(false);
+      setSelectedMeta(null);
+      setSelectedValorMeta(null);
       setSelectedAccionId(null);
   };
 
@@ -267,13 +275,17 @@ const PamIndex = ({ pamGeneralId }) => {
     <div className="container-fluid mt-4">
       <div className="d-flex justify-content-start gap-2 mb-4">
         {/* <CBackButton /> */}
-        <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
-        <CNavigationButton
-          label="Crear avance"
-          to="#"
-          icon="fas fa-history"
-          onClick={openCrearAvance}
-        />
+        {isInProceso && (
+          <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
+        )}
+        {!isInProceso && (
+          <CNavigationButton
+            label="Crear avance"
+            to="#"
+            icon="fas fa-history"
+            onClick={openCrearAvance}
+          />
+        )}
         <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable}/>
         <CNavigationButton
           label="Vista completa"
@@ -319,26 +331,30 @@ const PamIndex = ({ pamGeneralId }) => {
                       <div className="d-flex justify-content-center gap-2">
                         <button
                             className="btn btn-sm btn-info text-white"
-                            onClick={() => openAvancesModal(row.id)}
+                            onClick={() => openAvancesModal(row.id, row.meta.descripcion, row.meta.valor_meta)}
                             title="Ver Avances"
                         >
                             <i className="fas fa-eye"></i>
                         </button>
-                        <a
-                          href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
-                          className="btn btn-sm btn-primary"
-                          title="Editar registro"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </a>
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => deleteRow(row.id)}
-                          disabled={isLoading}
-                          title="Eliminar registro"
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
+                        {isInProceso && (
+                          <a
+                            href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
+                            className="btn btn-sm btn-primary"
+                            title="Editar registro"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </a>
+                        )}
+                        {isInProceso && (
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => deleteRow(row.id)}
+                            disabled={isLoading}
+                            title="Eliminar registro"
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -361,6 +377,8 @@ const PamIndex = ({ pamGeneralId }) => {
             <VerAvance
                 accionId={selectedAccionId}
                 onClose={closeAvancesModal}
+                meta={selectedMeta}
+                valorMeta={selectedValorMeta}
             />
         )}
       </div>

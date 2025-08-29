@@ -465,7 +465,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 const unidadDescripcion2 = unidadSeleccionada ? unidadSeleccionada.unidad_total : '';
 
                 // Se crea la nueva descripción del indicador
-                const newDescription = `(0) ${unidadDescripcion} de (${meta.valor_meta}) ${unidadDescripcion2}`;
+                const newDescription = `${unidadDescripcion} / ${unidadDescripcion2}`;
 
                 // Comentamos lo que modificamos: Se agrega la lógica para manejar ambos escenarios.
                 // Escenario 1: No hay indicadores, se agregan automáticamente
