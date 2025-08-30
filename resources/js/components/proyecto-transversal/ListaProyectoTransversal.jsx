@@ -189,6 +189,12 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                 >
                                     Eliminar
                                 </button>
+                                <a
+                                    href={`/${proyectoTransversal.id}/proyecto-transversal-actividades`}
+                                    className="btn btn-info btn-sm"
+                                >
+                                    Actividades e integrantes
+                                </a>
                             </td>
                         </tr>
                     ))}

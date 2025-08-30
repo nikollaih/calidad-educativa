@@ -21,6 +21,7 @@ use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIObjetivoController;
 use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\PMI\IndicadoresController;
+use App\Http\Controllers\ProyectoTransversalActividadesController;
 use App\Http\Controllers\ProyectoTransversalController;
 use App\Http\Controllers\RedesActividadesController;
 use App\Http\Controllers\RedesIntegrantesController;
@@ -168,6 +169,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
     // Rutas relacionadas a las actividades de redes
     Route::resource('red-actividades', RedesActividadesController::class);
+    // Rutas relacionadas a las actividades de redes
+    Route::resource('{proyectoTransversalId}/proyecto-transversal-actividades', ProyectoTransversalActividadesController::class);
     // Rutas relacionadas a los integrantes de redes
     Route::resource('red-integrantes', RedesIntegrantesController::class);
     // Rutas relacionadas a ajustes
