@@ -8,6 +8,7 @@
             <a href="{{ route('institution.pei', $institucionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
             <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluacion</a>
             <a href="#" class="btn btn-secondary  btn-sm">PMI</a>
+            <a href="{{ route('proyectos_transversales.index', $institucionId) }}" class="btn btn-outline-warning btn-sm">Proyectos transversales</a>
         </div>
     </div>
     <div

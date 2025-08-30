@@ -1,0 +1,361 @@
+import { h } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
+
+export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, csrfToken = '' }) {
+    console.log([agregarUrl, proyectosTransversales, institucionId, csrfToken]);
+
+    // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
+    const [showModal, setShowModal] = useState(false);
+    const [modalMode, setModalMode] = useState('agregar');
+    const [currentProyectoTransversal, setCurrentProyectoTransversal] = useState(null);
+
+    // Nuevos estados para los campos del formulario
+    const [nombre, setNombre] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    const [actoAdministrativo, setActoAdministrativo] = useState(null); // Para el nuevo archivo
+    // MODIFICACION: Nuevo estado para almacenar la URL del documento existente
+    const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null); 
+    const [numeroContacto, setNumeroContacto] = useState('');
+    // MODIFICACION: Nuevo estado para el correo electrónico
+    // const [correoElectronico, setCorreoElectronico] = useState('');
+
+    // Estados para los modales de alerta y confirmación
+    const [showAlertModal, setShowAlertModal] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    // Estado para la lista de redes de aprendizaje
+    const [proyectos, setProyectos] = useState(proyectosTransversales);
+
+    // Función para mostrar el modal de alerta
+    const showAlert = (message) => {
+        setAlertMessage(message);
+        setShowAlertModal(true);
+    };
+
+    // Función para mostrar el modal de confirmación
+    const showConfirm = (message, action) => {
+        setAlertMessage(message);
+        setConfirmAction(() => action);
+        setShowConfirmModal(true);
+    };
+
+    const handleAgregarClick = () => {
+        setModalMode('agregar');
+        // Limpiar todos los estados del formulario al agregar
+        setNombre('');
+        setDescripcion('');
+        setActoAdministrativo(null);
+        // MODIFICACION: Limpiar la URL del documento
+        setActoAdministrativoUrl(null); 
+        setNumeroContacto('');
+        // MODIFICACION: Limpiar el campo de correo electrónico
+        // setCorreoElectronico('');
+        setCurrentProyectoTransversal(null);
+        setShowModal(true);
+    };
+
+    const handleEditarClick = (proyectoTransversal) => {
+        
+        setModalMode('editar');
+        // Llenar el formulario con los datos de la proyecto transversal actual
+        setCurrentProyectoTransversal(proyectoTransversal);
+        setNombre(proyectoTransversal.nombre || '');
+        setDescripcion(proyectoTransversal.descripcion || '');
+        setNumeroContacto(proyectoTransversal.numero_contacto || '');
+        // MODIFICACION: Llenar el campo de correo electrónico
+        // setCorreoElectronico(proyectoTransversal.correo || '');
+        setActoAdministrativo(null); // No se precarga el archivo
+        // MODIFICACION: Cargar la URL del documento existente
+        setActoAdministrativoUrl(proyectoTransversal.acto_administrativo?.ruta || null); 
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        // Limpiar todos los estados al cerrar el modal
+        setNombre('');
+        setDescripcion('');
+        setActoAdministrativo(null);
+        // MODIFICACION: Limpiar la URL del documento
+        setActoAdministrativoUrl(null);
+        setNumeroContacto('');
+        // MODIFICACION: Limpiar el campo de correo electrónico
+        // setCorreoElectronico('');
+        setCurrentProyectoTransversal(null);
+    };
+
+    const handleSubmit = (e) => {
+      // Esta función ahora solo realiza la validación.
+      // Si la validación falla, se evita el envío del formulario.
+      // MODIFICACION: Validar que el campo de correo no esté vacío
+    //   if (!nombre.trim() || !correoElectronico.trim()) {
+      if (!nombre.trim()) {
+          showAlert('Por favor, completa el nombre.');
+          e.preventDefault(); // Detiene el envío nativo del formulario
+          return;
+      }
+      // MODIFICACION: Validar el formato del correo electrónico
+    //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //   if (!emailRegex.test(correoElectronico)) {
+    //       showAlert('Por favor, introduce un correo electrónico válido.');
+    //       e.preventDefault();
+    //       return;
+    //   }
+
+      if (modalMode === 'agregar' && !actoAdministrativo) {
+          showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
+          e.preventDefault(); // Detiene el envío nativo del formulario
+          return;
+      }
+    };
+    
+    // Maneja la acción de eliminar
+    const handleDelete = async (id) => {
+        showConfirm('¿Estás seguro de que quieres eliminar esta proyecto transversal?', async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`proyectos-transversales/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-HTTP-Method-Override': 'DELETE' // Para simular el método DELETE en Laravel
+                    },
+                    body: JSON.stringify({ _method: 'DELETE', _token: csrfToken }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Error en el servidor');
+                }
+
+                // Filtrar la proyecto transversal eliminada del estado
+                setProyectos(prevRedes => prevRedes.filter(red => red.id !== id));
+                showAlert('Red de aprendizaje eliminada con éxito.');
+
+            } catch (error) {
+                showAlert(`Error al eliminar: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        });
+    };
+
+
+    return (
+        <div class="container mt-4">
+            <h2 class="mb-4">Proyectos transversales</h2>
+            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                Agregar proyecto transversal
+            </button>
+            {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        {/* <th>Correo Electrónico</th> */}
+                        <th>Acto Administrativo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {proyectos.map((proyectoTransversal) => (
+                        <tr key={proyectoTransversal.id}>
+                            <td>{proyectoTransversal.nombre}</td>
+                            <td>{proyectoTransversal.descripcion ?? 'Sin información'}</td>
+                            {/* <td>{proyectoTransversal.correo ?? 'Sin información'}</td> */}
+                            <td>
+                                {proyectoTransversal.acto_administrativo?.ruta ? (
+                                    <a href={`/storage/${proyectoTransversal.acto_administrativo.ruta}`} target="_blank">Ver documento</a>
+                                ) : (
+                                    'sin información'
+                                )}
+                            </td>
+                            <td>
+                                <button
+                                    onClick={() => handleEditarClick(proyectoTransversal)}
+                                    className="btn btn-warning btn-sm me-2"
+                                >
+                                    Editar
+                                </button>
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => handleDelete(proyectoTransversal.id)}
+                                >
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* Modal de formulario (agregar/editar) */}
+            {showModal && (
+                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    {modalMode === 'agregar' ? 'Agregar proyecto transversal' : 'Editar proyecto transversal'}
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    onClick={handleCloseModal}
+                                ></button>
+                            </div>
+                            <form
+                                action={modalMode === 'agregar' ? agregarUrl : `/${institucionId}/proyectos-transversales/${currentProyectoTransversal.id}`}
+                                method="POST"
+                                enctype="multipart/form-data"
+                                onSubmit={handleSubmit}
+                            >
+                                <div class="modal-body">
+                                    {modalMode === 'editar' && (
+                                        <input type="hidden" name="_method" value="PUT" />
+                                    )}
+                                    <input type="hidden" name="_token" value={csrfToken} />
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="nombre"
+                                            name="nombre"
+                                            value={nombre}
+                                            onInput={(e) => setNombre(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <textarea
+                                            class="form-control"
+                                            id="descripcion"
+                                            name="descripcion"
+                                            value={descripcion}
+                                            onInput={(e) => setDescripcion(e.target.value)}
+                                            rows="3"
+                                        ></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="actoAdministrativo" class="form-label">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
+                                        {/* MODIFICACION: Mostrar el documento actual y la opción de reemplazarlo */}
+                                        {modalMode === 'editar' && actoAdministrativoUrl && (
+                                            <div class="mb-2">
+                                                <p>Documento actual: <a href={`/storage/${actoAdministrativoUrl}`} target="_blank">Ver documento</a></p>
+                                                <small class="form-text text-muted">Selecciona un nuevo archivo para reemplazar el actual.</small>
+                                            </div>
+                                        )}
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="actoAdministrativo"
+                                            name="acto_administrativo"
+                                            onChange={(e) => setActoAdministrativo(e.target.files[0])}
+                                            required={modalMode === 'agregar'}
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="numeroContacto" class="form-label">Número de Contacto</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="numeroContacto"
+                                            name="numero_contacto"
+                                            value={numeroContacto}
+                                            onInput={(e) => setNumeroContacto(e.target.value)}
+                                        />
+                                    </div>
+                                    {/* MODIFICACION: Nuevo campo para el correo electrónico */}
+                                    {/* <div class="mb-3">
+                                        <label for="correoElectronico" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            id="correoElectronico"
+                                            name="correo"
+                                            value={correoElectronico}
+                                            onInput={(e) => setCorreoElectronico(e.target.value)}
+                                            required
+                                        />
+                                    </div> */}
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        onClick={handleCloseModal}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        // MODIFICACION: Se agregó el campo de correo electrónico a la validación
+                                        // disabled={loading || !nombre.trim() || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
+                                        disabled={loading || !nombre.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
+                                    >
+                                        {loading ? 'Cargando...' : modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Modal de alerta personalizado */}
+            {showAlertModal && (
+                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Alerta</h5>
+                                <button type="button" class="btn-close" onClick={() => setShowAlertModal(false)}></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{alertMessage}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmación personalizado */}
+            {showConfirmModal && (
+                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmación</h5>
+                                <button type="button" class="btn-close" onClick={() => setShowConfirmModal(false)}></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{alertMessage}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                                <button type="button" class="btn btn-danger" onClick={() => {
+                                    if (confirmAction) {
+                                        confirmAction();
+                                    }
+                                    setShowConfirmModal(false);
+                                }}>Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}

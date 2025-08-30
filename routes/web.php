@@ -21,6 +21,7 @@ use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\PMI\PMIObjetivoController;
 use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\PMI\IndicadoresController;
+use App\Http\Controllers\ProyectoTransversalController;
 use App\Http\Controllers\RedesActividadesController;
 use App\Http\Controllers\RedesIntegrantesController;
 
@@ -90,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('institution/{autoevaluacionId}/autoevaluaciones-validar/' , [InstitutionController::class, 'autoevaluacionesValidar'])->name('institution.autoevaluaciones-validar');
 
         Route::resource('institution'             , InstitutionController::class);
+        Route::get('{institutionId}/proyectos-transversales', [ProyectoTransversalController::class, 'index'])->name('proyectos_transversales.index');
         Route::get('institution/{institutionId}/pei', [InstitutionController::class, 'pei'])->name('institution.pei');
         Route::get('institution/{institutionId}/update-pei', [InstitutionController::class, 'peiManageInformation'])->name('institution.pei.update-pei');
         Route::post('institution/{institutionId}/save-new-pei', [InstitutionController::class, 'updatePei'])
@@ -187,6 +189,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/{institucionId}/pmi', PMIController::class);
     Route::resource('objetivo-pmi', PMIObjetivoController::class);
     Route::resource('indicadores-pmi',IndicadoresController::class);
+    // Gestion de proyectos transversales
+    Route::resource('/{institucionId}/proyectos-transversales', ProyectoTransversalController::class);
 
 });
 

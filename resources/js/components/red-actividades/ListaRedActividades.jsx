@@ -406,7 +406,10 @@ useEffect(() => {
             redesActividades.map((actividad) => (
               <tr key={actividad.id}>
                 <td>{actividad.fecha}</td>
-                <td>{actividad.descripcion ?? 'Sin información'}</td>
+                {/* NUEVO: Se agregó un estilo para limitar el ancho y permitir que el texto se envuelva */}
+                <td style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
+                  {actividad.descripcion ?? 'Sin información'}
+                </td>
                 <td>
                   {/* NUEVO: Botón para ver documentos */}
                   {actividad.adjuntos && actividad.adjuntos.length > 0 && (
@@ -449,7 +452,7 @@ useEffect(() => {
         </tbody>
       </table>
     </div>
-  );
+);
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (

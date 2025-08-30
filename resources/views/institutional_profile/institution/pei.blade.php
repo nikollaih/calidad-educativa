@@ -53,22 +53,9 @@
             <a href="#" class="btn btn-success  btn-sm">PEI</a>
             <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
             <a href="{{ route('pmi.index', $institucionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
+            <a href="{{ route('proyectos_transversales.index', $institucionId) }}" class="btn btn-outline-warning btn-sm">Proyectos transversales</a>
         </div>
     </div>
-
-    <!-- <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('institution.edit', $institucionId) }}" class="btn btn-outline-warning btn-sm">Editar</a>
-            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluaciones</a>
-            <a href="{{ route('institution.pei', $institucionId) }}" class="btn btn-outline-success  btn-sm active">PEI</a>
-            <form  action="{{ route('institution.destroy', $institucionId) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
-            </form>
-        </div>
-    </div> -->
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
