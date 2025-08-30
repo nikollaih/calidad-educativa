@@ -3,7 +3,7 @@
 @section('content')
     <div
         data-component="CBackButton"
-        data-to="{{asset("/dashboard")}}"
+        data-to="{{ route('proyectos-transversales.index', $proyectoTransversal) }}"
     >
     </div>
     <div

@@ -36,9 +36,12 @@ export default function ListaRedActividades({
   const [integranteNombre, setIntegranteNombre] = useState('');
   const [integranteCorreo, setIntegranteCorreo] = useState(''); // NUEVO: Estado para el correo
   const [integranteContacto, setIntegranteContacto] = useState('');
-  const [integranteActividad, setIntegranteActividad] = useState('');
+  const [integranteInstitucion, setIntegranteInstitucion] = useState(null);
   const [integranteRol, setIntegranteRol] = useState(''); // NUEVO: Estado para el rol del integrante
 
+  const [instituciones, setInstituciones] = useState([]); // NUEVO: Lista de instituciones
+  const [isLoadingInstitutions, setIsLoadingInstitutions] = useState(false);
+  const [institutionsError, setInstitutionsError] = useState(null);
 
   // Lógica de carga, errores y modales genéricos (se mantienen)
   const [showAlertModal, setShowAlertModal] = useState(false);
@@ -56,12 +59,6 @@ export default function ListaRedActividades({
   const [selectedRole, setSelectedRole] = useState(''); // NUEVO: Rol seleccionado para compartir
   // CAMBIO: Estado para la descripción del correo en el modal de compartir
   const [shareDescription, setShareDescription] = useState('');
-
-
-  // Estado para la lista de usuarios (representantes)
-  const [usuarios, setUsuarios] = useState([]);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-  const [usersError, setUsersError] = useState(null);
 
   // Efecto para obtener la lista de usuarios al cargar el componente
   useEffect(() => {
@@ -103,6 +100,25 @@ export default function ListaRedActividades({
     }
   }, [showShareModal]);
 
+  useEffect(() => {
+    const fetchInstitutions = async () => {
+      setIsLoadingInstitutions(true);
+      try {
+        const response = await fetch('/get-instituciones');
+        if (!response.ok) {
+          throw new Error('Error al obtener las instituciones.');
+        }
+        const data = await response.json();
+        setInstituciones(data.data || data); // Adaptable según la estructura de respuesta
+        setInstitutionsError(null);
+      } catch (error) {
+        setInstitutionsError(error.message);
+      } finally {
+        setIsLoadingInstitutions(false);
+      }
+    };
+    fetchInstitutions();
+  }, []);
 
   // Función para mostrar el modal de alerta
   const showAlert = (message) => {
@@ -158,15 +174,14 @@ export default function ListaRedActividades({
     setActividadAdjuntos(actividadAdjuntos.filter((_, index) => index !== indexToRemove));
   };
 
-
   // Lógica para la pestaña de Integrantes
   const handleAgregarIntegranteClick = () => {
     setModalIntegranteMode('agregar');
     setIntegranteNombre('');
-    setIntegranteCorreo(''); // NUEVO
+    setIntegranteCorreo('');
     setIntegranteContacto('');
-    setIntegranteActividad('');
-    setIntegranteRol(''); // NUEVO
+    setIntegranteRol('');
+    setIntegranteInstitucion(null);
     setCurrentIntegrante(null);
     setShowIntegranteModal(true);
   };
@@ -175,20 +190,20 @@ export default function ListaRedActividades({
     setModalIntegranteMode('editar');
     setCurrentIntegrante(integrante);
     setIntegranteNombre(integrante.nombre || '');
-    setIntegranteCorreo(integrante.correo || ''); // NUEVO
-    setIntegranteContacto(integrante.telefono || ''); // CAMBIO: Se corrigió la propiedad de contacto
-    setIntegranteActividad(integrante.actividad_id || '');
-    setIntegranteRol(integrante.rol || ''); // NUEVO
+    setIntegranteCorreo(integrante.correo || ''); 
+    setIntegranteContacto(integrante.telefono || '');
+    setIntegranteInstitucion(integrante.institucion_id || '');
+    setIntegranteRol(integrante.rol || ''); 
     setShowIntegranteModal(true);
   };
 
   const handleCloseIntegranteModal = () => {
     setShowIntegranteModal(false);
     setIntegranteNombre('');
-    setIntegranteCorreo(''); // NUEVO
+    setIntegranteCorreo('');
     setIntegranteContacto('');
-    setIntegranteActividad('');
-    setIntegranteRol(''); // NUEVO
+    setIntegranteRol('');
+    setIntegranteInstitucion(null);
     setCurrentIntegrante(null);
   };
   
@@ -268,11 +283,11 @@ export default function ListaRedActividades({
 
       } else if (type === 'integrante') {
           // Validación de campos obligatorios para integrantes
-          if (!integranteNombre.trim() || !integranteCorreo.trim() || !integranteContacto.trim() || !integranteRol) {
+          if (!integranteNombre.trim() || !integranteCorreo.trim() || !integranteContacto.trim() || !integranteRol || !integranteInstitucion) {
             showAlert('Por favor, asegúrese de que todos los campos obligatorios estén completos.');
             setLoading(false);
             return;
-        }
+          }
 
           url = modalIntegranteMode === 'editar' ? `/red-integrantes/${currentIntegrante.id}` : '/red-integrantes';
 
@@ -280,6 +295,7 @@ export default function ListaRedActividades({
           formData.append('nombre', integranteNombre);
           formData.append('correo', integranteCorreo);
           formData.append('telefono', integranteContacto);
+          formData.append('institucion_id', integranteInstitucion);
           formData.append('rol', integranteRol);
 
           if (modalIntegranteMode === 'editar') {
@@ -469,6 +485,7 @@ useEffect(() => {
             <th>Contacto</th>
             <th>Correo</th>
             <th>Rol</th>
+            <th>Institución</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -481,6 +498,9 @@ useEffect(() => {
                 <td>{integrante.correo ?? 'N/A'}</td>
                 <td>
                   {integrantesRoles.find(r => r.id === integrante.rol)?.name ?? 'N/A'}
+                </td>
+                <td>
+                  {instituciones.find(inst => inst.id === integrante.institucion_id)?.nombre ?? 'N/A'}
                 </td>
                 <td>
                   {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
@@ -502,7 +522,7 @@ useEffect(() => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center">No hay integrantes para mostrar.</td>
+              <td colSpan="6" className="text-center">No hay integrantes para mostrar.</td>
             </tr>
           )}
         </tbody>
@@ -712,6 +732,35 @@ useEffect(() => {
                                 <option key={rol.id} value={rol.id}>{rol.name}</option>
                             ))}
                         </select>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="integranteInstitucion" className="form-label">Institución <span className="text-danger">*</span></label>
+                        {isLoadingInstitutions ? (
+                          <div className="text-center">
+                            <div className="spinner-border spinner-border-sm text-primary" role="status">
+                              <span className="visually-hidden">Cargando instituciones...</span>
+                            </div>
+                          </div>
+                        ) : institutionsError ? (
+                          <div className="alert alert-danger" role="alert">
+                            Error al cargar instituciones: {institutionsError}
+                          </div>
+                        ) : (
+                          <select
+                            className="form-control"
+                            id="integranteInstitucion"
+                            value={integranteInstitucion}
+                            onChange={(e) => setIntegranteInstitucion(e.target.value)}
+                            required
+                          >
+                            <option value="">Selecciona una institución</option>
+                            {instituciones.map(institucion => (
+                              <option key={institucion.id} value={institucion.id}>
+                                {institucion.nombre || institucion.name}
+                              </option>
+                            ))}
+                          </select>
+                        )}
                       </div>
                     </div>
                     <div className="modal-footer">

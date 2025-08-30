@@ -14,6 +14,7 @@ class RedIntegrante extends Model
 
     protected $fillable = [
         'red_aprendizaje_id',
+        'institucion_id',
         'nombre',
         'telefono',
         'correo',
@@ -26,5 +27,13 @@ class RedIntegrante extends Model
     public function redAprendizaje(): BelongsTo
     {
         return $this->belongsTo(RedesAprendizaje::class, 'red_aprendizaje_id');
+    }
+
+    /**
+     * Relación: Un integrante pertenece a una institucion.
+     */
+    public function institucion(): BelongsTo
+    {
+        return $this->belongsTo(Institucion::class, 'institucion_id');
     }
 }

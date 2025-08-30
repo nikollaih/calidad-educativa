@@ -3,51 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
-use App\Models\RedesAprendizaje;
-use App\Models\Adjunto;
-use App\Models\RedesActividad;
-use App\Models\RedIntegrante;
-use Illuminate\Http\JsonResponse;
+use App\Models\ProyectoIntegrante;
+use App\Models\ProyectosActividad;
+use App\Models\ProyectosTransversal;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Storage;
 
-class RedesIntegrantesController extends Controller {
+class ProyectoTransversalIntegrantesController extends Controller {
 
     public function __construct(
         private AdjuntoService $adjuntoService,
     ){}
 
-    public function index(Request $request) {
-        $user = auth()->user();
+    public function index(Request $request, int $proyectoTransversalId) {
+        $proyectoActividades = ProyectosActividad::with(['proyectoTransversal', 'adjuntos.adjunto'])
+            ->where('proyecto_transversal_id', $proyectoTransversalId)
+            ->get();
 
-        $isRelatedToRed = false;
-        // Se verifica si hay un usuario autenticado para realizar el filtro.
-        if ($user) {
-            $redActividades = RedesActividad::with(['redAprendizaje', 'adjuntos.adjunto'])
-                ->whereHas('redAprendizaje', function ($query) use ($user) {
-                    $query->where('representante_id', $user->id);
-                })
-                ->get();
-
-                $isRelatedToRed = RedesAprendizaje::where('representante_id', $user->id)->exists();
-
-            $redIntegrantes = RedIntegrante::with(['redAprendizaje'])
-                ->whereHas('redAprendizaje', function ($query) use ($user) {
-                    $query->where('representante_id', $user->id);
-                })
-                ->get();
-        } else {
-            $redActividades = collect();
-            $redIntegrantes = collect();
-        }
+        $proyectoIntegrantes = ProyectoIntegrante::with(['proyectoTransversal'])
+            ->where('proyecto_transversal_id', $proyectoTransversalId)
+            ->get();
 
         // dd($redActividades);
-        return view('redActividades.index', [
-            'redActividades' => $redActividades,
-            'integrantes' => $redIntegrantes,
-            'isRelatedToRed' => $isRelatedToRed,
+        return view('proyectoTransversal.actividades.index', [
+            'actividades' => $proyectoActividades,
+            'integrantes' => $proyectoIntegrantes,
+            'proyectoTransversal' => $proyectoTransversalId,
         ]);
     }
 
@@ -57,8 +38,7 @@ class RedesIntegrantesController extends Controller {
         return view('redesAprendizajes.create', compact('permissions'));
     }
 
-    public function store(Request $request) {
-        $user = auth()->user();
+    public function store(Request $request, int $proyectoTransversalId) {
         $request->validate([
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
@@ -78,22 +58,23 @@ class RedesIntegrantesController extends Controller {
             'rol.max' => 'El rol no debe superar los 100 caracteres.',
         ]);
 
-        $redAprendizaje = RedesAprendizaje::where('representante_id', $user->id)->first();
+        $institucionId = ProyectosTransversal::find($proyectoTransversalId)?->institucion_id;
 
         // Crear la nueva actividad en la base de datos.
-        RedIntegrante::create([
-            'red_aprendizaje_id' => $redAprendizaje->id,
+        ProyectoIntegrante::create([
+            'proyecto_transversal_id' => $proyectoTransversalId,
+            'institucion_id' => $institucionId,
             'nombre' => $request->input('nombre'),
             'telefono' => $request->input('telefono'),
             'correo' => $request->input('correo'),
             'rol' => (int) $request->input('rol'),
         ]);
 
-        return redirect()->route('red-actividades.index')->with('flash_success_message', 'Integrante creado con éxito.');
+        return redirect()->route('proyecto-transversal-integrantes.index', $proyectoTransversalId)->with('flash_success_message', 'Integrante creado con éxito.');
     }
 
     
-    public function update(Request $request, int $integranteId) {
+    public function update(Request $request, int $proyectoTransversalId, int $integranteId) {
         // Se valida la petición con las reglas para el modelo de integrantes.
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -116,7 +97,7 @@ class RedesIntegrantesController extends Controller {
 
         try {
             // Se busca el integrante por su ID.
-            $integrante = RedIntegrante::findOrFail($integranteId);
+            $integrante = ProyectoIntegrante::findOrFail($integranteId);
             
             // Se actualizan los campos del integrante con los datos de la petición.
             $integrante->update([
@@ -141,10 +122,10 @@ class RedesIntegrantesController extends Controller {
     }
 
 
-    public function destroy(int $redIntegranteId) {
-        $redIntegrante = RedIntegrante::findOrFail($redIntegranteId);
+    public function destroy(int $proyectoTransversalId, int $proyectoIntegranteId) {
+        $proyectoIntegrante = ProyectoIntegrante::findOrFail($proyectoIntegranteId);
         
-        $redIntegrante->delete();
-        return redirect()->route('red-integrantes.index')->with('flash_success_message', 'Red de Aprendizaje eliminada correctamente.');
+        $proyectoIntegrante->delete();
+        return redirect()->route('proyecto-transversal-integrantes.index', $proyectoTransversalId)->with('flash_success_message', 'Integrante eliminado correctamente.');
     }
 }

@@ -64,6 +64,7 @@ class RedesIntegrantesController extends Controller {
             'telefono' => 'required|string|max:20',
             'correo' => 'required|email|max:255',
             'rol' => 'required|max:100',
+            'institucion_id' => 'required|integer',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.string' => 'El nombre debe ser una cadena de texto.',
@@ -76,6 +77,8 @@ class RedesIntegrantesController extends Controller {
             'correo.max' => 'El correo no debe superar los 255 caracteres.',
             'rol.required' => 'El rol es obligatorio.',
             'rol.max' => 'El rol no debe superar los 100 caracteres.',
+            'institucion_id.required' => 'La institución es obligatoria.', // NUEVO: Mensaje de error
+            'institucion_id.integer' => 'La institución debe ser un número válido.',
         ]);
 
         $redAprendizaje = RedesAprendizaje::where('representante_id', $user->id)->first();
@@ -87,19 +90,19 @@ class RedesIntegrantesController extends Controller {
             'telefono' => $request->input('telefono'),
             'correo' => $request->input('correo'),
             'rol' => (int) $request->input('rol'),
+            'institucion_id' => (int) $request->input('institucion_id'),
         ]);
 
         return redirect()->route('red-actividades.index')->with('flash_success_message', 'Integrante creado con éxito.');
     }
 
-    
     public function update(Request $request, int $integranteId) {
-        // Se valida la petición con las reglas para el modelo de integrantes.
         $request->validate([
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
             'correo' => 'required|email|max:255',
             'rol' => 'required|max:100',
+            'institucion_id' => 'required|integer',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.string' => 'El nombre debe ser una cadena de texto.',
@@ -112,6 +115,8 @@ class RedesIntegrantesController extends Controller {
             'correo.max' => 'El correo no debe superar los 255 caracteres.',
             'rol.required' => 'El rol es obligatorio.',
             'rol.max' => 'El rol no debe superar los 100 caracteres.',
+            'institucion_id.required' => 'La institución es obligatoria.',
+            'institucion_id.integer' => 'La institución debe ser un número válido.',
         ]);
 
         try {
@@ -120,6 +125,7 @@ class RedesIntegrantesController extends Controller {
             
             // Se actualizan los campos del integrante con los datos de la petición.
             $integrante->update([
+                'institucion_id' => (int) $request->input('institucion_id'),
                 'nombre' => $request->input('nombre'),
                 'telefono' => $request->input('telefono'),
                 'correo' => $request->input('correo'),

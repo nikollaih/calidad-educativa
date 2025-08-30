@@ -201,7 +201,7 @@ export default function ListaProyectoTransversalActividades({
   const handleDelete = async (id, type) => {
     setLoading(true);
     try {
-        const url = type === 'actividad' ? `proyecto-transversal-actividades/${id}` : `/proyecto-transversal-integrantes/${id}`;
+        const url = type === 'actividad' ? `proyecto-transversal-actividades/${id}` : `proyecto-transversal-integrantes/${id}`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -274,7 +274,7 @@ export default function ListaProyectoTransversalActividades({
             return;
         }
 
-          url = modalIntegranteMode === 'editar' ? `/red-integrantes/${currentIntegrante.id}` : '/red-integrantes';
+          url = modalIntegranteMode === 'editar' ? `proyecto-transversal-integrantes/${currentIntegrante.id}` : 'proyecto-transversal-integrantes';
 
           formData.append('_token', csrfToken);
           formData.append('nombre', integranteNombre);

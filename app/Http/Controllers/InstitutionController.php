@@ -18,6 +18,7 @@ use App\Models\Municipio;
 use App\Models\PeiHistorial;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,6 +46,26 @@ class InstitutionController extends Controller
             ]
         );
     }
+
+    /**
+     * Obtiene todas las instituciones
+     *
+     * @return JsonResponse
+     */
+    public function all(): JsonResponse {
+        try {
+            $instituciones = Institucion::all();
+
+            return response()->json($instituciones, 200);
+
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json([
+                'message' => 'Error al obtener las instituciones: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function show(int $institucion)
     {
         $municipios = Municipio::get();
@@ -59,7 +80,7 @@ class InstitutionController extends Controller
             ->where('id',$institucion)
             ->first();
         if (!$institucion) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
         }
         return view('institutional_profile.institution.show', ['institution' => $institucion, 'municipios' => $municipios]);
     }
@@ -71,7 +92,7 @@ class InstitutionController extends Controller
 
     public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId){
         $factores = $request->input('factores');
-        // Recolectar los registros válidos que vamos a mantener
+        // Recolectar los registros v?lidos que vamos a mantener
         $idsParaMantener = [];
         foreach ($factores as $factor) {
             $descripcion = $factor['descripcion'] ?? null;
@@ -128,7 +149,7 @@ class InstitutionController extends Controller
     {
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
         if(empty($autoevaluacionId)){
-            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
         }
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
@@ -145,7 +166,7 @@ class InstitutionController extends Controller
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion', 'notas.calificacion.grupo','notas.calificacion.grupo.padre')
             ->where('id', $autoevaluacionId)->first();
         if(empty($autoevaluacionId)){
-            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
         }
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
@@ -189,7 +210,7 @@ class InstitutionController extends Controller
                 $ponderados = [
                     'Existencia' => $notasDelGrupo->where('valor', 1)->count(),
                     'Pertinencia' => $notasDelGrupo->where('valor', 2)->count(),
-                    'Apropiación' => $notasDelGrupo->where('valor', 3)->count(),
+                    'Apropiaci?n' => $notasDelGrupo->where('valor', 3)->count(),
                     'Mejoramiento' => $notasDelGrupo->where('valor', 4)->count(),
                 ];
 
@@ -217,7 +238,7 @@ class InstitutionController extends Controller
 
         $autoevaluacionOld = Autoevaluacion::where($autoevaluacionData)->first();
         if($autoevaluacionOld)
-            return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacionOld->institucion_id])->with('flash_error_message', "Error! ya existe una  autoevaluación con esa vigencia");
+            return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacionOld->institucion_id])->with('flash_error_message', "Error! ya existe una  autoevaluaci?n con esa vigencia");
 
         $autoevaluacion = Autoevaluacion::create($autoevaluacionData);
 
@@ -229,7 +250,7 @@ class InstitutionController extends Controller
             }
             $autoevaluacion->notas()->sync($syncData);
         }
-        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluaci?n creada correctamente");
 
     }
     public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null)
@@ -237,7 +258,7 @@ class InstitutionController extends Controller
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
 
         if(!$autoevaluacion)
-            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
         $notasPendientes = $this->autoevaluacionService->obtenerNotasPendientes(autoevaluacion: $autoevaluacion);
         if ($notasPendientes->count() != 0) {
             return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('tiene_notas_pendientes', $notasPendientes);
@@ -248,7 +269,7 @@ class InstitutionController extends Controller
         return redirect()->route(
             'institution.autoevaluaciones',
             ['institution' => $autoevaluacion->institucion_id]
-        )->with('flash_success_message', 'Autoevaluación enviada a validación correctamente');
+        )->with('flash_success_message', 'Autoevaluaci?n enviada a validaci?n correctamente');
 
     }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
@@ -257,7 +278,7 @@ class InstitutionController extends Controller
         $notas = $request->input('notas');
 
         if(!$autoevaluacion)
-            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
 
         if($notas){
             $syncData = [];
@@ -267,7 +288,7 @@ class InstitutionController extends Controller
             }
             $autoevaluacion->notas()->sync($syncData);
         }
-        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación actualizada correctamente");
+        return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluaci?n actualizada correctamente");
 
     }
     public function create()
@@ -300,7 +321,7 @@ class InstitutionController extends Controller
         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'],$institutionCreated);
 
 
-        return redirect()->back()->with('flash_success_message', 'Institución creada correctamente.');
+        return redirect()->back()->with('flash_success_message', 'Instituci?n creada correctamente.');
     }
     public function edit(int $institucion)
     {
@@ -316,7 +337,7 @@ class InstitutionController extends Controller
             ->where('id',$institucion)
             ->first();
          if (!$institucion) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
          }
         return view('institutional_profile.institution.edit', ['institution' => $institucion , 'municipios' => $municipios]);
     }
@@ -327,7 +348,7 @@ class InstitutionController extends Controller
             ->first();
 
          if (!$institucionToUpdate) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
          }
 
          $institutionData = $request->all();
@@ -343,18 +364,18 @@ class InstitutionController extends Controller
          $institucionToUpdate->save();
          $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'], $institucionToUpdate);
 
-        return redirect()->route('institution.edit',$institucion)->with('success', 'Institución actualizada correctamente.');
+        return redirect()->route('institution.edit',$institucion)->with('success', 'Instituci?n actualizada correctamente.');
     }
     public function destroy(int $institucion)
     {
          $institucionToDel = Institucion::find($institucion);
          if (!$institucionToDel) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
          }
 
          $institucionToDel->redesSociales()->delete();
          $institucionToDel->delete();
-         return redirect()->back()->with('success', 'Institución Eliminada correctamente.');
+         return redirect()->back()->with('success', 'Instituci?n Eliminada correctamente.');
     }
 
     public function pei(int $institucion) {
@@ -369,7 +390,7 @@ class InstitutionController extends Controller
             ->first();
 
          if (!$institucionData) {
-            return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
+            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
          }
 
         return view('institutional_profile.institution.pei', [
@@ -416,7 +437,7 @@ class InstitutionController extends Controller
 
             $input = $request->all();
 
-            // Obtener la institución con relaciones
+            // Obtener la instituci?n con relaciones
             $institucion = Institucion::with([
                 'gestionDirectiva',
                 'gestionAcademica',
@@ -441,7 +462,7 @@ class InstitutionController extends Controller
                     $value instanceof \Illuminate\Http\UploadedFile;
             }, ARRAY_FILTER_USE_BOTH);
 
-            // Filtrar datos para actualización
+            // Filtrar datos para actualizaci?n
             $dataToUpdate = array_diff_key($input, array_flip($propiedadesAEliminar));
             // Obtener el modelo objetivo
             $relationPath = str_replace('->', '.', $input['relation_name']);
@@ -451,7 +472,7 @@ class InstitutionController extends Controller
             foreach ($documentos as $key => $value) {
                 $adjuntoInfo = [];
 
-                // Obtener la extensión original del archivo
+                // Obtener la extensi?n original del archivo
                 $adjuntoInfo['extension']        = $value->getClientOriginalExtension();
                 // Obtiene el nombre del archivo
                 $adjuntoInfo['nombre']           =  pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME);
@@ -462,7 +483,7 @@ class InstitutionController extends Controller
                 // Obtiene el disco del archivo
                 $adjuntoInfo['disco']             = 'public';
 
-                // Generar un nombre único
+                // Generar un nombre ?nico
                 $nombreUnico = $adjuntoInfo['nombre'] . '_' . uniqid() . '.' . $adjuntoInfo['extension'];
 
                 // Guardar archivo
@@ -477,7 +498,7 @@ class InstitutionController extends Controller
             }
 
             if (!$model) {
-                throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
+                throw new \Exception("No se encontr? el modelo para la relaci?n: {$input['relation_name']}");
             }
 
             // Capturar datos originales
@@ -514,7 +535,7 @@ class InstitutionController extends Controller
                 'message' => 'PEI actualizado correctamente',
                 'changes' => count($changedFields),
                 'historial_id' => $historial->id,
-                'validated_data' => $validated // Añadimos esto
+                'validated_data' => $validated // A?adimos esto
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {

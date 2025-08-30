@@ -23,6 +23,7 @@ use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\PMI\IndicadoresController;
 use App\Http\Controllers\ProyectoTransversalActividadesController;
 use App\Http\Controllers\ProyectoTransversalController;
+use App\Http\Controllers\ProyectoTransversalIntegrantesController;
 use App\Http\Controllers\RedesActividadesController;
 use App\Http\Controllers\RedesIntegrantesController;
 
@@ -53,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-usuarios', [UserController::class, 'all'])->name('usuarios.all');
     Route::get('/usuarios/create', [UserController::class, 'create'])->name('usuarios.create');
     Route::get('/get-componentes', [ComponenteController::class, 'all'])->name('componentes.all');
+    Route::get('/get-instituciones', [InstitutionController::class, 'all'])->name('instituciones.all');
     Route::get('/get-roles', [RoleController::class, 'all'])->name('roles.all');
     Route::get('/get-redes-aprendizajes', [RedesAprendizajeController::class, 'all'])->name('redesAprendizajes.all');
     Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
@@ -171,6 +173,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('red-actividades', RedesActividadesController::class);
     // Rutas relacionadas a las actividades de redes
     Route::resource('{proyectoTransversalId}/proyecto-transversal-actividades', ProyectoTransversalActividadesController::class);
+    // Rutas relacionadas a los integrantes de redes
+    Route::resource('{proyectoTransversalId}/proyecto-transversal-integrantes', ProyectoTransversalIntegrantesController::class);
     // Rutas relacionadas a los integrantes de redes
     Route::resource('red-integrantes', RedesIntegrantesController::class);
     // Rutas relacionadas a ajustes
