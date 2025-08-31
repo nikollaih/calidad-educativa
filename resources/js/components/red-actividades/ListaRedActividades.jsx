@@ -534,8 +534,8 @@ useEffect(() => {
     <div className="container mt-4">
       <h2 className="mb-4 text-center">Gestión de Redes de Aprendizaje y Actividades</h2>
       {!isRelatedToRed ? (
-        <div className="alert alert-info text-center" role="alert">
-          El usuario actual no tiene redes asociadas.
+        <div className="alert alert-danger text-center" role="alert">
+          En estos momentos no se encuentra relacionado a este proyecto transversal como responsable
         </div>
       ) : (
         <>

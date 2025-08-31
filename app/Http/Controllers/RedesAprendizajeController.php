@@ -42,12 +42,6 @@ class RedesAprendizajeController extends Controller {
         }
     }
 
-    public function create() {
-        $permissions = Permission::all();
-        // Se corrige el nombre de la vista y la variable.
-        return view('redesAprendizajes.create', compact('permissions'));
-    }
-
     public function store(Request $request) {
         // Se agregan las reglas de validación para todos los campos de la solicitud, incluyendo el archivo.
         // Se ha modificado la regla 'mimes' para aceptar formatos de imagen.

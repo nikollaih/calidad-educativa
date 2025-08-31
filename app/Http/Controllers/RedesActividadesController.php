@@ -43,7 +43,6 @@ class RedesActividadesController extends Controller {
             $redIntegrantes = collect();
         }
 
-        // dd($redActividades);
         return view('redActividades.index', [
             'redActividades' => $redActividades,
             'integrantes' => $redIntegrantes,

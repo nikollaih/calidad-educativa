@@ -33,33 +33,13 @@ class ProyectoTransversalController extends Controller
     ){}
 
     public function index( int $institucionId) {
-        $proyectosTransversales = ProyectosTransversal::with('actoAdministrativo')->whereHas('institucion', function ($query) use ($institucionId) {
+        $proyectosTransversales = ProyectosTransversal::with(['representante', 'actoAdministrativo'])->whereHas('institucion', function ($query) use ($institucionId) {
             $query->where('id', $institucionId);
         })->get();
 
         return view('proyectoTransversal.index', [
             'institucionId' => $institucionId,
             'proyectosTransversales' => $proyectosTransversales,
-        ]);
-    }
-
-    public function all(int $institucion) {
-        $institucionData = Institucion::with([])
-            ->where('id', $institucion)
-            ->first();
-
-         if (!$institucionData) {
-            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
-         }
-
-        return view('institutional_profile.institution.pei', [
-            'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
-            'gestion_academica' => $institucionData->gestionAcademica ?? null,
-            'gestion_comunidad' => $institucionData->gestionComunidad ?? null,
-            'resena_historica' => $institucionData->resenaHistorica ?? null,
-            'gestion_administrativa' => $institucionData->gestionAdministrativa ?? null,
-            'institucionId' => $institucion,
-            'institucionNombre' => $institucionData->nombre,
         ]);
     }
     
@@ -70,16 +50,20 @@ class ProyectoTransversalController extends Controller
             'nombre' => 'required|string',
             'descripcion' => 'nullable|string', 
             'numero_contacto' => 'nullable|string',
-            // 'correo' => 'required|string',
+            'representante_id' => [
+                'required',
+                'exists:users,id',
+                'unique:proyectos_transversales,representante_id',
+            ],
             'acto_administrativo' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.string' => 'El nombre debe ser una cadena de texto.',
-            'descripcion.string' => 'La descripci?n debe ser una cadena de texto.',
-            // 'correo.required' => 'El correo es obligatorio.',
-            'representante_id.exists' => 'El representante seleccionado no es v?lido.',
-            'representante_id.unique' => 'El representante seleccionado ya est? relacionado con otra red de aprendizaje.',
-            'numero_contacto.string' => 'El n?mero de contacto debe ser una cadena de texto.',
+            'descripcion.string' => 'La descripción debe ser una cadena de texto.',
+            'representante_id.required' => 'El representante es obligatorio.',
+            'representante_id.exists' => 'El representante seleccionado no es válido.',
+            'representante_id.unique' => 'El representante seleccionado ya está relacionado con otro proyecto transversal.',
+            'numero_contacto.string' => 'El número de contacto debe ser una cadena de texto.',
             'acto_administrativo.required' => 'El archivo del acto administrativo es obligatorio.',
             'acto_administrativo.file' => 'El acto administrativo debe ser un archivo.',
             'acto_administrativo.mimes' => 'El archivo del acto administrativo debe ser de tipo: pdf, doc, docx, jpeg, jpg, png, gif, svg, webp.',
@@ -98,12 +82,13 @@ class ProyectoTransversalController extends Controller
         ProyectosTransversal::create([
             'institucion_id' => $institucion,
             'acto_administrativo_id' => $actoAdministrativo?->data?->id,
+            'representante_id' => $request?->representante_id,
             'nombre' => $request?->nombre,
             'descripcion' => $request?->descripcion,
             'numero_contacto' => $request?->numero_contacto,
         ]);
 
-        return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Red de Aprendizaje creada correctamente.');
+        return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto transversal creada correctamente.');
     }
 
     public function edit(int $institucion)
@@ -128,6 +113,7 @@ class ProyectoTransversalController extends Controller
     public function update(Request $request, int $institucion, int $proyectoTransversal) {
         $request->validate([
             'nombre' => 'required|string',
+            'representante_id' => 'required|exists:users,id',
             'descripcion' => 'nullable|string',
             'numero_contacto' => 'nullable|string',
             'acto_administrativo' => 'nullable|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
@@ -159,6 +145,7 @@ class ProyectoTransversalController extends Controller
         // CAMBIO: Se actualizan los datos del proyecto, incluyendo el nuevo ID del adjunto si se subi? uno.
         $proyectoTransversalModel->update([
             'institucion_id' => $institucion,
+            'representante_id' => $request->representante_id,
             'acto_administrativo_id' => $acto_administrativo_id,
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,

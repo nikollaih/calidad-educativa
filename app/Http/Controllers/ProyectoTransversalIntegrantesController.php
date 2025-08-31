@@ -16,19 +16,37 @@ class ProyectoTransversalIntegrantesController extends Controller {
     ){}
 
     public function index(Request $request, int $proyectoTransversalId) {
-        $proyectoActividades = ProyectosActividad::with(['proyectoTransversal', 'adjuntos.adjunto'])
-            ->where('proyecto_transversal_id', $proyectoTransversalId)
-            ->get();
+        $user = auth()->user();
 
-        $proyectoIntegrantes = ProyectoIntegrante::with(['proyectoTransversal'])
-            ->where('proyecto_transversal_id', $proyectoTransversalId)
-            ->get();
+        $isRelatedToProyecto = false;
+        
+        // Se verifica si hay un usuario autenticado para realizar el filtro.
+        if ($user) {
+            $proyectoActividades = ProyectosActividad::with(['proyectoTransversal', 'adjuntos.adjunto'])
+                ->whereHas('proyectoTransversal', function ($query) use ($user) {
+                    $query->where('representante_id', $user->id);
+                })
+                ->get();
 
-        // dd($redActividades);
+            $proyectoTransversal = ProyectosTransversal::find($proyectoTransversalId);
+
+            $isRelatedToProyecto = $proyectoTransversal && $proyectoTransversal->representante_id === $user->id;
+
+            $proyectoIntegrantes = ProyectoIntegrante::with(['proyectoTransversal'])
+                ->whereHas('proyectoTransversal', function ($query) use ($user) {
+                    $query->where('representante_id', $user->id);
+                })
+                ->get();
+        } else {
+            $proyectoActividades = collect();
+            $proyectoIntegrantes = collect();
+        }
+
         return view('proyectoTransversal.actividades.index', [
             'actividades' => $proyectoActividades,
             'integrantes' => $proyectoIntegrantes,
             'proyectoTransversal' => $proyectoTransversalId,
+            'isRelatedToProyecto' => $isRelatedToProyecto,
         ]);
     }
 

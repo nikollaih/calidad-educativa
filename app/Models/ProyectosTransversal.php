@@ -16,10 +16,20 @@ class ProyectosTransversal extends Model
     protected $fillable = [
         'institucion_id',
         'acto_administrativo_id',
+        'representante_id',
         'nombre',
         'descripcion',
         'numero_contacto',
     ];
+
+
+    /**
+     * Relación: Un proyecto transversal pertenece a un representante (usuario).
+     */
+    public function representante(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'representante_id');
+    }
 
     /**
      * Relación: Un proyecto transversal pertenece a una institución.

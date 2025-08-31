@@ -188,7 +188,6 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Representante</th>
-                        {/* MODIFICACION: Nueva columna para el correo electrónico */}
                         <th>Correo Electrónico</th>
                         <th>Acto Administrativo</th>
                         <th>Acciones</th>

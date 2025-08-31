@@ -7,6 +7,7 @@ export default function ListaProyectoTransversalActividades({
   proyectoTransversalId,
   actividades = [],
   integrantes = [],
+  isRelatedToProyecto = false,
   csrfToken = ''
 }) {
   // Estado para controlar qué pestaña está activa
@@ -513,348 +514,355 @@ useEffect(() => {
   return (
     <div className="container mt-4">
       <h2 className="mb-4 text-center">Gestión de proyectos transversales</h2>
-      
-      <ul className="nav nav-tabs nav-justified">
-        <li className="nav-item">
-          <a
-            className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
-            onClick={() => setActiveTab('actividades')}
-          >
-            Actividades
-          </a>
-        </li>
-        <li className="nav-item">
-          <a
-            className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('integrantes')}
-          >
-            Integrantes
-          </a>
-        </li>
-      </ul>
+      {!isRelatedToProyecto ? (
+        <div className="alert alert-danger text-center" role="alert">
+          En estos momentos no se encuentra relacionado a este proyecto transversal como responsable
+        </div>
+      ) : (
+        <>
+          <ul className="nav nav-tabs nav-justified">
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
+                onClick={() => setActiveTab('actividades')}
+              >
+                Actividades
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('integrantes')}
+              >
+                Integrantes
+              </a>
+            </li>
+          </ul>
 
-      <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
-        {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
-        {activeTab === 'actividades' && renderActividadesTable()}
-        {activeTab === 'integrantes' && renderIntegrantesTable()}
-      </div>
+          <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
+            {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
+            {activeTab === 'actividades' && renderActividadesTable()}
+            {activeTab === 'integrantes' && renderIntegrantesTable()}
+          </div>
 
-      {/* Modal de formulario de actividades */}
-      {showActividadModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header d-flex justify-content-between align-items-center">
-                {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
-                <div className="d-flex align-items-center me-3">
-                  <h5 className="modal-title me-4">
-                    {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
-                  </h5>
-                </div>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={handleCloseActividadModal}
-                ></button>
-              </div>
-              <form onSubmit={handleActividadSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label htmlFor="actividadFecha" className="form-label">Fecha<span className="text-danger">*</span></label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="actividadFecha"
-                      value={actividadFecha}
-                      onInput={(e) => setActividadFecha(e.target.value)}
-                      required
-                    />
+          {/* Modal de formulario de actividades */}
+          {showActividadModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header d-flex justify-content-between align-items-center">
+                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                    <div className="d-flex align-items-center me-3">
+                      <h5 className="modal-title me-4">
+                        {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
+                      </h5>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      onClick={handleCloseActividadModal}
+                    ></button>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="actividadDescripcion" className="form-label">Descripción<span className="text-danger">*</span></label>
-                    <textarea
-                      className="form-control"
-                      id="actividadDescripcion"
-                      value={actividadDescripcion}
-                      onInput={(e) => setActividadDescripcion(e.target.value)}
-                      rows="3"
-                      required
-                    ></textarea>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="actividadAdjuntos" className="form-label">Evidencias</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      id="actividadAdjuntos"
-                      multiple
-                      onChange={handleFileChange}
-                      ref={fileInputRef}
-                    />
-                    {/* CAMBIO: Se añadió una sección para ver y gestionar los archivos ya adjuntos */}
-                    {actividadAdjuntos.length > 0 && (
-                      <div className="mt-2">
-                        <h6>Archivos seleccionados:</h6>
-                        <ul className="list-group">
-                          {actividadAdjuntos.map((file, index) => (
-                            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                              <span>{file.name || `Documento ${index + 1}`}</span>
-                              <div>
-                                {/* NUEVO: Botón para ver el adjunto */}
-                                {file.url && (
-                                  <a href={file.url} target="_blank" className="btn btn-info btn-sm me-2">
-                                    <i className="fa fa-eye text-white"></i> Ver
-                                  </a>
-                                )}
-                                {/* NUEVO: Botón para eliminar el adjunto del array */}
-                                <button
-                                  type="button"
-                                  className="btn btn-danger btn-sm flex gap-2"
-                                  onClick={() => handleRemoveAdjunto(index)}
-                                >
-                                  <i className="fa fa-trash-alt text-white"></i> Eliminar
-                                </button>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
+                  <form onSubmit={handleActividadSubmit}>
+                    <div className="modal-body">
+                      <div className="mb-3">
+                        <label htmlFor="actividadFecha" className="form-label">Fecha<span className="text-danger">*</span></label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          id="actividadFecha"
+                          value={actividadFecha}
+                          onInput={(e) => setActividadFecha(e.target.value)}
+                          required
+                        />
                       </div>
+                      <div className="mb-3">
+                        <label htmlFor="actividadDescripcion" className="form-label">Descripción<span className="text-danger">*</span></label>
+                        <textarea
+                          className="form-control"
+                          id="actividadDescripcion"
+                          value={actividadDescripcion}
+                          onInput={(e) => setActividadDescripcion(e.target.value)}
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="actividadAdjuntos" className="form-label">Evidencias</label>
+                        <input
+                          type="file"
+                          className="form-control"
+                          id="actividadAdjuntos"
+                          multiple
+                          onChange={handleFileChange}
+                          ref={fileInputRef}
+                        />
+                        {/* CAMBIO: Se añadió una sección para ver y gestionar los archivos ya adjuntos */}
+                        {actividadAdjuntos.length > 0 && (
+                          <div className="mt-2">
+                            <h6>Archivos seleccionados:</h6>
+                            <ul className="list-group">
+                              {actividadAdjuntos.map((file, index) => (
+                                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                                  <span>{file.name || `Documento ${index + 1}`}</span>
+                                  <div>
+                                    {/* NUEVO: Botón para ver el adjunto */}
+                                    {file.url && (
+                                      <a href={file.url} target="_blank" className="btn btn-info btn-sm me-2">
+                                        <i className="fa fa-eye text-white"></i> Ver
+                                      </a>
+                                    )}
+                                    {/* NUEVO: Botón para eliminar el adjunto del array */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger btn-sm flex gap-2"
+                                      onClick={() => handleRemoveAdjunto(index)}
+                                    >
+                                      <i className="fa fa-trash-alt text-white"></i> Eliminar
+                                    </button>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={handleCloseActividadModal}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                      >
+                        Guardar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal de formulario de integrantes */}
+          {showIntegranteModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header d-flex justify-content-between align-items-center">
+                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                    <div className="d-flex align-items-center me-3">
+                      <h5 className="modal-title me-4">
+                        {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
+                      </h5>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      onClick={handleCloseIntegranteModal}
+                    ></button>
+                  </div>
+                  <form onSubmit={handleIntegranteSubmit}>
+                    <div className="modal-body">
+                      <div className="mb-3">
+                        <label htmlFor="integranteNombre" className="form-label">Nombre <span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="integranteNombre"
+                          value={integranteNombre}
+                          onInput={(e) => setIntegranteNombre(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico <span className="text-danger">*</span></label>
+                        <input
+                          type="email"
+                          className="form-control"
+                          id="integranteCorreo"
+                          value={integranteCorreo}
+                          onInput={(e) => setIntegranteCorreo(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="integranteContacto" className="form-label">Número de contacto <span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="integranteContacto"
+                          value={integranteContacto}
+                          onInput={(e) => setIntegranteContacto(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="integranteRol" className="form-label">Rol <span className="text-danger">*</span></label>
+                        <select
+                            className="form-control"
+                            id="integranteRol"
+                            value={integranteRol}
+                            onChange={(e) => setIntegranteRol(e.target.value)}
+                        >
+                            <option value="">Selecciona un rol</option>
+                            {/* MODIFICACIÓN: Se usa map() para generar las opciones */}
+                            {integrantesRoles.map(rol => (
+                                <option key={rol.id} value={rol.id}>{rol.name}</option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={handleCloseIntegranteModal}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                      >
+                        Guardar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* NUEVO: Modal para ver documentos de la actividad */}
+          {showDocumentosModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Evidencias de la Actividad</h5>
+                    <button type="button" className="btn-close" onClick={() => setShowDocumentosModal(false)}></button>
+                  </div>
+                  <div className="modal-body">
+                    {currentDocumentos.length > 0 ? (
+                      <ul className="list-group">
+                        {currentDocumentos.map((adjunto, index) => (
+                          <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{adjunto.adjunto.nombre}</span>
+                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank" className="btn btn-info btn-sm">
+                              <i className="fa fa-eye text-white"></i> Ver
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No hay documentos para esta actividad.</p>
                     )}
                   </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
+                  </div>
                 </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={handleCloseActividadModal}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de formulario de integrantes */}
-      {showIntegranteModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header d-flex justify-content-between align-items-center">
-                {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
-                <div className="d-flex align-items-center me-3">
-                  <h5 className="modal-title me-4">
-                    {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
-                  </h5>
-                </div>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={handleCloseIntegranteModal}
-                ></button>
               </div>
-              <form onSubmit={handleIntegranteSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label htmlFor="integranteNombre" className="form-label">Nombre <span className="text-danger">*</span></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="integranteNombre"
-                      value={integranteNombre}
-                      onInput={(e) => setIntegranteNombre(e.target.value)}
-                    />
+            </div>
+          )}
+
+          {/* NUEVO: Modal para compartir */}
+          {showShareModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Compartir con Rol</h5>
+                    <button type="button" className="btn-close" onClick={() => setShowShareModal(false)}></button>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico <span className="text-danger">*</span></label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="integranteCorreo"
-                      value={integranteCorreo}
-                      onInput={(e) => setIntegranteCorreo(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="integranteContacto" className="form-label">Número de contacto <span className="text-danger">*</span></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="integranteContacto"
-                      value={integranteContacto}
-                      onInput={(e) => setIntegranteContacto(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="integranteRol" className="form-label">Rol <span className="text-danger">*</span></label>
-                    <select
-                        className="form-control"
-                        id="integranteRol"
-                        value={integranteRol}
-                        onChange={(e) => setIntegranteRol(e.target.value)}
-                    >
-                        <option value="">Selecciona un rol</option>
-                        {/* MODIFICACIÓN: Se usa map() para generar las opciones */}
-                        {integrantesRoles.map(rol => (
+                  <form onSubmit={handleShareSubmit}>
+                    <div className="modal-body">
+                      <div className="mb-3">
+                        <label htmlFor="selectRole" className="form-label">Selecciona un rol:</label>
+                        <select
+                          id="selectRole"
+                          className="form-control"
+                          value={selectedRole}
+                          onChange={(e) => setSelectedRole(e.target.value)}
+                        >
+                          <option value="">-- Selecciona --</option>
+                          {rolesList.map(rol => (
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
-                        ))}
-                    </select>
+                          ))}
+                        </select>
+                      </div>
+                      {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
+                      <div className="mb-3">
+                        <label htmlFor="shareDescription" className="form-label">Descripción para el correo</label>
+                        <textarea
+                          id="shareDescription"
+                          className="form-control"
+                          rows="3"
+                          value={shareDescription}
+                          onChange={(e) => setShareDescription(e.target.value)}
+                        ></textarea>
+                        <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
+                      </div>
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>Cancelar</button>
+                      <button type="submit" className="btn btn-primary">Compartir</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal de alerta personalizado */}
+          {showAlertModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Alerta</h5>
+                    <button type="button" className="btn-close" onClick={() => setShowAlertModal(false)}></button>
+                  </div>
+                  <div className="modal-body">
+                    <p>{alertMessage}</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={handleCloseIntegranteModal}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* NUEVO: Modal para ver documentos de la actividad */}
-      {showDocumentosModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Evidencias de la Actividad</h5>
-                <button type="button" className="btn-close" onClick={() => setShowDocumentosModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                {currentDocumentos.length > 0 ? (
-                  <ul className="list-group">
-                    {currentDocumentos.map((adjunto, index) => (
-                      <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                        <span>{adjunto.adjunto.nombre}</span>
-                        <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank" className="btn btn-info btn-sm">
-                          <i className="fa fa-eye text-white"></i> Ver
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No hay documentos para esta actividad.</p>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* NUEVO: Modal para compartir */}
-      {showShareModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Compartir con Rol</h5>
-                <button type="button" className="btn-close" onClick={() => setShowShareModal(false)}></button>
-              </div>
-              <form onSubmit={handleShareSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label htmlFor="selectRole" className="form-label">Selecciona un rol:</label>
-                    <select
-                      id="selectRole"
-                      className="form-control"
-                      value={selectedRole}
-                      onChange={(e) => setSelectedRole(e.target.value)}
-                    >
-                      <option value="">-- Selecciona --</option>
-                      {rolesList.map(rol => (
-                        <option key={rol.id} value={rol.id}>{rol.name}</option>
-                      ))}
-                    </select>
+          {/* Modal de confirmación personalizado */}
+          {showConfirmModal && (
+            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Confirmación</h5>
+                    <button type="button" className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
                   </div>
-                  {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
-                  <div className="mb-3">
-                    <label htmlFor="shareDescription" className="form-label">Descripción para el correo</label>
-                    <textarea
-                      id="shareDescription"
-                      className="form-control"
-                      rows="3"
-                      value={shareDescription}
-                      onChange={(e) => setShareDescription(e.target.value)}
-                    ></textarea>
-                    <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
+                  <div className="modal-body">
+                    <p>{alertMessage}</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                    <button type="button" className="btn btn-danger" onClick={() => {
+                      if (confirmAction) {
+                        confirmAction();
+                      }
+                      setShowConfirmModal(false);
+                    }}>Confirmar</button>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>Cancelar</button>
-                  <button type="submit" className="btn btn-primary">Compartir</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de alerta personalizado */}
-      {showAlertModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Alerta</h5>
-                <button type="button" className="btn-close" onClick={() => setShowAlertModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <p>{alertMessage}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de confirmación personalizado */}
-      {showConfirmModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Confirmación</h5>
-                <button type="button" className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <p>{alertMessage}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                <button type="button" className="btn btn-danger" onClick={() => {
-                  if (confirmAction) {
-                    confirmAction();
-                  }
-                  setShowConfirmModal(false);
-                }}>Confirmar</button>
-              </div>
-            </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
   );

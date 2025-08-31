@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
 export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, csrfToken = '' }) {
-    console.log([agregarUrl, proyectosTransversales, institucionId, csrfToken]);
 
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
     const [showModal, setShowModal] = useState(false);
@@ -15,9 +14,13 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     const [actoAdministrativo, setActoAdministrativo] = useState(null); // Para el nuevo archivo
     // MODIFICACION: Nuevo estado para almacenar la URL del documento existente
     const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null); 
+    const [representanteId, setRepresentanteId] = useState(''); // ID del representante seleccionado
     const [numeroContacto, setNumeroContacto] = useState('');
-    // MODIFICACION: Nuevo estado para el correo electrónico
-    // const [correoElectronico, setCorreoElectronico] = useState('');
+
+    // Estado para la lista de usuarios (representantes)
+    const [usuarios, setUsuarios] = useState([]);
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [usersError, setUsersError] = useState(null);
 
     // Estados para los modales de alerta y confirmación
     const [showAlertModal, setShowAlertModal] = useState(false);
@@ -25,6 +28,29 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [confirmAction, setConfirmAction] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    // Efecto para obtener la lista de usuarios al cargar el componente
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setIsLoadingUsers(true);
+            try {
+                const response = await fetch('/get-usuarios');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los usuarios.');
+                }
+                const data = await response.json();
+                setUsuarios(data.data);
+                
+                setUsersError(null);
+            } catch (error) {
+                setUsersError(error.message);
+            } finally {
+                setIsLoadingUsers(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     // Estado para la lista de redes de aprendizaje
     const [proyectos, setProyectos] = useState(proyectosTransversales);
@@ -48,6 +74,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setNombre('');
         setDescripcion('');
         setActoAdministrativo(null);
+        setRepresentanteId('');
         // MODIFICACION: Limpiar la URL del documento
         setActoAdministrativoUrl(null); 
         setNumeroContacto('');
@@ -64,6 +91,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setCurrentProyectoTransversal(proyectoTransversal);
         setNombre(proyectoTransversal.nombre || '');
         setDescripcion(proyectoTransversal.descripcion || '');
+        setRepresentanteId(proyectoTransversal.representante_id || '');
         setNumeroContacto(proyectoTransversal.numero_contacto || '');
         // MODIFICACION: Llenar el campo de correo electrónico
         // setCorreoElectronico(proyectoTransversal.correo || '');
@@ -82,6 +110,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         // MODIFICACION: Limpiar la URL del documento
         setActoAdministrativoUrl(null);
         setNumeroContacto('');
+        setRepresentanteId('');
         // MODIFICACION: Limpiar el campo de correo electrónico
         // setCorreoElectronico('');
         setCurrentProyectoTransversal(null);
@@ -92,8 +121,8 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
       // Si la validación falla, se evita el envío del formulario.
       // MODIFICACION: Validar que el campo de correo no esté vacío
     //   if (!nombre.trim() || !correoElectronico.trim()) {
-      if (!nombre.trim()) {
-          showAlert('Por favor, completa el nombre.');
+      if (!nombre.trim() || !representanteId) {
+          showAlert('Por favor, asegurese de completar todos los campos obligatorios.');
           e.preventDefault(); // Detiene el envío nativo del formulario
           return;
       }
@@ -144,7 +173,6 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         });
     };
 
-
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Proyectos transversales</h2>
@@ -158,7 +186,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                     <tr>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        {/* <th>Correo Electrónico</th> */}
+                        <th>Representante</th>
                         <th>Acto Administrativo</th>
                         <th>Acciones</th>
                     </tr>
@@ -168,7 +196,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                         <tr key={proyectoTransversal.id}>
                             <td>{proyectoTransversal.nombre}</td>
                             <td>{proyectoTransversal.descripcion ?? 'Sin información'}</td>
-                            {/* <td>{proyectoTransversal.correo ?? 'Sin información'}</td> */}
+                            <td>{proyectoTransversal.representante ? proyectoTransversal.representante.name : 'N/A'}</td>
                             <td>
                                 {proyectoTransversal.acto_administrativo?.ruta ? (
                                     <a href={`/storage/${proyectoTransversal.acto_administrativo.ruta}`} target="_blank">Ver documento</a>
@@ -184,7 +212,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                     Editar
                                 </button>
                                 <button
-                                    className="btn btn-danger btn-sm"
+                                    className="btn btn-danger btn-sm me-2" // COMENTARIO: Se agregó la clase 'me-2' para crear un margen a la derecha.
                                     onClick={() => handleDelete(proyectoTransversal.id)}
                                 >
                                     Eliminar
@@ -269,6 +297,30 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                         />
                                     </div>
                                     <div class="mb-3">
+                                        <label for="representante" class="form-label">Representante <span class="text-danger">*</span></label>
+                                        {isLoadingUsers ? (
+                                            <div>Cargando usuarios...</div>
+                                        ) : usersError ? (
+                                            <div class="text-danger">Error: {usersError}</div>
+                                        ) : (
+                                            <select
+                                                class="form-select"
+                                                id="representante"
+                                                name="representante_id"
+                                                value={representanteId}
+                                                onInput={(e) => setRepresentanteId(e.target.value)}
+                                                required
+                                            >
+                                                <option value="">Selecciona un representante</option>
+                                                {usuarios.map((user) => (
+                                                    <option key={user.id} value={user.id}>
+                                                        {user.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="numeroContacto" class="form-label">Número de Contacto</label>
                                         <input
                                             type="text"
@@ -279,19 +331,6 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                             onInput={(e) => setNumeroContacto(e.target.value)}
                                         />
                                     </div>
-                                    {/* MODIFICACION: Nuevo campo para el correo electrónico */}
-                                    {/* <div class="mb-3">
-                                        <label for="correoElectronico" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
-                                        <input
-                                            type="email"
-                                            class="form-control"
-                                            id="correoElectronico"
-                                            name="correo"
-                                            value={correoElectronico}
-                                            onInput={(e) => setCorreoElectronico(e.target.value)}
-                                            required
-                                        />
-                                    </div> */}
                                 </div>
                                 <div class="modal-footer">
                                     <button
@@ -306,7 +345,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                         class="btn btn-primary"
                                         // MODIFICACION: Se agregó el campo de correo electrónico a la validación
                                         // disabled={loading || !nombre.trim() || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
-                                        disabled={loading || !nombre.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
+                                        disabled={loading || !nombre.trim() || !representanteId || (modalMode === 'agregar' && !actoAdministrativo)}
                                     >
                                         {loading ? 'Cargando...' : modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
                                     </button>
