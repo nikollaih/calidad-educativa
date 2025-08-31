@@ -45,6 +45,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
         return view('proyectoTransversal.actividades.index', [
             'actividades' => $proyectoActividades,
             'integrantes' => $proyectoIntegrantes,
+            'institucionId' => $proyectoTransversal?->institucion_id,
             'proyectoTransversal' => $proyectoTransversalId,
             'isRelatedToProyecto' => $isRelatedToProyecto,
         ]);
