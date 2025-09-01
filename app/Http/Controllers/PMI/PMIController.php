@@ -61,10 +61,6 @@ class PMIController extends Controller
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
-            ->whereDoesntHave('institucion.autoevaluaciones.pmi', function ($query) {
-                $query->whereColumn('autoevaluacions.anio_vigencia', '>=', 'pmis.anio_inicio')
-                    ->whereColumn('autoevaluacions.anio_vigencia', '<', 'pmis.anio_fin');
-            })
             ->get();
         return view('pmi.create',
         [
@@ -102,7 +98,7 @@ class PMIController extends Controller
             })
             ->exists();
 
-        if ($existeTraslape) {
+        if (false) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', 'El intervalo de años se cruza con otro PMI existente para esta institución.');
