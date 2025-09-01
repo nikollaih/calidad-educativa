@@ -264,6 +264,12 @@ class InstitutionController extends Controller
             return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('tiene_notas_pendientes', $notasPendientes);
         }
         $this->autoevaluacionService->getFortalezasDebilidades(autoevaluacionId:$autoevaluacionId);
+        $cantidadFactoresCriticosPriorizados = $autoevaluacion->factoresCriticos->where('valor', '>','3')->count();
+        if($cantidadFactoresCriticosPriorizados == 0 ){
+            return redirect()
+                ->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])
+                ->with('flash_error_message','Debe tener almenos un factor crítico priorizado');
+        }
         $autoevaluacion->alias_estado = "VALIDACION";
         $autoevaluacion->save();
         return redirect()->route(
