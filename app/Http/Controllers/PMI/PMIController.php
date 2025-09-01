@@ -138,7 +138,14 @@ class PMIController extends Controller
         if(empty($pmi)){
             return  redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
-                ->with('flash_error_message', 'Pmi critico no encontrado.');
+                ->with('flash_error_message', 'Pmi  no encontrado.');
+        }
+
+        $cantidadObjetivosVinculados = $pmi->objetivosVinculados->count();
+        if($cantidadObjetivosVinculados == 0 ) {
+            return redirect()
+                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
+                ->with('flash_error_message', 'El pmi debe contar con almenos un objetivo.');
         }
         $pmi->estado = PmiEstadoEnum::Presentado->value;
         $pmi->save();
