@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PMI;
 
+use App\Exports\PmiExport;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
@@ -17,13 +18,12 @@ use App\Models\PMI\PmiObjetivo;
 use App\Models\PmiActividadAvance;
 use App\Models\PmiActividadAvanceFiles;
 use App\Models\PmiActividadVinculada;
-use App\Models\PmiMetaVinculada;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class PMIController extends Controller
 {
@@ -152,6 +152,12 @@ class PMIController extends Controller
         return  redirect()
             ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
             ->with('flash_success_message', 'Pmi presentado correctamente.');
+    }
+    public function exportarPmi(Request $request , int $pmiId)
+    {
+        $fileName = 'pmi_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new PmiExport($pmiId), $fileName);
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
