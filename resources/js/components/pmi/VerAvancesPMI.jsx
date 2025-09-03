@@ -51,10 +51,25 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
                         <h5 className="modal-title" id="advanceFormModalLabel">
                             Ver Avances
                         </h5>
-                        <div className=" px-3">Valor meta {meta?.valor_requerido}</div>
-                        <div className=" px-3">{meta?.indicador_info?.unidad_total} : {meta?.valor_requerido} </div>
-                        <div className=" px-3">{meta?.indicador_info?.unidad_parcial} : {meta?.indicador}</div>
-                        <div className=" px-3">Total avances {avances.length}</div>
+                        <div className="d-flex gap-2 flex-wrap ms-3">
+                            <div className="card shadow-sm border-0 bg-primary text-white px-2 py-1 small">
+                                Valor meta: {meta?.valor_requerido}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-success text-white px-2 py-1 small">
+                                {meta?.indicador_info?.unidad_total}: {meta?.valor_requerido}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-warning text-dark px-2 py-1 small">
+                                {meta?.indicador_info?.unidad_parcial}: {meta?.indicador}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-info text-dark px-2 py-1 small">
+                                Total avances: {avances.length}
+                            </div>
+                        </div>
+
+
                         <button
                             type="button"
                             className="btn-close"
