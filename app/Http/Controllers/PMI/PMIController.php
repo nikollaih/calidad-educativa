@@ -137,11 +137,16 @@ class PMIController extends Controller
                 ->with('flash_error_message', 'Pmi  no encontrado.');
         }
 
-        $cantidadObjetivosVinculados = $pmi->objetivosVinculados->count();
-        if($cantidadObjetivosVinculados == 0 ) {
+        $cantidadFactoresCriticosPriorizadosSinObjetivos = $pmi->autoevaluacion
+            ->factoresCriticos()
+            ->where('valor', '>', 3)
+            ->doesntHave('objetivos')
+            ->count();
+
+        if($cantidadFactoresCriticosPriorizadosSinObjetivos ) {
             return redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
-                ->with('flash_error_message', 'El pmi debe contar con almenos un objetivo.');
+                ->with('flash_error_message', 'Todos los factores críticos deben contar con almenos un objetivo vinculado, actualmente hay '. $cantidadFactoresCriticosPriorizadosSinObjetivos . ' factores criticos sin un objetivo vinculado.');
         }
         $pmi->estado = PmiEstadoEnum::Presentado->value;
         $pmi->save();
