@@ -2,9 +2,7 @@
 
 namespace App\Http\Services\PMI;
 
-use App\Http\Services\PmiActividadService;
 use App\Models\PmiMetaVinculada;
-use App\Models\PmiObjetivoVinculado;
 
 class PmiMetasVinculadasService {
     public function __construct(private PmiActividadVinculadasService $pmiActividadVinculadasService){}
