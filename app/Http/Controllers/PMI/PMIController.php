@@ -18,6 +18,7 @@ use App\Models\PMI\PmiObjetivo;
 use App\Models\PmiActividadAvance;
 use App\Models\PmiActividadAvanceFiles;
 use App\Models\PmiActividadVinculada;
+use App\Models\PmiMetaVinculada;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -306,11 +307,17 @@ class PMIController extends Controller
     }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null)
     {
-        $avances = PmiActividadAvance::with('actividad', 'adjuntos')
+        $meta = PmiMetaVinculada::with('indicadorInfo')
+            ->whereHas(relation:  'actividades',
+                callback: function ($query) use ($actividadId) {
+                    $query->where('id', $actividadId);
+            })
+            ->first();
+        $avances = PmiActividadAvance::with('actividad.meta.indicadorInfo', 'adjuntos')
             ->where('actividad_id', $actividadId)
             ->get();
 
-        return response()->json($avances);
+        return response()->json(['avances'=>$avances, 'meta'=>$meta]);
 
     }
     public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){

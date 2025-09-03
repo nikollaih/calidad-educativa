@@ -4,6 +4,7 @@ import { h } from "preact";
 
 const VerAvancesPMI = ({ actividad, onClose }) => {
     const [avances, setAvances] = useState([]);
+    const [meta, setMeta] = useState({});
 
     // --- Modal control functions ---
     const closeModal = () => {
@@ -26,8 +27,8 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
             const data = await response.json();
 
             // Ordenar por id descendente
-            const sortedData = data.sort((a, b) => b.id - a.id);
-
+            const sortedData = data.avances.sort((a, b) => b.id - a.id);
+            setMeta(data.meta);
             setAvances(sortedData);
         } catch (error) {
             console.error("Error al cargar los avances:", error);
@@ -50,6 +51,10 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
                         <h5 className="modal-title" id="advanceFormModalLabel">
                             Ver Avances
                         </h5>
+                        <div className=" px-3">Valor meta {meta?.valor_requerido}</div>
+                        <div className=" px-3">{meta?.indicador_info?.unidad_total} : {meta?.valor_requerido} </div>
+                        <div className=" px-3">{meta?.indicador_info?.unidad_parcial} : {meta?.indicador}</div>
+                        <div className=" px-3">Total avances {avances.length}</div>
                         <button
                             type="button"
                             className="btn-close"
