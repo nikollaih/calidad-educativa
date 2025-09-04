@@ -26,7 +26,7 @@ export default function ListaRedActividades({
   const integrantesRoles = [
     { id: 1, name: 'Líder' },
     { id: 2, name: 'Integrante' },
-    { id: 3, name: 'Aliado' }
+    { id: 3, name: 'Aliado' },
   ];
   
   // Estados de Integrantes (para el segundo tab)

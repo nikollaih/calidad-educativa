@@ -4,6 +4,7 @@ import { h } from "preact";
 
 const VerAvancesPMI = ({ actividad, onClose }) => {
     const [avances, setAvances] = useState([]);
+    const [meta, setMeta] = useState({});
 
     // --- Modal control functions ---
     const closeModal = () => {
@@ -26,8 +27,8 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
             const data = await response.json();
 
             // Ordenar por id descendente
-            const sortedData = data.sort((a, b) => b.id - a.id);
-
+            const sortedData = data.avances.sort((a, b) => b.id - a.id);
+            setMeta(data.meta);
             setAvances(sortedData);
         } catch (error) {
             console.error("Error al cargar los avances:", error);
@@ -50,6 +51,25 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
                         <h5 className="modal-title" id="advanceFormModalLabel">
                             Ver Avances
                         </h5>
+                        <div className="d-flex gap-2 flex-wrap ms-3">
+                            <div className="card shadow-sm border-0 bg-primary text-white px-2 py-1 small">
+                                Valor meta: {meta?.valor_requerido}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-success text-white px-2 py-1 small">
+                                {meta?.indicador_info?.unidad_total}: {meta?.valor_requerido}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-warning text-dark px-2 py-1 small">
+                                {meta?.indicador_info?.unidad_parcial}: {meta?.indicador}
+                            </div>
+
+                            <div className="card shadow-sm border-0 bg-info text-dark px-2 py-1 small">
+                                Total avances: {avances.length}
+                            </div>
+                        </div>
+
+
                         <button
                             type="button"
                             className="btn-close"

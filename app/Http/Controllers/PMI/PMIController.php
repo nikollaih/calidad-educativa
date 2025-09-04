@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PMI;
 
+use App\Exports\PmiExport;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
@@ -22,8 +23,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class PMIController extends Controller
 {
@@ -61,10 +62,6 @@ class PMIController extends Controller
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
-            ->whereDoesntHave('institucion.autoevaluaciones.pmi', function ($query) {
-                $query->whereColumn('autoevaluacions.anio_vigencia', '>=', 'pmis.anio_inicio')
-                    ->whereColumn('autoevaluacions.anio_vigencia', '<', 'pmis.anio_fin');
-            })
             ->get();
         return view('pmi.create',
         [
@@ -102,7 +99,7 @@ class PMIController extends Controller
             })
             ->exists();
 
-        if ($existeTraslape) {
+        if (false) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', 'El intervalo de años se cruza con otro PMI existente para esta institución.');
@@ -138,13 +135,31 @@ class PMIController extends Controller
         if(empty($pmi)){
             return  redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
-                ->with('flash_error_message', 'Pmi critico no encontrado.');
+                ->with('flash_error_message', 'Pmi  no encontrado.');
+        }
+
+        $cantidadFactoresCriticosPriorizadosSinObjetivos = $pmi->autoevaluacion
+            ->factoresCriticos()
+            ->where('valor', '>', 3)
+            ->doesntHave('objetivos')
+            ->count();
+
+        if($cantidadFactoresCriticosPriorizadosSinObjetivos ) {
+            return redirect()
+                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
+                ->with('flash_error_message', 'Todos los factores críticos deben contar con almenos un objetivo vinculado, actualmente hay '. $cantidadFactoresCriticosPriorizadosSinObjetivos . ' factores criticos sin un objetivo vinculado.');
         }
         $pmi->estado = PmiEstadoEnum::Presentado->value;
         $pmi->save();
         return  redirect()
             ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
             ->with('flash_success_message', 'Pmi presentado correctamente.');
+    }
+    public function exportarPmi(Request $request , int $pmiId)
+    {
+        $fileName = 'pmi_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new PmiExport($pmiId), $fileName);
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
@@ -292,11 +307,17 @@ class PMIController extends Controller
     }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null)
     {
-        $avances = PmiActividadAvance::with('actividad', 'adjuntos')
+        $meta = PmiMetaVinculada::with('indicadorInfo')
+            ->whereHas(relation:  'actividades',
+                callback: function ($query) use ($actividadId) {
+                    $query->where('id', $actividadId);
+            })
+            ->first();
+        $avances = PmiActividadAvance::with('actividad.meta.indicadorInfo', 'adjuntos')
             ->where('actividad_id', $actividadId)
             ->get();
 
-        return response()->json($avances);
+        return response()->json(['avances'=>$avances, 'meta'=>$meta]);
 
     }
     public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){

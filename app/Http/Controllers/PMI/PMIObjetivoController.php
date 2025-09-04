@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\PMI;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\PmiMetaService;
 use App\Models\FactorCriticoCalificacion;
-use App\Models\PMI\PmiActividad;
 use App\Models\PMI\PmiIndicador;
-use App\Models\PMI\PmiMeta;
 use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
 

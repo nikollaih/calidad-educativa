@@ -26,4 +26,16 @@ class Pmi extends Model
     public function factoresCriticos(){
         return $this->hasMany(FactorCritico::class, 'pmi_id');
     }
+    public function objetivosVinculados()
+    {
+        return $this->hasManyThrough(
+            PmiObjetivoVinculado::class, // Modelo destino
+            FactorCritico::class,        // Modelo intermedio
+            'pmi_id',    // Foreign key en factoresCriticos que apunta al PMI
+            'factor_id', // Foreign key en objetivosVinculados que apunta al factor
+            'id',        // Primary key de PMI
+            'id'         // Primary key de FactorCritico
+        );
+    }
+
 }

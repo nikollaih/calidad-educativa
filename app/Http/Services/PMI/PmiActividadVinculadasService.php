@@ -1,7 +1,5 @@
 <?php
 namespace App\Http\Services\PMI;
-use App\Models\PMI\PmiActividad;
-use App\Models\PMI\PmiIndicador;
 use App\Models\PmiActividadVinculada;
 
 class PmiActividadVinculadasService {

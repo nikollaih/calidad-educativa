@@ -3,7 +3,7 @@ import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import { h } from "preact";
 import CrearAvancePMI from "@/components/pmi/CrearAvancePMI.jsx";
 import VerAvancesPMI from "@/components/pmi/VerAvancesPMI.jsx";
-const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1}) => {
+const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1, exportarUrl=''}) => {
     const [pmi] = useState(pmiData);
     const [showCrearAvance, setShowCrearAvance] = useState(false);
     const [showVerAvances, setShowVerAvances] = useState(false);
@@ -110,7 +110,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                             </small>
                         </div>
                         <div class="d-flex gap-3">
-                            <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" />
+                            <CNavigationButton label="Exportar tabla" to={exportarUrl} icon="fas fa-file-excel" target="_blank"/>
                         </div>
                     </div>
                 </div>

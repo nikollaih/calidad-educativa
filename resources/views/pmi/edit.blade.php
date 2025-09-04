@@ -15,6 +15,7 @@
         data-component="PmiEdit"
         data-csrf-token="{{ csrf_token() }}"
         data-institucion-id="{{$institucionId}}"
+        data-exportar-url="{{ route('pmi.exportar', $pmi->id)  }}"
         data-pmi-data='@json($pmi->toArray())'
     >
     </div>
