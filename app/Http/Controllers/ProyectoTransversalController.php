@@ -32,7 +32,11 @@ class ProyectoTransversalController extends Controller
         private AutoevaluacionService $autoevaluacionService,
     ){}
 
-    public function index( int $institucionId) {
+    public function index(int $institucionId) {
+        $usuarioActual = auth()->user()->load('roles');
+
+        // Verifica si el usuario tiene el rol de 'rector'
+        $esRector = $usuarioActual->roles->contains('name', 'rector');
         $proyectosTransversales = ProyectosTransversal::with(['representante', 'actoAdministrativo'])->whereHas('institucion', function ($query) use ($institucionId) {
             $query->where('id', $institucionId);
         })->get();
@@ -40,6 +44,7 @@ class ProyectoTransversalController extends Controller
         return view('proyectoTransversal.index', [
             'institucionId' => $institucionId,
             'proyectosTransversales' => $proyectosTransversales,
+            'esRector' => $esRector,
         ]);
     }
     
@@ -91,8 +96,7 @@ class ProyectoTransversalController extends Controller
         return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto transversal creada correctamente.');
     }
 
-    public function edit(int $institucion)
-    {
+    public function edit(int $institucion) {
         $municipios = Municipio::get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',

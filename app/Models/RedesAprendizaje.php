@@ -43,7 +43,7 @@ class RedesAprendizaje extends Model
      */
     public function integrantes(): HasMany
     {
-        return $this->hasMany(Integrante::class, 'red_aprendizaje_id');
+        return $this->hasMany(RedIntegrante::class, 'red_aprendizaje_id');
     }
 
     /**

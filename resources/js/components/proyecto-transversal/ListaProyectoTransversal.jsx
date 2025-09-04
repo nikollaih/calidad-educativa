@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
-export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, csrfToken = '' }) {
+export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, esRector = false, csrfToken = '' }) {
 
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
     const [showModal, setShowModal] = useState(false);
@@ -205,12 +205,14 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                 )}
                             </td>
                             <td>
-                                <button
-                                    onClick={() => handleEditarClick(proyectoTransversal)}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
+                                {esRector && (
+                                    <button
+                                        onClick={() => handleEditarClick(proyectoTransversal)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Editar
+                                    </button>
+                                )}
                                 <button
                                     className="btn btn-danger btn-sm me-2" // COMENTARIO: Se agregó la clase 'me-2' para crear un margen a la derecha.
                                     onClick={() => handleDelete(proyectoTransversal.id)}

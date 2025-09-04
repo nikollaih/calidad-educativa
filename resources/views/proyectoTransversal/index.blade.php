@@ -17,6 +17,7 @@
         data-institucion-id="{{$institucionId}}"
         data-csrf-token="{{csrf_token()}}"
         data-proyectos-transversales='@json($proyectosTransversales)'
+        data-es-rector='@json($esRector)'
     >
 
     </div>

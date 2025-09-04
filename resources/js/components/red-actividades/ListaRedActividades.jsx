@@ -837,7 +837,7 @@ useEffect(() => {
                           onChange={(e) => setSelectedRole(e.target.value)}
                         >
                           <option value="">-- Selecciona --</option>
-                          {rolesList.map(rol => (
+                          {integrantesRoles.map(rol => (
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
                           ))}
                         </select>
