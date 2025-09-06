@@ -111,7 +111,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
 
     return (
         <div className="container py-4">
-                <h3 className="mb-4">Crear nuevo objetivo pmi</h3>
+                <h3 className="mb-4">Crear nuevo objetivo PMI</h3>
 
                 {/* Sección del objetivo */}
                 <div className="card mb-4">
