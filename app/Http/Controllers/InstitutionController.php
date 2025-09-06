@@ -2,37 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\Result;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
-use App\Models\Calificacion;
 use App\Models\FactorCritico;
-use App\Models\FactorCriticoCalificacion;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\PeiHistorial;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
-class InstitutionController extends Controller
-{
+class InstitutionController extends Controller {
     public function __construct(
         private AdjuntoService $adjuntoService,
         private RedesSocialesService $redesSocialesService,
         private AutoevaluacionService $autoevaluacionService,
-    ){}
+    ) {
+    }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $municipioId = request()->query('municipio_id');
         $paginate = Institucion::with('licenciaFuncionamiento','redesSociales')
             ->when($municipioId, function ($query, $municipioId) {
@@ -57,7 +53,6 @@ class InstitutionController extends Controller
             $instituciones = Institucion::all();
 
             return response()->json($instituciones, 200);
-
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
@@ -66,8 +61,7 @@ class InstitutionController extends Controller
         }
     }
 
-    public function show(int $institucion)
-    {
+    public function show(int $institucion) {
         $municipios = Municipio::get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
@@ -84,13 +78,12 @@ class InstitutionController extends Controller
         }
         return view('institutional_profile.institution.show', ['institution' => $institucion, 'municipios' => $municipios]);
     }
-    public function fortalezasDebilidades(int $autoevaluacionId = null)
-    {
+    public function fortalezasDebilidades(int $autoevaluacionId) {
         $fortalezasDebilidades = $this->autoevaluacionService->getFortalezasDebilidades(autoevaluacionId:$autoevaluacionId);
         return view('institutional_profile.institution.resultados.form', $fortalezasDebilidades);
     }
 
-    public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId){
+    public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId) {
         $factores = $request->input('factores');
         // Recolectar los registros v?lidos que vamos a mantener
         $idsParaMantener = [];
@@ -121,17 +114,14 @@ class InstitutionController extends Controller
         // Redirigir usando el primer autoevaluacion_id
         return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionId])
             ->with('flash_success_message', "Resultados actualizados correctamente");
-
     }
-    public function autoevaluaciones(int $institution = null)
-    {
+    public function autoevaluaciones(int $institution ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->get();
-       // $roles = Role::all();
+        // $roles = Role::all();
         return view('institutional_profile.institution.autoevaluaciones.index',
             ['institutionId' => $institution, 'autoevaluaciones' => $autoevaluaciones]);
     }
-    public function autoevaluacionesCrear(int $institution = null)
-    {
+    public function autoevaluacionesCrear(int $institution ) {
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
@@ -145,10 +135,9 @@ class InstitutionController extends Controller
             ]
         );
     }
-    public function autoevaluacionesEditar(int $autoevaluacionId = null)
-    {
+    public function autoevaluacionesEditar(int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
-        if(empty($autoevaluacionId)){
+        if (empty($autoevaluacionId)) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
         }
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
@@ -161,11 +150,10 @@ class InstitutionController extends Controller
             ]
         );
     }
-    public function autoevaluacionesVer(int $autoevaluacionId = null)
-    {
+    public function autoevaluacionesVer(int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion', 'notas.calificacion.grupo','notas.calificacion.grupo.padre')
             ->where('id', $autoevaluacionId)->first();
-        if(empty($autoevaluacionId)){
+        if (empty($autoevaluacionId)) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
         }
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
@@ -192,7 +180,7 @@ class InstitutionController extends Controller
             ->whereNull('padre_id')
             ->get()
             ->map( function ( $baseGroup) use ($formattedNotes) {
-                $subGruposFormateados = $baseGroup->hijos->map( function ( $subGrupo)  use ($formattedNotes) {
+                $subGruposFormateados = $baseGroup->hijos->map( function ( $subGrupo) use ($formattedNotes) {
                     return [
                         'nombre' => $subGrupo->nombre,
                         'indice' => $subGrupo->indice,
@@ -230,19 +218,19 @@ class InstitutionController extends Controller
             ]
         );
     }
-    public function autoevaluacionesAlmacenar(Request $request)
-    {
+    public function autoevaluacionesAlmacenar(Request $request) {
         $autoevaluacionData =  $request->input('autoevaluacion');
         $autoevaluacionData['alias_estado'] = "PROCESO";
         $notas = $request->input('notas');
 
         $autoevaluacionOld = Autoevaluacion::where($autoevaluacionData)->first();
-        if($autoevaluacionOld)
+        if ($autoevaluacionOld) {
             return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacionOld->institucion_id])->with('flash_error_message', "Error! ya existe una  autoevaluaci?n con esa vigencia");
+        }
 
         $autoevaluacion = Autoevaluacion::create($autoevaluacionData);
 
-        if($notas){
+        if ($notas) {
             $syncData = [];
 
             foreach ($notas as $nota) {
@@ -251,24 +239,23 @@ class InstitutionController extends Controller
             $autoevaluacion->notas()->sync($syncData);
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluaci?n creada correctamente");
-
     }
-    public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null)
-    {
+    public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
 
-        if(!$autoevaluacion)
+        if (!$autoevaluacion) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
+        }
         $notasPendientes = $this->autoevaluacionService->obtenerNotasPendientes(autoevaluacion: $autoevaluacion);
         if ($notasPendientes->count() != 0) {
             return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('tiene_notas_pendientes', $notasPendientes);
         }
         $this->autoevaluacionService->getFortalezasDebilidades(autoevaluacionId:$autoevaluacionId);
         $cantidadFactoresCriticosPriorizados = $autoevaluacion->factoresCriticos->where('valor', '>','3')->count();
-        if($cantidadFactoresCriticosPriorizados == 0 ){
+        if ($cantidadFactoresCriticosPriorizados < 2 ) {
             return redirect()
                 ->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])
-                ->with('flash_error_message','Debe tener almenos un factor crítico priorizado');
+                ->with('flash_error_message','Debe tener almenos dos factores crítico priorizados');
         }
         $autoevaluacion->alias_estado = "VALIDACION";
         $autoevaluacion->save();
@@ -276,17 +263,16 @@ class InstitutionController extends Controller
             'institution.autoevaluaciones',
             ['institution' => $autoevaluacion->institucion_id]
         )->with('flash_success_message', 'Autoevaluaci?n enviada a validaci?n correctamente');
-
     }
-    public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null)
-    {
+    public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
         $notas = $request->input('notas');
 
-        if(!$autoevaluacion)
+        if (!$autoevaluacion) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluaci?n no encontrada.');
+        }
 
-        if($notas){
+        if ($notas) {
             $syncData = [];
 
             foreach ($notas as $nota) {
@@ -295,17 +281,13 @@ class InstitutionController extends Controller
             $autoevaluacion->notas()->sync($syncData);
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluaci?n actualizada correctamente");
-
     }
-    public function create()
-    {
+    public function create() {
         $municipios = Municipio::get();
-       // $roles = Role::all();
+        // $roles = Role::all();
         return view('institutional_profile.institution.create', ['municipios' => $municipios]);
     }
-    public function store(Request $request)
-    {
-
+    public function store(Request $request) {
         // Valida si hay un file de licencia de funcionamiento
         if (!$request->hasFile('licencia_funcionamiento')) {
             return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar una licencia de funcionamiento.');
@@ -314,7 +296,7 @@ class InstitutionController extends Controller
         // Intenta almacenar el Adjunto
         $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto($request->file('licencia_funcionamiento'),'institucion/licencia_funcionamiento','public');
 
-        if ($storeAdjuntoResponse->success == false){
+        if ($storeAdjuntoResponse->success == false) {
             return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse->msg);
         }
         $institutionData = $request->all();
@@ -329,8 +311,7 @@ class InstitutionController extends Controller
 
         return redirect()->back()->with('flash_success_message', 'Instituci?n creada correctamente.');
     }
-    public function edit(int $institucion)
-    {
+    public function edit(int $institucion) {
         $municipios = Municipio::get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
@@ -339,49 +320,47 @@ class InstitutionController extends Controller
             'sedes.levelSedeEducational.schedules',
             'sedes.levelSedeEducational.schedules.anexo',
             'sedes.educationalOffer'
-            )
+        )
             ->where('id',$institucion)
             ->first();
-         if (!$institucion) {
+        if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
-         }
+        }
         return view('institutional_profile.institution.edit', ['institution' => $institucion , 'municipios' => $municipios]);
     }
-    public function update(Request $request, int $institucion)
-    {
-         $institucionToUpdate = Institucion::with('redesSociales')
-            ->where('id', $institucion)
-            ->first();
+    public function update(Request $request, int $institucion) {
+        $institucionToUpdate = Institucion::with('redesSociales')
+           ->where('id', $institucion)
+           ->first();
 
-         if (!$institucionToUpdate) {
+        if (!$institucionToUpdate) {
             return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
-         }
+        }
 
-         $institutionData = $request->all();
+        $institutionData = $request->all();
 
-         if ($request->hasFile('licencia_funcionamiento')) {
+        if ($request->hasFile('licencia_funcionamiento')) {
             $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto($request->file('licencia_funcionamiento'),'institucion/licencia_funcionamiento','public');
-             if ($storeAdjuntoResponse->success == false){
+            if ($storeAdjuntoResponse->success == false) {
                 return redirect()->route('institution.create')->with('flash_error_message', $storeAdjuntoResponse->msg);
-             }
+            }
             $institutionData['licencia_funcionamiento'] = $storeAdjuntoResponse->data->id;
-         }
-         $institucionToUpdate->fill($institutionData);
-         $institucionToUpdate->save();
-         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'], $institucionToUpdate);
+        }
+        $institucionToUpdate->fill($institutionData);
+        $institucionToUpdate->save();
+        $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'], $institucionToUpdate);
 
         return redirect()->route('institution.edit',$institucion)->with('success', 'Instituci?n actualizada correctamente.');
     }
-    public function destroy(int $institucion)
-    {
-         $institucionToDel = Institucion::find($institucion);
-         if (!$institucionToDel) {
+    public function destroy(int $institucion) {
+        $institucionToDel = Institucion::find($institucion);
+        if (!$institucionToDel) {
             return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
-         }
+        }
 
-         $institucionToDel->redesSociales()->delete();
-         $institucionToDel->delete();
-         return redirect()->back()->with('success', 'Instituci?n Eliminada correctamente.');
+        $institucionToDel->redesSociales()->delete();
+        $institucionToDel->delete();
+        return redirect()->back()->with('success', 'Instituci?n Eliminada correctamente.');
     }
 
     public function pei(int $institucion) {
@@ -395,9 +374,9 @@ class InstitutionController extends Controller
             ->where('id', $institucion)
             ->first();
 
-         if (!$institucionData) {
+        if (!$institucionData) {
             return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
-         }
+        }
 
         return view('institutional_profile.institution.pei', [
             'gestion_directiva' => $institucionData->gestionDirectiva ?? null,
@@ -543,14 +522,12 @@ class InstitutionController extends Controller
                 'historial_id' => $historial->id,
                 'validated_data' => $validated // A?adimos esto
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error al actualizar PEI: " . $e->getMessage());
