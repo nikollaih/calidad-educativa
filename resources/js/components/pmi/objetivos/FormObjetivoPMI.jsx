@@ -88,30 +88,9 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
         }
     };
 
-    // Agregar actividad a un meta
-    const addActividad = (metaIndex) => {
-        const newMeta = [...metas];
-        newMeta[metaIndex].actividades.push({
-            descripcion: '',
-        });
-
-        setMetas(newMeta);
-    };
-
-    // Eliminar actividad de un meta
-    const removeActividad = (metaIndex, actividadIndex) => {
-        const newMeta = [...metas];
-        if (newMeta[metaIndex].actividades.length > 1) {
-            // Eliminar la actividad
-            newMeta[metaIndex].actividades = newMeta[metaIndex]
-                .actividades.filter((_, i) => i !== actividadIndex);
-            setMetas(newMeta);
-        }
-    };
-
     return (
         <div className="container py-4">
-                <h3 className="mb-4">Crear nuevo objetivo PMI</h3>
+                <h3 className="mb-4">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
 
                 {/* Sección del objetivo */}
                 <div className="card mb-4">
@@ -214,57 +193,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                             />
                                         </div>
                                     </div>
-
-
-                                    {/* Actividades del meta */}
-                                    <div className="ps-3">
-                                        <div className="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Actividades</h6>
-                                        </div>
-
-                                        {meta.actividades.map((actividad, j) => {
-                                            return (
-                                                <div key={j} className="mb-3 border p-3 rounded">
-                                                    <div className="d-flex align-items-center mb-2">
-                                                        <label
-                                                            htmlFor={`actividad-${i}-${j}`}
-                                                            className="form-label me-2"
-                                                        >
-                                                            Actividad #{j + 1}
-                                                        </label>
-                                                        { editable && (
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-sm btn-outline-danger ms-auto"
-                                                                onClick={() => removeActividad(i, j)}
-                                                                disabled={meta.actividades.length <= 1}
-                                                            >
-                                                                Eliminar
-                                                            </button>
-                                                        )}
-
-                                                    </div>
-                                                    <textarea
-                                                        id={`actividad-desc-${i}-${j}`}
-                                                        className="form-control mb-2"
-                                                        name="descripcion"
-                                                        value={actividad.descripcion}
-                                                        onChange={(e) => handleActividadChange(i, j, e)}
-                                                        disabled={!editable}
-                                                        required
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-
-                                        { editable && (<button
-                                            type="button"
-                                            className="btn btn-sm btn-outline-primary"
-                                            onClick={() => addActividad(i)}
-                                        >
-                                            Agregar Actividad
-                                        </button>)}
-                                    </div>
                                 </div>
                             );
                         })}
@@ -290,17 +218,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             name={`metas[${i}][indicador_id]`}
                             value={meta.indicador_id}
                         />
-
-                        {meta.actividades.map((actividad, j) => (
-                            <div key={j}>
-                                <input
-                                    type="hidden"
-                                    name={`metas[${i}][actividades][${j}][descripcion]`}
-                                    value={actividad.descripcion}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                   </div>
                 ))}
                 { editable && (
                     <button

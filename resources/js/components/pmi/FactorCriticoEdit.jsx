@@ -176,6 +176,39 @@ const FactorCriticoEdit = ({
         // Opcional: limpiar el select tras agregar
         setSelectedMetaByObjetivo(prev => ({...prev, [objetivo.id]: ''}));
     };
+    // Agregar actividad a una meta por ID
+const addActividad = (metaId) => {
+    setFormData(prev => ({
+        ...prev,
+        objetivos: prev.objetivos.map(objetivo => ({
+            ...objetivo,
+            metas: (objetivo.metas || []).map(meta =>
+                meta.id === metaId
+                    ? {
+                        ...meta,
+                        actividades: [
+                            ...(meta.actividades || []),
+                            {
+                                id: `actividad-virtual-${uniqueId()}`,
+                                descripcion: '',
+                                peso: 0,
+                                max_suma_indicador: 0,
+                                afecta_indicador: 0,
+                                responsables: '',
+                                recursos: '',
+                                fecha_inicio: '',
+                                fecha_fin: '',
+                                meta_id: metaId
+                            }
+                        ]
+                    }
+                    : meta
+            )
+        }))
+    }));
+};
+
+
 
     /**
      * Función para eliminar elementos
@@ -247,7 +280,7 @@ const FactorCriticoEdit = ({
                             value={actividad.descripcion}
                             onChange={(e) => updateField(actividad.id, 'descripcion', e.target.value)}
                             placeholder="Descripción de la actividad"
-                            disabled={true}
+                            disabled={false}
                         />
                     </div>
 
@@ -451,8 +484,15 @@ const FactorCriticoEdit = ({
                                 min="0"
                             />
                         </div>
-                    </div>
 
+                    </div>
+                     <button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary mt-4"
+                            onClick={() => addActividad(meta.id)}
+                        >
+                            Agregar Actividad
+                        </button>
                     {/* Renderizar actividades */}
                     {meta.actividades && meta.actividades.map(actividad =>
                         renderActividad(actividad, meta.id, restante, sumaPesos, meta)

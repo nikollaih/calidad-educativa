@@ -218,56 +218,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' , factoresCriticos=
                                             />
                                         </div>
                                     </div>
-
-
-                                    {/* Actividades del meta */}
-                                    <div className="ps-3">
-                                        <div className="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Actividades</h6>
-                                        </div>
-
-                                        {meta.actividades.map((actividad, j) => {
-                                            const pesoRestante = calcularPesoRestante(i, j);
-
-                                            return (
-                                                <div key={j} className="mb-3 border p-3 rounded">
-                                                    <div className="d-flex align-items-center mb-2">
-                                                        <label
-                                                            htmlFor={`actividad-${i}-${j}`}
-                                                            className="form-label me-2"
-                                                        >
-                                                            Actividad #{j + 1}
-                                                        </label>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-sm btn-outline-danger ms-auto"
-                                                            onClick={() => removeActividad(i, j)}
-                                                            disabled={meta.actividades.length <= 1}
-                                                        >
-                                                            Eliminar
-                                                        </button>
-                                                    </div>
-                                                    <textarea
-                                                        id={`actividad-desc-${i}-${j}`}
-                                                        className="form-control mb-2"
-                                                        name="descripcion"
-                                                        value={actividad.descripcion}
-                                                        onChange={(e) => handleActividadChange(i, j, e)}
-                                                        required
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm btn-outline-primary"
-                                            onClick={() => addActividad(i)}
-                                        >
-                                            Agregar Actividad
-                                        </button>
-                                    </div>
-                                </div>
+                               </div>
                             );
                         })}
                     </div>
@@ -287,17 +238,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '' , factoresCriticos=
                             name={`metas[${i}][indicador_id]`}
                             value={meta.indicador_id}
                         />
-                        {meta.actividades.map((actividad, j) => (
-                            <div key={j}>
-                                <input
-                                    type="hidden"
-                                    name={`metas[${i}][actividades][${j}][descripcion]`}
-                                    value={actividad.descripcion}
-                                    className="form-control"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                   </div>
                 ))}
                 <input type="hidden" name="descripcion" value={objetivo.descripcion} />
                 <input type="hidden" name="factor_id" value={objetivo.factor_id} />
