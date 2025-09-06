@@ -78,7 +78,7 @@ export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPag
                                             className="btn btn-success btn-sm"
                                             alt
                                     >
-                                        Presentar PMI
+                                       Enviar a SED
                                     </button>
                                 </form>
                             )}
