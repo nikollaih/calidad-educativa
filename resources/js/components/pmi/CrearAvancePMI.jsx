@@ -257,7 +257,7 @@ const CrearAvancePMI = ({
                                                     htmlFor="unidades"
                                                     className="form-label"
                                                 >
-                                                    Cantidad (queda {selectedActivity?.max_suma_indicador - selectedActivity?.indicador_acumulado} )  :
+                                                    Cantidad   :
                                                 </label>
                                                 <input
                                                     type="number"

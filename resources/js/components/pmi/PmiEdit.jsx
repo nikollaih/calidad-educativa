@@ -122,7 +122,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                 <th className="text-center">Gestión</th>
                                 <th className="text-center">Componente</th>
                                 <th className="text-center">Factor Crítico</th>
-                                <th className="text-center">Objective</th>
+                                <th className="text-center">Objectivo</th>
                                 <th className="text-center">Meta</th>
                                 <th className="text-center">Indicador</th>
                                 <th className="text-center">Actividad</th>
@@ -226,14 +226,12 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                     <div className="text-center">
                                                         <div className="d-flex align-items-center gap-2">
                                                             <small>{row?.meta?.indicador_info?.unidad_parcial}</small>
-                                                            <div>{row?.meta?.indicador}</div>
                                                         </div>
 
                                                         <hr className="my-1"/>
 
                                                         <div className="d-flex align-items-center gap-2">
                                                             <small>{row?.meta?.indicador_info?.unidad_total}</small>
-                                                            <div>{row?.meta?.valor_requerido}</div>
                                                         </div>
 
                                                     </div>
