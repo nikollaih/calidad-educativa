@@ -21,6 +21,22 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
         }
     ]);
 
+
+    // Nuevo estado: gestión seleccionada
+    const [gestionSeleccionada, setGestionSeleccionada] = useState(null);
+
+    // Sacamos las gestiones únicas desde los factores
+    const gestiones = Array.from(
+        new Map(
+            factoresCriticos.map(f => [f.calificacion.grupo.padre.id, f.calificacion.grupo.padre])
+        ).values()
+    );
+
+    // Filtrar factores por gestión seleccionada
+    const factoresFiltrados = gestionSeleccionada
+        ? factoresCriticos.filter(f => f.calificacion.grupo.padre.id === gestionSeleccionada.id)
+        : [];
+
     useEffect(() => {
         if (objetivoExistente){
             setObjetivo({
@@ -28,10 +44,16 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 descripcion: objetivoExistente.descripcion,
                 factor_id:  objetivoExistente.factor_id,
             });
+
+            // Si ya hay factor, asignar gestión automáticamente
+            const factorExistente = factoresCriticos.find(f => f.id === objetivoExistente.factor_id);
+            if (factorExistente) {
+                setGestionSeleccionada(factorExistente.calificacion.grupo.padre);
+            }
+
             setMetas(objetivoExistente.metas);
         }
     },[]);
-
     // Manejar cambios en los campos de la objetivo
     const handleObjetivoChange = (e) => {
         const { name, value } = e.target;
@@ -112,23 +134,38 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                         </div>
                     </div>
                     <div className="card-body">
-                        <label htmlFor="descripcion" className="form-label">Factor critico asociado al objetivo*</label>
+                        <label className="form-label">Gestión*</label>
                         <CAutocompleteFromArray
-                            data={factoresCriticos}
-                            fieldName={"factor_id"}
-                            initialValue={objetivo.factor_id}
-                            searchFields={['descripcion', 'indice_calificacion']}
-                            labelFields={['indice_calificacion', 'descripcion']}
-                            onSelect={(factor) => {
-                                setObjetivo(prev => ({
-                                    ...prev,
-                                    ['factor_id']: factor.id
-                                }));
+                            data={gestiones}
+                            fieldName={"gestion_id"}
+                            initialValue={gestionSeleccionada?.id}
+                            searchFields={['nombre', 'indice']}
+                            labelFields={['indice','nombre']}
+                            onSelect={(gestion) => {
+                                setGestionSeleccionada(gestion);
+                                // Reiniciar factor si cambia la gestión
+                                setObjetivo(prev => ({ ...prev, factor_id: "" }));
                             }}
                         />
-
                     </div>
-                </div>
+
+                    {gestionSeleccionada && (
+                        <div className="card-body">
+                            <label className="form-label">Factor crítico*</label>
+                            <CAutocompleteFromArray
+                                key={gestionSeleccionada.id}   // 🔑 fuerza reset al cambiar gestión
+                                data={factoresFiltrados}
+                                fieldName={"factor_id"}
+                                initialValue={objetivo.factor_id}
+                                searchFields={['descripcion','indice_calificacion']}
+                                labelFields={['indice_calificacion','descripcion']}
+                                onSelect={(factor) => {
+                                    setObjetivo(prev => ({ ...prev, factor_id: factor.id }));
+                                }}
+                            />
+                        </div>
+                    )}
+            </div>
 
                 {/* Sección de Meta */}
                 <div className="card mb-4">
