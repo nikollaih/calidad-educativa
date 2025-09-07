@@ -13,6 +13,7 @@
         data-is-related-to-proyecto='{!! json_encode($isRelatedToProyecto) !!}'
         data-actividades='{!! json_encode($actividades) !!}'
         data-integrantes='{!! json_encode($integrantes) !!}'
+        data-detalle-proyecto='{!! json_encode($detalleProyecto) !!}'
         data-agregar-url="{{ route('proyecto-transversal-actividades.store', $proyectoTransversal) }}">
     </div>
 @endsection

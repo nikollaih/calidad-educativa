@@ -53,7 +53,7 @@
             <a href="#" class="btn btn-success  btn-sm">PEI</a>
             <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
             <a href="{{ route('pmi.index', $institucionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="{{ route('proyectos_transversales.index', $institucionId) }}" class="btn btn-outline-warning btn-sm">Proyectos transversales</a>
+            <a href="{{ route('proyectos_transversales.index', $institucionId) }}" class="btn btn-outline-warning btn-sm">PPT</a>
         </div>
     </div>
     <!-- Content -->

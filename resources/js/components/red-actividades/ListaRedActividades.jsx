@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 // Se eliminó la importación de Lucide-React y se usaron las clases de Font Awesome directamente.
 // Los íconos de Font Awesome deben estar disponibles a través de una hoja de estilos CSS en el proyecto HTML.
@@ -8,10 +9,11 @@ export default function ListaRedActividades({
   redesActividades = [],
   integrantes = [],
   redesAprendizajes = [],
+  detalleRed = {}, // NUEVA PROP: detalle de la red
   csrfToken = ''
 }) {
   // Estado para controlar qué pestaña está activa
-  const [activeTab, setActiveTab] = useState('actividades');
+  const [activeTab, setActiveTab] = useState('actividades'); // CAMBIO: Pestaña por defecto
 
   // Estados del modal de actividades
   const [showActividadModal, setShowActividadModal] = useState(false);
@@ -43,6 +45,10 @@ export default function ListaRedActividades({
   const [isLoadingInstitutions, setIsLoadingInstitutions] = useState(false);
   const [institutionsError, setInstitutionsError] = useState(null);
 
+  // NUEVO: Estados para el filtro de año en la pestaña de histórico
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [availableYears, setAvailableYears] = useState([]);
+
   // Lógica de carga, errores y modales genéricos (se mantienen)
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -60,10 +66,37 @@ export default function ListaRedActividades({
   // CAMBIO: Estado para la descripción del correo en el modal de compartir
   const [shareDescription, setShareDescription] = useState('');
 
+  // NUEVO: Efecto para generar la lista de años disponibles basado en las actividades
+  useEffect(() => {
+    const years = redesActividades.map(actividad => {
+      const fecha = new Date(actividad.fecha);
+      return fecha.getFullYear();
+    });
+    const uniqueYears = [...new Set(years)].sort((a, b) => b - a);
+    setAvailableYears(uniqueYears);
+  }, [redesActividades]);
+
+  // NUEVO: Función para obtener actividades del año actual
+  const getActividadesAnioActual = () => {
+    const currentYear = new Date().getFullYear();
+    return redesActividades.filter(actividad => {
+      const fecha = new Date(actividad.fecha);
+      return fecha.getFullYear() === currentYear;
+    });
+  };
+
+  // NUEVO: Función para obtener actividades filtradas por año
+  const getActividadesPorAnio = () => {
+    return redesActividades.filter(actividad => {
+      const fecha = new Date(actividad.fecha);
+      return fecha.getFullYear() === selectedYear;
+    });
+  };
+
   // Efecto para obtener la lista de usuarios al cargar el componente
   useEffect(() => {
     const fetchUsers = async () => {
-      setIsLoadingUsers(true);
+      // setIsLoadingUsers(true);
       try {
         const response = await fetch('/get-usuarios');
         if (!response.ok) {
@@ -71,11 +104,11 @@ export default function ListaRedActividades({
         }
         const data = await response.json();
         setUsuarios(data.data);
-        setUsersError(null);
+        // setUsersError(null);
       } catch (error) {
-        setUsersError(error.message);
+        // setUsersError(error.message);
       } finally {
-        setIsLoadingUsers(false);
+        // setIsLoadingUsers(false);
       }
     };
     fetchUsers();
@@ -394,16 +427,55 @@ useEffect(() => {
     }
   };
 
+  // NUEVO: Función para renderizar la información de la red
+  const renderInformacionRed = () => (
+    <div className="mt-4">
+      <div className="card">
+        <div className="card-header bg-primary text-white">
+          <h4 className="mb-0">Información de la Red</h4>
+        </div>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-12 mb-3">
+              <h5>Nombre</h5>
+              <p className="text-muted">{detalleRed.nombre || 'No especificado'}</p>
+            </div>
+            <div className="col-12 mb-3">
+              <h5>Descripción</h5>
+              <p className="text-muted" style={{ textAlign: 'justify' }}>
+                {detalleRed.descripcion || 'No hay descripción disponible'}
+              </p>
+            </div>
+            {detalleRed.acto_administrativo.ruta && (
+              <div className="col-12 mb-3">
+                <h5>Documento</h5>
+                <a 
+                  href={`/storage/${detalleRed.acto_administrativo.ruta}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-outline-primary"
+                >
+                  <i className="fa fa-file-pdf me-2"></i>Ver documento
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-  // Función para renderizar la tabla de actividades
-  const renderActividadesTable = () => (
+  // Función para renderizar la tabla de actividades (modificada para recibir actividades como parámetro)
+  const renderActividadesTable = (actividades, showAddButton = true, title = "Lista de Actividades") => (
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Lista de Actividades</h4>
-        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
-          {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-          <i className="fa fa-plus me-2"></i>Agregar Actividad
-        </button>
+        <h4>{title}</h4>
+        {showAddButton && (
+          <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
+            {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
+            <i className="fa fa-plus me-2"></i>Agregar Actividad
+          </button>
+        )}
       </div>
       <table className="table table-striped table-hover">
         <thead className="bg-primary text-white">
@@ -415,8 +487,8 @@ useEffect(() => {
           </tr>
         </thead>
         <tbody>
-          {redesActividades.length > 0 ? (
-            redesActividades.map((actividad) => (
+          {actividades.length > 0 ? (
+            actividades.map((actividad) => (
               <tr key={actividad.id}>
                 <td>{actividad.fecha}</td>
                 {/* NUEVO: Se agregó un estilo para limitar el ancho y permitir que el texto se envuelva */}
@@ -466,6 +538,30 @@ useEffect(() => {
       </table>
     </div>
 );
+
+  // NUEVO: Función para renderizar la pestaña de histórico
+  const renderHistoricoActividades = () => (
+    <div className="mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4>Histórico de Actividades</h4>
+        <div className="d-flex align-items-center">
+          <label htmlFor="yearFilter" className="form-label me-2 mb-0">Filtrar por año:</label>
+          <select
+            id="yearFilter"
+            className="form-select"
+            style={{ width: 'auto' }}
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+          >
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {renderActividadesTable(getActividadesPorAnio(), false, `Actividades del año ${selectedYear}`)}
+    </div>
+  );
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
@@ -532,36 +628,64 @@ useEffect(() => {
   
   return (
     <div className="container mt-4">
-      <h2 className="mb-4 text-center">Gestión de Redes de Aprendizaje y Actividades</h2>
+      <div className="text-center mb-4">
+        <h2 className="mb-2">Gestión de Redes de Aprendizaje y Actividades</h2>
+        {detalleRed.nombre && (
+          <h4 className="text-muted">{detalleRed.nombre}</h4>
+        )}
+      </div>
       {!isRelatedToRed ? (
         <div className="alert alert-danger text-center" role="alert">
-          En estos momentos no se encuentra relacionado a este proyecto transversal como responsable
+          En estos momentos no se encuentra relacionado a esta red de aprendizaje como responsable
         </div>
       ) : (
         <>
+          {/* CAMBIO: Se agregaron las nuevas pestañas */}
           <ul className="nav nav-tabs nav-justified">
             <li className="nav-item">
               <a
                 className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
                 onClick={() => setActiveTab('actividades')}
+                style={{ cursor: 'pointer' }}
               >
-                Actividades
+                Actividades {new Date().getFullYear()}
               </a>
             </li>
             <li className="nav-item">
               <a
                 className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
                 onClick={() => setActiveTab('integrantes')}
+                style={{ cursor: 'pointer' }}
               >
                 Integrantes
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'historico' ? 'active' : ''}`}
+                onClick={() => setActiveTab('historico')}
+                style={{ cursor: 'pointer' }}
+              >
+                Histórico
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
+                onClick={() => setActiveTab('informacion')}
+                style={{ cursor: 'pointer' }}
+              >
+                Información de la Red
               </a>
             </li>
           </ul>
 
           <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
             {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
-            {activeTab === 'actividades' && renderActividadesTable()}
+            {activeTab === 'actividades' && renderActividadesTable(getActividadesAnioActual(), true, `Actividades ${new Date().getFullYear()}`)}
             {activeTab === 'integrantes' && renderIntegrantesTable()}
+            {activeTab === 'historico' && renderHistoricoActividades()}
+            {activeTab === 'informacion' && renderInformacionRed()}
           </div>
 
           {/* Modal de formulario de actividades */}
