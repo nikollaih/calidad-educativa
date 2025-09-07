@@ -169,4 +169,58 @@ class RedesAprendizajeController extends Controller {
         $redAprendizaje->delete();
         return redirect()->route('redes-aprendizajes.index')->with('flash_success_message', 'Red de Aprendizaje eliminada correctamente.');
     }
+    
+    /**
+     * Obtiene las actividades e integrantes de una red de aprendizaje específica.
+     *
+     * @param int $redAprendizajeId
+     * @return JsonResponse
+     */
+    public function getActividadesIntegrantes(int $redAprendizajeId): JsonResponse {
+        try {
+            // Buscar la red de aprendizaje con sus relaciones
+            $redAprendizaje = RedesAprendizaje::with(['integrantes', 'actividades'])
+                ->findOrFail($redAprendizajeId);
+
+            // Estructurar la respuesta
+            $response = [
+                'red_aprendizaje' => [
+                    'id' => $redAprendizaje->id,
+                    'nombre' => $redAprendizaje->nombre,
+                ],
+                'actividades' => $redAprendizaje->actividades->map(function ($actividad) {
+                    return [
+                        'id' => $actividad->id,
+                        'descripcion' => $actividad->descripcion ?? null,
+                        'fecha' => $actividad->fecha ?? $actividad->created_at,
+                    ];
+                }),
+                'integrantes' => $redAprendizaje->integrantes->map(function ($integrante) {
+                    return [
+                        'id' => $integrante->id,
+                        'nombre' => $integrante->nombre ?? 'Sin nombre',
+                        'email' => $integrante->correo ?? null,
+                        'telefono' => $integrante->telefono ?? null,
+                        // El rol es un numero, necesito que en el front obtengas el nombre
+                        'rol' => $integrante->rol,
+                        'fecha_vinculacion' => $integrante->created_at?->format('Y-m-d'),
+                    ];
+                })
+            ];
+
+            return response()->json($response, 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Red de aprendizaje no encontrada.',
+                'error' => 'La red de aprendizaje con ID ' . $redAprendizajeId . ' no existe.'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener las actividades e integrantes.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
