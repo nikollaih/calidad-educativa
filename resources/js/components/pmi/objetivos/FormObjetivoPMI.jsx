@@ -119,20 +119,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                     <div className="card-header">
                         <h5>Información del objetivo </h5>
                     </div>
-                    <div className="card-body">
-                        <div className="mb-3">
-                            <label htmlFor="descripcion" className="form-label">Descripción*</label>
-                            <textarea
-                                id="descripcion"
-                                className="form-control"
-                                name="descripcion"
-                                value={objetivo.descripcion}
-                                onChange={handleObjetivoChange}
-                                disabled={!editable}
-                                required
-                            />
-                        </div>
-                    </div>
+
                     <div className="card-body">
                         <label className="form-label">Gestión*</label>
                         <CAutocompleteFromArray
@@ -165,6 +152,20 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             />
                         </div>
                     )}
+                    <div className="card-body">
+                        <div className="mb-3">
+                            <label htmlFor="descripcion" className="form-label">Descripción*</label>
+                            <textarea
+                                id="descripcion"
+                                className="form-control"
+                                name="descripcion"
+                                value={objetivo.descripcion}
+                                onChange={handleObjetivoChange}
+                                disabled={!editable}
+                                required
+                            />
+                        </div>
+                    </div>
             </div>
 
                 {/* Sección de Meta */}
