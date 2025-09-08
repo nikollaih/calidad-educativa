@@ -1,8 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{  route('pmi.index', $institucionId) }}" data-is-container="{{false}}"></div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('pmi.index', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-pei-url="{{ route('institution.pei', $institucionId) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
+        data-pmi-url="#"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
+    >
     </div>
     <div
         data-component="CreatePMI"

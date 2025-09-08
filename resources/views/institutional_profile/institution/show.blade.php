@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{ route('institution.index') }}" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
-            <a href="{{ route('institution.pei', $institution->id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="{{ route('institution.autoevaluaciones', $institution->id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
-            <a href="{{ route('pmi.index', $institution->id) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="{{ route('proyectos_transversales.index', $institution->id) }}" class="btn btn-outline-warning btn-sm">Proyectos transversales</a>
-        </div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.index') }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei', $institution->id) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institution->id) }}"
+        data-pmi-url="{{ route('pmi.index', $institution->id) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institution->id) }}"
+    >
     </div>
 
     <div class="container pt-3">

@@ -1,9 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div
-        data-component="CBackButton"
-        data-to="{{ route('institution.autoevaluaciones', $institucionId) }}"
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-pei-url="{{ route('institution.pei', $institucionId) }}"
+        data-autevaluacion-url="#"
+        data-pmi-url="{{ route('pmi.index', $institucionId) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
     >
     </div>
     <div

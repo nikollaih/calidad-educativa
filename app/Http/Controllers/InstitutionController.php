@@ -215,6 +215,7 @@ class InstitutionController extends Controller {
                 'gruposCalificaciones' => $gruposCalificaciones,
                 'autoevaluacion' => $autoevaluacion,
                 'statistics' => $statistics,
+                'institucionId' => $autoevaluacion->institucion_id,
             ]
         );
     }

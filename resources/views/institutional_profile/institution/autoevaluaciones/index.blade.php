@@ -34,16 +34,15 @@
             </div>
         </div>
     @endif
-
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{ route('institution.index') }}" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('institution.show', $institutionId) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
-            <a href="{{ route('institution.pei', $institutionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="#" class="btn btn-info btn-sm">Autoevaluacion</a>
-            <a href="{{ route('pmi.index', $institutionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="{{ route('proyectos_transversales.index', $institutionId) }}" class="btn btn-outline-warning  btn-sm">Proyectos transversales</a>
-        </div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.index') }}"
+        data-detail-url="{{ route('institution.show', $institutionId) }}"
+        data-pei-url="{{ route('institution.pei', $institutionId) }}"
+        data-autevaluacion-url="#"
+        data-pmi-url="{{ route('pmi.index', $institutionId) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institutionId) }}"
+    >
     </div>
     <div
         data-component="Lista"

@@ -1,27 +1,53 @@
+
 import { h } from 'preact';
+import CBackButton from '@/components/shared/CBackButton.jsx';
+
 const CInstitutionNavigations = ({
-                         institucionId = -1,
+    backUrl = '',
+    detailUrl = '',
+    peiUrl = '',
+    autevaluacionUrl = '',
+    pmiUrl = '',
+    proyectosTransversalesUrl = '',
 }) => {
-    const handleClick = () => {
-        if (typeof to === 'number') {
-            window.history.go(to);
-        } else {
-            window.location.href = to;
-        }
+    const getBtnClass = (url, baseClass) => {
+        // Si la url es "#", usamos btn-baseClass (sólido)
+        // Si no, usamos btn-outline-baseClass
+        return url === '#'
+            ? `btn btn-${baseClass} btn-sm`
+            : `btn btn-outline-${baseClass} btn-sm`;
     };
 
     return (
-        <div class={isContainer ? 'container' : ' '}>
-            <button
-                type="button"
-                className="btn btn-outline-primary d-flex align-items-center gap-2"
-                onClick={handleClick}
-            >
-                <i className="fa fa-arrow-left" aria-hidden="true"></i>
-                {label}
-            </button>
+        <div class="d-flex align-items-center justify-content-between container">
+            <CBackButton
+                to={backUrl}
+                label="Volver"
+                isContainer={false}
+            />
+            <div class="d-flex gap-2">
+                <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
+                    Detalles
+                </a>
+                <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
+                    PEI
+                </a>
+                <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
+                    Autoevaluación
+                </a>
+                <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
+                    PMI
+                </a>
+                <a
+                    href={proyectosTransversalesUrl}
+                    class={getBtnClass(proyectosTransversalesUrl, 'warning')}
+                >
+                    Proyectos transversales
+                </a>
+            </div>
         </div>
     );
 };
 
 export default CInstitutionNavigations;
+
