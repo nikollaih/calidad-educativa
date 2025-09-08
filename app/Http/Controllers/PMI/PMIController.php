@@ -26,13 +26,13 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-class PMIController extends Controller
-{
+class PMIController extends Controller {
     public function __construct(
         private AdjuntoService $adjuntoService,
         private AutoevaluacionService $autoevaluacionService,
         private PmiObjetivoVinculadoService $objetivoVinculadoService,
-    ){}
+    ) {
+    }
 
     public function index( int $institucionId = null) {
         $pmis = Pmi::whereHas('autoevaluacion', function ($query) use ($institucionId) {
@@ -58,16 +58,15 @@ class PMIController extends Controller
     }
 
     public function create(int $institucionId = null) {
-
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
             ->get();
         return view('pmi.create',
-        [
-            'autoevaluaciones' => $autoevaluaciones,
-            'institucionId' => $institucionId,
-        ]);
+            [
+                'autoevaluaciones' => $autoevaluaciones,
+                'institucionId' => $institucionId,
+            ]);
     }
     public function store(Request $request, int $institucionId = null) {
         try {
@@ -114,25 +113,23 @@ class PMIController extends Controller
             ->route('pmi.edit', ['institucionId' => $institucionId, 'pmi' => $pmiCreated->id])
             ->with('flash_success_message', 'PMI creado correctamente.');
     }
-    public function edit(Request $request, int $institucionId , int $pmi){
-         $pmi = PMI::where('id', $pmi)
-             ->with(
-                 'factoresCriticos.calificacion.grupo.padre',
-                 'factoresCriticos.objetivos.metas.actividades',
-                 'factoresCriticos.objetivos.metas.indicadorInfo'
-             )
-             ->first();
+    public function edit(Request $request, int $institucionId , int $pmi) {
+        $pmi = PMI::where('id', $pmi)
+            ->with(
+                'factoresCriticos.calificacion.grupo.padre',
+                'factoresCriticos.objetivos.metas.actividades',
+                'factoresCriticos.objetivos.metas.indicadorInfo'
+            )
+            ->first();
         return view('pmi.edit',
             [
                 'pmi' => $pmi,
                 'institucionId' => $institucionId,
             ]);
-
     }
-    public function presentarPmi(Request $request, int $institucionId , int $pmiId)
-    {
+    public function presentarPmi(Request $request, int $institucionId , int $pmiId) {
         $pmi = Pmi::find($pmiId);
-        if(empty($pmi)){
+        if (empty($pmi)) {
             return  redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
                 ->with('flash_error_message', 'Pmi  no encontrado.');
@@ -144,7 +141,7 @@ class PMIController extends Controller
             ->doesntHave('objetivos')
             ->count();
 
-        if($cantidadFactoresCriticosPriorizadosSinObjetivos ) {
+        if ($cantidadFactoresCriticosPriorizadosSinObjetivos ) {
             return redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
                 ->with('flash_error_message', 'Todos los factores críticos deben contar con almenos un objetivo vinculado, actualmente hay '. $cantidadFactoresCriticosPriorizadosSinObjetivos . ' factores criticos sin un objetivo vinculado.');
@@ -155,13 +152,12 @@ class PMIController extends Controller
             ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
             ->with('flash_success_message', 'Pmi presentado correctamente.');
     }
-    public function exportarPmi(Request $request , int $pmiId)
-    {
+    public function exportarPmi(Request $request , int $pmiId) {
         $fileName = 'pmi_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
         return Excel::download(new PmiExport($pmiId), $fileName);
     }
-    public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId){
+    public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId) {
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
             ->with([
                 'calificacion.grupo.padre',
@@ -182,19 +178,18 @@ class PMIController extends Controller
                 'objetivos' => $objetivos,
                 'indicadores' => $indicadores,
             ]);
-
     }
-    public function storeActividadAvance(Request $request){
+    public function storeActividadAvance(Request $request) {
         $pmi = Pmi::where('id', $request->input('pmi_id'))->first();
         $actividad = PmiActividadVinculada::with('meta')->where('id', $request->input('actividad_id'))->first();
 
 
-        if(empty($pmi)){
+        if (empty($pmi)) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
         }
-        if(empty($actividad)){
+        if (empty($actividad)) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
@@ -234,7 +229,7 @@ class PMIController extends Controller
 
         Log::info("cantidad todal avanzada" . $cantidadTotalAvanzada);
 
-        if($cantidadTotalAvanzada > $actividad->max_suma_indicador){
+        if ($cantidadTotalAvanzada > $actividad->max_suma_indicador) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', "El valor del avance total no puede se mayor a " . $actividad->max_suma_indicador . " actualmente es" . $cantidadTotalAvanzada);
@@ -248,22 +243,20 @@ class PMIController extends Controller
         Log::info("accumulated " . $accumulated);
         DB::beginTransaction();
         try {
-
-
             $actividad->accumulated = $accumulated;
             $actividad->indicador_acumulado = $cantidadTotalAvanzada;
             $avanceData['porcentaje_ejecutado'] = $accumulated;
             $avance = PmiActividadAvance::create($avanceData);
 
-            if($avance->porcentaje_ejecutado == 100){
+            if ($avance->porcentaje_ejecutado == 100) {
                 $actividad->slug_estado= ActividadEstadoEnum::COMPLETADA->value;
             }
-            if($actividad->slug_estado == ActividadEstadoEnum::SIN_INICIAR->value){
+            if ($actividad->slug_estado == ActividadEstadoEnum::SIN_INICIAR->value) {
                 $actividad->slug_estado= ActividadEstadoEnum::EN_PROGRESO->value;
             }
             $avance->save();
             $actividad->save();
-            if($avance->suma_al_indicador !== 0 ){
+            if ($avance->suma_al_indicador !== 0 ) {
                 $meta  = $actividad->meta;
                 $meta->indicador += $avance->suma_al_indicador;
                 $meta->save();
@@ -282,15 +275,14 @@ class PMIController extends Controller
                         adjunto: $file,
                         ruta: 'pmi/actividades/avances/'. $avance->pmi_id . '/' . $avance->id,
                         disk: 'public');
-                    if($storeAdjuntoResponse->success){
-
+                    if ($storeAdjuntoResponse->success) {
                         $adjuntoId = $storeAdjuntoResponse->data->id;
 
                         PmiActividadAvanceFiles:: create([
                             'avance_id' => $avance->id,
                             'file_id' => $adjuntoId,
                         ]);
-                    }else{
+                    } else {
                         return redirect()->back()->with('flash_error_message', $storeAdjuntoResponse->msg);
                     }
                 }
@@ -299,54 +291,56 @@ class PMIController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('flash_success_message', 'Avance guardado correctamente.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
         }
     }
-    public function avancesActividadByActividadId(Request $request, int $actividadId = null)
-    {
+    public function avancesActividadByActividadId(Request $request, int $actividadId = null) {
         $meta = PmiMetaVinculada::with('indicadorInfo')
             ->whereHas(relation:  'actividades',
                 callback: function ($query) use ($actividadId) {
                     $query->where('id', $actividadId);
-            })
+                })
             ->first();
         $avances = PmiActividadAvance::with('actividad.meta.indicadorInfo', 'adjuntos')
             ->where('actividad_id', $actividadId)
             ->get();
 
         return response()->json(['avances'=>$avances, 'meta'=>$meta]);
-
     }
-    public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId){
+    public function actualizarFactorCritico(Request $request, int $institucionId , int $pmi,  int $factorCriticoId) {
+        try {
+            $pmiOwner = Pmi::find($pmi);
+            if (!$pmiOwner) {
+                return redirect()
+                    ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                    ->with('flash_error_message', 'El pmi asociado no fue encontrado.');
+            }
+            if ($pmiOwner->estado == PmiEstadoEnum::Presentado->value) {
+                return redirect()
+                    ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                    ->with('flash_error_message', 'No se pueden editar los factores criticos de un pmi presentado.');
+            }
+            $factorCritico = FactorCritico::where('id', $factorCriticoId)
+                ->with('calificacion.grupo.padre')
+                ->first();
 
-        $pmiOwner = Pmi::find($pmi);
-        if(!$pmiOwner){
+            if (!$factorCritico) {
+                return redirect()
+                    ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
+                    ->with('flash_error_message', 'Factor critico no encontrado.');
+            }
+            $this->objetivoVinculadoService
+                ->syncObjetivosVinculados( objetivosArray: $request->input('objetivos'), idFactorCritico: $factorCritico->id );
+
             return redirect()
                 ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-                ->with('flash_error_message', 'El pmi asociado no fue encontrado.');
-        }
-        if($pmiOwner->estado == PmiEstadoEnum::Presentado->value){
+                ->with('flash_success_message', 'Factor critico actualizad correctamente.');
+        } catch (\Throwable $e) {
             return redirect()
                 ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-                ->with('flash_error_message', 'No se pueden editar los factores criticos de un pmi presentado.');
+                ->with('flash_error_message', 'Ocurrió un error al actualizar el factor crítico: '. $e->getMessage());
         }
-        $factorCritico = FactorCritico::where('id', $factorCriticoId)
-            ->with('calificacion.grupo.padre')
-            ->first();
-
-        if (!$factorCritico) {
-            return redirect()
-                ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-                ->with('flash_error_message', 'Factor critico no encontrado.');
-        }
-        $this->objetivoVinculadoService
-            ->syncObjetivosVinculados( objetivosArray: $request->input('objetivos'), idFactorCritico: $factorCritico->id );
-
-        return redirect()
-            ->route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmi ])
-            ->with('flash_success_message', 'Factor critico actualizad correctamente.');
     }
 }

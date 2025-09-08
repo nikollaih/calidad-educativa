@@ -632,6 +632,15 @@ const addActividad = (metaId) => {
 
                 // ✅ validar fechas de actividades
                 for (const actividad of meta.actividades || []) {
+                     // 👇 Nueva validación de descripción
+                    if (!actividad.descripcion || actividad.descripcion.trim() === "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Descripción requerida',
+                            text: `Todas las actividades deben tener una descripción. Revisa las actividades de la meta "${meta.descripcion}".`,
+                        });
+                        return;
+                    }
                     if (!actividad.fecha_inicio || !actividad.fecha_fin) {
                         Swal.fire({
                             icon: 'error',
