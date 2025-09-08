@@ -97,9 +97,9 @@ class InstitutionController extends Controller {
             $factorCritico = FactorCritico::updateOrCreate(
                 [
                     'calificacion_indice' => $calificacionIndice,
+                    'autoevaluacion_id' => $autoevaluacionId,
                 ],
                 [
-                    'autoevaluacion_id' => $autoevaluacionId,
                     'descripcion' => $descripcion,
                     'valor' => $valor,
                 ]
