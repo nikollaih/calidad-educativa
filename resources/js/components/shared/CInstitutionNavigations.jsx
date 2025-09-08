@@ -42,7 +42,7 @@ const CInstitutionNavigations = ({
                     href={proyectosTransversalesUrl}
                     class={getBtnClass(proyectosTransversalesUrl, 'warning')}
                 >
-                    Proyectos transversales
+                    PPT
                 </a>
             </div>
         </div>

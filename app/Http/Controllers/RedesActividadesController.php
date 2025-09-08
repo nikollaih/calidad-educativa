@@ -25,7 +25,7 @@ class RedesActividadesController extends Controller {
         $isRelatedToRed = false;
         // Se verifica si hay un usuario autenticado para realizar el filtro.
         if ($user) {
-            $redActividades = RedesActividad::with(['redAprendizaje', 'adjuntos.adjunto'])
+            $redActividades = RedesActividad::with(['redAprendizaje.actoAdministrativo', 'adjuntos.adjunto'])
                 ->whereHas('redAprendizaje', function ($query) use ($user) {
                     $query->where('representante_id', $user->id);
                 })
@@ -46,6 +46,7 @@ class RedesActividadesController extends Controller {
         return view('redActividades.index', [
             'redActividades' => $redActividades,
             'integrantes' => $redIntegrantes,
+            'detalleRed' => $isRelatedToRed ? RedesAprendizaje::with('actoAdministrativo')->where('representante_id', $user->id)->first() : null,
             'isRelatedToRed' => $isRelatedToRed,
         ]);
     }

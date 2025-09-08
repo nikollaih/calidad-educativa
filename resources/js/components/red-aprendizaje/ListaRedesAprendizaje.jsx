@@ -30,6 +30,25 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
     const [confirmAction, setConfirmAction] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    // NUEVO: Estados para el modal de ver actividades e integrantes
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [actividadesIntegrantes, setActividadesIntegrantes] = useState(null);
+    const [isLoadingActividades, setIsLoadingActividades] = useState(false);
+    const [actividadesError, setActividadesError] = useState(null);
+
+    // Mapeo de roles por ID
+    const integrantesRoles = [
+        { id: 1, name: 'Líder' },
+        { id: 2, name: 'Integrante' },
+        { id: 3, name: 'Aliado' },
+    ];
+
+    // NUEVO: Función para obtener el nombre del rol por ID
+    const getRoleName = (rolId) => {
+        const rol = integrantesRoles.find(r => r.id === rolId);
+        return rol ? rol.name : 'Sin rol';
+    };
+
     // Estado para la lista de redes de aprendizaje
     const [redes, setRedes] = useState(redesAprendizajes);
 
@@ -67,6 +86,28 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         setAlertMessage(message);
         setConfirmAction(() => action);
         setShowConfirmModal(true);
+    };
+
+    // NUEVO: Función para ver actividades e integrantes
+    const handleVerClick = async (redAprendizaje) => {
+        setCurrentRedAprendizaje(redAprendizaje);
+        setShowViewModal(true);
+        setIsLoadingActividades(true);
+        setActividadesError(null);
+        setActividadesIntegrantes(null);
+
+        try {
+            const response = await fetch(`/get-actividades-integrantes/${redAprendizaje.id}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener las actividades e integrantes.');
+            }
+            const data = await response.json();
+            setActividadesIntegrantes(data);
+        } catch (error) {
+            setActividadesError(error.message);
+        } finally {
+            setIsLoadingActividades(false);
+        }
     };
 
     const handleAgregarClick = () => {
@@ -114,6 +155,14 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         setNumeroContacto('');
         // MODIFICACION: Limpiar el campo de correo electrónico
         setCorreoElectronico('');
+        setCurrentRedAprendizaje(null);
+    };
+
+    // NUEVO: Función para cerrar el modal de vista
+    const handleCloseViewModal = () => {
+        setShowViewModal(false);
+        setActividadesIntegrantes(null);
+        setActividadesError(null);
         setCurrentRedAprendizaje(null);
     };
 
@@ -209,6 +258,12 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 )}
                             </td>
                             <td>
+                                <button
+                                    onClick={() => handleVerClick(redAprendizaje)}
+                                    className="btn btn-info btn-sm me-2"
+                                >
+                                    Ver
+                                </button>
                                 <button
                                     onClick={() => handleEditarClick(redAprendizaje)}
                                     className="btn btn-warning btn-sm me-2"
@@ -361,6 +416,122 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* NUEVO: Modal para ver actividades e integrantes */}
+            {showViewModal && (
+                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    Actividades e Integrantes - {currentRedAprendizaje?.nombre}
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    onClick={handleCloseViewModal}
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                {isLoadingActividades ? (
+                                    <div class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                        <p class="mt-2">Cargando actividades e integrantes...</p>
+                                    </div>
+                                ) : actividadesError ? (
+                                    <div class="alert alert-danger">
+                                        <strong>Error:</strong> {actividadesError}
+                                    </div>
+                                ) : actividadesIntegrantes ? (
+                                    <div class="row">
+                                        {/* Sección de Actividades */}
+                                        <div class="col-md-6 mb-4">
+                                            <h6 class="mb-3">
+                                                <i class="fas fa-tasks me-2"></i>Actividades
+                                            </h6>
+                                            {actividadesIntegrantes.actividades && actividadesIntegrantes.actividades.length > 0 ? (
+                                                <div class="list-group">
+                                                    {actividadesIntegrantes.actividades.map((actividad) => (
+                                                        <div key={actividad.id} class="list-group-item">
+                                                            <div class="d-flex w-100 justify-content-between">
+                                                                <h6 class="mb-1">Actividad #{actividad.id}</h6>
+                                                                <small>{actividad.fecha ? new Date(actividad.fecha).toLocaleDateString() : ''}</small>
+                                                            </div>
+                                                            {actividad.descripcion && (
+                                                                <p class="mb-1 text-muted small" style={{wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal'}}>{actividad.descripcion}</p>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div class="alert alert-info">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    No hay actividades registradas para esta red de aprendizaje.
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Sección de Integrantes */}
+                                        <div class="col-md-6 mb-4">
+                                            <h6 class="mb-3">
+                                                <i class="fas fa-users me-2"></i>Integrantes
+                                            </h6>
+                                            {actividadesIntegrantes.integrantes && actividadesIntegrantes.integrantes.length > 0 ? (
+                                                <div class="list-group">
+                                                    {actividadesIntegrantes.integrantes.map((integrante) => (
+                                                        <div key={integrante.id} class="list-group-item">
+                                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                                <h6 class="mb-1">{integrante.nombre}</h6>
+                                                                <span class="badge bg-primary rounded-pill">
+                                                                    {getRoleName(integrante.rol)}
+                                                                </span>
+                                                            </div>
+                                                            <div class="mb-1">
+                                                                {integrante.email && (
+                                                                    <p class="mb-1 text-muted small">
+                                                                        <i class="fas fa-envelope me-1"></i>{integrante.email}
+                                                                    </p>
+                                                                )}
+                                                                {integrante.telefono && (
+                                                                    <p class="mb-1 text-muted small">
+                                                                        <i class="fas fa-phone me-1"></i>{integrante.telefono}
+                                                                    </p>
+                                                                )}
+                                                                {integrante.fecha_vinculacion && (
+                                                                    <small class="text-muted">
+                                                                        <i class="fas fa-calendar me-1"></i>
+                                                                        Vinculado: {integrante.fecha_vinculacion}
+                                                                    </small>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div class="alert alert-info">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    No hay integrantes registrados para esta red de aprendizaje.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    onClick={handleCloseViewModal}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

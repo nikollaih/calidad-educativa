@@ -23,13 +23,14 @@ class ProyectoTransversalActividadesController extends Controller {
         
         // Se verifica si hay un usuario autenticado para realizar el filtro.
         if ($user) {
-            $proyectoActividades = ProyectosActividad::with(['proyectoTransversal', 'adjuntos.adjunto'])
+            $proyectoActividades = ProyectosActividad::with(['proyectoTransversal.actoAdministrativo', 'adjuntos.adjunto'])
                 ->whereHas('proyectoTransversal', function ($query) use ($user) {
                     $query->where('representante_id', $user->id);
                 })
                 ->get();
 
-            $proyectoTransversal = ProyectosTransversal::find($proyectoTransversalId);
+            $proyectoTransversal = ProyectosTransversal::with(['actoAdministrativo'])
+                ->where('id', $proyectoTransversalId)->first();
 
             $isRelatedToProyecto = $proyectoTransversal && $proyectoTransversal->representante_id === $user->id;
 
@@ -45,6 +46,8 @@ class ProyectoTransversalActividadesController extends Controller {
 
         return view('proyectoTransversal.actividades.index', [
             'actividades' => $proyectoActividades,
+            //obtenerlo directamente del modelo 
+            'detalleProyecto' => $isRelatedToProyecto ? $proyectoTransversal : null,
             'integrantes' => $proyectoIntegrantes,
             'institucionId' => $proyectoTransversal?->institucion_id,
             'proyectoTransversal' => $proyectoTransversalId,

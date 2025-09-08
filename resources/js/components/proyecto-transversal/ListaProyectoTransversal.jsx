@@ -143,7 +143,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     
     // Maneja la acción de eliminar
     const handleDelete = async (id) => {
-        showConfirm('¿Estás seguro de que quieres eliminar esta proyecto transversal?', async () => {
+        showConfirm('¿Estás seguro de que quieres eliminar este PPT?', async () => {
             setLoading(true);
             try {
                 const response = await fetch(`proyectos-transversales/${id}`, {
@@ -175,9 +175,9 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">Proyectos transversales</h2>
+            <h2 class="mb-4">PPT</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar proyecto transversal
+                Agregar PPT
             </button>
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
             
@@ -186,7 +186,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                     <tr>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        <th>Representante</th>
+                        <th>Lider</th>
                         <th>Acto Administrativo</th>
                         <th>Acciones</th>
                     </tr>
@@ -238,7 +238,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    {modalMode === 'agregar' ? 'Agregar proyecto transversal' : 'Editar proyecto transversal'}
+                                    {modalMode === 'agregar' ? 'Agregar PPT' : 'Editar PPT'}
                                 </h5>
                                 <button
                                     type="button"
@@ -299,7 +299,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                         />
                                     </div>
                                     <div class="mb-3">
-                                        <label for="representante" class="form-label">Representante <span class="text-danger">*</span></label>
+                                        <label for="representante" class="form-label">Lider <span class="text-danger">*</span></label>
                                         {isLoadingUsers ? (
                                             <div>Cargando usuarios...</div>
                                         ) : usersError ? (
@@ -313,7 +313,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 onInput={(e) => setRepresentanteId(e.target.value)}
                                                 required
                                             >
-                                                <option value="">Selecciona un representante</option>
+                                                <option value="">Selecciona un lider</option>
                                                 {usuarios.map((user) => (
                                                     <option key={user.id} value={user.id}>
                                                         {user.name}

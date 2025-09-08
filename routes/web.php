@@ -180,6 +180,8 @@ Route::middleware(['auth'])->group(function () {
     // Rutas relacionadas a ajustes
     Route::post('/ajustes/actualizar_imagenes_sistema', [AjustesController::class, 'actualizarImagenesSistema'])->name('ajustes.actualizar_imagenes_sistema');
     Route::resource('ajustes', AjustesController::class);
+    // Ruta para obtener las actividades e integrantes de una red de aprendizaje para ver en detalle
+    Route::get('/get-actividades-integrantes/{redAprendizajeId}',[RedesAprendizajeController::class, 'getActividadesIntegrantes'])->name('red-aprendizaje.get-all');
     // Ruta para exportar un pmi a excel
     Route::get('/pmi/exportar/{pmiId}',[PMIController::class, 'exportarPmi'])->name('pmi.exportar');
     // Ruta que obtiene las actividades de un pmi

@@ -47,6 +47,7 @@ class RedesIntegrantesController extends Controller {
         return view('redActividades.index', [
             'redActividades' => $redActividades,
             'integrantes' => $redIntegrantes,
+            'detalleRed' => $isRelatedToRed ? RedesAprendizaje::with('actoAdministrativo')->where('representante_id', $user->id)->first() : null,
             'isRelatedToRed' => $isRelatedToRed,
         ]);
     }

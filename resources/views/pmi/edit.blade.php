@@ -10,6 +10,7 @@
         data-pmi-url="#"
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
     >
+
     </div>
     <div
         data-component="PmiEdit"
