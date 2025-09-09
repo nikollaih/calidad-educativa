@@ -486,17 +486,26 @@ const addActividad = (metaId) => {
                         </div>
 
                     </div>
-                     <button
+
+                    {meta?.actividades?.length == 0 && (<button
                             type="button"
                             className="btn btn-sm btn-outline-primary mt-4"
                             onClick={() => addActividad(meta.id)}
                         >
                             Agregar Actividad
-                        </button>
+                    </button>)}
                     {/* Renderizar actividades */}
                     {meta.actividades && meta.actividades.map(actividad =>
                         renderActividad(actividad, meta.id, restante, sumaPesos, meta)
                     )}
+
+                    {meta?.actividades?.length > 0 && (<button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary mt-4"
+                            onClick={() => addActividad(meta.id)}
+                        >
+                            Agregar Actividad
+                    </button>)}
                 </div>
             </div>
         );
