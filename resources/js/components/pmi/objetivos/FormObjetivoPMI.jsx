@@ -126,6 +126,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             data={gestiones}
                             fieldName={"gestion_id"}
                             initialValue={gestionSeleccionada?.id}
+                            orderBy={{ field: 'indice', direction: 'asc' }}
                             searchFields={['nombre', 'indice']}
                             labelFields={['indice','nombre']}
                             onSelect={(gestion) => {
@@ -142,6 +143,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             <CAutocompleteFromArray
                                 key={gestionSeleccionada.id}   // 🔑 fuerza reset al cambiar gestión
                                 data={factoresFiltrados}
+                                orderBy={{ field: 'indice_calificacion', direction: 'asc' }}
                                 fieldName={"factor_id"}
                                 initialValue={objetivo.factor_id}
                                 searchFields={['descripcion','indice_calificacion']}

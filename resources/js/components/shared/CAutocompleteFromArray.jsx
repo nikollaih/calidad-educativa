@@ -9,13 +9,29 @@ const CAutocompleteFromArray = ({
                                     valueField = 'id',         // Campo que se guarda como value real
                                     searchFields = [],         // Campos que se usan para buscar
                                     labelFields = [],           // Campos que se muestran en el desplegable
-                                    initialValue = null       // Valor inicial (ej: id)
+                                    initialValue = null,       // Valor inicial (ej: id),
+                                    orderBy = null
                                 }) => {
     const [displayValue, setDisplayValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
     const [filtered, setFiltered] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const wrapperRef = useRef(null);
+
+        // --- función para ordenar con múltiples campos
+    const sortData = (arr) => {
+        if (!orderBy) return arr;
+
+        const orderArray = Array.isArray(orderBy) ? orderBy : [orderBy];
+        return [...arr].sort((a, b) => {
+            for (let { field, direction } of orderArray) {
+                const dir = direction?.toLowerCase() === 'desc' ? -1 : 1;
+                if (a[field] < b[field]) return -1 * dir;
+                if (a[field] > b[field]) return 1 * dir;
+            }
+            return 0;
+        });
+    };
 
     // Cerrar el menú si se hace clic afuera
     useEffect(() => {
@@ -27,7 +43,8 @@ const CAutocompleteFromArray = ({
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-    // Preseleccionar valor inicial si existe
+
+    // --- Preseleccionar valor inicial
     useEffect(() => {
         if (initialValue && data.length > 0) {
             const found = data.find(item => item[valueField] === initialValue);
@@ -38,13 +55,19 @@ const CAutocompleteFromArray = ({
             }
         }
     }, [initialValue, data]);
+
+        // --- cuando cambia `data` o `orderBy`, reordenar
+    useEffect(() => {
+        setFiltered(sortData(data));
+    }, [data, orderBy]);
+
     const handleInput = (e) => {
         const value = e.target.value;
         setDisplayValue(value);
         setSelectedValue('');
 
         if (value.trim() === '') {
-            setFiltered(data);
+            setFiltered(sortData(data));
             setIsOpen(true);
             return;
         }
@@ -57,9 +80,10 @@ const CAutocompleteFromArray = ({
             )
         );
 
-        setFiltered(results);
+        setFiltered(sortData(results));
         setIsOpen(true);
     };
+
 
     const handleSelect = (item) => {
         // Texto visible: concatenamos los campos labelFields
@@ -74,9 +98,9 @@ const CAutocompleteFromArray = ({
         if (onSelect) onSelect(item);
     };
 
-    const handleFocus = () => {
+     const handleFocus = () => {
         if (displayValue.trim() === '') {
-            setFiltered(data);
+            setFiltered(sortData(data));
         }
         setIsOpen(true);
     };
