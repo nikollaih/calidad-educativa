@@ -104,7 +104,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                 <div className="card-header text-black">
                     <div className="d-flex justify-content-between">
                         <div>
-                            <h5 className="mb-0">Plan de mejoramiento institucional</h5>
+                            <h5 className="mb-0">Plan de Mejoramiento Institucional</h5>
                             <small>
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
@@ -242,7 +242,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
 
                                             <div className="card mt-5 shadow-sm border-0" style={{ maxWidth: "16rem" }}>
                                                 <div className="card-body py-2 px-3 d-flex justify-content-between align-items-center">
-                                                    <small className="text-muted">Avance total</small>
+                                                    <small className="text-muted p-1">Avance</small>
                                                     <span className="fw-bold text-success">
                                                       {calcularCompletitudMeta(row?.meta)}%
                                                     </span>
