@@ -40,7 +40,7 @@
         <div class="d-flex gap-2">
             <a href="{{ route('institution.show', $institutionId) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
             <a href="{{ route('institution.pei', $institutionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="#" class="btn btn-info btn-sm">Autoevaluacion</a>
+            <a href="#" class="btn btn-info btn-sm">Autoevaluación</a>
             <a href="{{ route('pmi.index', $institutionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
             <a href="{{ route('proyectos_transversales.index', $institutionId) }}" class="btn btn-outline-warning  btn-sm">PPT</a>
         </div>

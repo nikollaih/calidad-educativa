@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 // Se eliminó la importación de Lucide-React y se usaron las clases de Font Awesome directamente.
 // Los íconos de Font Awesome deben estar disponibles a través de una hoja de estilos CSS en el proyecto HTML.
@@ -45,10 +44,6 @@ export default function ListaRedActividades({
   const [isLoadingInstitutions, setIsLoadingInstitutions] = useState(false);
   const [institutionsError, setInstitutionsError] = useState(null);
 
-  // NUEVO: Estados para el filtro de año en la pestaña de histórico
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [availableYears, setAvailableYears] = useState([]);
-
   // Lógica de carga, errores y modales genéricos (se mantienen)
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -66,32 +61,27 @@ export default function ListaRedActividades({
   // CAMBIO: Estado para la descripción del correo en el modal de compartir
   const [shareDescription, setShareDescription] = useState('');
 
-  // NUEVO: Efecto para generar la lista de años disponibles basado en las actividades
+  // MODIFICACION: Nuevo estado para el año seleccionado en el filtro
+  const [selectedYear, setSelectedYear] = useState('');
+  // MODIFICACION: Nuevo estado para la lista de años disponibles
+  const [availableYears, setAvailableYears] = useState([]);
+  // MODIFICACION: Se crea un estado para la lista de actividades filtradas
+  const [filteredActividades, setFilteredActividades] = useState(redesActividades);
+  
+  // MODIFICACION: Se crea un nuevo useEffect para manejar el filtro por año
   useEffect(() => {
-    const years = redesActividades.map(actividad => {
-      const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear();
-    });
-    const uniqueYears = [...new Set(years)].sort((a, b) => b - a);
-    setAvailableYears(uniqueYears);
-  }, [redesActividades]);
-
-  // NUEVO: Función para obtener actividades del año actual
-  const getActividadesAnioActual = () => {
-    const currentYear = new Date().getFullYear();
-    return redesActividades.filter(actividad => {
-      const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear() === currentYear;
-    });
-  };
-
-  // NUEVO: Función para obtener actividades filtradas por año
-  const getActividadesPorAnio = () => {
-    return redesActividades.filter(actividad => {
-      const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear() === selectedYear;
-    });
-  };
+    // Extraer años únicos de todas las actividades
+    const years = [...new Set(redesActividades.map(act => new Date(act.fecha).getFullYear()))]
+                    .sort((a, b) => b - a);
+    setAvailableYears(years);
+    
+    // Aplicar el filtro inicialmente o cada vez que cambien las actividades o el año seleccionado
+    if (selectedYear) {
+      setFilteredActividades(redesActividades.filter(act => new Date(act.fecha).getFullYear().toString() === selectedYear));
+    } else {
+      setFilteredActividades(redesActividades);
+    }
+  }, [redesActividades, selectedYear]);
 
   // Efecto para obtener la lista de usuarios al cargar el componente
   useEffect(() => {
@@ -465,38 +455,50 @@ useEffect(() => {
     </div>
   );
 
-  // Función para renderizar la tabla de actividades (modificada para recibir actividades como parámetro)
-  const renderActividadesTable = (actividades, showAddButton = true, title = "Lista de Actividades") => (
+  // MODIFICACION: Función para renderizar la tabla de actividades unificada con filtro por año
+  const renderActividadesTable = () => (
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>{title}</h4>
-        {showAddButton && (
-          <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
-            {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-            <i className="fa fa-plus me-2"></i>Agregar Actividad
-          </button>
-        )}
+        <h4>Lista de Actividades</h4>
+        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
+          <i className="fa fa-plus me-2"></i>Agregar Actividad
+        </button>
+      </div>
+      {/* MODIFICACION: Se agregó un filtro de selección de año */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label htmlFor="selectYear" className="form-label">Filtrar por año</label>
+          <select 
+            id="selectYear"
+            className="form-control"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            <option value="">Todos los años</option>
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <table className="table table-striped table-hover">
         <thead className="bg-primary text-white">
           <tr>
             <th>Fecha</th>
             <th>Descripción</th>
-            {/* CAMBIO: Se quitó la columna de evidencias */}
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {actividades.length > 0 ? (
-            actividades.map((actividad) => (
+          {/* MODIFICACION: Ahora se usa la lista filtrada */}
+          {filteredActividades.length > 0 ? (
+            filteredActividades.map((actividad) => (
               <tr key={actividad.id}>
                 <td>{actividad.fecha}</td>
-                {/* NUEVO: Se agregó un estilo para limitar el ancho y permitir que el texto se envuelva */}
                 <td style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
                   {actividad.descripcion ?? 'Sin información'}
                 </td>
                 <td>
-                  {/* NUEVO: Botón para ver documentos */}
                   {actividad.adjuntos && actividad.adjuntos.length > 0 && (
                     <button
                       onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
@@ -505,21 +507,18 @@ useEffect(() => {
                       <i className="fa fa-eye text-white"></i>
                     </button>
                   )}
-                  {/* NUEVO: Botón de compartir */}
                   <button
                     onClick={() => handleCompartirClick(actividad, 'actividad')}
                     className="btn btn-secondary btn-sm me-2"
                   >
                     <i className="fa fa-share-alt text-white"></i>
                   </button>
-                  {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
                   <button
                     onClick={() => handleEditarActividadClick(actividad)}
                     className="btn btn-warning btn-sm me-2"
                   >
                     <i className="fa fa-pen-to-square text-white"></i>
                   </button>
-                  {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
                   <button
                     className="btn btn-danger btn-sm"
                     onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
@@ -539,29 +538,8 @@ useEffect(() => {
     </div>
 );
 
-  // NUEVO: Función para renderizar la pestaña de histórico
-  const renderHistoricoActividades = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Histórico de Actividades</h4>
-        <div className="d-flex align-items-center">
-          <label htmlFor="yearFilter" className="form-label me-2 mb-0">Filtrar por año:</label>
-          <select
-            id="yearFilter"
-            className="form-select"
-            style={{ width: 'auto' }}
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-          >
-            {availableYears.map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      {renderActividadesTable(getActividadesPorAnio(), false, `Actividades del año ${selectedYear}`)}
-    </div>
-  );
+  // MODIFICACION: Se eliminó la función `renderHistoricoActividades`
+  // porque se unificó la funcionalidad en `renderActividadesTable`.
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
@@ -629,7 +607,7 @@ useEffect(() => {
   return (
     <div className="container mt-4">
       <div className="text-center mb-4">
-        <h2 className="mb-2">Gestión de Redes de Aprendizaje y Actividades</h2>
+        <h2 className="mb-2">Gestión de Redes de Aprendizaje</h2>
         {detalleRed.nombre && (
           <h4 className="text-muted">{detalleRed.nombre}</h4>
         )}
@@ -640,35 +618,9 @@ useEffect(() => {
         </div>
       ) : (
         <>
-          {/* CAMBIO: Se agregaron las nuevas pestañas */}
+          {/* MODIFICACION: Se unieron las pestañas de actividades e histórico */}
           <ul className="nav nav-tabs nav-justified">
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
-                onClick={() => setActiveTab('actividades')}
-                style={{ cursor: 'pointer' }}
-              >
-                Actividades {new Date().getFullYear()}
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
-                onClick={() => setActiveTab('integrantes')}
-                style={{ cursor: 'pointer' }}
-              >
-                Integrantes
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'historico' ? 'active' : ''}`}
-                onClick={() => setActiveTab('historico')}
-                style={{ cursor: 'pointer' }}
-              >
-                Histórico
-              </a>
-            </li>
+            {/* Informacion de red */}
             <li className="nav-item">
               <a
                 className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
@@ -678,14 +630,33 @@ useEffect(() => {
                 Información de la Red
               </a>
             </li>
+            {/* Integrantes */}
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('integrantes')}
+                style={{ cursor: 'pointer' }}
+              >
+                Integrantes
+              </a>
+            </li>
+            {/* Actividades */}
+            <li className="nav-item">
+              <a
+                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
+                onClick={() => setActiveTab('actividades')}
+                style={{ cursor: 'pointer' }}
+              >
+                Actividades
+              </a>
+            </li>
           </ul>
 
           <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
             {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
-            {activeTab === 'actividades' && renderActividadesTable(getActividadesAnioActual(), true, `Actividades ${new Date().getFullYear()}`)}
-            {activeTab === 'integrantes' && renderIntegrantesTable()}
-            {activeTab === 'historico' && renderHistoricoActividades()}
             {activeTab === 'informacion' && renderInformacionRed()}
+            {activeTab === 'integrantes' && renderIntegrantesTable()}
+            {activeTab === 'actividades' && renderActividadesTable()}
           </div>
 
           {/* Modal de formulario de actividades */}

@@ -175,9 +175,9 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
 
     return (
         <div class="container mt-4">
-            <h2 class="mb-4">PPT</h2>
+            <h2 class="mb-4">Proyectos pedagógicos transversales</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar PPT
+                Agregar proyecto transversal
             </button>
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
             
@@ -238,7 +238,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    {modalMode === 'agregar' ? 'Agregar PPT' : 'Editar PPT'}
+                                    {modalMode === 'agregar' ? 'Agregar proyecto transversal' : 'Editar proyecto transversal'}
                                 </h5>
                                 <button
                                     type="button"

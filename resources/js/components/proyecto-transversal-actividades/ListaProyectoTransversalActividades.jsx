@@ -12,7 +12,7 @@ export default function ListaProyectoTransversalActividades({
   csrfToken = ''
 }) {
   // Estado para controlar qué pestaña está activa
-  const [activeTab, setActiveTab] = useState('actividades'); // CAMBIO: Pestaña por defecto
+  const [activeTab, setActiveTab] = useState('actividades');
 
   // Estados del modal de actividades
   const [showActividadModal, setShowActividadModal] = useState(false);
@@ -41,8 +41,8 @@ export default function ListaProyectoTransversalActividades({
   const [integranteActividad, setIntegranteActividad] = useState('');
   const [integranteRol, setIntegranteRol] = useState(''); // NUEVO: Estado para el rol del integrante
 
-  // NUEVO: Estados para el filtro de año en la pestaña de histórico
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  // NUEVO: Estados para el filtro de año
+  const [selectedYear, setSelectedYear] = useState('');
   const [availableYears, setAvailableYears] = useState([]);
 
   // Lógica de carga, errores y modales genéricos (se mantienen)
@@ -68,30 +68,29 @@ export default function ListaProyectoTransversalActividades({
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const [usersError, setUsersError] = useState(null);
 
-  // NUEVO: Efecto para generar la lista de años disponibles basado en las actividades
+  const [filteredActividades, setFilteredActividades] = useState(actividades);
+
+  // NUEVO: Efecto para generar la lista de años disponibles
   useEffect(() => {
-    const years = actividades.map(actividad => {
-      const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear();
-    });
-    const uniqueYears = [...new Set(years)].sort((a, b) => b - a);
-    setAvailableYears(uniqueYears);
-  }, [actividades]);
+    const years = [...new Set(actividades.map(act => new Date(act.fecha).getFullYear()))]
+                    .sort((a, b) => b - a);
+    setAvailableYears(years);
+    
+    if (selectedYear) {
+      setFilteredActividades(actividades.filter(act => new Date(act.fecha).getFullYear().toString() === selectedYear));
+    } else {
+      setFilteredActividades(actividades);
+    }
+  }, [actividades, selectedYear]);
 
-  // NUEVO: Función para obtener actividades del año actual
-  const getActividadesAnioActual = () => {
-    const currentYear = new Date().getFullYear();
+  // NUEVA FUNCIÓN: Filtra las actividades según el año seleccionado
+  const getFilteredActividades = () => {
+    if (selectedYear === '') {
+      return actividades;
+    }
     return actividades.filter(actividad => {
       const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear() === currentYear;
-    });
-  };
-
-  // NUEVO: Función para obtener actividades filtradas por año
-  const getActividadesPorAnio = () => {
-    return actividades.filter(actividad => {
-      const fecha = new Date(actividad.fecha);
-      return fecha.getFullYear() === selectedYear;
+      return fecha.getFullYear().toString() === selectedYear;
     });
   };
 
@@ -448,38 +447,51 @@ useEffect(() => {
     </div>
   );
 
-  // Función para renderizar la tabla de actividades (modificada para recibir actividades como parámetro)
-  const renderActividadesTable = (actividadesData, showAddButton = true, title = "Lista de Actividades") => (
+  // FUNCIÓN MODIFICADA: Ahora recibe las actividades a mostrar y el título.
+  const renderActividadesTable = () => (
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>{title}</h4>
-        {showAddButton && (
-          <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
-            {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-            <i className="fa fa-plus me-2"></i>Agregar Actividad
-          </button>
-        )}
+        <h4>Lista de Actividades</h4>
+        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
+          <i className="fa fa-plus me-2"></i>Agregar Actividad
+        </button>
       </div>
+      {/* Filtro de año */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label htmlFor="selectYear" className="form-label">Filtrar por año</label>
+          <select 
+            id="selectYear"
+            className="form-control"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            <option value="">Todos los años</option>
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <table className="table table-striped table-hover">
         <thead className="bg-primary text-white">
           <tr>
             <th>Fecha</th>
             <th>Descripción</th>
-            {/* CAMBIO: Se quitó la columna de evidencias */}
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {actividadesData.length > 0 ? (
-            actividadesData.map((actividad) => (
+          {/* CAMBIO: Usar getFilteredActividades() directamente */}
+          {getFilteredActividades().length > 0 ? (
+            getFilteredActividades().map((actividad) => (
               <tr key={actividad.id}>
                 <td>{actividad.fecha}</td>
-                {/* NUEVO: Se agregó un estilo para limitar el ancho y permitir que el texto se envuelva */}
                 <td style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
                   {actividad.descripcion ?? 'Sin información'}
                 </td>
                 <td>
-                  {/* NUEVO: Botón para ver documentos */}
                   {actividad.adjuntos && actividad.adjuntos.length > 0 && (
                     <button
                       onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
@@ -488,21 +500,18 @@ useEffect(() => {
                       <i className="fa fa-eye text-white"></i>
                     </button>
                   )}
-                  {/* NUEVO: Botón de compartir */}
                   <button
                     onClick={() => handleCompartirClick(actividad, 'actividad')}
                     className="btn btn-secondary btn-sm me-2"
                   >
                     <i className="fa fa-share-alt text-white"></i>
                   </button>
-                  {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
                   <button
                     onClick={() => handleEditarActividadClick(actividad)}
                     className="btn btn-warning btn-sm me-2"
                   >
                     <i className="fa fa-pen-to-square text-white"></i>
                   </button>
-                  {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
                   <button
                     className="btn btn-danger btn-sm"
                     onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
@@ -519,30 +528,6 @@ useEffect(() => {
           )}
         </tbody>
       </table>
-    </div>
-);
-
-  // NUEVO: Función para renderizar la pestaña de histórico
-  const renderHistoricoActividades = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Histórico de Actividades</h4>
-        <div className="d-flex align-items-center">
-          <label htmlFor="yearFilter" className="form-label me-2 mb-0">Filtrar por año:</label>
-          <select
-            id="yearFilter"
-            className="form-select"
-            style={{ width: 'auto' }}
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-          >
-            {availableYears.map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      {renderActividadesTable(getActividadesPorAnio(), false, `Actividades del año ${selectedYear}`)}
     </div>
   );
 
@@ -620,15 +605,15 @@ useEffect(() => {
         </div>
       ) : (
         <>
-          {/* CAMBIO: Se agregaron las nuevas pestañas */}
+          {/* CAMBIO: Se eliminó la pestaña de 'Historico' y se fusionó la lógica en 'Actividades' */}
           <ul className="nav nav-tabs nav-justified">
             <li className="nav-item">
               <a
-                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
-                onClick={() => setActiveTab('actividades')}
+                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
+                onClick={() => setActiveTab('informacion')}
                 style={{ cursor: 'pointer' }}
               >
-                Actividades {new Date().getFullYear()}
+                Información del Proyecto
               </a>
             </li>
             <li className="nav-item">
@@ -642,33 +627,21 @@ useEffect(() => {
             </li>
             <li className="nav-item">
               <a
-                className={`nav-link ${activeTab === 'historico' ? 'active' : ''}`}
-                onClick={() => setActiveTab('historico')}
+                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
+                onClick={() => setActiveTab('actividades')}
                 style={{ cursor: 'pointer' }}
               >
-                Histórico
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
-                onClick={() => setActiveTab('informacion')}
-                style={{ cursor: 'pointer' }}
-              >
-                Información del Proyecto
+                Actividades
               </a>
             </li>
           </ul>
 
           <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
             {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
-            {/* NUEVO: Pestaña de información del proyecto */}
-            {activeTab === 'informacion' && renderInformacionProyecto()}
-            {/* CAMBIO: Pestaña de actividades del año actual */}
-            {activeTab === 'actividades' && renderActividadesTable(getActividadesAnioActual(), true, `Actividades ${new Date().getFullYear()}`)}
-            {/* NUEVO: Pestaña de histórico */}
-            {activeTab === 'historico' && renderHistoricoActividades()}
+            {/* CAMBIO: Se llama a la función con el filtro aplicado */}
+            {activeTab === 'actividades' && renderActividadesTable()}
             {activeTab === 'integrantes' && renderIntegrantesTable()}
+            {activeTab === 'informacion' && renderInformacionProyecto()}
           </div>
 
           {/* Modal de formulario de actividades */}
