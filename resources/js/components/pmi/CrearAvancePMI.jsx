@@ -139,7 +139,7 @@ const CrearAvancePMI = ({
         }
 
         if (selectedActivity?.afecta_indicador && (!formData.suma_al_indicador || formData.suma_al_indicador <= 0)) {
-            setSubmitMessage({ type: "error", text: "Debes ingresar un valor válido en 'Unidades avanzadas'." });
+            setSubmitMessage({ type: "error", text: "Debes ingresar un valor válido en 'cantidad'." });
             return;
         }
 
@@ -257,7 +257,7 @@ const CrearAvancePMI = ({
                                                     htmlFor="unidades"
                                                     className="form-label"
                                                 >
-                                                    Unidades avanzadas (quedan {selectedActivity?.max_suma_indicador - selectedActivity?.indicador_acumulado} unidades por avanzar)  :
+                                                    Cantidad   :
                                                 </label>
                                                 <input
                                                     type="number"

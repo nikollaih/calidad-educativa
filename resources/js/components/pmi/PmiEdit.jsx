@@ -104,7 +104,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                 <div className="card-header text-black">
                     <div className="d-flex justify-content-between">
                         <div>
-                            <h5 className="mb-0">Plan de mejoramiento institucional</h5>
+                            <h5 className="mb-0">Plan de Mejoramiento Institucional</h5>
                             <small>
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
@@ -122,13 +122,13 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                 <th className="text-center">Gestión</th>
                                 <th className="text-center">Componente</th>
                                 <th className="text-center">Factor Crítico</th>
-                                <th className="text-center">Objective</th>
+                                <th className="text-center">Objectivo</th>
                                 <th className="text-center">Meta</th>
                                 <th className="text-center">Indicador</th>
                                 <th className="text-center">Actividad</th>
                                 <th className="text-center">Recurso ($)</th>
                                 <th className="text-center">Responsables</th>
-                                <th className="text-center">% Completitud</th>
+                                <th className="text-center">% Avance</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -226,14 +226,12 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                     <div className="text-center">
                                                         <div className="d-flex align-items-center gap-2">
                                                             <small>{row?.meta?.indicador_info?.unidad_parcial}</small>
-                                                            <div>{row?.meta?.indicador}</div>
                                                         </div>
 
                                                         <hr className="my-1"/>
 
                                                         <div className="d-flex align-items-center gap-2">
                                                             <small>{row?.meta?.indicador_info?.unidad_total}</small>
-                                                            <div>{row?.meta?.valor_requerido}</div>
                                                         </div>
 
                                                     </div>
@@ -244,7 +242,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
 
                                             <div className="card mt-5 shadow-sm border-0" style={{ maxWidth: "16rem" }}>
                                                 <div className="card-body py-2 px-3 d-flex justify-content-between align-items-center">
-                                                    <small className="text-muted">Completitud total</small>
+                                                    <small className="text-muted p-1">Avance</small>
                                                     <span className="fw-bold text-success">
                                                       {calcularCompletitudMeta(row?.meta)}%
                                                     </span>
@@ -266,7 +264,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                                             <strong>Estado:</strong> {row.actividad.slug_estado || "N/A"}
                                                         </small>
                                                         <small className="text-muted">
-                                                            <strong>Porcentaje de completitud:</strong> {row.actividad?.accumulated}%
+                                                            <strong>Porcentaje de avance:</strong> {row.actividad?.accumulated}%
                                                         </small>
                                                         <small className="text-muted">
                                                             <strong>Peso:</strong> {row.actividad.peso || "N/A"}%
@@ -348,7 +346,7 @@ const FactoresCriticosTable = ({csrfToken = '', pmiData = {}, institucionId = -1
                                               </span>
                                             </div>
                                         ) : (
-                                            <div>Sin porcentaje de completitud</div>
+                                            <div>Sin porcentaje de avance</div>
                                         )}
                                     </td>
                                 </tr>

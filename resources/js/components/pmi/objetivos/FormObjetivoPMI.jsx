@@ -21,6 +21,22 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
         }
     ]);
 
+
+    // Nuevo estado: gestión seleccionada
+    const [gestionSeleccionada, setGestionSeleccionada] = useState(null);
+
+    // Sacamos las gestiones únicas desde los factores
+    const gestiones = Array.from(
+        new Map(
+            factoresCriticos.map(f => [f.calificacion.grupo.padre.id, f.calificacion.grupo.padre])
+        ).values()
+    );
+
+    // Filtrar factores por gestión seleccionada
+    const factoresFiltrados = gestionSeleccionada
+        ? factoresCriticos.filter(f => f.calificacion.grupo.padre.id === gestionSeleccionada.id)
+        : [];
+
     useEffect(() => {
         if (objetivoExistente){
             setObjetivo({
@@ -28,10 +44,16 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 descripcion: objetivoExistente.descripcion,
                 factor_id:  objetivoExistente.factor_id,
             });
+
+            // Si ya hay factor, asignar gestión automáticamente
+            const factorExistente = factoresCriticos.find(f => f.id === objetivoExistente.factor_id);
+            if (factorExistente) {
+                setGestionSeleccionada(factorExistente.calificacion.grupo.padre);
+            }
+
             setMetas(objetivoExistente.metas);
         }
     },[]);
-
     // Manejar cambios en los campos de la objetivo
     const handleObjetivoChange = (e) => {
         const { name, value } = e.target;
@@ -88,36 +110,50 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
         }
     };
 
-    // Agregar actividad a un meta
-    const addActividad = (metaIndex) => {
-        const newMeta = [...metas];
-        newMeta[metaIndex].actividades.push({
-            descripcion: '',
-        });
-
-        setMetas(newMeta);
-    };
-
-    // Eliminar actividad de un meta
-    const removeActividad = (metaIndex, actividadIndex) => {
-        const newMeta = [...metas];
-        if (newMeta[metaIndex].actividades.length > 1) {
-            // Eliminar la actividad
-            newMeta[metaIndex].actividades = newMeta[metaIndex]
-                .actividades.filter((_, i) => i !== actividadIndex);
-            setMetas(newMeta);
-        }
-    };
-
     return (
         <div className="container py-4">
-                <h3 className="mb-4">Crear nuevo objetivo pmi</h3>
+                <h3 className="mb-4">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
 
                 {/* Sección del objetivo */}
                 <div className="card mb-4">
                     <div className="card-header">
                         <h5>Información del objetivo </h5>
                     </div>
+
+                    <div className="card-body">
+                        <label className="form-label">Gestión*</label>
+                        <CAutocompleteFromArray
+                            data={gestiones}
+                            fieldName={"gestion_id"}
+                            initialValue={gestionSeleccionada?.id}
+                            orderBy={{ field: 'indice', direction: 'asc' }}
+                            searchFields={['nombre', 'indice']}
+                            labelFields={['indice','nombre']}
+                            onSelect={(gestion) => {
+                                setGestionSeleccionada(gestion);
+                                // Reiniciar factor si cambia la gestión
+                                setObjetivo(prev => ({ ...prev, factor_id: "" }));
+                            }}
+                        />
+                    </div>
+
+                    {gestionSeleccionada && (
+                        <div className="card-body">
+                            <label className="form-label">Factor crítico*</label>
+                            <CAutocompleteFromArray
+                                key={gestionSeleccionada.id}   // 🔑 fuerza reset al cambiar gestión
+                                data={factoresFiltrados}
+                                orderBy={{ field: 'indice_calificacion', direction: 'asc' }}
+                                fieldName={"factor_id"}
+                                initialValue={objetivo.factor_id}
+                                searchFields={['descripcion','indice_calificacion']}
+                                labelFields={['indice_calificacion','descripcion']}
+                                onSelect={(factor) => {
+                                    setObjetivo(prev => ({ ...prev, factor_id: factor.id }));
+                                }}
+                            />
+                        </div>
+                    )}
                     <div className="card-body">
                         <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción*</label>
@@ -132,24 +168,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             />
                         </div>
                     </div>
-                    <div className="card-body">
-                        <label htmlFor="descripcion" className="form-label">Factor critico asociado al objetivo*</label>
-                        <CAutocompleteFromArray
-                            data={factoresCriticos}
-                            fieldName={"factor_id"}
-                            initialValue={objetivo.factor_id}
-                            searchFields={['descripcion', 'indice_calificacion']}
-                            labelFields={['indice_calificacion', 'descripcion']}
-                            onSelect={(factor) => {
-                                setObjetivo(prev => ({
-                                    ...prev,
-                                    ['factor_id']: factor.id
-                                }));
-                            }}
-                        />
-
-                    </div>
-                </div>
+            </div>
 
                 {/* Sección de Meta */}
                 <div className="card mb-4">
@@ -214,57 +233,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                             />
                                         </div>
                                     </div>
-
-
-                                    {/* Actividades del meta */}
-                                    <div className="ps-3">
-                                        <div className="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Actividades</h6>
-                                        </div>
-
-                                        {meta.actividades.map((actividad, j) => {
-                                            return (
-                                                <div key={j} className="mb-3 border p-3 rounded">
-                                                    <div className="d-flex align-items-center mb-2">
-                                                        <label
-                                                            htmlFor={`actividad-${i}-${j}`}
-                                                            className="form-label me-2"
-                                                        >
-                                                            Actividad #{j + 1}
-                                                        </label>
-                                                        { editable && (
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-sm btn-outline-danger ms-auto"
-                                                                onClick={() => removeActividad(i, j)}
-                                                                disabled={meta.actividades.length <= 1}
-                                                            >
-                                                                Eliminar
-                                                            </button>
-                                                        )}
-
-                                                    </div>
-                                                    <textarea
-                                                        id={`actividad-desc-${i}-${j}`}
-                                                        className="form-control mb-2"
-                                                        name="descripcion"
-                                                        value={actividad.descripcion}
-                                                        onChange={(e) => handleActividadChange(i, j, e)}
-                                                        disabled={!editable}
-                                                        required
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-
-                                        { editable && (<button
-                                            type="button"
-                                            className="btn btn-sm btn-outline-primary"
-                                            onClick={() => addActividad(i)}
-                                        >
-                                            Agregar Actividad
-                                        </button>)}
-                                    </div>
                                 </div>
                             );
                         })}
@@ -290,17 +258,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             name={`metas[${i}][indicador_id]`}
                             value={meta.indicador_id}
                         />
-
-                        {meta.actividades.map((actividad, j) => (
-                            <div key={j}>
-                                <input
-                                    type="hidden"
-                                    name={`metas[${i}][actividades][${j}][descripcion]`}
-                                    value={actividad.descripcion}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                   </div>
                 ))}
                 { editable && (
                     <button

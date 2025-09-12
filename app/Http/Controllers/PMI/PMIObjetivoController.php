@@ -9,11 +9,11 @@ use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
 
-class PMIObjetivoController extends Controller
-{
+class PMIObjetivoController extends Controller {
     public function __construct(
         private PmiMetaService $pmiMetaService,
-    ){}
+    ) {
+    }
 
     public function index() {
         $objetivos = PmiObjetivo::paginate(20);
@@ -23,7 +23,7 @@ class PMIObjetivoController extends Controller
     }
 
     public function create() {
-        $factoresCriticos = FactorCriticoCalificacion::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
         $unidadesMedida = PmiIndicador::get();
         return view('pmi.objetivos.create',
             [
@@ -32,15 +32,15 @@ class PMIObjetivoController extends Controller
             ]
         );
     }
-    public function edit(int $objetivo_pmi){
+    public function edit(int $objetivo_pmi) {
         $objetivo = PmiObjetivo::with('metas.actividades')
             ->find($objetivo_pmi);
-        if(!$objetivo){
+        if (!$objetivo) {
             return redirect()
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
-        $factoresCriticos = FactorCriticoCalificacion::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
         $unidadesMedida = PmiIndicador::get();
         return view('pmi.objetivos.edit', [
             'objetivo' => $objetivo,
@@ -49,16 +49,15 @@ class PMIObjetivoController extends Controller
 
         ]);
     }
-    public function show(int $objetivo_pmi)
-    {
+    public function show(int $objetivo_pmi) {
         $objetivo = PmiObjetivo::with('metas.actividades')
             ->find($objetivo_pmi);
-        if(!$objetivo){
+        if (!$objetivo) {
             return redirect()
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
-        $factoresCriticos = FactorCriticoCalificacion::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
         $unidadesMedida = PmiIndicador::get();
         return view('pmi.objetivos.show', [
             'objetivo' => $objetivo,
@@ -71,11 +70,11 @@ class PMIObjetivoController extends Controller
         $objetivoData['descripcion'] = $input['descripcion'];
         $objetivoData['factor_id'] = $input['factor_id'];
         $metas = $input['metas'];
-        if( isset ($input['id']) && !empty ($input['id'])  ){
+        if ( isset ($input['id']) && !empty ($input['id'])  ) {
             $objetivo = PmiObjetivo::find($input['id']);
             $objetivo->fill($objetivoData);
             $objetivo->save();
-        }else{
+        } else {
             $objetivo = PmiObjetivo::create($objetivoData);
         }
 
