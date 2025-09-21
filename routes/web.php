@@ -1,31 +1,31 @@
 <?php
 
-use App\Http\Controllers\MunicipioController;
-use App\Http\Controllers\ProfileController;
-use App\Models\Municipio;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\InstitutionController;
-use App\Http\Controllers\EducationalOfferController;
-use App\Http\Controllers\PAMController;
-use App\Http\Controllers\PAMGeneralController;
-use App\Http\Controllers\PMI\PMIController;
-use App\Http\Controllers\SedeController;
 use App\Http\Controllers\AjustesController;
 use App\Http\Controllers\ComponenteController;
+use App\Http\Controllers\EducationalOfferController;
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\ModeloEducacionalController;
 use App\Http\Controllers\ModeloPedagogicoController;
-use App\Http\Controllers\UnidadMetaController;
-use App\Http\Controllers\PMI\PMIObjetivoController;
-use App\Http\Controllers\RedesAprendizajeController;
+use App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\PAMController;
+use App\Http\Controllers\PAMGeneralController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PMI\IndicadoresController;
+use App\Http\Controllers\PMI\PMIController;
+use App\Http\Controllers\PMI\PMIObjetivoController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectoTransversalActividadesController;
 use App\Http\Controllers\ProyectoTransversalController;
 use App\Http\Controllers\ProyectoTransversalIntegrantesController;
 use App\Http\Controllers\RedesActividadesController;
+use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\RedesIntegrantesController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SedeController;
+use App\Http\Controllers\UnidadMetaController;
+use App\Http\Controllers\UserController;
+use App\Models\Municipio;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -202,7 +202,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('indicadores-pmi',IndicadoresController::class);
     // Gestion de proyectos transversales
     Route::resource('/{institucionId}/proyectos-transversales', ProyectoTransversalController::class);
-
 });
 
 require __DIR__.'/auth.php';
