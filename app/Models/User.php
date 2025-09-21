@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -44,4 +43,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    /**
+     * Alias para relaciones polimorficas
+     */
+    public function getMorphClass() {
+        return 'user';
+    }
 }

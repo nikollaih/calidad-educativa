@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+class FirtsUserSeeder extends Seeder {
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void {
+        $firstUser = User::create([
+             'name' => 'administrador',
+             'email' => 'admin@gmail.com',
+             'password'=> bcrypt('password')
+        ]);
+
+        $superAdmin = Role::where("name","super_admin")
+            ->firstOrFail();
+
+        // Asignar permisos a los roles
+        $superAdmin->givePermissionTo(Permission::all());
+        // Asignar rol a un usuario por defecto
+        $firstUser->assignRole('super_admin');
+        $firstUser->save();
+    }
+}

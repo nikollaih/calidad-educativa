@@ -4,65 +4,23 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\EducationalOfferLevel;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 
-class DatabaseSeeder extends Seeder
-{
+class DatabaseSeeder extends Seeder {
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
-
-        // \App\Models\User::factory(1)->create();
-
-        // // \App\Models\User::factory()->create([
-        // //     'name' => 'Test User',
-        // //     'email' => 'test@example.com',
-        // // ]);
-        // //
-        // $superAdmin = Role::create(['name' => 'super_admin']);
-        // $admin = Role::create(['name' => 'administrador']);
-        // $vendedor = Role::create(['name' => 'rector']);
-        // $contador = Role::create(['name' => 'secretario']);
-
-        // // Crear permisos
-        // // Permission::create(['name' => 'crear usuarios']);
-        // // Permission::create(['name' => 'editar usuarios']);
-        // // Permission::create(['name' => 'eliminar usuarios']);
-        // $permissions = [
-        //     'ver usuarios',
-        //     'crear usuarios',
-        //     'editar usuarios',
-        //     'eliminar usuarios',
-        //     'ver roles',
-        //     'crear roles',
-        //     'editar roles',
-        //     'eliminar roles'
-        // ];
-
-        // foreach ($permissions as $permission) {
-        //     Permission::create(['name' => $permission]);
-        // }
-
-        // // Asignar permisos a los roles
-        // $superAdmin->givePermissionTo(Permission::all());
-        // // $admin->givePermissionTo(['crear usuarios', 'editar usuarios']);
-        // // Asignar rol a un usuario por defecto
-        // $user = User::where('email','admin@gmail.com')->first(); // Cambiar por un usuario existente
-        // $user->assignRole('super_admin');
-
+    public function run(): void {
         // Seeder de los modelos educativos
+        $this->call(RoleSeeder::class);
+        $this->call(PermissionSeeder::class);
+        $this->call(FirtsUserSeeder::class);
         //$this->call(EducationalModelSeeder::class);
         //$this->call(EducationalOfferLevelSeeder::class);
         //$this->call(GrupoCalificacionSeeder::class);
         //$this->call(CalificacionSeeder::class);
         //$this->call(NotaCalificacionSeeder::class);
-        $this->call(FactorCriticoCalificacionSeeder::class);
+        //$this->call(FactorCriticoCalificacionSeeder::class);
         //$this->call(RelacionInstitucionPeiSeeder::class);
         //$this->call(MunicipalitySeeder::class);
     }
