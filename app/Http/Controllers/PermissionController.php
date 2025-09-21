@@ -2,27 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Seguridad\Permission\Permission;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 
-class PermissionController extends Controller
-{
+class PermissionController extends Controller {
     // Mostrar lista de permisos
-    public function index()
-    {
+    public function index() {
         $permissions = Permission::all();
         return view('permissions.index', compact('permissions'));
     }
 
     // Mostrar formulario de creación de permiso
-    public function create()
-    {
+    public function create() {
         return view('permissions.create');
     }
 
     // Guardar un nuevo permiso
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name' => 'required|unique:permissions,name',
             'guard_name' => 'required|string',
@@ -37,15 +33,13 @@ class PermissionController extends Controller
     }
 
     // Mostrar formulario para editar un permiso
-    public function edit($id)
-    {
+    public function edit($id) {
         $permission = Permission::findOrFail($id);
         return view('permissions.edit', compact('permission'));
     }
 
     // Actualizar permiso
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $request->validate([
             'name' => 'required|unique:permissions,name,' . $id,
             'guard_name' => 'required|string',
@@ -61,8 +55,7 @@ class PermissionController extends Controller
     }
 
     // Eliminar permiso
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $permission = Permission::findOrFail($id);
         $permission->delete();
 

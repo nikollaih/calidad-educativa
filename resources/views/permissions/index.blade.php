@@ -24,7 +24,7 @@
                     <tbody>
                         @foreach($permissions as $permission)
                             <tr>
-                                <td>{{ $permission->name }}</td>
+                                <td>{{ $permission->name_translated }}</td>
                                 <td>{{ $permission->guard_name }}</td>
                                 <td>
                                     <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-warning">Editar</a>

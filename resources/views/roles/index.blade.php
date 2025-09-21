@@ -18,8 +18,8 @@
                     <tbody>
                         @foreach($roles as $role)
                         <tr>
-                            <td>{{ $role->name }}</td>
-                            <td>{{ $role->permissions->pluck('name')->join(', ') }}</td>
+                            <td>{{ $role->name_translated}}</td>
+                            <td>{{ $role->permissions->pluck('name_translated')->join(', ') }}</td>
                             <td>
                                 <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
                                 <form action="{{ route('roles.destroy', $role) }}" method="POST" style="display:inline;">

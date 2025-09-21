@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Seguridad\Permission\Permission;
+use App\Models\Seguridad\Role\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
-class RoleController extends Controller
-{
-
-    public function index()
-    {
-        $roles = Role::with('permissions')->paginate(10);
+class RoleController extends Controller {
+    public function index() {
+        $roles = Role::with('permissions')
+            ->whereNot('name','super_admin')
+            ->paginate(10);
         return view('roles.index', compact('roles'));
     }
 
-    
+
     /**
      * Obtiene todas los roles
      *
@@ -27,7 +26,6 @@ class RoleController extends Controller
             // Se carga la relación con el representante para el JSON.
             $roles = Role::get();
             return response()->json($roles, 200);
-
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
@@ -36,40 +34,36 @@ class RoleController extends Controller
         }
     }
 
-    public function create()
-    {
+    public function create() {
         $permissions = Permission::all();
         return view('roles.create', compact('permissions'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name' => 'required|unique:roles,name',
             'permissions' => 'required|array',
             'permissions.*' => 'exists:permissions,id'
         ]);
-    
+
         $role = Role::create(['name' => $request->name]);
-    
+
         // Asegurarte de que los permisos estén en el guard `web`
         $permissions = Permission::whereIn('id', $request->permissions)
             ->where('guard_name', 'web')
             ->get();
-    
+
         $role->givePermissionTo($permissions);
-    
+
         return redirect()->route('roles.index')->with('success', 'Rol creado correctamente.');
     }
-    
-    public function edit(Role $role)
-    {
+
+    public function edit(Role $role) {
         $permissions = Permission::all();
         return view('roles.edit', compact('role', 'permissions'));
     }
 
-    public function update(Request $request, Role $role)
-    {
+    public function update(Request $request, Role $role) {
         $request->validate([
             'name' => "required|unique:roles,name,{$role->id}",
             'permissions' => 'required|array',
@@ -86,8 +80,7 @@ class RoleController extends Controller
     }
 
 
-    public function destroy(Role $role)
-    {
+    public function destroy(Role $role) {
         $role->delete();
         return redirect()->route('roles.index')->with('success', 'Rol eliminado correctamente.');
     }
