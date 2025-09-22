@@ -454,7 +454,7 @@ const addActividad = (metaId) => {
                             value={meta.descripcion}
                             onChange={(e) => updateField(meta.id, 'descripcion', e.target.value)}
                             placeholder="Descripción de la meta"
-                            disabled={true}
+                            disabled={false}
                         />
                     </div>
 
@@ -531,6 +531,21 @@ const addActividad = (metaId) => {
                     </button>
                 </div>
                 <div className="card-body">
+
+                    {/* Descripción completa del objetivo seleccionado */}
+                    {/* Descripción completa del objetivo seleccionado */}
+                    {objetivo.descripcion && (
+                    <div className="mt-3">
+                        <label className="form-label fw-bold">Descripción del objetivo:</label>
+                        <textarea
+                        className="form-control"
+                        rows="3"
+                        value={objetivo.descripcion}
+                        onChange={(e) => updateField(objetivo.id, 'descripcion', e.target.value)}
+                        placeholder="Escribe o edita la descripción del objetivo"
+                        />
+                    </div>
+                    )}
                     <div className="mb-3">
                         <label className="form-label fw-bold">Seleccione un objetivo:</label>
                         <select
@@ -552,15 +567,7 @@ const addActividad = (metaId) => {
                             ))}
                         </select>
                     </div>
-                    {/* Descripción completa del objetivo seleccionado */}
-                    {objetivo.descripcion && (
-                        <div className="mt-3">
-                            <div className="alert alert-info">
-                                <strong>Descripción del objetivo:</strong>
-                                <p className="mb-2">{objetivo.descripcion}</p>
-                            </div>
-                        </div>
-                    )}
+
                     {/* Select de metas + botón agregar */}
                     {objetivo.objetivo_general_id && (
                         <div className="mb-3">
