@@ -27,7 +27,7 @@ const CInstitutionNavigations = ({
             />
             <div class="d-flex gap-2">
                 <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
-                    Detalles
+                   Perfil
                 </a>
                 <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
                     PEI
