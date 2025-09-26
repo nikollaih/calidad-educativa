@@ -21,7 +21,7 @@
                         <tr>
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
-                            <td>{{ $usuario->roles->pluck('name')->join(', ') }}</td>
+                            <td>{{ $usuario->roles->pluck('name_translated')->join(', ') }}</td>
                             <td>
                                 <a href="{{ route('usuarios.edit', $usuario) }}" class="btn btn-warning btn-sm">Editar</a>
                                 <form action="{{ route('usuarios.destroy', $usuario) }}" method="POST" style="display:inline;">

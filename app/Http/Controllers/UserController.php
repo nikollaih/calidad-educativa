@@ -2,32 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Seguridad\Role\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
-{
-
-
-    public function index()
-    {
+class UserController extends Controller {
+    public function index() {
         $usuarios = User::with('roles')->paginate(10);
         return view('usuarios.index', compact('usuarios'));
     }
 
     public function all() {
-        
         try {
             $usuarios = User::get();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $usuarios,
                 'message' => 'Usuarios obtenidos correctamente'
             ], 200);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -36,14 +30,12 @@ class UserController extends Controller
         }
     }
 
-    public function create()
-    {
-        $roles = Role::all();
+    public function create() {
+        $roles = Role::whereNot('name','super_admin')->get();
         return view('usuarios.create', compact('roles'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -62,14 +54,12 @@ class UserController extends Controller
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado correctamente.');
     }
 
-    public function edit(User $usuario)
-    {
-        $roles = Role::all();
+    public function edit(User $usuario) {
+        $roles = Role::whereNot('name','super_admin')->get();
         return view('usuarios.edit', compact('usuario', 'roles'));
     }
 
-    public function update(Request $request, User $usuario)
-    {
+    public function update(Request $request, User $usuario) {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => "required|email|unique:users,email,{$usuario->id}",
@@ -88,8 +78,7 @@ class UserController extends Controller
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
     }
 
-    public function destroy(User $usuario)
-    {
+    public function destroy(User $usuario) {
         $usuario->delete();
         return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
     }

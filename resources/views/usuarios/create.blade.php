@@ -28,7 +28,7 @@
                         <label for="role" class="form-label">Rol</label>
                         <select name="role" class="form-control" required>
                             @foreach($roles as $role)
-                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                <option value="{{ $role->name }}">{{ $role->name_translated }}</option>
                             @endforeach
                         </select>
                     </div>

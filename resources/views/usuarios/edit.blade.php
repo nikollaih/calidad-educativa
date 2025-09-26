@@ -29,7 +29,7 @@
                         <select name="role" class="form-control" required>
                             @foreach($roles as $role)
                                 <option value="{{ $role->name }}" @if($usuario->hasRole($role->name)) selected @endif>
-                                    {{ $role->name }}
+                                    {{ $role->name_translated }}
                                 </option>
                             @endforeach
                         </select>
