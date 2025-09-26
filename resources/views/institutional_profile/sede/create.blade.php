@@ -280,6 +280,14 @@
                                     @php
                                         $infraestructura = [
                                             [
+                                                'nombre' => 'Baterias sanitarias mujeres',
+                                                'tiene_cantidad' => true
+                                            ],
+                                            [
+                                                'nombre' => 'Baterias sanitarias hombres',
+                                                'tiene_cantidad' => true
+                                            ],
+                                            [
                                                 'nombre' => 'Área del lote',
                                                 'tiene_cantidad' => false
                                             ],
