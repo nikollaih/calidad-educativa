@@ -9,6 +9,7 @@ use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
+use App\Models\FactorCriticoCalificacion;
 use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
@@ -85,6 +86,7 @@ class InstitutionController extends Controller {
 
     public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId) {
         $factores = $request->input('factores');
+        $institucionId = $request->input('institucionId');
         // Recolectar los registros v?lidos que vamos a mantener
         $idsParaMantener = [];
         foreach ($factores as $factor) {
@@ -94,16 +96,34 @@ class InstitutionController extends Controller {
             $calificacionIndice = $factor['calificacion_indice'];
 
             // Buscar si ya existe uno igual
-            $factorCritico = FactorCritico::updateOrCreate(
+            $factorCritico = FactorCritico::firstOrCreate(
                 [
                     'calificacion_indice' => $calificacionIndice,
                     'autoevaluacion_id' => $autoevaluacionId,
-                ],
-                [
                     'descripcion' => $descripcion,
                     'valor' => $valor,
                 ]
             );
+
+            // Verificar si ya existe uno con mismo descripcion + indice_calificacion
+            // con institucion_id NULL o exactamente el mismo institucion_id
+            $existe = FactorCriticoCalificacion::where('descripcion', $descripcion)
+                ->where('indice_calificacion', $calificacionIndice)
+                ->where(function ($q) use ($institucionId) {
+                    $q->whereNull('institucion_id')
+                      ->orWhere('institucion_id', $institucionId);
+                })
+                ->exists();
+
+            // Si no existe, lo creamos
+            if (! $existe) {
+                FactorCriticoCalificacion::create([
+                    'descripcion' => $descripcion,
+                    'indice_calificacion' => $calificacionIndice,
+                    'institucion_id' => $institucionId,
+                ]);
+            }
+
 
             $idsParaMantener[] = $factorCritico->id;
         }

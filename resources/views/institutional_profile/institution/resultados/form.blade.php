@@ -13,6 +13,7 @@
     >
     </div>
     <div
+        data-institucion-id="{{ $institucionId }}"
         data-component="AutoevaluacionResultados"
         data-fortalezas='{!! json_encode($fortalezas) !!}'
         data-oportunidades-mejora='{!! json_encode($oportunidadesMejora) !!}'
@@ -21,6 +22,7 @@
         data-csrf-token="{{ csrf_token() }}"
         data-sincronizar-url="{{ route('institution.fort_deb-save', ['autoevaluacionId' => $autoevaluacionId]) }}"
         data-factores-criticos-por-defecto='@json($factoresCriticosPorDefecto)'
+        data-factores-criticos-institucion='@json($factoresCriticosInstitucion)'
         data-puede-editar="{{$puedeEditar}}"
     >
     </div>

@@ -11,29 +11,28 @@ use App\Models\GrupoCalificacion;
 use Illuminate\Support\Collection;
 
 class AutoevaluacionService {
-
     const PUNTAJE_MINIMO_PARA_PMI = 4;
 
     // Permite almacenar un adjunto
     public function tieneNotasPendientes(Autoevaluacion $autoevaluacion):Result {
-            $cantidadTotalNotas = Calificacion::count();
-            $cantidadTotalNotasCalificadas = $autoevaluacion->notas()->count();
+        $cantidadTotalNotas = Calificacion::count();
+        $cantidadTotalNotasCalificadas = $autoevaluacion->notas()->count();
 
-            $tieneNotasPendientes  = $cantidadTotalNotas - $cantidadTotalNotasCalificadas != 0;
-            if( $tieneNotasPendientes) {
-                // Obtener los IDs de las notas ya calificadas
-                $notasCalificadasIds = $autoevaluacion->notas()->pluck('indice_calificacion');
+        $tieneNotasPendientes  = $cantidadTotalNotas - $cantidadTotalNotasCalificadas != 0;
+        if ( $tieneNotasPendientes) {
+            // Obtener los IDs de las notas ya calificadas
+            $notasCalificadasIds = $autoevaluacion->notas()->pluck('indice_calificacion');
 
-                // Obtener la primera nota que no está calificada
-                $primeraNotaSinCalificar = Calificacion::whereNotIn('indice', $notasCalificadasIds)
-                    ->orderBy('indice')
-                    ->first();
+            // Obtener la primera nota que no está calificada
+            $primeraNotaSinCalificar = Calificacion::whereNotIn('indice', $notasCalificadasIds)
+                ->orderBy('indice')
+                ->first();
 
-               return  Result::success('Actualmente tienes '. $primeraNotaSinCalificar->indice . ' ' . $primeraNotaSinCalificar->nombre .
-                   ' y otras '
-                   . $cantidadTotalNotas - ($cantidadTotalNotasCalificadas + 1) . ' notas pendientes por calificar.');
-            }
-            return Result::error(msg:' No tienes notas pendientes por calificar.');
+            return  Result::success('Actualmente tienes '. $primeraNotaSinCalificar->indice . ' ' . $primeraNotaSinCalificar->nombre .
+                ' y otras '
+                . $cantidadTotalNotas - ($cantidadTotalNotasCalificadas + 1) . ' notas pendientes por calificar.');
+        }
+        return Result::error(msg:' No tienes notas pendientes por calificar.');
     }
     public function obtenerNotasPendientes(Autoevaluacion $autoevaluacion):Collection {
         // Extrae los índices de calificación ya respondidos
@@ -70,7 +69,7 @@ class AutoevaluacionService {
         $factoresCriticosRegistrados = $autoevaluacion->factoresCriticos()->get();
 
 
-        if(empty($autoevaluacion)){
+        if (empty($autoevaluacion)) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
         }
         $gestiones = GrupoCalificacion::whereNull('padre_id')->get();
@@ -259,13 +258,16 @@ class AutoevaluacionService {
                 }
             }
         }
-        if($autoevaluacion->alias_estado != 'VALIDACION'){
+        if ($autoevaluacion->alias_estado != 'VALIDACION') {
             // Recolectar los registros válidos que vamos a mantener
             $idsParaMantener = [];
             foreach ($factoresCriticosPorDefecto as $factorPorDefecto) {
-                $factorCriticoExistente = $factoresCriticosRegistrados->where('calificacion_indice',$factorPorDefecto->indice_calificacion)->first();
-                if ($factorCriticoExistente  != null) {
-                    $idsParaMantener[] = $factorCriticoExistente->id;
+                $factoresCriticosExistentes = $factoresCriticosRegistrados->where('calificacion_indice',$factorPorDefecto->indice_calificacion);
+                if ($factoresCriticosExistentes->isNotEmpty()) {
+                    $idsParaMantener = array_merge(
+                        $idsParaMantener,
+                        $factoresCriticosExistentes->pluck('id')->toArray()
+                    );
                 } else {
                     // Buscar si ya existe uno igual
                     $factorCreado = FactorCritico::create(
@@ -289,6 +291,10 @@ class AutoevaluacionService {
         $factoresCriticos = FactorCritico::with('calificacion')
             ->where('autoevaluacion_id', $autoevaluacionId)
             ->get();
+        $factoresCriticosInstitucion = FactorCriticoCalificacion::with('calificacion')
+            ->whereNull('institucion_id')
+            ->orWhere('institucion_id',$autoevaluacion->institucion_id)
+            ->get();
         return [
             'fortalezas' => $fortalezas,
             'oportunidadesMejora' => $oportunidadesMejora,
@@ -297,6 +303,7 @@ class AutoevaluacionService {
             'institucionId' => $autoevaluacion->institucion_id,
             'factoresCriticosPorDefecto' => $factoresCriticos,
             'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
+            'factoresCriticosInstitucion' => $factoresCriticosInstitucion
         ];
     }
 }
