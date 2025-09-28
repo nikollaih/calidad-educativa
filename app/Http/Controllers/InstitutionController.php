@@ -75,7 +75,7 @@ class InstitutionController extends Controller {
             ->where('id',$institucion)
             ->first();
         if (!$institucion) {
-            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
+            return redirect()->route('institution.index')->with('flash_error_message', "No se encontró la institución.");
         }
         return view('institutional_profile.institution.show', ['institution' => $institucion, 'municipios' => $municipios]);
     }
@@ -371,17 +371,17 @@ class InstitutionController extends Controller {
         $institucionToUpdate->save();
         $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'], $institucionToUpdate);
 
-        return redirect()->route('institution.edit',$institucion)->with('success', 'Instituci?n actualizada correctamente.');
+        return redirect()->route('institution.edit',$institucion)->with('success', 'Institución actualizada correctamente.');
     }
     public function destroy(int $institucion) {
         $institucionToDel = Institucion::find($institucion);
         if (!$institucionToDel) {
-            return redirect()->back()->with('flash_error_message', 'Instituci?n no encontrada.');
+            return redirect()->route('institution.index')->with('flash_error_message', "No se encontró la institución.");
         }
 
         $institucionToDel->redesSociales()->delete();
         $institucionToDel->delete();
-        return redirect()->back()->with('success', 'Instituci?n Eliminada correctamente.');
+        return redirect()->route('institution.index')->with('flash_success_message', "Institución Eliminada correctamente.");
     }
 
     public function pei(int $institucion) {
