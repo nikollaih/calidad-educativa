@@ -608,7 +608,7 @@ const addActividad = (metaId) => {
                                 >
                                     <i className="fas fa-plus-circle"></i> Agregar meta
                                 </button>
-                            </div>
+                           </div>
                             {metasDisponibles.length === 0 && (
                                 <small className="text-muted d-block mt-1">Este objetivo no tiene metas
                                     registradas.</small>
@@ -625,6 +625,31 @@ const addActividad = (metaId) => {
                     {objetivo.metas && objetivo.metas.map(meta =>
                         renderMeta(meta, objetivo.id)
                     )}
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary"
+                        onClick={() => {
+                            const newMeta = {
+                                id: `meta-virtual-${uniqueId()}`,
+                                descripcion: "Nueva meta",
+                                indicador_id: '',
+                                valor_requerido: 0,
+                                objetivo_id: objetivo.id,
+                                actividades: []
+                            };
+                            setFormData(prev => ({
+                                ...prev,
+                                objetivos: prev.objetivos.map(o =>
+                                    o.id === objetivo.id
+                                        ? {...o, metas: [...(o.metas || []), newMeta]}
+                                        : o
+                                )
+                            }));
+                        }}
+                    >
+                        <i className="fas fa-plus"></i> Nueva meta
+                    </button>
+
                 </div>
             </div>
         );
@@ -642,6 +667,16 @@ const addActividad = (metaId) => {
                         text: `La meta "${meta.descripcion}" no tiene pesos correctos. Debe sumar 100%, actualmente está en ${100-restante}%.`,
                     });
                     return; // detener envío
+                }
+
+                // validar indicador_id no sea nulo o vacío
+                if (!meta.indicador_id || meta.indicador_id === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Indicador requerido',
+                        text: `La meta \"${meta.descripcion}\" debe tener un indicador válido asignado.`,
+                    });
+                    return;
                 }
 
                 // validar valor requerido vs max_suma_indicador
