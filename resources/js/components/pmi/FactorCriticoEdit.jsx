@@ -109,12 +109,21 @@ const FactorCriticoEdit = ({
     // --- Funciones para agregar elementos ---
 
     const agregarObjetivo = () => {
+        var objetivoId = `objetivo-virtual-${uniqueId()}`;
         const newObjetivo = {
-            id: `objetivo-virtual-${uniqueId()}`,
-            descripcion: '',
+            id: objetivoId,
+            descripcion: 'Nuevo objetivo',
             objetivo_general_id: null,
-            metas: []
-        };
+            metas: [{
+                id: `meta-virtual-${uniqueId()}`,
+                __source_meta_id: -1, // solo para control interno (no se envía)
+                descripcion: "Nueva meta",
+                indicador_id: '',
+                valor_requerido: 0,
+                objetivo_id: objetivoId,
+                actividades:         [],
+            }]
+            };
 
         setFormData(prev => ({
             ...prev,
@@ -463,7 +472,7 @@ const addActividad = (metaId) => {
                             <label className="form-label fw-bold">Unidad de Medida:</label>
                             <CAutocompleteFromArray
                                 data={indicadores}
-                                isEditable={false}
+                                isEditable={true}
                                 initialValue={meta.indicador_id}
                                 fieldName={"indicador_id"}
                                 searchFields={['unidad_total', 'unidad_parcial']}
@@ -728,6 +737,7 @@ const addActividad = (metaId) => {
 
                     >
                         <input type="hidden" name="_token" value={csrfToken}/>
+                        <input type="hidden" name="institucionId" value={institucionId}/>
 
                         {/* Recorrer objetivos */}
                         {formData.objetivos.map((objetivo, i) => (

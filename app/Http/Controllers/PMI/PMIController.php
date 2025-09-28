@@ -177,6 +177,7 @@ class PMIController extends Controller {
                 'pmiId' => $pmi,
                 'objetivos' => $objetivos,
                 'indicadores' => $indicadores,
+                'institucionId' => $institucionId,
             ]);
     }
     public function storeActividadAvance(Request $request) {
