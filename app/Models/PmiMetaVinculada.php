@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use App\Models\PMI\PmiIndicador;
-use App\Models\PMI\PmiObjetivo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PmiMetaVinculada extends Model
-{
+class PmiMetaVinculada extends Model {
     use HasFactory;
     protected $fillable = [
         'descripcion',
@@ -16,13 +14,13 @@ class PmiMetaVinculada extends Model
         'indicador_id',
         'valor_requerido',
     ];
-    public function actividades(){
+    public function actividades() {
         return $this->hasMany(PmiActividadVinculada::class, 'meta_id','id');
     }
-    public function indicadorInfo(){
+    public function indicadorInfo() {
         return $this->belongsTo(PmiIndicador::class, 'indicador_id');
     }
-    public function objetivo(){
+    public function objetivo() {
         return $this->belongsTo(PmiObjetivoVinculado::class, 'objetivo_id');
     }
 }

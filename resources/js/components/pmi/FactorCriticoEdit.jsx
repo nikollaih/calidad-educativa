@@ -543,7 +543,7 @@ const addActividad = (metaId) => {
 
                     {/* Descripción completa del objetivo seleccionado */}
                     {/* Descripción completa del objetivo seleccionado */}
-                    {objetivo.descripcion && (
+                    { (
                     <div className="mt-3">
                         <label className="form-label fw-bold">Descripción del objetivo:</label>
                         <textarea

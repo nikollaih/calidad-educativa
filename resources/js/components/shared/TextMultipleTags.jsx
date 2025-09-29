@@ -75,6 +75,7 @@ const TextMultipleTags = ({
                     value={inputValue}
                     onInput={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    onBlur={addTag}
                 />)}
             </div>
 
