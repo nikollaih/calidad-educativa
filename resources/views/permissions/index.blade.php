@@ -38,6 +38,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div
+                    data-component="CPagination"
+                    data-pagination='{!! json_encode($permissions) !!}'>
+                </div>
             </div>
         </div>
     </div>

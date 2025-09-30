@@ -31,6 +31,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div
+                    data-component="CPagination"
+                    data-pagination='{!! json_encode($roles) !!}'>
+                </div>
             </div>
         </div>
     </div>
