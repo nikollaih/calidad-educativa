@@ -33,6 +33,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div
+                    data-component="CPagination"
+                    data-pagination='{!! json_encode($usuarios) !!}'>
+                </div>
             </div>
         </div>
     </div>

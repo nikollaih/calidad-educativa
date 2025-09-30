@@ -51,7 +51,7 @@ class UserController extends Controller {
 
         $user->assignRole($request->role);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario creado correctamente.');
+        return redirect()->route('usuarios.index')->with('flash_success_message', 'Usuario creado correctamente.');
     }
 
     public function edit(User $usuario) {
@@ -75,7 +75,7 @@ class UserController extends Controller {
 
         $usuario->syncRoles([$request->role]);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
+        return redirect()->route('usuarios.index')->with('flash_success_message', 'Usuario actualizado correctamente.');
     }
 
     public function destroy(User $usuario) {
