@@ -250,7 +250,7 @@
                                     <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                         <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                             <div class="avatar avatar-online">
-                                                <img src="{{asset('storage/iconos')}}/{{session('icono') ?  session('icono') : 'icono_empresa.png'}}" alt class="rounded-circle" />
+                                                    <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
                                             </div>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
@@ -267,8 +267,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="flex-grow-1">
-                                                            <span class="fw-semibold d-block lh-1">{{ session('logo') ? session('logo') : 'Sin Perfil' }}</span>
-                                                            <small>Admin</small>
+                                                            <span class="fw-semibold d-block lh-1"> {{ Auth::user() ? Auth::user()->name : 'Sin Perfil' }}</span>
+                                                            <small>
+                                                            {{ Auth::check()
+                                                                ? Auth::user()->roles()->first()->name_translated ?? 'Sin Rol'
+                                                                : 'Sin Perfil'
+                                                            }}</small>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -280,7 +284,7 @@
                                                 <form method="POST" action="{{ route('logout') }}">
                                                     @csrf
                                                     <button type="submit" class="nav-link btn btn-link" style="cursor: pointer;">
-                                                        Logout
+                                                       Cerrar sesión
                                                     </button>
                                                 </form>
                                             </li>
