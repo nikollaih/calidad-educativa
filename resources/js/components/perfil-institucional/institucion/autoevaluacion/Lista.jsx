@@ -1,5 +1,5 @@
 import { h } from 'preact';
-
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) {
     const handleAgregarClick = () => {
@@ -40,7 +40,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                 </tr>
                 </thead>
                 <tbody>
-                {autoevaluaciones.map((evaluacion) => (
+                {autoevaluaciones.data.map((evaluacion) => (
                     <tr key={evaluacion.id}>
                         <td>{evaluacion.anio_vigencia}</td>
                         <td>{evaluacion.alias_estado}</td>
@@ -86,6 +86,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                 ))}
                 </tbody>
             </table>
+                <CPagination  pagination={autoevaluaciones} />
         </div>
     );
 }

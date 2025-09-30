@@ -136,7 +136,7 @@ class InstitutionController extends Controller {
             ->with('flash_success_message', "Resultados actualizados correctamente");
     }
     public function autoevaluaciones(int $institution ) {
-        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->get();
+        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->paginate(10);
         // $roles = Role::all();
         return view('institutional_profile.institution.autoevaluaciones.index',
             ['institutionId' => $institution, 'autoevaluaciones' => $autoevaluaciones]);

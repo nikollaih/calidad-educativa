@@ -2,35 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\Result;
-use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
-use App\Models\Autoevaluacion;
-use App\Models\Calificacion;
-use App\Models\FactorCritico;
-use App\Models\FactorCriticoCalificacion;
-use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
-use App\Models\PeiHistorial;
 use App\Models\ProyectosTransversal;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class ProyectoTransversalController extends Controller
-{
+class ProyectoTransversalController extends Controller {
     public function __construct(
         private AdjuntoService $adjuntoService,
         private RedesSocialesService $redesSocialesService,
         private AutoevaluacionService $autoevaluacionService,
-    ){}
+    ) {
+    }
 
     public function index(int $institucionId) {
         $usuarioActual = auth()->user()->load('roles');
@@ -39,7 +27,7 @@ class ProyectoTransversalController extends Controller
         $esRector = $usuarioActual->roles->contains('name', 'rector');
         $proyectosTransversales = ProyectosTransversal::with(['representante', 'actoAdministrativo'])->whereHas('institucion', function ($query) use ($institucionId) {
             $query->where('id', $institucionId);
-        })->get();
+        })->paginate(10);
 
         return view('proyectoTransversal.index', [
             'institucionId' => $institucionId,
@@ -47,13 +35,13 @@ class ProyectoTransversalController extends Controller
             'esRector' => $esRector,
         ]);
     }
-    
+
     public function store(Request $request, int $institucion) {
         // Se agregan las reglas de validaci?n para todos los campos de la solicitud, incluyendo el archivo.
         // Se ha modificado la regla 'mimes' para aceptar formatos de imagen.
         $request->validate([
             'nombre' => 'required|string',
-            'descripcion' => 'nullable|string', 
+            'descripcion' => 'nullable|string',
             'numero_contacto' => 'nullable|string',
             'representante_id' => [
                 'required',
@@ -105,15 +93,15 @@ class ProyectoTransversalController extends Controller
             'sedes.levelSedeEducational.schedules',
             'sedes.levelSedeEducational.schedules.anexo',
             'sedes.educationalOffer'
-            )
+        )
             ->where('id',$institucion)
             ->first();
-         if (!$institucion) {
+        if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
-         }
+        }
         return view('institutional_profile.institution.edit', ['institution' => $institucion , 'municipios' => $municipios]);
     }
-    
+
     public function update(Request $request, int $institucion, int $proyectoTransversal) {
         $request->validate([
             'nombre' => 'required|string',
@@ -136,16 +124,16 @@ class ProyectoTransversalController extends Controller
                 ruta: 'actos_administrativos',
                 disk: 'public'
             );
-            
+
             // Actualiza el ID del adjunto para el registro.
             $acto_administrativo_id = $newAdjunto?->data?->id;
-            
+
             if ($proyectoTransversalModel->acto_administrativo) {
                 Storage::disk('public')->delete($proyectoTransversalModel->acto_administrativo->ruta);
                 $proyectoTransversalModel->acto_administrativo->delete();
             }
         }
-        
+
         // CAMBIO: Se actualizan los datos del proyecto, incluyendo el nuevo ID del adjunto si se subi? uno.
         $proyectoTransversalModel->update([
             'institucion_id' => $institucion,
@@ -162,7 +150,7 @@ class ProyectoTransversalController extends Controller
 
     public function destroy(int $institucion, int $proyectoTransversal) {
         $proyectoTransversal = ProyectosTransversal::findOrFail($proyectoTransversal);
-        
+
         $proyectoTransversal->delete();
         return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto Transversal eliminada correctamente.');
     }

@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, esRector = false, csrfToken = '' }) {
 
@@ -13,7 +14,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     const [descripcion, setDescripcion] = useState('');
     const [actoAdministrativo, setActoAdministrativo] = useState(null); // Para el nuevo archivo
     // MODIFICACION: Nuevo estado para almacenar la URL del documento existente
-    const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null); 
+    const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null);
     const [representanteId, setRepresentanteId] = useState(''); // ID del representante seleccionado
     const [numeroContacto, setNumeroContacto] = useState('');
 
@@ -40,7 +41,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                 }
                 const data = await response.json();
                 setUsuarios(data.data);
-                
+
                 setUsersError(null);
             } catch (error) {
                 setUsersError(error.message);
@@ -53,7 +54,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     }, []);
 
     // Estado para la lista de redes de aprendizaje
-    const [proyectos, setProyectos] = useState(proyectosTransversales);
+    const [proyectos, setProyectos] = useState(proyectosTransversales.data);
 
     // Función para mostrar el modal de alerta
     const showAlert = (message) => {
@@ -76,7 +77,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setActoAdministrativo(null);
         setRepresentanteId('');
         // MODIFICACION: Limpiar la URL del documento
-        setActoAdministrativoUrl(null); 
+        setActoAdministrativoUrl(null);
         setNumeroContacto('');
         // MODIFICACION: Limpiar el campo de correo electrónico
         // setCorreoElectronico('');
@@ -85,7 +86,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     };
 
     const handleEditarClick = (proyectoTransversal) => {
-        
+
         setModalMode('editar');
         // Llenar el formulario con los datos de la proyecto transversal actual
         setCurrentProyectoTransversal(proyectoTransversal);
@@ -97,7 +98,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         // setCorreoElectronico(proyectoTransversal.correo || '');
         setActoAdministrativo(null); // No se precarga el archivo
         // MODIFICACION: Cargar la URL del documento existente
-        setActoAdministrativoUrl(proyectoTransversal.acto_administrativo?.ruta || null); 
+        setActoAdministrativoUrl(proyectoTransversal.acto_administrativo?.ruta || null);
         setShowModal(true);
     };
 
@@ -140,7 +141,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
           return;
       }
     };
-    
+
     // Maneja la acción de eliminar
     const handleDelete = async (id) => {
         showConfirm('¿Estás seguro de que quieres eliminar este PPT?', async () => {
@@ -180,11 +181,11 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                 Agregar proyecto transversal
             </button>
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
-            
+
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
+                        <th>Nombrea</th>
                         <th>Descripción</th>
                         <th>Lider</th>
                         <th>Acto Administrativo</th>
@@ -230,7 +231,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                     ))}
                 </tbody>
             </table>
-
+            <CPagination  pagination={proyectosTransversales} />
             {/* Modal de formulario (agregar/editar) */}
             {showModal && (
                 <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
@@ -357,7 +358,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                     </div>
                 </div>
             )}
-            
+
             {/* Modal de alerta personalizado */}
             {showAlertModal && (
                 <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>

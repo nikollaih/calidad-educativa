@@ -37,8 +37,9 @@
                         </tbody>
                     </table>
                     <!-- Paginación -->
-                    <div class="d-flex justify-content-center">
-                        {{ $paginate->links() }}
+                    <div
+                        data-component="CPagination"
+                        data-pagination='{!! json_encode($paginate) !!}'>
                     </div>
                 </div>
             </div>

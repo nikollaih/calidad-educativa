@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import {useEffect, useState} from "preact/hooks";
-
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPaginated = {}, csrfToken = '',}) {
     const [pmis, setPmis] = useState([]);
@@ -88,6 +88,7 @@ export default function IndexPMI({ agregarUrl,institucionId = undefined, pmisPag
                 ))}
                 </tbody>
             </table>
+                <CPagination  pagination={pmisPaginated} />
         </div>
     );
 }
