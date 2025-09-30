@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import {useEffect, useState} from "preact/hooks";
-
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, csrfToken = '',}) {
     const [objetivos, setObjetivos] = useState([]);
@@ -49,6 +49,7 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
                 ))}
                 </tbody>
             </table>
+            <CPagination  pagination={objetivosPaginated} />
         </div>
     );
 }

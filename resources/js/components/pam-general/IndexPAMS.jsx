@@ -2,6 +2,7 @@
 import { h } from 'preact';
 import Swal from 'sweetalert2';
 import { useEffect, useState } from "preact/hooks";
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = '' }) {
     const [pams, setPams] = useState([]);
@@ -164,8 +165,8 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                     <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
                                         Gestionar
                                     </a>
-                                    
-                                    <button 
+
+                                    <button
                                         className="btn btn-sm btn-danger me-2" // [MODIFICACIÓN] Agregado margen para separar los botones.
                                         onClick={() => deleteRow(pam.id)}
                                         title="Eliminar PAM"
@@ -174,7 +175,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                     </button>
                                     { Boolean(pam.estado == "Proceso") && (
                                         // Se cambió el tipo de botón a "button" para que no envíe el formulario.
-                                        <button 
+                                        <button
                                             type="button"
                                             className="btn btn-success btn-sm"
                                             onClick={() => handlePresentarClick(pam.id)}
@@ -193,26 +194,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                     )}
                 </tbody>
             </table>
-            {pamsPaginated.links && pamsPaginated.links.length > 3 && (
-                <nav>
-                    <ul class="pagination">
-                        {pamsPaginated.links.map((link, index) => (
-                            <li
-                                key={index}
-                                class={`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''}`}
-                            >
-                                <a
-                                    class="page-link"
-                                    href={link.url || '#'}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                    onClick={(e) => { if (!link.url) e.preventDefault(); }}
-                                >
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-            )}
+            <CPagination  pagination={pamsPaginated} />
         </div>
     );
 }

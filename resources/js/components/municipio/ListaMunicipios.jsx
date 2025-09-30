@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = '' }) {
     const [showModal, setShowModal] = useState(false);
@@ -94,7 +95,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                 </tr>
                 </thead>
                 <tbody>
-                {municipios.map((municipio) => (
+                {municipios.data.map((municipio) => (
                     <tr key={municipio.id}>
                         <td>{municipio.nombre}</td>
                         <td>
@@ -125,7 +126,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                 ))}
                 </tbody>
             </table>
-
+            <CPagination  pagination={municipios} />
             {/* Modal */}
             {showModal && (
                 <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>

@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
     const [showModal, setShowModal] = useState(false);
@@ -94,7 +95,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                 </tr>
                 </thead>
                 <tbody>
-                {modelosEducacionales.map((modeloEducacional) => (
+                {modelosEducacionales.data.map((modeloEducacional) => (
                     <tr key={modeloEducacional.id}>
                         <td>{modeloEducacional.name}</td>
                         <td>
@@ -126,6 +127,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                 </tbody>
             </table>
 
+            <CPagination  pagination={modelosEducacionales} />
             {/* Modal */}
             {showModal && (
                 <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>

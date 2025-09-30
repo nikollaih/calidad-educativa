@@ -2,26 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\PamGeneralExport;
-use App\Http\Requests\StorePamGeneralRowRequest;
 use App\Models\Enums\PamEstadoEnum;
 use App\Models\Pam;
-use App\Models\PamGeneralAccion;
-use App\Models\PamGeneralAvance;
-use App\Models\PamGeneralComponente;
-use App\Models\PamGeneralMeta;
-use App\Models\PamGeneralObjetivoEstrategico;
-use App\Models\PamGeneralRow;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use Maatwebsite\Excel\Facades\Excel;
 
 class PAMGeneralController extends Controller {
     /**
@@ -70,8 +55,6 @@ class PAMGeneralController extends Controller {
                     'pam' => $pam,
                     'pamId' => $id,
                 ]);
-
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -127,7 +110,6 @@ class PAMGeneralController extends Controller {
                 'success' => true,
                 'message' => 'Registro eliminado correctamente'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -151,7 +133,7 @@ class PAMGeneralController extends Controller {
         return redirect()->route('pams.index')->with('success', 'Pam actualizado correctamente.');
     }
 
-    
+
     public function presentarPam(Request $request, int $pamId) {
         $pam = Pam::findOrFail($pamId);
         $pam->estado = PamEstadoEnum::Presentado->value;

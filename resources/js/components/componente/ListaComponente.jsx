@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function ListaComponente({ agregarUrl, componentes, csrfToken = '' }) {
     const [showModal, setShowModal] = useState(false);
@@ -65,7 +66,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
             form.appendChild(methodInput);
         }
 
-        
+
         document.body.appendChild(form);
         form.submit();
     };
@@ -85,7 +86,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                     </tr>
                 </thead>
                 <tbody>
-                    {componentes.map((componente) => (
+                    {componentes.data.map((componente) => (
                         <tr key={componente.id}>
                             <td>{componente.descripcion}</td>
                             <td>
@@ -116,7 +117,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                     ))}
                 </tbody>
             </table>
-
+            <CPagination  pagination={componentes} />
             {/* Modal */}
             {showModal && (
                 <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>

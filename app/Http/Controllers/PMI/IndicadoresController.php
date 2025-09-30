@@ -3,32 +3,25 @@
 namespace App\Http\Controllers\PMI;
 
 use App\Http\Controllers\Controller;
-use App\Models\Municipality;
-use App\Models\Municipio;
 use App\Models\PMI\PmiIndicador;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
-class IndicadoresController extends Controller
-{
-
-    public function index()
-    {
-        $indicadores = PmiIndicador::get();
+class IndicadoresController extends Controller {
+    public function index() {
+        $indicadores = PmiIndicador::paginate(10);
         return view('pmi.indicador.index',['indicadores' => $indicadores]);
     }
 
-    public function create()
-    {
+    public function create() {
         //$permissions = Permission::all();
-       // return view('roles.create', compact('permissions'));
+        // return view('roles.create', compact('permissions'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $indicador = $request->all();
-        if( PmiIndicador::where('unidad_total', $indicador['unidad_total'])->where('unidad_parcial',$indicador['unidad_parcial'])->first() ) {
+        if ( PmiIndicador::where('unidad_total', $indicador['unidad_total'])->where('unidad_parcial',$indicador['unidad_parcial'])->first() ) {
             return redirect()->route('indicadores-pmi.index')->with('flash_error_message', 'El indicadoor ya existe.');
         } else {
             PmiIndicador::create($indicador);
@@ -36,17 +29,15 @@ class IndicadoresController extends Controller
         }
     }
 
-    public function edit(Role $role)
-    {
+    public function edit(Role $role) {
         //permissions = Permission::all();
         //return view('roles.edit', compact('role', 'permissions'));
     }
 
-    public function update(Request $request, int $id)
-    {
+    public function update(Request $request, int $id) {
         $indicadorData = $request->all();
         $indicadorToUpdate = PmiIndicador::find($id);
-        if( $indicadorToUpdate ) {
+        if ( $indicadorToUpdate ) {
             $indicadorToUpdate->fill($indicadorData);
             $indicadorToUpdate->save();
             return redirect()->route('indicadores-pmi.index')->with('flash_success_message', 'Indicador actualizado correctamente.');
@@ -56,13 +47,12 @@ class IndicadoresController extends Controller
     }
 
 
-    public function destroy(int $id)
-    {
+    public function destroy(int $id) {
         $indicadorToDel = PmiIndicador::find($id);
 
 
-        if( $indicadorToDel ) {
-            if($indicadorToDel->metas->count() > 0) {
+        if ( $indicadorToDel ) {
+            if ($indicadorToDel->metas->count() > 0) {
                 return redirect()->route('indicadores-pmi.index')->with('flash_error_message', 'El indicador tiene metas vinculadas.');
             }
             $indicadorToDel->delete();

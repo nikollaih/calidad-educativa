@@ -5,26 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Componente;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class ComponenteController extends Controller {
-
     public function index() {
-        $componente = Componente::get();
+        $componente = Componente::paginate(10);
         return view('componente.index', ['componente' => $componente]);
     }
-/**
-     * Obtiene todas las unidades de meta con su código y descripción.
-     *
-     * @return JsonResponse
-     */
+    /**
+         * Obtiene todas las unidades de meta con su código y descripción.
+         *
+         * @return JsonResponse
+         */
     public function all(): JsonResponse {
         try {
             $componentes = Componente::all();
 
             return response()->json($componentes, 200);
-
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([

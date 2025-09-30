@@ -5,26 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Indicador;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class UnidadMetaController extends Controller {
-
     public function index() {
-        $unidadMeta = Indicador::get();
+        $unidadMeta = Indicador::paginate(10);
         return view('unidadMeta.index', ['unidadMeta' => $unidadMeta]);
     }
-/**
-     * Obtiene todas las unidades de meta con su código y descripción.
-     *
-     * @return JsonResponse
-     */
+    /**
+         * Obtiene todas las unidades de meta con su código y descripción.
+         *
+         * @return JsonResponse
+         */
     public function all(): JsonResponse {
         try {
             $unidadesMeta = Indicador::all();
 
             return response()->json($unidadesMeta, 200);
-
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([

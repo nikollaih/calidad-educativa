@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
+import CPagination from '@/components/shared/CPagination.jsx';
 
 export default function ListaUnidadMeta({
     agregarUrl,
@@ -107,7 +108,7 @@ export default function ListaUnidadMeta({
                     </tr>
                 </thead>
                 <tbody>
-                    {unidadesMeta.map((unidadMeta) => (
+                    {unidadesMeta.data.map((unidadMeta) => (
                         <tr key={unidadMeta.id}>
                             {/* Eliminado: La celda 'código' */}
                             <td>{unidadMeta.unidad_parcial}</td>
@@ -158,6 +159,7 @@ export default function ListaUnidadMeta({
                 </tbody>
             </table>
 
+            <CPagination  pagination={unidadesMeta} />
             {/* Modal */}
             {showModal && (
                 <div

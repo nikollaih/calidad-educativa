@@ -3,23 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
-use App\Models\RedesAprendizaje;
 use App\Models\Adjunto;
+use App\Models\RedesAprendizaje;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
 
 class RedesAprendizajeController extends Controller {
-
     public function __construct(
         private AdjuntoService $adjuntoService,
-    ){}
+    ) {
+    }
 
     public function index() {
         // Se carga la relación con el representante para mostrar su nombre en la tabla.
-        $redAprendizaje = RedesAprendizaje::with(['representante', 'actoAdministrativo'])->get();
+        $redAprendizaje = RedesAprendizaje::with(['representante', 'actoAdministrativo'])->paginate(10);
         return view('redesAprendizajes.index', ['redesAprendizaje' => $redAprendizaje]);
     }
 
@@ -33,7 +31,6 @@ class RedesAprendizajeController extends Controller {
             // Se carga la relación con el representante para el JSON.
             $redAprendizaje = RedesAprendizaje::with(['representante', 'actoAdministrativo'])->get();
             return response()->json($redAprendizaje, 200);
-
         } catch (\Exception $e) {
             // Manejo de errores
             return response()->json([
@@ -47,7 +44,7 @@ class RedesAprendizajeController extends Controller {
         // Se ha modificado la regla 'mimes' para aceptar formatos de imagen.
         $request->validate([
             'nombre' => 'required|string',
-            'descripcion' => 'nullable|string', 
+            'descripcion' => 'nullable|string',
             'representante_id' => [
                 'required',
                 'exists:users,id',
@@ -90,7 +87,7 @@ class RedesAprendizajeController extends Controller {
             'numero_contacto' => $request?->numero_contacto,
             'acto_administrativo_id' => $actoAdministrativo?->data?->id,
         ]);
-        
+
         return redirect()->route('redes-aprendizajes.index')->with('flash_success_message', 'Red de Aprendizaje creada correctamente.');
     }
 
@@ -111,7 +108,7 @@ class RedesAprendizajeController extends Controller {
         ]);
 
         $redAprendizaje = RedesAprendizaje::findOrFail($redAprendizaje);
-        
+
         // MODIFICACION: Se inicializa el ID del adjunto actual.
         $acto_administrativo_id = $redAprendizaje->acto_administrativo_id;
         $old_adjunto = $redAprendizaje->actoAdministrativo;
@@ -137,7 +134,7 @@ class RedesAprendizajeController extends Controller {
                 'numero_contacto' => $request->numero_contacto,
                 'acto_administrativo_id' => $acto_administrativo_id,
             ]);
-            
+
             // Ahora se puede eliminar el archivo anterior y su registro en la base de datos.
             if ($old_adjunto) {
                 Storage::disk('public')->delete($old_adjunto->ruta);
@@ -160,16 +157,16 @@ class RedesAprendizajeController extends Controller {
 
     public function destroy(int $redAprendizaje) {
         $redAprendizaje = RedesAprendizaje::findOrFail($redAprendizaje);
-        
+
         // Se agrega la lógica para eliminar el archivo relacionado antes de eliminar el registro.
         if ($redAprendizaje->acto_administrativo) {
             Storage::disk('public')->delete($redAprendizaje->acto_administrativo);
         }
-        
+
         $redAprendizaje->delete();
         return redirect()->route('redes-aprendizajes.index')->with('flash_success_message', 'Red de Aprendizaje eliminada correctamente.');
     }
-    
+
     /**
      * Obtiene las actividades e integrantes de una red de aprendizaje específica.
      *
@@ -209,13 +206,11 @@ class RedesAprendizajeController extends Controller {
             ];
 
             return response()->json($response, 200);
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Red de aprendizaje no encontrada.',
                 'error' => 'La red de aprendizaje con ID ' . $redAprendizajeId . ' no existe.'
             ], 404);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener las actividades e integrantes.',
