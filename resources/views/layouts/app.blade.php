@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html
         lang="en"
         class="light-style layout-navbar-fixed layout-menu-fixed"
@@ -11,9 +10,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-
         <title>{{ env('APP_NAME') }}</title>
-
         <meta name="description" content="" />
         <link rel="icon" type="image/x-icon" href="{{asset('assets/img/favicon/favicon.ico')}}" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,26 +18,20 @@
         <meta http-equiv="Last-Modified" content="0">
         <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
         <meta http-equiv="Pragma" content="no-cache">
-
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
-
         <link rel="stylesheet" href="{{asset('assets/vendor/fonts/boxicons.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/fonts/fontawesome.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/fonts/flag-icons.css')}}" />
-
-
         <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/core.css') }}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/theme-default.css') }}" />
         <link rel="stylesheet" href="{{asset('assets/css/demo.css')}}" />
-
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/typography.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/katex.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/editor.css')}}" />
-
         @yield('vendors_css')
         <!-- Custom CSS -->
         @yield('custom_css')
@@ -48,11 +39,32 @@
         <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
-        <!--<script src="{{asset('assets/js/forms-editors-pei.js')}}"></script> -->
+        <style>
+            .light-style .menu .app-brand.demo {height: 80px !important;}
 
-        <style>.light-style .menu .app-brand.demo {height: 80px !important;}</style>
+            /* Hacer visible el botón de toggle en todas las pantallas */
+            .layout-menu-toggle {
+                display: block !important;
+            }
+
+            /* Mostrar logo completo cuando el menú está expandido */
+            #layout-menu:not(.layout-menu-collapsed) .logo-full {
+                display: block;
+            }
+            #layout-menu:not(.layout-menu-collapsed) .logo-collapsed {
+                display: none;
+            }
+
+            /* Mostrar favicon cuando el menú está colapsado */
+            #layout-menu.layout-menu-collapsed .logo-full {
+                display: none;
+            }
+            #layout-menu.layout-menu-collapsed .logo-collapsed {
+                display: block;
+                margin: 0 auto;
+            }
+        </style>
     </head>
-
     <body>
     @php
         $municipios = session('municipios');
@@ -62,18 +74,18 @@
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                     <div class="app-brand demo justify-content-center">
                         <a href="{{  url('usuarios') }}" class="app-brand-link">
-                            <span class="app-brand-logo demo">
-                                <svg
-                                        width="26px"
-                                        height="26px"
-                                        viewBox="0 0 26 26"
-                                        version="1.1"
-                                        xmlns="{{asset('imagenes/educacion_menu-nobg.png')}}"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <title>{{ env('APP_NAME') }}</title>
-                                </svg>
-                            </span>
-                            <img src="{{asset('imagenes/educacion_menu-nobg.png')}}" width="190px;" height="70" alt="Logo">
+                            <!-- Logo completo para menú expandido -->
+                            <img src="{{asset('imagenes/educacion_menu-nobg.png')}}"
+                                 class="logo-full"
+                                 width="190px"
+                                 height="70"
+                                 alt="Logo">
+                            <!-- Favicon para menú colapsado -->
+                            <img src="{{asset('favicon.png')}}"
+                                 class="logo-collapsed"
+                                 width="40px"
+                                 height="40"
+                                 alt="Logo Pequeño">
                         </a>
                     </div>
                     <div class="menu-divider mt-0"></div>
@@ -104,10 +116,8 @@
                                     </a>
                                 </li>
                             </ul>
-
                         </li>
                         <li class="menu-item">
-
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon fa-solid fa-university"></i>
@@ -141,7 +151,6 @@
                                 </a>
                             @endif
                             </ul>
-
                         </li>
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -202,7 +211,7 @@
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon fas fa-shapes"></i>
-                                        <div data-i18n="PMI"></div>
+                                        <div data-i18n="PMI">PMI</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
@@ -220,7 +229,6 @@
                                     </ul>
                                 </li>
                             </ul>
-
                         </li>
                         <li class="menu-item">
                             <a href="{{ url('pams/index')}}" class="menu-link">
@@ -239,12 +247,12 @@
                 <div class="layout-page">
                     <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
                         <div class="container-fluid">
-                            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                            <!-- Botón de toggle visible en todas las pantallas -->
+                            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0">
                                 <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                                     <i class="bx bx-menu bx-sm"></i>
                                 </a>
                             </div>
-
                             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                                 <ul class="navbar-nav flex-row align-items-center ms-auto">
                                     <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -322,7 +330,6 @@
                                     </ul>
                                 </div>
                             @endif
-
                             @yield('content')
                         </div>
                         <footer class="content-footer footer bg-footer-theme">
@@ -331,14 +338,11 @@
                                </div> -->
                             </div>
                         </footer>
-
                         <div class="content-backdrop fade"></div>
                     </div>
                 </div>
             </div>
-
             <div class="layout-overlay layout-menu-toggle"></div>
-
             <div class="drag-target"></div>
         </div>
         <script src="{{ asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
@@ -349,12 +353,65 @@
         <script src="{{ asset('assets/vendor/libs/i18n/i18n.js')}}"></script>
         <script src="{{ asset('assets/vendor/libs/typeahead-js/typeahead.js')}}"></script>
         <script src="{{ asset('assets/vendor/js/menu.js')}}"></script>
-
         @yield('vendors_js')
         <script src="{{ asset('assets/js/main.js')}}"></script>
+        <script>
+            // Script para cambiar el logo cuando el menú se colapsa
+            $(document).ready(function() {
+                // Función para actualizar el logo basado en el ancho del menú
+                function updateLogo() {
+                    var layoutMenu = $('#layout-menu');
+                    var menuWidth = layoutMenu.width();
 
+                    // Debug: imprimir en consola
+                    console.log('Menu width:', menuWidth);
+                    console.log('Menu classes:', layoutMenu.attr('class'));
+
+                    // Si el menú tiene menos de 100px de ancho, está colapsado
+                    if (menuWidth < 100) {
+                        console.log('Mostrando logo colapsado');
+                        $('.logo-full').hide();
+                        $('.logo-collapsed').show();
+                    } else {
+                        console.log('Mostrando logo completo');
+                        $('.logo-full').show();
+                        $('.logo-collapsed').hide();
+                    }
+                }
+
+                // Ejecutar al cargar la página
+                setTimeout(updateLogo, 500);
+
+                // Detectar clicks en el botón de toggle
+                $(document).on('click', '.layout-menu-toggle', function(e) {
+                    console.log('Toggle clicked');
+                    setTimeout(updateLogo, 350);
+                });
+
+                // Detectar clicks en el overlay
+                $(document).on('click', '.layout-overlay', function() {
+                    console.log('Overlay clicked');
+                    setTimeout(updateLogo, 350);
+                });
+
+                // Observar cambios en el tamaño del menú
+                if (window.ResizeObserver) {
+                    const resizeObserver = new ResizeObserver(function(entries) {
+                        updateLogo();
+                    });
+
+                    var menuElement = document.getElementById('layout-menu');
+                    if (menuElement) {
+                        resizeObserver.observe(menuElement);
+                    }
+                }
+
+                // Verificar cada segundo durante los primeros 5 segundos (por si acaso)
+                for (let i = 1; i <= 5; i++) {
+                    setTimeout(updateLogo, i * 1000);
+                }
+            });
+        </script>
         @yield('javascripts')
     </body>
 </html>
-
-
