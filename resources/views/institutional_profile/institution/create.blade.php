@@ -22,7 +22,7 @@
                                 <div
                                     data-component="CTextInput"
                                     data-name="nombre"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                     data-name="dane"
                                     data-tipo="decimal"
                                     data-rango="mixto"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                     data-name="nit"
                                     data-tipo="entero"
                                     data-rango="positivo"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>

@@ -103,7 +103,7 @@
                                         data-place-holder="Ej: -74.123456"
                                         data-tipo="decimal"
                                         data-rango="mixto"
-                                        data-isRequired="true"
+                                        data-is-required="true"
                                     >
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                         data-value="{{ $sede->dane }}"
                                         data-tipo="entero"
                                         data-rango="positivo"
-                                        data-isRequired="true"
+                                        data-is-required="true"
                                     >
                                 </div>
                                 </div>
@@ -176,7 +176,7 @@
                                         data-component="CTextInput"
                                         data-name="sede[name]"
                                         data-value="{{ $sede->name }}"
-                                        data-isRequired="true"
+                                        data-is-required="true"
                                     >
                                     </div>
                                 </div>
@@ -191,7 +191,7 @@
                                         data-place-holder="Ej: 4.123456"
                                         data-tipo="decimal"
                                         data-rango="mixto"
-                                        data-isRequired="true"
+                                        data-is-required="true"
                                     >
                                     </div>
                                 </div>

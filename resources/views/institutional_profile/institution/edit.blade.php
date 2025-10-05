@@ -38,7 +38,7 @@
                                     data-component="CTextInput"
                                     data-name="nombre"
                                     data-value="{{ $institution->nombre }}"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                                     data-value="{{ $institution->dane }}"
                                     data-tipo="entero"
                                     data-rango="positivo"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                     data-value="{{ $institution->nit }}"
                                     data-tipo="entero"
                                     data-rango="positivo"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>

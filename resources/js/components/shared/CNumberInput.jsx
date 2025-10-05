@@ -24,6 +24,8 @@ import { h } from 'preact';
 const CNumberInput = ({
     name = '',
     value='',
+    id='',
+    style='',
     placeHolder="",
     tipo = 'entero',
     rango = 'mixto',
@@ -68,6 +70,8 @@ const CNumberInput = ({
   return (
     <input
       type="text"
+      id={id}
+      style={style}
       name={name}
       value={value}
       placeHolder={placeHolder}

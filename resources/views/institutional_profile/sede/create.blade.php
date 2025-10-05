@@ -94,7 +94,7 @@
                                 <div
                                     data-component="CTextInput"
                                     data-name="sede[name]"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                                     data-name="sede[dane]"
                                     data-tipo="entero"
                                     data-rango="positivo"
-                                    data-isRequired="true"
+                                    data-is-required="true"
                                 >
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                                 data-place-holder="Ej: -74.123456"
                                 data-tipo="decimal"
                                 data-rango="mixto"
-                                data-isRequired="true"
+                                data-is-required="true"
                             >
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                                 data-place-holder="Ej: 4.123456"
                                 data-tipo="decimal"
                                 data-rango="mixto"
-                                data-isRequired="true"
+                                data-is-required="true"
                             >
                             </div>
                         </div>
@@ -211,7 +211,15 @@
                                         <!-- Campo para cantidad de aulas -->
                                         <div class="col-md-6">
                                             <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
-                                            <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="form-control" min="1" placeholder="Ingrese cantidad">
+                                            <div
+                                                data-component="CNumberInput"
+                                                data-name="steam_classroom[quantity]"
+                                                data-place-holder="Ingrese la cantidad"
+                                                data-tipo="entero"
+                                                data-rango="positivo"
+                                                data-is-required="true"
+                                            >
+                                            </div>
                                         </div>
 
                                         <!-- Campo para fase -->
@@ -293,7 +301,17 @@
                                                     <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: none;">
                                                         <label class="form-check-label">Cantidad.</label>
                                                     </div>
-                                                    <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: none;" placeholder="Cantidad">
+                                                    <div
+                                                        data-component="CNumberInput"
+                                                        data-id="cantidad_{{ Str::slug($equipo) }}"
+                                                        data-name="inventory[{{$key}}][quantity]"
+                                                        data-place-holder="Cantidad"
+                                                        data-style="display: none;"
+                                                        data-tipo="entero"
+                                                        data-rango="positivo"
+                                                        data-is-required="true"
+                                                    >
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
