@@ -33,23 +33,36 @@
                         <!-- Columna 1 -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)</label>
-
-                                <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" required>
+                                <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)<span class="text-danger">*</span></label>
+                                <div
+                                    data-component="CTextInput"
+                                    data-name="nombre"
+                                    data-value="{{ $institution->nombre }}"
+                                    data-isRequired="true"
+                                >
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="dane" class="form-label">Código DANE</label>
-                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" required>
+                                <label for="dane" class="form-label">Código DANE <span class="text-danger">*</span></label>
+                                <div
+                                    data-component="CNumberInput"
+                                    data-name="dane"
+                                    data-value="{{ $institution->dane }}"
+                                    data-tipo="entero"
+                                    data-rango="positivo"
+                                    data-isRequired="true"
+                                >
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <label for="email" class="form-label">Correo Electrónico  <span class="text-danger">*</span></label>
                                 <input type="email" name="email" class="form-control" value="{{ $institution->email }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento</label>
+                                    <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento <span class="text-danger">*</span></label>
                                     @if(isset($institution->licenciaFuncionamiento))
                                         <a href="{{ $institution->licenciaFuncionamiento->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver Licencia Actual
@@ -73,20 +86,33 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} required>
+                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} >
                             </div>
                             <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" required>
+                                <label for="nit" class="form-label">NIT <span class="text-danger">*</span></label>
+                                <div
+                                    data-component="CNumberInput"
+                                    data-name="nit"
+                                    data-value="{{ $institution->nit }}"
+                                    data-tipo="entero"
+                                    data-rango="positivo"
+                                    data-isRequired="true"
+                                >
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}">
+                                <input type="text" name="web_url" class="form-control" value="{{ $institution->web_url }}">
                             </div>
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
-                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" required>
+                                <div
+                                    data-component="CTextInput"
+                                    data-name="nombre_rector"
+                                    data-value="{{ $institution->nombre_rector }}"
+                                >
+                                </div>
                             </div>
                             <div
                                 data-component="TextMultipleTags"
