@@ -388,12 +388,6 @@
                     setTimeout(updateLogo, 350);
                 });
 
-                // Detectar clicks en el overlay
-                $(document).on('click', '.layout-overlay', function() {
-                    console.log('Overlay clicked');
-                    setTimeout(updateLogo, 350);
-                });
-
                 // Observar cambios en el tamaño del menú
                 if (window.ResizeObserver) {
                     const resizeObserver = new ResizeObserver(function(entries) {
