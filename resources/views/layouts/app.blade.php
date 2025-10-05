@@ -242,6 +242,12 @@
                                 <div data-i18n="Redes pedagogicas"> Redes pedagogicas</div>
                             </a>
                         </li>
+                        <li class="menu-item">
+                                <a class="layout-menu-toggle menu-link " href="javascript:void(0)">
+                                    <i class="bx bx-menu bx-sm"></i>
+                                </a>
+                        </li>
+
                     </ul>
                 </aside>
                 <div class="layout-page">
@@ -342,7 +348,6 @@
                     </div>
                 </div>
             </div>
-            <div class="layout-overlay layout-menu-toggle"></div>
             <div class="drag-target"></div>
         </div>
         <script src="{{ asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
