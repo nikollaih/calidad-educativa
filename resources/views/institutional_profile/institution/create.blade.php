@@ -32,8 +32,8 @@
                                 <div
                                     data-component="CNumberInput"
                                     data-name="dane"
-                                    data-tipo="entero"
-                                    data-rango="positivo"
+                                    data-tipo="decimal"
+                                    data-rango="mixto"
                                     data-isRequired="true"
                                 >
                                 </div>

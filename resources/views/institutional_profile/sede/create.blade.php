@@ -64,14 +64,14 @@
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                             <div class="mb-3">
-                                <label for="tipo_sede" class="form-label">Tipo de Sede</label>
+                                <label for="tipo_sede" class="form-label">Tipo de Sede<span class="text-danger">*</span></label>
                                 <select name="tipo_sede" id="tipo_sede" class="form-control" required>
                                     <option value="Principal">Principal</option>
                                     <option value="Adscrita a una principal">Adscrita a una principal</option>
                                 </select>
                             </div>
                             <div class="mb-3" id="sede_principal_container" style="display: none;">
-                                <label for="sede_principal_id" class="form-label">Sede Principal</label>
+                                <label for="sede_principal_id" class="form-label">Sede Principal<span class="text-danger">*</span></label>
                                 <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
                                     <option value="">Seleccione una sede principal</option>
                                     @foreach ($availableSedes as $sede)
@@ -80,7 +80,7 @@
                                 </select>
                             </div>
                             <div class="mb-3" id="is_sede_principal_container" style="display: block;">
-                                <label  class="form-label">Estrategia pedagógica</label>
+                                <label  class="form-label">Estrategia pedagógica <span class="text-danger">*</span></label>
                                 <select name="sede[modelo_pedagogico_id]" class="form-control">
                                     <option value="">Seleccione una estrategia pedagógica</option>
                                     @foreach ($modelosPedagogicos as $modeloPedagogico)
@@ -90,21 +90,33 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="sede[name]" class="form-label">Nombre</label>
-                                <input type="text" name="sede[name]" class="form-control" required>
+                                <label for="sede[name]" class="form-label">Nombre<span class="text-danger">*</span></label>
+                                <div
+                                    data-component="CTextInput"
+                                    data-name="sede[name]"
+                                    data-isRequired="true"
+                                >
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="sede[dane]" class="form-label">Código DANE</label>
-                                <input type="text" name="sede[dane]" class="form-control" required>
+                                <label for="sede[dane]" class="form-label">Código DANE<span class="text-danger">*</span></label>
+                                <div
+                                    data-component="CNumberInput"
+                                    data-name="sede[dane]"
+                                    data-tipo="entero"
+                                    data-rango="positivo"
+                                    data-isRequired="true"
+                                >
+                                </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="sede[address]" class="form-label">Dirección</label>
-                                <input type="text" name="sede[address]" class="form-control" required>
+                                <input type="text" name="sede[address]" class="form-control" >
                             </div>
                             <div class="mb-3">
-                                <label for="titularidad_sede" class="form-label">Titularidad de la Sede</label>
+                                <label for="titularidad_sede" class="form-label">Titularidad de la Sede<span class="text-danger">*</span></label>
                                 <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full" required>
                                     <option value="Municipio">Municipio</option>
                                     <option value="Departamento">Departamento</option>
@@ -122,7 +134,7 @@
 
                             <div class="row" id="anexo_certificado_container" >
                                 <div class="mb-3">
-                                    <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
+                                    <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro<span class="text-danger">*</span></label>
                                     <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" required>
                                 </div>
                             </div>
@@ -133,20 +145,36 @@
                             <!-- Campos existentes -->
                         <div class="mb-3">
                             <label for="sede[zone]" class="form-label">Zona</label>
-                            <select name="sede[zone]" id="titularidad_sede" class="form-control w-full" required>
+                            <select name="sede[zone]"  class="form-control w-full" >
                                 <option value="RURAL">Rural</option>
                                 <option value="URBANA">Urbana</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="sede[longitude]" class="form-label">Longitud</label>
-                            <input type="text" name="sede[longitude]" class="form-control" placeholder="Ej: -74.123456" required>
+                            <label for="sede[longitude]" class="form-label">Longitud<span class="text-danger">*</span></label>
+                            <div
+                                data-component="CNumberInput"
+                                data-name="sede[longitude]"
+                                data-place-holder="Ej: -74.123456"
+                                data-tipo="decimal"
+                                data-rango="mixto"
+                                data-isRequired="true"
+                            >
+                            </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="sede[latitude]" class="form-label">Latitud</label>
-                            <input type="text" name="sede[latitude]" class="form-control" placeholder="Ej: 4.123456" required>
+                            <label for="sede[latitude]" class="form-label">Latitud<span class="text-danger">*</span></label>
+                            <div
+                                data-component="CNumberInput"
+                                data-name="sede[latitude]"
+                                data-place-holder="Ej: 4.123456"
+                                data-tipo="decimal"
+                                data-rango="mixto"
+                                data-isRequired="true"
+                            >
+                            </div>
                         </div>
 
                         <div class="mb-3">

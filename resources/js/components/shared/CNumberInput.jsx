@@ -10,6 +10,7 @@ import { h } from 'preact';
  *
  * Props:
  *  - name: Nombre del campo (atributo name del input).
+ *  - value: Valor inicial/controlado del input.
  *  - tipo: Define si el número debe ser:
  *      - "entero"  → Solo números enteros (sin decimales).
  *      - "decimal" → Números con decimales (permitido un solo punto).
@@ -17,8 +18,17 @@ import { h } from 'preact';
  *      - "mixto"     → Permite tanto positivos como negativos.
  *      - "positivo"  → Restringe a valores positivos.
  *      - "negativo"  → Restringe a valores negativos.
+ *  - isRequired: Indica si el campo es obligatorio.
+ *  - placeHolder: Texto de ayuda a mostrar cuando el input está vacío.
  */
-const CNumberInput = ({ name = '',value='', tipo = 'entero', rango = 'mixto', isRequired = false}) => {
+const CNumberInput = ({
+    name = '',
+    value='',
+    placeHolder="",
+    tipo = 'entero',
+    rango = 'mixto',
+    isRequired = false
+}) => {
   // Manejador del evento input: procesa y valida cada valor digitado
   const handleInput = (e) => {
     let value = e.target.value;
@@ -28,6 +38,8 @@ const CNumberInput = ({ name = '',value='', tipo = 'entero', rango = 'mixto', is
       // Solo se permiten dígitos y opcionalmente el signo "-"
       value = value.replace(/[^0-9\-]/g, '');
     } else if (tipo === 'decimal') {
+      value = value.replace(',', '.');
+
       // Se permiten dígitos, un punto decimal y el signo "-"
       value = value.replace(/[^0-9\.\-]/g, '');
 
@@ -58,6 +70,7 @@ const CNumberInput = ({ name = '',value='', tipo = 'entero', rango = 'mixto', is
       type="text"
       name={name}
       value={value}
+      placeHolder={placeHolder}
       class="form-control"
       required={isRequired}
       onInput={handleInput}
