@@ -521,7 +521,17 @@
                                                         </div>
                                                         <input type="hidden" name="mobiliario[{{$key}}][nombre]" value="{{ $mobiliario['nombre'] }}"  />
 
-                                                        <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}" class="form-control" style="display: none;" placeholder="Cantidad" step="1">
+                                                        <div
+                                                            data-component="CNumberInput"
+                                                            data-id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"
+                                                            data-name="mobiliario[{{$key}}][cantidad]"
+                                                            data-place-holder="Cantidad"
+                                                            data-style="display: none;"
+                                                            data-tipo="entero"
+                                                            data-rango="positivo"
+                                                            data-is-required="true"
+                                                        >
+                                                        </div>
                                                     </div>
                                             </div>
                                         </div>

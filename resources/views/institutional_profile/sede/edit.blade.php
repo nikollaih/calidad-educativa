@@ -324,7 +324,18 @@
                                                 <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
                                                     <label class="form-check-label">Cantidad.</label>
                                                 </div>
-                                                <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="form-control" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}">
+                                                <div
+                                                        data-component="CNumberInput"
+                                                        data-id="cantidad_{{ Str::slug($equipo) }}"
+                                                        data-name="inventory[{{$key}}][quantity]"
+                                                        data-value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}"
+                                                        data-place-holder="Cantidad"
+                                                        data-style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};"
+                                                        data-tipo="entero"
+                                                        data-rango="positivo"
+                                                        data-is-required="true"
+                                                    >
+                                                 </div>
                                             </div>
                                         </div>
                                     </div>
@@ -550,8 +561,18 @@
                                                     <label class="form-check-label">Cantidad.</label>
                                                 </div>
                                                 <input type="hidden" name="mobiliario[{{$key}}][nombre]" value="{{ $mobiliario['nombre'] }}"  />
-
-                                                <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="form-control" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1">
+                                                <div
+                                                    data-component="CNumberInput"
+                                                    data-id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"
+                                                    data-name="mobiliario[{{$key}}][cantidad]"
+                                                    data-value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}"
+                                                    data-place-holder="Cantidad"
+                                                    data-style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};"
+                                                    data-tipo="entero"
+                                                    data-rango="positivo"
+                                                    data-is-required="true"
+                                                >
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
