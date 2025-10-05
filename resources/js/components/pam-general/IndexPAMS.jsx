@@ -136,7 +136,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
     return (
         <div class="container mt-4">
             <h1 class="mb-4">PLAN DE APOYO AL MEJORAMIENTO</h1>
-            <h2 class="mb-4">HISTORICO</h2>
+            <h2 class="mb-4">HISTÓRICO</h2>
             <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
                 Agregar nuevo registro
             </button>
