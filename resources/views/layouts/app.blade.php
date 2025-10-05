@@ -98,19 +98,19 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="{{ url('usuarios')}}" class="menu-link">
+                                    <a href="{{ url('usuarios')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-users"></i>
                                         <div data-i18n="Usuarios"> Usuarios</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('roles')}}" class="menu-link">
+                                    <a href="{{ url('roles')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-cogs"></i>
                                         <div data-i18n="Roles"> Roles</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('permissions')}}" class="menu-link">
+                                    <a href="{{ url('permissions')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-check"></i>
                                         <div data-i18n="Permisos"> Permisos</div>
                                     </a>
@@ -127,7 +127,7 @@
                                 <ul>
                                     <li class="menu-item">
                                         <a href="{{ url('institutional_profile/institution')}}"
-                                            class="menu-link"
+                                            class="menu-link gap-2"
                                         >
                                             <i class="menu-icon fas fa-globe-americas"></i>
                                             <div data-i18n="Todos"> Todos</div>
@@ -136,7 +136,7 @@
                                     @foreach ($municipios as $municipio)
                                         <li class="menu-item">
                                             <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id)}}"
-                                                class="menu-link"
+                                                class="menu-link gap-2"
                                             >
                                                 <i class="menu-icon fas fa-map-marker-alt"></i>
                                                 <div data-i18n="{{$municipio->nombre}}"> {{$municipio->nombre}}</div>
@@ -145,7 +145,7 @@
                                     @endforeach
                                 </ul>
                             @else
-                                <a href="{{ url('institutional_profile/institution')}}" class="menu-link">
+                                <a href="{{ url('institutional_profile/institution')}}" class="menu-link gap-2">
                                     <i class="menu-icon fa-solid fa-university"></i>
                                     <div data-i18n="Instituciones">Instituciones</div>
                                 </a>
@@ -153,55 +153,55 @@
                             </ul>
                         </li>
                         <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
                                 <div data-i18n="Paŕametros">Paŕametros</div>
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="{{ url('municipios')}}" class="menu-link">
+                                    <a href="{{ url('municipios')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-map"></i>
                                         <div data-i18n="Municipios"> Municipios</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('ajustes')}}" class="menu-link">
+                                    <a href="{{ url('ajustes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-gears"></i>
                                         <div data-i18n="Ajustes de la página"> Ajustes de la página"</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('modelos-educacionales')}}" class="menu-link">
+                                    <a href="{{ url('modelos-educacionales')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-lightbulb"></i>
                                         <div data-i18n="Modelos flexibles"> Modelos flexibles</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('modelos-pedagogicos')}}" class="menu-link">
+                                    <a href="{{ url('modelos-pedagogicos')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-chalkboard-teacher"></i>
                                         <div data-i18n="Estrategias pedagógicas"> Estrategias pedagógicas</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="{{ url('redes-aprendizajes')}}" class="menu-link">
+                                    <a href="{{ url('redes-aprendizajes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-graduation-cap"></i>
                                         <div data-i18n="Redes de aprendizaje"> Redes de aprendizaje</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-clipboard-list"></i>
                                         <div data-i18n="PAM"> PAM</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
-                                            <a href="{{ url('unidades-meta')}}" class="menu-link">
+                                            <a href="{{ url('unidades-meta')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Indicadores"> Indicadores</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="{{ url('componentes')}}" class="menu-link">
+                                            <a href="{{ url('componentes')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Componentes"> Componentes</div>
                                             </a>
@@ -209,19 +209,19 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-shapes"></i>
                                         <div data-i18n="PMI">PMI</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
-                                            <a  href="{{ url('objetivo-pmi')}}" class="menu-link">
+                                            <a  href="{{ url('objetivo-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Objetivos"> Objetivos</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
-                                            <a  href="{{ url('indicadores-pmi')}}" class="menu-link">
+                                            <a  href="{{ url('indicadores-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-ruler-horizontal"></i>
                                                 <div data-i18n="Indicadores"> Indicadores</div>
                                             </a>
@@ -231,7 +231,7 @@
                             </ul>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ url('pams/index')}}" class="menu-link">
+                            <a href="{{ url('pams/index')}}" class="menu-link ">
                                 <i class="menu-icon fa-solid fa-table"></i>
                                 <div data-i18n="PAM"> PAM</div>
                             </a>
