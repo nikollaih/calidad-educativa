@@ -2,17 +2,17 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
 // Modal de editar
-const ModalAjustes = ({ 
-  nombre_gestion, 
-  institucionId, 
-  csrfToken, 
-  formData, 
-  setFormData, 
-  documentos, 
+const ModalAjustes = ({
+  nombre_gestion,
+  institucionId,
+  csrfToken,
+  formData,
+  setFormData,
+  documentos,
   onClose,
   onSave
 }) => {
-  
+
   const [fileUploads, setFileUploads] = useState({});
 
   const handleSubmit = (e) => {
@@ -22,7 +22,7 @@ const ModalAjustes = ({
 
  const handleFileChange = (documentData, e) => {
   console.log('documentData', documentData);
-  
+
   if (e.target.files[0]) {
     setFileUploads({
       ...fileUploads,
@@ -54,9 +54,9 @@ const handleNewFile = (fieldName, e) => {
       <div className="modal-content">
         <div className="modal-header">
           <h5 className="modal-title">EDITAR {nombre_gestion}</h5>
-          <button 
-            type="button" 
-            className="btn-close" 
+          <button
+            type="button"
+            className="btn-close"
             onClick={onClose}
             aria-label="Cerrar"
           ></button>
@@ -64,7 +64,7 @@ const handleNewFile = (fieldName, e) => {
         <div className="modal-body">
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="_token" value={csrfToken} />
-            
+
             {/* Sección superior: Tipo de ajuste y Fecha */}
             <div className="row mb-4">
               <div className="col-md-6">
@@ -92,18 +92,19 @@ const handleNewFile = (fieldName, e) => {
                     required
                     className="form-control"
                     value={formData.fecha || ''}
+                    min={new Date().toISOString().split("T")[0]}
                     onChange={(e) => setFormData({...formData, fecha: e.target.value})}
                   />
                 </div>
               </div>
             </div>
-  
+
             {/* Sección central: Campos del formulario en 2 columnas */}
             <div className="row mb-4">
               {Object.entries(formData).map(([clave, valor]) => {
-                
+
                 if (['tipo_codificacion', 'fecha', 'observacion', 'relation_name'].includes(clave)) return null;
-                
+
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
                     <label className="form-label text-capitalize">{clave.replace(/_/g, ' ')}</label>
@@ -117,7 +118,7 @@ const handleNewFile = (fieldName, e) => {
                 );
               })}
             </div>
-  
+
             {/* Sección de documentos */}
             {documentos && (
               <div className="mb-4 pt-3 border-top">
@@ -143,11 +144,11 @@ const handleNewFile = (fieldName, e) => {
                       .trim()
                       .toLowerCase()
                       .replace(/\b\w/g, l => l.toUpperCase());
-                    
+
                     // Verificamos si hay un archivo subido recientemente para este documento
-                    const hasUploadedFile = fileUploads[documentData.document_key] || 
+                    const hasUploadedFile = fileUploads[documentData.document_key] ||
                                           fileUploads[documentData.original_key];
-                    
+
                     return (
                       <div className="col-md-6 mb-3" key={`edit-doc-${id || docKey}`}>
                         <div className="d-flex justify-content-between align-items-center">
@@ -155,23 +156,23 @@ const handleNewFile = (fieldName, e) => {
                           <div>
                             <label className="btn btn-sm btn-outline-primary mb-0">
                               <i className="fas fa-upload me-1"></i> Subir
-                              <input 
-                                type="file" 
-                                style={{display: 'none'}} 
+                              <input
+                                type="file"
+                                style={{display: 'none'}}
                                 onChange={(e) => handleFileChange(documentData, e)}
                               />
                             </label>
-                            
+
                             {/* Mostrar nombre del archivo subido recientemente */}
                             {hasUploadedFile && (
                               <span className="ms-2">{hasUploadedFile.name}</span>
                             )}
-                            
+
                             {/* Mostrar botón Ver si hay ruta o archivo subido */}
                             {(ruta || hasUploadedFile) && (
-                              <a 
-                                href={ruta ? `/storage/${ruta}` : URL.createObjectURL(hasUploadedFile)} 
-                                target="_blank" 
+                              <a
+                                href={ruta ? `/storage/${ruta}` : URL.createObjectURL(hasUploadedFile)}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-sm btn-outline-success ms-2"
                               >
@@ -189,7 +190,7 @@ const handleNewFile = (fieldName, e) => {
                 </div>
               </div>
             )}
-  
+
             {/* Sección inferior: Observación y campo de documento adicional */}
             <div className="row mt-3">
               <div className="col-md-12 mb-3">
@@ -201,13 +202,13 @@ const handleNewFile = (fieldName, e) => {
                   rows="3"
                 />
               </div>
-              
+
               {/* Campo adicional para subir documento */}
               <div className="col-md-12 mb-3">
                 <label className="form-label text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
                 <div className="input-group">
-                  <input 
-                    type="file" 
+                  <input
+                    type="file"
                     required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
                     className="form-control"
                     onChange={(e) => handleNewFile('documento_adicional', e)}
@@ -220,11 +221,11 @@ const handleNewFile = (fieldName, e) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="modal-footer">
-              <button 
-                type="button" 
-                className="btn btn-secondary" 
+              <button
+                type="button"
+                className="btn btn-secondary"
                 onClick={onClose}
               >
                 Cancelar
@@ -242,7 +243,7 @@ const handleNewFile = (fieldName, e) => {
 };
 
 // Modal de historial
-const ModalHistoricos = ({ 
+const ModalHistoricos = ({
   traces,
   nombre_gestion,
   onClose
@@ -279,20 +280,20 @@ const ModalHistoricos = ({
         }
         return data || {};
       };
-  
+
       const oldData = normalizeData(trace.changes.old_data);
       const newData = normalizeData(trace.changes.new_data);
-      
+
       // Eliminamos campos técnicos que no son relevantes para la comparación
       const technicalFields = ['updated_at', 'created_at', 'id'];
       technicalFields.forEach(field => {
         delete oldData[field];
         delete newData[field];
       });
-  
+
       // Objeto para almacenar los cambios detectados
       const detectedChanges = {};
-      
+
       // 1. Detectamos campos modificados o nuevos
       Object.keys(newData).forEach(key => {
         if (!oldData.hasOwnProperty(key) || JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
@@ -303,7 +304,7 @@ const ModalHistoricos = ({
           };
         }
       });
-  
+
       // 2. Detectamos campos eliminados (presentes en oldData pero no en newData)
       Object.keys(oldData).forEach(key => {
         if (!newData.hasOwnProperty(key)) {
@@ -314,7 +315,7 @@ const ModalHistoricos = ({
           };
         }
       });
-  
+
       // Devolvemos un objeto con toda la información relevante
       return {
         model_id: trace.model_id,
@@ -349,12 +350,12 @@ const ModalHistoricos = ({
             </h5>
             <button type="button" className="btn-close" onClick={onClose} aria-label="Cerrar"></button>
           </div>
-  
+
           <div className="modal-body bg-white">
             {traces && traces.length > 0 ? (
               traces.map((trace, index) => {
                 const { changes: fieldChanges } = parseChanges(trace);
-  
+
                 return (
                   <div className="card shadow-sm border mb-4" key={`trace-${index}`}>
                     <div className="card-header bg-light d-flex justify-content-between align-items-center">
@@ -366,7 +367,7 @@ const ModalHistoricos = ({
                         {formatDate(trace.date || trace.created_at)}
                       </small>
                     </div>
-  
+
                     <div className="card-body">
                     {trace.observation && (
                       <div className="my-3 border rounded p-2">
@@ -377,8 +378,8 @@ const ModalHistoricos = ({
                     {trace.attachment_url && (
                       <div className="my-3 border rounded p-2">
                         <i className="fas fa-file-signature me-2 text-muted"></i>
-                        <a 
-                          href={`/storage/${trace.attachment_url}`} 
+                        <a
+                          href={`/storage/${trace.attachment_url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-decoration-none text-primary"
@@ -387,7 +388,7 @@ const ModalHistoricos = ({
                         </a>
                       </div>
                     )}
-  
+
                       {Object.keys(fieldChanges).length > 0 ? (
                         Object.entries(fieldChanges).map(([field, values]) => (
                           <div className="mb-4" key={field}>
@@ -402,7 +403,7 @@ const ModalHistoricos = ({
                                 </span>
                               )}
                             </div>
-  
+
                             <div className="row">
                               <div className="col-md-6 mb-2">
                                 <small className="text-muted d-block">Anterior</small>
@@ -437,7 +438,7 @@ const ModalHistoricos = ({
               </div>
             )}
           </div>
-  
+
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               <i className="fas fa-times me-1"></i> Cerrar
@@ -447,10 +448,10 @@ const ModalHistoricos = ({
       </div>
     </div>
   );
-  
-}; 
 
-export default function ActualizarPei({ 
+};
+
+export default function ActualizarPei({
   editarUrl = '#',
   institucionId = [],
   institucionData = {},
@@ -479,16 +480,16 @@ export default function ActualizarPei({
   const gestionArrayOrdenado = gestionArray.sort((a, b) => {
     const indexA = ordenGestiones.indexOf(a.id);
     const indexB = ordenGestiones.indexOf(b.id);
-    
+
     // Si un elemento no está en el array de orden, lo colocamos al final
     if (indexA === -1) return 1;
     if (indexB === -1) return -1;
-    
+
     return indexA - indexB;
   });
 
   console.log('gestionArrayOrdenado', gestionArrayOrdenado);
-  
+
 
   const [activeTab, setActiveTab] = useState(0);
   const [currentModal, setCurrentModal] = useState(null);
@@ -504,28 +505,28 @@ export default function ActualizarPei({
       default: return valor.replace(/_/g, ' ').toUpperCase();
     }
   };
-  
+
 
     const handleSave = async (institucionId, hijoIndex, formData, files) => {
     try {
       // Crear FormData para enviar tanto campos como archivos
       const formDataToSend = new FormData();
-      
+
       // Agregar campos del formulario
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
-      
+
       // Agregar archivos subidos
       Object.entries(files).forEach(([fieldName, file]) => {
         if (file) {
           formDataToSend.append(fieldName, file);
         }
       });
-      
+
       formDataToSend.append('institucion_id', institucionId);
       formDataToSend.append('hijo_index', hijoIndex);
-      
+
       const response = await fetch(`/institutional_profile/institution/${institucionId}/save-new-pei`, {
         method: 'POST',
         headers: {
@@ -534,23 +535,23 @@ export default function ActualizarPei({
         },
         body: formDataToSend
       });
-      
+
       if (!response.ok) {
         throw new Error('Error en la respuesta del servidor');
       }
-      
+
       const data = await response.json();
-      
+
       location.reload();
 
       console.log('Datos guardados exitosamente:', data);
       setCurrentModal(null);
-      
+
       alert('Los cambios se guardaron correctamente');
-      
+
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
-      
+
       // Mostrar error al usuario
       alert('Ocurrió un error al guardar los cambios: ' + error.message);
     }
@@ -586,8 +587,8 @@ export default function ActualizarPei({
                 <div>
                   {grupo.hijos.map((hijo, hijoIndex) => {
                     const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
-                    
-                    
+
+
                     return (
                       <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
                         {/* Encabezado con botones */}
@@ -598,13 +599,13 @@ export default function ActualizarPei({
                             <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
                           )}
                           <div>
-                            <button 
+                            <button
                               className="btn btn-sm btn-outline-primary me-2"
                               onClick={() => setCurrentModal({ gestionIndex: index, hijoIndex, formData: {...otrosCampos}, documentos, nombre_gestion })}
                             >
                               <i className="fas fa-edit me-1"></i> Actualizar
                             </button>
-                            <button 
+                            <button
                               className="btn btn-sm btn-outline-secondary"
                               onClick={() => setHistoricosModal({index, hijoIndex, nombre_gestion, traces})}
                             >
@@ -612,7 +613,7 @@ export default function ActualizarPei({
                           </button>
                           </div>
                         </div>
-                        
+
                         {/* Contenido normal (vista) */}
                         <div>
                           {Object.entries(otrosCampos)
@@ -628,7 +629,7 @@ export default function ActualizarPei({
                             </div>
                           ))}
                         </div>
-                        
+
                         {/* Documentos */}
                         {documentos && Object.keys(documentos).length > 0 && (
                           <div className="mt-4">
@@ -645,8 +646,8 @@ export default function ActualizarPei({
                                         .trim()}
                                     </div>
                                     {docValor?.ruta ? (
-                                      <a 
-                                        href={`/storage/${docValor.ruta}`} 
+                                      <a
+                                        href={`/storage/${docValor.ruta}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="badge bg-primary rounded-pill text-decoration-none"
@@ -670,11 +671,11 @@ export default function ActualizarPei({
             </div>
           ))}
         </div>
-        
+
         {/* Boton de volver */}
         {/* <div class="d-flex justify-content-end mt-4">
-        <button 
-          onClick={() => window.history.back()} 
+        <button
+          onClick={() => window.history.back()}
           class="btn btn-secondary"
         >
           <i class="fas fa-arrow-left me-2"></i> Volver
