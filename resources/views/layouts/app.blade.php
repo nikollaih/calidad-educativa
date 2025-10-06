@@ -239,7 +239,7 @@
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">
                                 <i class="menu-icon fa fa-graduation-cap"></i>
-                                <div data-i18n="Redes pedagogicas"> Redes pedagogicas</div>
+                                <div data-i18n="Redes pedagogicas"> Redes pedagógicas</div>
                             </a>
                         </li>
                         <li class="menu-item">
