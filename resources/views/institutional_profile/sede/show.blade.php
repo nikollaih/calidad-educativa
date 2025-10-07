@@ -108,11 +108,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="titularidad_sede" class="form-label">Titularidad de la sede</label>
-                                            @if($sede?->titularidadSede?->adjunto?->url)
-                                                <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                                    <i class="fas fa-eye"></i> Ver anexo
-                                                </a>
-                                            @endif
+
                                         <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  disabled>
                                             <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
                                              <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
@@ -127,6 +123,12 @@
                                             <input type="text" name="titularity[name]" class="form-control">
                                         </div>
                                     </div>
+                                        <label for="titularidad_sede" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
+                                        @if($sede?->titularidadSede?->adjunto?->url)
+                                            <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-eye"></i> Ver anexo
+                                            </a>
+                                         @endif
                                 </div>
 
                                 <!-- Columna 2 -->
