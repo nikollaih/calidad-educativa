@@ -178,8 +178,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
-                            <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
+                            <label for="administrative_act_file" class="form-label">Acto Administrativo</label>
+                            <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf" required>
                         </div>
 
                         <div class="mb-3">

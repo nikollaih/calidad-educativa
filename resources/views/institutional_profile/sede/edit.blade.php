@@ -127,11 +127,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="titularidad_sede" class="form-label">Titularidad de la Sede<span class="text-danger">*</span></label>
-                                    @if($sede?->titularidadSede?->adjunto?->url)
-                                        <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                            <i class="fas fa-eye"></i> Ver anexo
-                                        </a>
-                                    @endif
+
                                     <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full"  required>
                                         <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
                                         <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
@@ -150,11 +146,12 @@
                                 <div class="row" id="anexo_certificado_container" >
                                     <div class="mb-3">
                                         <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro</label>
-                                        @if($sede?->administrativeAct?->url)
-                                            <a href="{{ $sede?->administrativeAct?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                        @if($sede?->titularidadSede?->adjunto?->url)
+                                            <a href="{{ $sede?->titularidadSede?->adjunto?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                                 <i class="fas fa-eye"></i> Ver anexo
                                             </a>
                                         @endif
+
                                         <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" >
                                     </div>
                                 </div>
@@ -197,9 +194,15 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="administrative_act_file" class="form-label">Acto Administrativo (Opcional)</label>
-
-                                    <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
+                                    <label for="administrative_act_file" class="form-label">Acto Administrativo </label>
+                                     @if($sede?->administrativeAct?->url)
+                                        <a href="{{ $sede?->administrativeAct?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-eye"></i> Ver anexo
+                                        </a>
+                                        <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf">
+                                    @else
+                                        <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf" required>
+                                     @endif
                                 </div>
 
                                 <div class="mb-3">
