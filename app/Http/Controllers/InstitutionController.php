@@ -369,7 +369,10 @@ class InstitutionController extends Controller {
         }
         $institucionToUpdate->fill($institutionData);
         $institucionToUpdate->save();
-        $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'], $institucionToUpdate);
+        if (isset($institutionData['redes_sociales'])) {
+            // Sincroniza las redes sociales de la institucion
+            $this->redesSocialesService->syncRedesSociales($institutionData['redes_sociales'],$institucionToUpdate);
+        }
 
         return redirect()->route('institution.edit',$institucion)->with('success', 'Institución actualizada correctamente.');
     }

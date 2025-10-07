@@ -155,7 +155,7 @@
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
-                                <div data-i18n="Paŕametros">Paŕametros</div>
+                                <div data-i18n="Parámetros">Parámetros</div>
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
@@ -239,7 +239,7 @@
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">
                                 <i class="menu-icon fa fa-graduation-cap"></i>
-                                <div data-i18n="Redes pedagogicas"> Redes pedagógicas</div>
+                                <div data-i18n="Redes pedagógicas"> Redes pedagógicas</div>
                             </a>
                         </li>
                         <li class="menu-item">

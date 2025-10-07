@@ -21,8 +21,8 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
             <table class="table">
                 <thead>
                 <tr>
-                    <th>DESCRIPCION</th>
-                    <th>Acciones</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>ACCIONES</th>
                 </tr>
                 </thead>
                 <tbody>
