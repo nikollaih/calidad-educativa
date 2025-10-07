@@ -464,7 +464,17 @@
                                                     <div id="label_cantidad_{{ Str::slug($equipo['nombre']) }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};">
                                                         <label class="form-check-label">Cantidad.</label>
                                                     </div>
-                                                    <input type="number" name="infraestructura[{{$key}}][cantidad]" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->cantidad  }}" id="cantidad_{{ Str::slug($equipo['nombre']) }}" class="form-control" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1">
+                                                    <div
+                                                        data-component="CNumberInput"
+                                                        data-id="cantidad_{{ Str::slug($equipo['nombre']) }}"
+                                                        data-name="infraestructura[{{$key}}][cantidad]"
+                                                        data-value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->cantidad  }}"
+                                                        data-place-holder="Cantidad"
+                                                        data-style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};"
+                                                        data-tipo="entero"
+                                                        data-rango="positivo_sin_cero"
+                                                    >
+                                                    </div>
                                                 </div>
                                             @endif
                                             <div class="col-md-4">
@@ -473,7 +483,17 @@
                                                 </div>
                                                 <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                 <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="form-control" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" >
+                                                <div
+                                                        data-component="CNumberInput"
+                                                        data-id="area_{{ Str::slug($equipo['nombre']) }}"
+                                                        data-name="infraestructura[{{$key}}][area]"
+                                                        data-value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}"
+                                                        data-place-holder="Área (m²)"
+                                                        data-style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};"
+                                                        data-tipo="entero"
+                                                        data-rango="positivo_sin_cero"
+                                                    >
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
