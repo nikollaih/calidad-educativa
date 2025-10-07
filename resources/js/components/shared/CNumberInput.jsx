@@ -6,7 +6,7 @@ import { h } from 'preact';
  * Es un input de texto personalizado para el ingreso de números
  * que permite controlar:
  *  - El tipo de número (entero o decimal).
- *  - El rango de valores permitidos (positivo, negativo o mixto).
+ *  - El rango de valores permitidos (positivo, negativo, mixto, positivo_sin_cero).
  *
  * Props:
  *  - name: Nombre del campo (atributo name del input).
@@ -15,9 +15,10 @@ import { h } from 'preact';
  *      - "entero"  → Solo números enteros (sin decimales).
  *      - "decimal" → Números con decimales (permitido un solo punto).
  *  - rango: Define el rango permitido:
- *      - "mixto"     → Permite tanto positivos como negativos.
- *      - "positivo"  → Restringe a valores positivos.
- *      - "negativo"  → Restringe a valores negativos.
+ *      - "mixto"            → Permite tanto positivos como negativos.
+ *      - "positivo"         → Restringe a valores positivos (incluye 0).
+ *      - "positivo_sin_cero"→ Restringe a valores positivos mayores o iguales a 1.
+ *      - "negativo"         → Restringe a valores negativos.
  *  - isRequired: Indica si el campo es obligatorio.
  *  - placeHolder: Texto de ayuda a mostrar cuando el input está vacío.
  */
@@ -31,21 +32,17 @@ const CNumberInput = ({
     rango = 'mixto',
     isRequired = false
 }) => {
-  // Manejador del evento input: procesa y valida cada valor digitado
   const handleInput = (e) => {
     let value = e.target.value;
 
     // 1. Filtrar caracteres según el tipo
     if (tipo === 'entero') {
-      // Solo se permiten dígitos y opcionalmente el signo "-"
       value = value.replace(/[^0-9\-]/g, '');
     } else if (tipo === 'decimal') {
       value = value.replace(',', '.');
+      value = value.replace(/[^0-9.\-]/g, '');
 
-      // Se permiten dígitos, un punto decimal y el signo "-"
-      value = value.replace(/[^0-9\.\-]/g, '');
-
-      // Evita que el usuario ponga más de un punto decimal
+      // Evita más de un punto decimal
       const parts = value.split('.');
       if (parts.length > 2) {
         value = parts[0] + '.' + parts.slice(1).join('');
@@ -54,12 +51,20 @@ const CNumberInput = ({
 
     // 2. Validar el rango
     if (rango === 'positivo') {
-      // Si el rango es positivo, se elimina cualquier signo negativo
       value = value.replace(/^-/, '');
+    } else if (rango === 'positivo_sin_cero') {
+      value = value.replace(/^-/, ''); // no negativos
+      // Si el valor numérico es 0, se limpia
+      if (value === '0' || value.startsWith('0') && !value.startsWith('0.')) {
+        value = '';
+      }
     } else if (rango === 'negativo') {
-      // Si el rango es negativo, siempre forzamos el signo "-"
       if (!value.startsWith('-')) {
         value = '-' + value.replace(/^-/, '');
+      }
+    } else if (rango === 'mixto') {
+      if (value.includes('-') && !value.startsWith('-')) {
+        value = '-' + value.replace(/-/g, '');
       }
     }
 

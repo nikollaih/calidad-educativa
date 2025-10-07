@@ -397,6 +397,7 @@ const addActividad = (metaId) => {
                                 className="form-control"
                                 value={actividad.fecha_inicio}
                                 onChange={(e) => updateField(actividad.id, 'fecha_inicio', e.target.value)}
+                                min={`${new Date().getFullYear()}-01-01`}
                                 required={true}
                             />
                         </div>

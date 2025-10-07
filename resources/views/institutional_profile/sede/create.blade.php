@@ -216,8 +216,7 @@
                                                 data-name="steam_classroom[quantity]"
                                                 data-place-holder="Ingrese la cantidad"
                                                 data-tipo="entero"
-                                                data-rango="positivo"
-                                                data-is-required="true"
+                                                data-rango="positivo_sin_cero"
                                             >
                                             </div>
                                         </div>
@@ -308,8 +307,7 @@
                                                         data-place-holder="Cantidad"
                                                         data-style="display: none;"
                                                         data-tipo="entero"
-                                                        data-rango="positivo"
-                                                        data-is-required="true"
+                                                        data-rango="positivo_sin_cero"
                                                     >
                                                     </div>
                                                 </div>
@@ -528,8 +526,7 @@
                                                             data-place-holder="Cantidad"
                                                             data-style="display: none;"
                                                             data-tipo="entero"
-                                                            data-rango="positivo"
-                                                            data-is-required="true"
+                                                            data-rango="positivo_sin_cero"
                                                         >
                                                         </div>
                                                     </div>

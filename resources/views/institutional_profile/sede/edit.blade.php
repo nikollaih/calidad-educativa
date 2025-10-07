@@ -332,8 +332,7 @@
                                                         data-place-holder="Cantidad"
                                                         data-style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};"
                                                         data-tipo="entero"
-                                                        data-rango="positivo"
-                                                        data-is-required="true"
+                                                        data-rango="positivo_sin_cero"
                                                     >
                                                  </div>
                                             </div>
@@ -569,8 +568,7 @@
                                                     data-place-holder="Cantidad"
                                                     data-style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};"
                                                     data-tipo="entero"
-                                                    data-rango="positivo"
-                                                    data-is-required="true"
+                                                    data-rango="positivo_sin_cero"
                                                 >
                                                 </div>
                                             </div>

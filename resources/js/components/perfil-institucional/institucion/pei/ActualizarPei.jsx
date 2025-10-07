@@ -92,7 +92,7 @@ const handleNewFile = (fieldName, e) => {
                     required
                     className="form-control"
                     value={formData.fecha || ''}
-                    min={new Date().toISOString().split("T")[0]}
+                    min={`${new Date().getFullYear()}-01-01`}
                     onChange={(e) => setFormData({...formData, fecha: e.target.value})}
                   />
                 </div>
