@@ -1,3 +1,4 @@
 {
-    'These credentials do not match our records.': 'Estas credenciales no coinciden con nuestros registros.
+    "These credentials do not match our records.": "Estas credenciales no coinciden con nuestros registros.",
+    "Too Many Requests": "Has superado el número máximo de intentos. Intenta de nuevo en unos minutos."
 }
