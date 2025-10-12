@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Seguridad\Role\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -48,5 +51,17 @@ class User extends Authenticatable {
      */
     public function getMorphClass() {
         return 'user';
+    }
+    public function  institucion () {
+        return $this->hasOne(Institucion::class,'rector_id');
+    }
+    public function roles(): BelongsToMany {
+        return $this->morphToMany(
+            Role::class,            // Modelo relacionado
+            'model',                // Nombre de la relación polimórfica (model_type y model_id)
+            'model_has_roles',      // Tabla pivote
+            'model_id',             // Clave foránea del modelo actual
+            'role_id'               // Clave foránea del modelo relacionado
+        );
     }
 }

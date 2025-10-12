@@ -14,6 +14,8 @@ use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\PeiHistorial;
+use App\Models\Seguridad\Role\Role;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,6 +69,7 @@ class InstitutionController extends Controller {
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
+            'rector',
             'sedes.levelSedeEducational.educationalLevel',
             'sedes.levelSedeEducational.schedules',
             'sedes.levelSedeEducational.schedules.anexo',
@@ -337,6 +340,7 @@ class InstitutionController extends Controller {
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
+            'rector',
             'sedes.levelSedeEducational.educationalLevel',
             'sedes.levelSedeEducational.schedules',
             'sedes.levelSedeEducational.schedules.anexo',
@@ -347,7 +351,24 @@ class InstitutionController extends Controller {
         if (!$institucion) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
         }
-        return view('institutional_profile.institution.edit', ['institution' => $institucion , 'municipios' => $municipios]);
+        // ID del rector actual de la institución (si existe)
+        $rectorActualId = $institucion->rector?->id;
+        // Lista de rectores disponibles
+        $availableRectors = User::whereHas('roles', function ($query) {
+            $query->where('name', 'rector');
+        })
+        ->where(function ($query) use ($rectorActualId) {
+            $query->whereDoesntHave('institucion')
+                  ->orWhere('id', $rectorActualId);
+        })
+        ->get();
+
+        return view('institutional_profile.institution.edit',
+            [
+                'institution' => $institucion ,
+                'municipios' => $municipios,
+                'availableRectors' => $availableRectors
+            ]);
     }
     public function update(Request $request, int $institucion) {
         $institucionToUpdate = Institucion::with('redesSociales')

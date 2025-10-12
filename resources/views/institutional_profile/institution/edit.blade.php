@@ -106,20 +106,25 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre_rector" class="form-label">Nombre del Rector</label>
+                                <label for="nombre_rector" class="form-label">Rector</label>
                                 <div
-                                    data-component="CTextInput"
-                                    data-name="nombre_rector"
-                                    data-value="{{ $institution->nombre_rector }}"
-                                >
-                                </div>
+                                    data-component="CAutocompleteFromArray"
+                                    data-data='@json($availableRectors)'
+                                    data-field-name="rector_id"
+                                    data-initial-value="{{ $institution->rector_id }}"
+                                    data-order-by='@json(["field" => "id", "direction" => "asc"])'
+                                    data-search-fields='@json(["name", "email"])'
+                                    data-label-fields='@json(["name", "email"])'
+                                ></div>
+
+
                             </div>
                             <div
                                 data-component="TextMultipleTags"
                                 data-initial-value="{{$institution->nombre_coordinadores}}"
                                 data-is-editable="{{true}}"
                             >
-                        </div>
+                            </div>
                     </div>
 
                     <!-- Redes Sociales -->

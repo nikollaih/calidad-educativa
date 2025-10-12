@@ -83,7 +83,7 @@
 
                             <div class="mb-3">
                                 <label for="nombre_rector" class="form-label">Nombre del Rector</label>
-                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution->nombre_rector}}" disabled>
+                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution?->rector?->name ?? "Sin rector"}}" disabled>
                             </div>
                             <div
                                 data-component="TextMultipleTags"

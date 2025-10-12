@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Institucion extends Model
-{
+class Institucion extends Model {
     use HasFactory, RedSocialMorphRelacion;
-     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    /**
+    * The attributes that are mass assignable.
+    *
+    * @var array<int, string>
+    */
     protected $fillable = [
         'nombre',
+        'rector_id',
         'nit',
         'dane',
         'email',
@@ -28,16 +28,19 @@ class Institucion extends Model
         'licencia_funcionamiento',
     ];
 
-    public function licenciaFuncionamiento (){
+    public function licenciaFuncionamiento () {
         return $this->belongsTo(Adjunto::class, 'licencia_funcionamiento');
     }
-    public function sedes (){
+    public function sedes () {
         return $this->hasMany(Sede::class,'institution_id');
     }
-    public function autoevaluacions(){
+    public function rector () {
+        return $this->belongsTo(User::class,'rector_id');
+    }
+    public function autoevaluacions() {
         return $this->hasMany(Autoevaluacion::class, 'institucion_id');
     }
-    public function autoevaluaciones(){
+    public function autoevaluaciones() {
         return $this->hasMany(Autoevaluacion::class, 'institucion_id');
     }
 
@@ -69,8 +72,7 @@ class Institucion extends Model
     /**
      * Crea una estructura PEI vacía para la institución
      */
-    public function createEmptyPei(): void
-    {
+    public function createEmptyPei(): void {
         // Usar transacción para asegurar integridad de datos
         DB::transaction(function () {
             // Crear gestión directiva con sus relaciones
