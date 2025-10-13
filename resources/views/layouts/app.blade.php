@@ -281,13 +281,21 @@
                                                             </div>
                                                         </div>
                                                         <div class="flex-grow-1">
-                                                            <span class="fw-semibold d-block lh-1"> {{ Auth::user() ? Auth::user()->name : 'Sin Perfil' }}</span>
-                                                            <small>
-                                                            {{ Auth::check()
-                                                                ? Auth::user()->roles()->first()->name_translated ?? 'Sin Rol'
-                                                                : 'Sin Perfil'
-                                                            }}</small>
+                                                            <span class="fw-semibold d-block lh-1">
+                                                                {{ Auth::user() ? Auth::user()->name : 'Sin Perfil' }}
+                                                            </span>
+
+                                                            <ul class="list-unstyled small mb-0 mt-1">
+                                                                @if (Auth::check() && Auth::user()->roles->isNotEmpty())
+                                                                    @foreach (Auth::user()->roles as $role)
+                                                                        <li>{{ $role->name_translated ?? $role->name }}</li>
+                                                                    @endforeach
+                                                                @else
+                                                                    <li>Sin Rol</li>
+                                                                @endif
+                                                            </ul>
                                                         </div>
+
                                                     </div>
                                                 </a>
                                             </li>
@@ -369,16 +377,12 @@
                     var menuWidth = layoutMenu.width();
 
                     // Debug: imprimir en consola
-                    console.log('Menu width:', menuWidth);
-                    console.log('Menu classes:', layoutMenu.attr('class'));
 
                     // Si el menú tiene menos de 100px de ancho, está colapsado
                     if (menuWidth < 100) {
-                        console.log('Mostrando logo colapsado');
                         $('.logo-full').hide();
                         $('.logo-collapsed').show();
                     } else {
-                        console.log('Mostrando logo completo');
                         $('.logo-full').show();
                         $('.logo-collapsed').hide();
                     }
@@ -389,7 +393,6 @@
 
                 // Detectar clicks en el botón de toggle
                 $(document).on('click', '.layout-menu-toggle', function(e) {
-                    console.log('Toggle clicked');
                     setTimeout(updateLogo, 350);
                 });
 

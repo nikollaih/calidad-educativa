@@ -11,9 +11,6 @@
             <a href="{{ route('proyectos_transversales.index', $institution->id) }}" class="btn btn-outline-warning btn-sm">PPT</a>
         </div>
     </div>
-
-
-
     <div class="container pt-3">
     @if(session('success'))
                         <div class="alert alert-success">

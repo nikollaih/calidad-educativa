@@ -81,12 +81,17 @@
 
 
                             <div class="mb-3">
-                                <label for="nombre_rector" class="form-label">Nombre del Rector <span class="text-danger">*</span></label>
+                                <div class="mb-3">
+                                <label for="nombre_rector" class="form-label">Rector</label>
                                 <div
-                                    data-component="CTextInput"
-                                    data-name="nombre_rector"
-                                >
-                                </div>
+                                    data-component="CAutocompleteFromArray"
+                                    data-data='@json($availableRectors)'
+                                    data-field-name="rector_id"
+                                    data-order-by='@json(["field" => "id", "direction" => "asc"])'
+                                    data-search-fields='@json(["name", "email"])'
+                                    data-label-fields='@json(["name", "email"])'
+                                ></div>
+                            </div>
                             </div>
 
                             <div

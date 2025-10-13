@@ -308,8 +308,16 @@ class InstitutionController extends Controller {
     }
     public function create() {
         $municipios = Municipio::get();
+        // Lista de rectores disponibles
+        $availableRectors = User::whereHas('roles', function ($query) {
+            $query->where('name', 'rector');
+        })
+        ->where(function ($query) {
+            $query->whereDoesntHave('institucion');
+        })
+        ->get();
         // $roles = Role::all();
-        return view('institutional_profile.institution.create', ['municipios' => $municipios]);
+        return view('institutional_profile.institution.create', ['municipios' => $municipios, 'availableRectors' => $availableRectors]);
     }
     public function store(Request $request) {
         // Valida si hay un file de licencia de funcionamiento
