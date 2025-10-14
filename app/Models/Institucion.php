@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasFilters;
 use App\Models\Traits\RedSocialMorphRelacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Institucion extends Model {
-    use HasFactory, RedSocialMorphRelacion;
+    use HasFactory, RedSocialMorphRelacion,HasFilters;
     /**
     * The attributes that are mass assignable.
     *

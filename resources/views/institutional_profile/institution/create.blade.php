@@ -87,6 +87,8 @@
                                     data-component="CAutocompleteFromArray"
                                     data-data='@json($availableRectors)'
                                     data-field-name="rector_id"
+                                    data-is-editable="{{ !( Auth::user()->hasRole('rector') && !(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('administrador')) ) }}"
+                                    data-initial-value="{{ Auth::user()->hasRole('rector') && !(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('administrador')) ? Auth::user()->id : null }}"
                                     data-order-by='@json(["field" => "id", "direction" => "asc"])'
                                     data-search-fields='@json(["name", "email"])'
                                     data-label-fields='@json(["name", "email"])'

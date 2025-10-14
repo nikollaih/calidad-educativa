@@ -91,6 +91,7 @@
                     <div class="menu-divider mt-0"></div>
                     <div class="menu-inner-shadow"></div>
                     <ul class="menu-inner py-1">
+                       @hasanyrole('super_admin|administrador')
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons fa fa-building"></i>
@@ -117,6 +118,7 @@
                                 </li>
                             </ul>
                         </li>
+                    @endrole
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">

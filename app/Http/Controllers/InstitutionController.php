@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InstitucionRequest;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
@@ -14,7 +15,6 @@ use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\PeiHistorial;
-use App\Models\Seguridad\Role\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -31,12 +31,13 @@ class InstitutionController extends Controller {
     ) {
     }
 
-    public function index(Request $request) {
+    public function index(InstitucionRequest $request) {
         $municipioId = request()->query('municipio_id');
         $paginate = Institucion::with('licenciaFuncionamiento','redesSociales')
             ->when($municipioId, function ($query, $municipioId) {
                 $query->where('municipio_id', $municipioId);
             })
+            ->filters($request->filters())
             ->paginate('10');
         return view(
             'institutional_profile.institution.index',

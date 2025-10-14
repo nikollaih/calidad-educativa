@@ -6,9 +6,17 @@
             <h1 class="card-header">Instituciones</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('institution.create') }}" class="btn btn-primary mb-3">Crear institución</a>
+                        @php
+                            $user = auth()->user();
+                        @endphp
 
-                    @if(session('success'))
+                        @if($user->hasAnyRole(['super_admin', 'administrador']) ||
+                            ($user->hasRole('rector') && $user->institucion === null))
+                            <a href="{{ route('institution.create') }}" class="btn btn-primary mb-3">
+                                Crear institución
+                            </a>
+                        @endif
+                                            @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
