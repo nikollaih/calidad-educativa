@@ -87,7 +87,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                             {/* Campo visible solo si contiene 'rector' */}
                             {showInstitutionField && (
                                 <div class="mb-3">
-                                    <label htmlFor="institucion_id" class="form-label">Institución del rector{institucionSelected.id}</label>
+                                    <label htmlFor="institucion_id" class="form-label">Institución del rector</label>
                                     <CAutocompleteFromArray
                                             key={institucionSelected || 'no-institucion'}
                                             data={institutionsWithoutRector}
