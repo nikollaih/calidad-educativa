@@ -325,6 +325,9 @@ class InstitutionController extends Controller {
         if (!$request->hasFile('licencia_funcionamiento')) {
             return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar una licencia de funcionamiento.');
         }
+        if ($request->rector_id == null) {
+            return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar un rector.');
+        }
 
         // Intenta almacenar el Adjunto
         $storeAdjuntoResponse = $this->adjuntoService->storeAdjunto($request->file('licencia_funcionamiento'),'institucion/licencia_funcionamiento','public');
@@ -387,7 +390,9 @@ class InstitutionController extends Controller {
         if (!$institucionToUpdate) {
             return redirect()->back()->with('flash_error_message', 'Institución no encontrada.');
         }
-
+        if ($request->rector_id == null) {
+            return redirect()->back()->with('flash_error_message', 'Se debe seleccionar un rector.');
+        }
         $institutionData = $request->all();
 
         if ($request->hasFile('licencia_funcionamiento')) {

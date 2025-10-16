@@ -5,5 +5,6 @@ return [
     'administrador' => 'Administrador(a)',
     'rector'        => 'Rector(a)',
     'secretario'    => 'Secretario(a)',
+    'secretaria_educacion'    => 'Secretaría de Educación',
 ];
 

@@ -103,7 +103,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre_rector" class="form-label">Rector</label>
+                                <label for="nombre_rector" class="form-label">Rector<span class="text-danger">*</span></label>
                                 <div
                                     data-component="CAutocompleteFromArray"
                                     data-data='@json($availableRectors)'

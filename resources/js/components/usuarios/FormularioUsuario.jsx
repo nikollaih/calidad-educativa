@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import Select from 'react-select';
 import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
+import CPasswordInput from "@/components/shared/CPasswordInput.jsx";
 
 export default function FormularioUsuario({ roles, institutionsWithoutRector, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -58,13 +59,23 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                             {/* Contraseña */}
                             <div class="mb-3">
                                 <label htmlFor="password" class="form-label">Contraseña</label>
-                                <input type="password" name="password" class="form-control"  />
+                                <CPasswordInput
+                                    name="password"
+                                    isRequired={true}
+                                    minLength={8}
+                                    maxLength={40}
+                                    />
                             </div>
 
                             {/* Confirmar contraseña */}
                             <div class="mb-3">
                                 <label htmlFor="password_confirmation" class="form-label">Confirmar Contraseña</label>
-                                <input type="password" name="password_confirmation" class="form-control"  />
+                                <CPasswordInput
+                                    name="password_confirmation"
+                                    isRequired={true}
+                                    minLength={8}
+                                    maxLength={40}
+                                />
                             </div>
 
                             {/* Roles (react-select multiple) */}
