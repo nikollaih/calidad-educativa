@@ -181,14 +181,22 @@ class PMIController extends Controller {
             ]);
     }
     public function storeActividadAvance(Request $request) {
-        $pmi = Pmi::where('id', $request->input('pmi_id'))->first();
-        $actividad = PmiActividadVinculada::with('meta')->where('id', $request->input('actividad_id'))->first();
+        $pmi = Pmi::where('id', $request->input('pmi_id'))
+            ->first();
+        $actividad = PmiActividadVinculada::with('meta')
+            ->where('id', $request->input('actividad_id'))
+            ->first();
 
 
         if (empty($pmi)) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', 'No se encontró el PMI asociado a este avance.');
+        }
+        if ($pmi->estado != PmiEstadoEnum::Aprobado->value) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'El PMI debe estar aprobado por el SED.');
         }
         if (empty($actividad)) {
             return redirect()->back()
@@ -228,20 +236,16 @@ class PMIController extends Controller {
 
         $cantidadTotalAvanzada = $actividad->indicador_acumulado + $avanceData['suma_al_indicador'];
 
-        Log::info("cantidad todal avanzada" . $cantidadTotalAvanzada);
 
         if ($cantidadTotalAvanzada > $actividad->max_suma_indicador) {
             return redirect()->back()
                 ->withInput()
                 ->with('flash_error_message', "El valor del avance total no puede se mayor a " . $actividad->max_suma_indicador . " actualmente es" . $cantidadTotalAvanzada);
         }
-        Log::info("afecta al indicador?" . $actividad->afecta_indicador);
-        Log::info("nuevo acumulado" . $cantidadTotalAvanzada >0 ? $cantidadTotalAvanzada : 1 / $actividad->max_suma_indicador);
 
         $accumulated = $actividad->afecta_indicador
             ? ( $cantidadTotalAvanzada / $actividad->max_suma_indicador) * 100
             : 100;
-        Log::info("accumulated " . $accumulated);
         DB::beginTransaction();
         try {
             $actividad->accumulated = $accumulated;
