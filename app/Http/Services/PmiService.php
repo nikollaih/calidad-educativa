@@ -8,6 +8,11 @@ use App\Models\PMI\Enums\PmiEstadoEnum;
 use App\Models\PMI\PmiComentarioFactor\Enums\PmiEstadoComentario;
 
 class PmiService {
+    public function __construct(
+        private MailService $mailService
+    ) {
+    }
+
     public function aprobarPmi(Pmi $pmi): Result {
         $pmi->comentarios->each(function ($comentario) {
             $comentario->estado = PmiEstadoComentario::Historico->value;
@@ -15,19 +20,35 @@ class PmiService {
         });
         $pmi->estado = PmiEstadoEnum::Aprobado->value;
         $pmi->save();
+        //rector
+        $rector = $pmi->institucion->rector;
+        // Enviar correo (retorna false si falla)
+        $this->mailService->sendMail(
+            email: $rector->email,
+            subject: 'PMI aprobado',
+            template: 'email.pmi.aprobado', // resources/views/emails/welcome.blade.php
+            data:['usuario'=>$rector,'pmi'=>$pmi]
+        );
         return Result::success(msg:"PMI aprobado correctamente");
     }
     public function devolverPmi(Pmi $pmi): Result {
-        $tieneComentariosPendientes = $pmi->comentarios
+        $cantidadComentariosPendientes = $pmi->comentarios
                     ->where('estado', PmiEstadoComentario::Activo->value)
-                    ->count() == 0
-                        ? true
-                        : false;
-        if ($tieneComentariosPendientes) {
+                    ->count();
+        if ($cantidadComentariosPendientes == 0 ) {
             return Result::error(msg: 'Debe tener al menos un comentario.');
         }
         $pmi->estado = PmiEstadoEnum::Proceso->value;
         $pmi->save();
+        //rector
+        $rector = $pmi->institucion->rector;
+        // Enviar correo (retorna false si falla)
+        $this->mailService->sendMail(
+            email: $rector->email,
+            subject: 'PMI devuelto',
+            template: 'email.pmi.devuelto', // resources/views/emails/welcome.blade.php
+            data:['usuario'=>$rector,'pmi'=>$pmi, 'cantidadComentariosPendientes' => $cantidadComentariosPendientes]
+        );
         return Result::success(msg:"PMI devuelto correctamente");
     }
 }
