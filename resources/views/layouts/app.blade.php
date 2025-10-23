@@ -119,6 +119,7 @@
                             </ul>
                         </li>
                     @endrole
+                    @hasanyrole('super_admin|administrador|rector')
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -154,6 +155,8 @@
                             @endif
                             </ul>
                         </li>
+                    @endrole
+                    @hasanyrole('super_admin|administrador|rector')
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
@@ -244,6 +247,15 @@
                                 <div data-i18n="Redes pedagógicas"> Redes pedagógicas</div>
                             </a>
                         </li>
+                    @endrole
+                    @hasanyrole('super_admin|administrador|secretaria_educacion')
+                        <li class="menu-item">
+                            <a href="{{ url('pmi/validacion')}}" class="menu-link ">
+                                <i class="menu-icon fas fa-tasks"></i>
+                                <div data-i18n="Validación de PMI">Validación de PMI</div>
+                            </a>
+                        </li>
+                    @endrole
                         <li class="menu-item">
                                 <a class="layout-menu-toggle menu-link " href="javascript:void(0)">
                                     <i class="bx bx-menu bx-sm"></i>

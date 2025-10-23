@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PmiComentarioFactor extends Model {
     use HasFactory;
+    protected $fillable = [
+        'id',
+        'comentario',
+        'estado',
+        'factor_id',
+        'pmi_id',
+        'autor_id',
+    ];
     // Relacion con el factor critico del comentario
     public function factor(): BelongsTo {
         return $this->belongsTo(FactorCritico::class,'factor_id');

@@ -182,6 +182,16 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('ajustes', AjustesController::class);
     // Ruta para obtener las actividades e integrantes de una red de aprendizaje para ver en detalle
     Route::get('/get-actividades-integrantes/{redAprendizajeId}',[RedesAprendizajeController::class, 'getActividadesIntegrantes'])->name('red-aprendizaje.get-all');
+    // Ruta para ver la lista de pmis en estado de validacion (vista para el rol de secretaria)
+    Route::get('/pmi/validacion',[PMIController::class, 'pmiValidacion'])->name('pmi.validacion');
+    // Ruta para ver el detalle de un pmi y enfocado a validarlo
+    Route::get('/pmi/validacion/{pmiId}',[PMIController::class, 'pmiValidar'])->name('pmi.validar');
+    // Ruta para registrar comentarios en un pmi
+    Route::post('/pmi/validacion/{pmiId}/almacenar-comentario',[PMIController::class, 'pmiAlmacenarComentario'])->name('pmi.validar');
+    // Ruta para eliminar el comentario de un pmi
+    Route::post('/pmi/validacion/{pmiId}/eliminar-comentario/{comentarioId}',[PMIController::class, 'pmiEliminarComentario'])->name('pmi.eliminar');
+    // Ruta para cambiar el estado de un pmi
+    Route::post('/pmi/validacion/{pmiId}/cambiar-estado',[PMIController::class, 'pmiCambiarEstado'])->name('pmi.cambiar_estado');
     // Ruta para exportar un pmi a excel
     Route::get('/pmi/exportar/{pmiId}',[PMIController::class, 'exportarPmi'])->name('pmi.exportar');
     // Ruta que obtiene las actividades de un pmi

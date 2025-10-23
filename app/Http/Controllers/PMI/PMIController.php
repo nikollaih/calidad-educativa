@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\PMI;
 
+use App\DTOs\Result;
 use App\Exports\PmiExport;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\PMI\PmiObjetivoVinculadoService;
+use App\Http\Services\PmiService;
 use App\Models\Autoevaluacion;
 use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
 use App\Models\PMI\ActividadEstadoEnum;
 use App\Models\PMI\Enums\PmiEstadoEnum;
+use App\Models\PMI\PmiComentarioFactor\Enums\PmiEstadoComentario;
+use App\Models\PMI\PmiComentarioFactor\PmiComentarioFactor;
 use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
 use App\Models\PmiActividadAvance;
@@ -20,6 +24,7 @@ use App\Models\PmiActividadAvanceFiles;
 use App\Models\PmiActividadVinculada;
 use App\Models\PmiMetaVinculada;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -31,19 +36,43 @@ class PMIController extends Controller {
         private AdjuntoService $adjuntoService,
         private AutoevaluacionService $autoevaluacionService,
         private PmiObjetivoVinculadoService $objetivoVinculadoService,
+        private PmiService $pmiService,
     ) {
     }
 
     public function index( int $institucionId = null) {
-        $pmis = Pmi::whereHas('autoevaluacion', function ($query) use ($institucionId) {
-            $query->where('institucion_id', $institucionId);
-        })->paginate(20);
+        $pmis = Pmi::with('comentarios','comentarios.autor','comentarios.factor')
+            ->whereHas('autoevaluacion', function ($query) use ($institucionId) {
+                $query->where('institucion_id', $institucionId);
+            })->paginate(20);
 
         return view('pmi.index', [
             'institucionId' => $institucionId,
             'pmis' => $pmis,
         ]);
     }
+    /*
+    * Obtiene los pmis en estado de validacion, y renderiza la vista de pmis en estado de validacion
+    */
+    public function pmiValidacion(Request $request) {
+        $pmis = Pmi::with('institucion')
+            ->whereIn('estado', [
+                PmiEstadoEnum::Presentado->value,
+                PmiEstadoEnum::Aprobado->value,
+            ])
+            ->orderByRaw("
+                CASE
+                    WHEN estado = ? THEN 1
+                    WHEN estado = ? THEN 2
+                    ELSE 3
+                END
+            ", [PmiEstadoEnum::Presentado->value, PmiEstadoEnum::Aprobado->value])
+            ->paginate(20);
+        return view('pmi.validacion', [
+            'pmis' => $pmis,
+        ]);
+    }
+
     public function actividadesByPmi(Request $request, int $pmiId = null) {
         $actividades = PmiActividadVinculada::whereHas('meta', function ($query) use ($pmiId) {
             $query->whereHas('objetivo', function ($query) use ($pmiId) {
@@ -179,6 +208,87 @@ class PMIController extends Controller {
                 'indicadores' => $indicadores,
                 'institucionId' => $institucionId,
             ]);
+    }
+    public function pmiValidar(Request $request, int $pmiId ) {
+        $pmi = PMI::with('institucion','comentarios')
+            ->where('id', $pmiId)
+            ->with(
+                'factoresCriticos.calificacion.grupo.padre',
+                'factoresCriticos.objetivos.metas.actividades',
+                'factoresCriticos.objetivos.metas.indicadorInfo'
+            )
+            ->first();
+        return view('pmi.validar',
+            [
+                'pmi' => $pmi,
+            ]);
+    }
+    public function pmiAlmacenarComentario(Request $request) {
+        // se obtienen los datos
+        $input = $request->all();
+        $input['estado'] = PmiEstadoComentario::Activo->value;
+        $comentarioId = data_get($input,'id');
+        if ($comentarioId) {
+            $comentario = PmiComentarioFactor::findOrFail($input['id']);
+            $comentario->fill($input);
+            $comentario->save();
+            return redirect()->back()
+                       ->withInput()
+                       ->with('flash_success_message', 'Comentario editado correctamente.');
+        } else {
+            $input['autor_id'] = Auth::user()->id;
+            $comentario = PmiComentarioFactor::create($input);
+            return redirect()->back()
+                       ->withInput()
+                       ->with('flash_success_message', 'Comentario editado correctamente.');
+        }
+    }
+    public function pmiEliminarComentario(Request $request, int $pmiId, int $comentarioId) {
+        $comentario = PmiComentarioFactor::find($comentarioId);
+        return 'test';
+        if ($comentario) {
+            $comentario->delete();
+            return redirect()->back()
+                       ->withInput()
+                       ->with('flash_success_message', 'Comentario eliminado correctamente.');
+        }
+        return redirect()->back()
+                       ->withInput()
+                ->with('flash_error_message', ' Comentario no encontrado.');
+    }
+    public function pmiCambiarEstado(Request $request, int $pmiId) {
+        $pmi = Pmi::with('comentarios')->where('id',$pmiId)->first();
+        if (!$pmi) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', ' PMI no encontrado.');
+        }
+        $input = $request->all();
+        try {
+            DB::beginTransaction();
+            /** @var Result $resultado */
+            $resultado = match ($input['estado']) {
+                PmiEstadoEnum::Aprobado->value => $this->pmiService->aprobarPmi(pmi: $pmi),
+                PmiEstadoEnum::Proceso->value => $this->pmiService->devolverPmi(pmi: $pmi),
+                DEFAULT => Result::error(msg: 'El nuevo estado no es válido')
+            };
+
+            if ($resultado->success) {
+                DB::commit();
+                return redirect()->route('pmi.validacion')
+                           ->withInput()
+                           ->with('flash_success_message', $resultado->msg);
+            }
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message',$resultado->msg);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message',$e->getMessage());
+        }
     }
     public function storeActividadAvance(Request $request) {
         $pmi = Pmi::where('id', $request->input('pmi_id'))
