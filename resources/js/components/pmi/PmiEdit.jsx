@@ -348,7 +348,7 @@ const FactoresCriticosTable = ({
                                                             {Boolean(
                                                                 row.actividad?.slug_estado !=
                                                                     'Completada' &&
-                                                                    pmi.estado == 'Presentado'
+                                                                    pmi.estado == 'Aprobado'
                                                             ) && (
                                                                 <button
                                                                     type="button"

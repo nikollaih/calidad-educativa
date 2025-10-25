@@ -51,4 +51,14 @@ class PmiService {
         );
         return Result::success(msg:"PMI devuelto correctamente");
     }
+    public function enviarCorreoPmiPresentado(Pmi $pmi): void {
+        $rector = $pmi?->institucion?->rector;
+        $notificado = $pmi?->comentarios?->last()?->autor ;
+        $this->mailService->sendMail(
+            email: $notificado?->email ?? env('ADMIN_EMAIL') ,
+            subject: 'PMI presentado',
+            template: 'email.pmi.presentado',
+            data:['rector'=>$rector,'pmi'=>$pmi, 'notificado' => $notificado]
+        );
+    }
 }

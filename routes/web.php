@@ -186,6 +186,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pmi/validacion',[PMIController::class, 'pmiValidacion'])->name('pmi.validacion');
     // Ruta para ver el detalle de un pmi y enfocado a validarlo
     Route::get('/pmi/validacion/{pmiId}',[PMIController::class, 'pmiValidar'])->name('pmi.validar');
+    // Ruta para marcar un comentario pmi como resuelto
+    Route::post('/pmi/validacion/{pmiId}/marcar-resuelto/{comentarioId}',[PMIController::class, 'pmiMarcarComentarioResuelto'])->name('pmi.comentario-marcar_resuelto');
     // Ruta para registrar comentarios en un pmi
     Route::post('/pmi/validacion/{pmiId}/almacenar-comentario',[PMIController::class, 'pmiAlmacenarComentario'])->name('pmi.validar');
     // Ruta para eliminar el comentario de un pmi

@@ -14,7 +14,7 @@
                     <tr>
                         <td style="background-color: #e74c3c; padding: 30px 20px; text-align: center;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: bold;">Plan de Mejoramiento Institucional</h1>
-                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">PMI Remitido para ajuste
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">PMI Remitido para ajustes
                         </td>
                     </tr>
 
@@ -25,7 +25,7 @@
                                 Estimad@ {{$usuario->name}} ,
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Le informamos que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido revisado y <strong>remitido</strong> para que realice los ajustes necesarias.
+                                Le informamos que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido revisado y <strong>remitido</strong> para que realice los ajustes necesarios.
                             </p>
                         </td>
                     </tr>
@@ -42,7 +42,7 @@
                                         <td style="vertical-align: top;">
                                             <h2 style="margin: 0 0 10px 0; color: #856404; font-size: 18px; font-weight: bold;">Comentarios pendientes de atención</h2>
                                             <p style="margin: 0; color: #856404; font-size: 15px; line-height: 1.6;">
-                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} observaciones</strong> que requieren su atención inmediata.
+                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} observacion/es</strong> que requieren su atención inmediata.
                                             </p>
                                         </td>
                                     </tr>

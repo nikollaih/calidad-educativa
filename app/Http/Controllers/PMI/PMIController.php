@@ -7,6 +7,7 @@ use App\Exports\PmiExport;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
+use App\Http\Services\MailService;
 use App\Http\Services\PMI\PmiObjetivoVinculadoService;
 use App\Http\Services\PmiService;
 use App\Models\Autoevaluacion;
@@ -37,6 +38,7 @@ class PMIController extends Controller {
         private AutoevaluacionService $autoevaluacionService,
         private PmiObjetivoVinculadoService $objetivoVinculadoService,
         private PmiService $pmiService,
+        private MailService $mailService,
     ) {
     }
 
@@ -161,9 +163,8 @@ class PMIController extends Controller {
         if (empty($pmi)) {
             return  redirect()
                 ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
-                ->with('flash_error_message', 'Pmi  no encontrado.');
+                ->with('flash_error_message', 'PMI  no encontrado.');
         }
-
         $cantidadComentariosActivos = $pmi->comentarios->where('estado',PmiEstadoComentario::Activo->value)->count();
         if ($cantidadComentariosActivos>0) {
             return redirect()
@@ -183,9 +184,15 @@ class PMIController extends Controller {
         }
         $pmi->estado = PmiEstadoEnum::Presentado->value;
         $pmi->save();
+        $pmi->comentarios->each(function ($comentario) {
+            $comentario->estado=PmiEstadoComentario::Historico->value;
+            $comentario->save();
+        });
+        // se envia el correo avisand del evento
+        $this->pmiService->enviarCorreoPmiPresentado(pmi: $pmi);
         return  redirect()
             ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
-            ->with('flash_success_message', 'Pmi presentado correctamente.');
+            ->with('flash_success_message', 'PMI presentado correctamente.');
     }
     public function exportarPmi(Request $request , int $pmiId) {
         $fileName = 'pmi_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
@@ -251,12 +258,24 @@ class PMIController extends Controller {
     }
     public function pmiEliminarComentario(Request $request, int $pmiId, int $comentarioId) {
         $comentario = PmiComentarioFactor::find($comentarioId);
-        return 'test';
         if ($comentario) {
             $comentario->delete();
             return redirect()->back()
                        ->withInput()
                        ->with('flash_success_message', 'Comentario eliminado correctamente.');
+        }
+        return redirect()->back()
+                       ->withInput()
+                ->with('flash_error_message', ' Comentario no encontrado.');
+    }
+    public function pmiMarcarComentarioResuelto(Request $request, int $pmiId, int $comentarioId) {
+        $comentario = PmiComentarioFactor::find($comentarioId);
+        if ($comentario) {
+            $comentario->estado = PmiEstadoComentario::Resuelto->value;
+            $comentario->save();
+            return redirect()->back()
+                       ->withInput()
+                       ->with('flash_success_message', 'Comentario marcado como resuelto correctamente.');
         }
         return redirect()->back()
                        ->withInput()

@@ -42,6 +42,31 @@ export default function IndexPMI({
     const cerrarModalComentarios = () => {
         setModalComentarios({ open: false, comentarios: [], pmiId: null });
     };
+    const marcarComoResuelto = (comentarioId, pmiId) => {
+        if (!comentarioId) return;
+
+        const confirmar = window.confirm(
+            '¿Estás seguro de que deseas marcar como resuelto este comentario?'
+        );
+        if (!confirmar) return;
+
+        // Crear formulario dinámico
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/pmi/validacion/${pmiId}/marcar-resuelto/${comentarioId}`;
+        // Token CSRF
+        const tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = '_token';
+        tokenInput.value = csrfToken;
+        form.appendChild(tokenInput);
+
+        // Agregar el formulario al DOM temporalmente
+        document.body.appendChild(form);
+
+        // Enviar formulario (HTML request)
+        form.submit();
+    };
 
     /** Agrupar comentarios por factor_id */
     const agruparPorFactor = (comentarios) => {
@@ -153,19 +178,19 @@ export default function IndexPMI({
                                 {Object.entries(agruparPorFactor(modalComentarios.comentarios)).map(
                                     ([factorId, comentarios]) => {
                                         const [mostrarTodos, setMostrarTodos] = useState(false);
-                                        // Ordenar por fecha de creación (más reciente primero)
+
+                                        // 1️⃣ Ordenar los comentarios por id descendente (más grande primero)
                                         const comentariosOrdenados = [...comentarios].sort(
-                                            (a, b) =>
-                                                new Date(a.created_at) - new Date(b.created_at)
+                                            (a, b) => b.id - a.id
                                         );
 
-                                        // Buscar el primer comentario activo
+                                        // 2️⃣ Buscar el primer comentario activo (el de id más grande con estado 'activo')
                                         const primerComentario =
                                             comentariosOrdenados.find(
                                                 (c) => c.estado === 'activo'
                                             ) || comentariosOrdenados[0];
 
-                                        // Filtrar los restantes (excluyendo el primero mostrado)
+                                        // 3️⃣ Filtrar los restantes (excluyendo el primero mostrado)
                                         const restantes = comentariosOrdenados.filter(
                                             (c) => c.id !== primerComentario.id
                                         );
@@ -199,18 +224,22 @@ export default function IndexPMI({
                                                             </a>
 
                                                             {/* Botón para marcar como resuelto */}
-                                                            <button
-                                                                class="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
-                                                                title="Marcar comentario como resuelto"
-                                                                onClick={() =>
-                                                                    marcarComoResuelto(
-                                                                        primerComentario.id
-                                                                    )
-                                                                }
-                                                            >
-                                                                <i class="fa-solid fa-check"></i>
-                                                                Marcar como resuelto
-                                                            </button>
+                                                            {primerComentario.estado ==
+                                                                'activo' && (
+                                                                <button
+                                                                    class="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
+                                                                    title="Marcar comentario como resuelto"
+                                                                    onClick={() =>
+                                                                        marcarComoResuelto(
+                                                                            primerComentario.id,
+                                                                            primerComentario.pmi_id
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <i class="fa-solid fa-check"></i>
+                                                                    Marcar como resuelto
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     </h7>
                                                     <div>

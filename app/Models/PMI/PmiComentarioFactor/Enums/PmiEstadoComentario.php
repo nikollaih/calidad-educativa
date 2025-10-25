@@ -8,4 +8,5 @@ namespace App\Models\PMI\PmiComentarioFactor\Enums;
 enum PmiEstadoComentario: string {
     case Activo    = 'activo';
     case Historico = 'historico';
+    case Resuelto  = 'resuelto';
 }

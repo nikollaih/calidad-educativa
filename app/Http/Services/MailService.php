@@ -35,20 +35,6 @@ class MailService {
                     $message->subject($subject);
                 }
             });
-
-            // Verificar si hubo fallos en el envío del correo
-            if (count(Mail::failures()) > 0) {
-                // Lanzar excepción si el envío falló
-                throw new Exception('Error al enviar el correo a: ' . $email);
-            }
-
-            // Registrar en el log que el correo se envió exitosamente
-            Log::info('Correo enviado exitosamente', [
-                'email' => $email,
-                'template' => $template
-            ]);
-
-            // Retornar true indicando éxito en el envío
             return true;
         } catch (Exception $e) {
             // Registrar el error en el log con detalles del fallo
