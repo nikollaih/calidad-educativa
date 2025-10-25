@@ -119,7 +119,7 @@
                             </ul>
                         </li>
                     @endrole
-                    @hasanyrole('super_admin|administrador|rector')
+                    @hasanyrole('super_admin|administrador|rector|secretaria_educacion')
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -156,7 +156,7 @@
                             </ul>
                         </li>
                     @endrole
-                    @hasanyrole('super_admin|administrador|rector')
+                    @hasanyrole('super_admin|administrador|rector|secretaria_educacion')
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
@@ -248,7 +248,7 @@
                             </a>
                         </li>
                     @endrole
-                    @hasanyrole('super_admin|administrador|secretaria_educacion')
+                    @hasanyrole('super_admin|administrador|secretaria_educacion|secretaria_educacion')
                         <li class="menu-item">
                             <a href="{{ url('pmi/validacion')}}" class="menu-link ">
                                 <i class="menu-icon fas fa-tasks"></i>
