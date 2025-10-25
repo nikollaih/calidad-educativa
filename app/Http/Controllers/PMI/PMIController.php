@@ -164,6 +164,12 @@ class PMIController extends Controller {
                 ->with('flash_error_message', 'Pmi  no encontrado.');
         }
 
+        $cantidadComentariosActivos = $pmi->comentarios->where('estado',PmiEstadoComentario::Activo->value)->count();
+        if ($cantidadComentariosActivos>0) {
+            return redirect()
+                ->route('pmi.index',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ])
+                ->with('flash_error_message', 'No se puede enviar a SED debido a que hay '.$cantidadComentariosActivos.' observaciones activas.');
+        }
         $cantidadFactoresCriticosPriorizadosSinObjetivos = $pmi->autoevaluacion
             ->factoresCriticos()
             ->where('valor', '>', 3)

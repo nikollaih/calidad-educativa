@@ -45,7 +45,7 @@ class PmiService {
         // Enviar correo (retorna false si falla)
         $this->mailService->sendMail(
             email: $rector->email,
-            subject: 'PMI devuelto',
+            subject: 'PMI con observaciones',
             template: 'email.pmi.devuelto', // resources/views/emails/welcome.blade.php
             data:['usuario'=>$rector,'pmi'=>$pmi, 'cantidadComentariosPendientes' => $cantidadComentariosPendientes]
         );

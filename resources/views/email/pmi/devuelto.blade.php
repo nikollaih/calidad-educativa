@@ -14,7 +14,7 @@
                     <tr>
                         <td style="background-color: #e74c3c; padding: 30px 20px; text-align: center;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: bold;">Plan de Mejoramiento Institucional</h1>
-                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">PMI Devuelto para Correcciones</p>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">PMI Remitido para ajuste
                         </td>
                     </tr>
 
@@ -25,7 +25,7 @@
                                 Estimad@ {{$usuario->name}} ,
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Le informamos que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido revisado y <strong>devuelto</strong> para que realice las correcciones necesarias.
+                                Le informamos que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido revisado y <strong>remitido</strong> para que realice los ajustes necesarias.
                             </p>
                         </td>
                     </tr>
@@ -42,7 +42,7 @@
                                         <td style="vertical-align: top;">
                                             <h2 style="margin: 0 0 10px 0; color: #856404; font-size: 18px; font-weight: bold;">Comentarios pendientes de atención</h2>
                                             <p style="margin: 0; color: #856404; font-size: 15px; line-height: 1.6;">
-                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} comentarios</strong> que requieren su atención inmediata.
+                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} observaciones</strong> que requieren su atención inmediata.
                                             </p>
                                         </td>
                                     </tr>
@@ -107,7 +107,7 @@
                                                 <td style="vertical-align: top; padding-left: 15px;">
                                                     <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.5;">
                                                         <strong style="color: #2c3e50;">Atienda las observaciones</strong><br>
-                                                        Realice las correcciones y ajustes solicitados en su PMI.
+                                                        Realice los ajustes solicitados en su PMI.
                                                     </p>
                                                 </td>
                                             </tr>
@@ -127,7 +127,7 @@
                                                 <td style="vertical-align: top; padding-left: 15px;">
                                                     <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.5;">
                                                         <strong style="color: #27ae60;">Vuelva a presentar el PMI</strong><br>
-                                                        Una vez realizadas las correcciones, haga clic en el botón "Presentar".
+                                                        Una vez realizados los ajustes, haga clic en el botón "Presentar".
                                                     </p>
                                                 </td>
                                             </tr>
@@ -150,7 +150,7 @@
                                         <td style="vertical-align: top; padding-left: 10px;">
                                             <h3 style="margin: 0 0 10px 0; color: #17a2b8; font-size: 16px; font-weight: bold;">Nota importante</h3>
                                             <p style="margin: 0; color: #0c5460; font-size: 14px; line-height: 1.6;">
-                                                Es fundamental que atienda todos los comentarios antes de volver a presentar el documento. De lo contrario, su PMI podría ser devuelto nuevamente.
+                                                Es fundamental que atienda todos los comentarios antes de volver a presentar el documento. De lo contrario, su PMI podría ser remitido nuevamente.
                                             </p>
                                         </td>
                                     </tr>
@@ -165,7 +165,7 @@
                             <table role="presentation" style="margin: 0 auto; border-collapse: collapse;">
                                 <tr>
                                     <td style="background-color: #28a745; padding: 15px 40px; border-radius: 5px;">
-                                        <a href="#" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: bold; display: block;">Corregir PMI</a>
+                                        <a href="#" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: bold; display: block;">Ajustar PMI</a>
                                     </td>
                                 </tr>
                             </table>
@@ -180,7 +180,9 @@
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.6;">
                                 Atentamente,<br>
-                                <strong>Equipo de Gestión de Calidad</strong>
+                                <strong>Equipo de dirección de calidad educativa</strong>
+                                <br>
+                                <strong>Secretaría de educación departamental del quindío</strong>
                             </p>
                         </td>
                     </tr>
@@ -189,7 +191,7 @@
                     <tr>
                         <td style="background-color: #34495e; padding: 20px 30px; text-align: center;">
                             <p style="margin: 0 0 10px 0; color: #ecf0f1; font-size: 13px; line-height: 1.5;">
-                                Este es un correo automático del sistema de gestión de PMI.<br>
+                                Este es un correo automático.<br>
                                 Por favor, no responda a este mensaje.
                             </p>
                             <p style="margin: 0; color: #95a5a6; font-size: 12px;">

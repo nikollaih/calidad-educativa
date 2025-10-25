@@ -182,11 +182,19 @@ const FactoresCriticosTable = ({
                                 <tr>
                                     <th className="text-center">Gestión</th>
                                     <th className="text-center">Componente</th>
-                                    <th className="text-center">Factor Crítico</th>
-                                    <th className="text-center">Objectivo</th>
-                                    <th className="text-center">Meta</th>
+                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                        Factor Crítico
+                                    </th>
+                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                        Objectivo
+                                    </th>
+                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                        Meta
+                                    </th>
                                     <th className="text-center">Indicador</th>
-                                    <th className="text-center">Actividad</th>
+                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                        Actividad
+                                    </th>
                                     <th className="text-center">Recurso ($)</th>
                                     <th className="text-center">Responsables</th>
                                 </tr>

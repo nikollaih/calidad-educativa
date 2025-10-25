@@ -156,15 +156,16 @@
                         </td>
                     </tr>
 
-                    <!-- Despedida -->
-                    <tr>
+                   <tr>
                         <td style="padding: 0 30px 30px 30px;">
                             <p style="margin: 0 0 15px 0; color: #333333; font-size: 15px; line-height: 1.6;">
-                                Le deseamos mucho éxito en la ejecución de su Plan de Mejoramiento Institucional.
+                                Si tiene alguna duda o requiere asistencia, no dude en contactarnos.
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.6;">
                                 Atentamente,<br>
-                                <strong>Equipo de Gestión de Calidad</strong>
+                                <strong>Equipo de dirección de calidad educativa</strong>
+                                <br>
+                                <strong>Secretaría de educación departamental del quindío</strong>
                             </p>
                         </td>
                     </tr>
