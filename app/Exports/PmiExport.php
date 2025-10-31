@@ -3,35 +3,33 @@
 namespace App\Exports;
 
 use App\Models\Pmi;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
-{
+class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize {
     private int $pmiId;
     private Collection $rows;
 
-    public function __construct(int $pmiId)
-    {
+    public function __construct(int $pmiId) {
         $this->pmiId = $pmiId;
         $this->rows  = $this->buildRows();
     }
 
-    private function buildRows(): Collection
-    {
+    /**
+     * Construir filas con la nueva estructura: Meta → Indicadores → Actividades
+     */
+    private function buildRows(): Collection {
         $pmi = Pmi::with(
             'factoresCriticos.calificacion.grupo.padre',
-            'factoresCriticos.objetivos.metas.actividades',
-            'factoresCriticos.objetivos.metas.indicadorInfo'
+            'factoresCriticos.objetivos.metas.indicadores.actividades'
         )->findOrFail($this->pmiId);
 
         $rows = collect();
@@ -41,21 +39,31 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $componente = $fc->calificacion->nombre ?? "Sin componente";
 
             $objetivos = $fc->objetivos->count() ? $fc->objetivos : collect([null]);
+
             foreach ($objetivos as $obj) {
                 $metas = $obj?->metas->count() ? $obj->metas : collect([null]);
 
                 foreach ($metas as $meta) {
-                    $actividades = $meta?->actividades->count() ? $meta->actividades : collect([null]);
+                    // Ahora iteramos sobre los indicadores de la meta
+                    $indicadores = $meta?->indicadores->count() ? $meta->indicadores : collect([null]);
 
-                    foreach ($actividades as $actividad) {
-                        $rows->push([
-                            'gestion'      => $gestion,
-                            'componente'   => $componente,
-                            'factor'       => $fc,
-                            'objetivo'     => $obj,
-                            'meta'         => $meta,
-                            'actividad'    => $actividad,
-                        ]);
+                    foreach ($indicadores as $indicador) {
+                        // Cada indicador tiene sus propias actividades
+                        $actividades = $indicador?->actividades->count()
+                            ? $indicador->actividades
+                            : collect([null]);
+
+                        foreach ($actividades as $actividad) {
+                            $rows->push([
+                                'gestion'    => $gestion,
+                                'componente' => $componente,
+                                'factor'     => $fc,
+                                'objetivo'   => $obj,
+                                'meta'       => $meta,
+                                'indicador'  => $indicador,
+                                'actividad'  => $actividad,
+                            ]);
+                        }
                     }
                 }
             }
@@ -64,13 +72,11 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
         return $rows->values();
     }
 
-    public function collection(): Collection
-    {
+    public function collection(): Collection {
         return $this->rows;
     }
 
-    public function headings(): array
-    {
+    public function headings(): array {
         return [
             'Gestión',
             'Componente',
@@ -81,23 +87,24 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'Actividad',
             'Recurso ($)',
             'Responsables',
-            '% Completitud',
+            '% Avance Actividad',
         ];
     }
 
-    public function map($row): array
-    {
-        $meta        = $row['meta'];
-        $actividad   = $row['actividad'];
+    public function map($row): array {
+        $meta      = $row['meta'];
+        $indicador = $row['indicador'];
+        $actividad = $row['actividad'];
 
-        $completitudMeta = $this->calcularCompletitudMeta($meta);
+        // Calcular completitud del indicador y de la meta
+        $completitudIndicador = $this->calcularCompletitudIndicador($indicador);
+        $completitudMeta      = $this->calcularCompletitudMeta($meta);
 
-        $indicador = "Sin indicador";
-        if ($meta && $meta->indicadorInfo) {
-            $indicador = $meta->indicadorInfo->unidad_parcial . " " .
-                ($meta->indicador ?? '') . " / " .
-                $meta->indicadorInfo->unidad_total . " " .
-                ($meta->valor_requerido ?? '');
+        // Construir texto del indicador (fórmula)
+        $indicadorTexto = "Sin indicador";
+        if ($indicador) {
+            $indicadorTexto = ($indicador->unidad_parcial ?? 'N/A') . " / " .
+                            ($indicador->unidad_total ?? 'N/A');
         }
 
         return [
@@ -106,35 +113,51 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $row['factor']?->descripcion ?? "Sin descripción",
             $row['objetivo']?->descripcion ?? "Sin descripción",
             $meta?->descripcion ?? "Sin descripción",
-            $indicador, // <- aquí va ya construido
+            $indicadorTexto,
             $actividad?->descripcion ?? "Sin actividades",
             $actividad?->recursos ?? "Sin recursos",
             $actividad?->responsables ?? "Sin asignar",
-            $actividad?->accumulated
-                ? $actividad->accumulated . "% (" . $actividad->slug_estado . ")"
-                : ($meta ? $completitudMeta . "% (Meta)" : "Sin completitud"),
+            $actividad?->accumulated !== null
+                ? $actividad->accumulated . "% (" . ($actividad->slug_estado ?? 'N/A') . ")"
+                : "Sin avance",
         ];
     }
 
-    private function calcularCompletitudMeta($meta): float
-    {
-        if (!$meta?->actividades?->count()) {
+    /**
+     * Calcular completitud de un indicador basado en sus actividades
+     */
+    private function calcularCompletitudIndicador($indicador): float {
+        if (!$indicador?->actividades?->count()) {
             return 0;
         }
 
         return round(
-            $meta->actividades->reduce(function ($total, $act) {
-                $peso     = $act->peso ?? 0;
-                $avance   = $act->accumulated ?? 0;
+            $indicador->actividades->reduce(function ($total, $act) {
+                $peso   = $act->peso ?? 0;
+                $avance = $act->accumulated ?? 0;
                 return $total + ($peso * $avance) / 100;
             }, 0),
             2
         );
     }
 
-    public function styles(Worksheet $sheet): array
-    {
-        $columns     = range('A', 'J');
+    /**
+     * Calcular completitud de una meta (promedio de sus indicadores)
+     */
+    private function calcularCompletitudMeta($meta): float {
+        if (!$meta?->indicadores?->count()) {
+            return 0;
+        }
+
+        $totalAvance = $meta->indicadores->reduce(function ($sum, $ind) {
+            return $sum + $this->calcularCompletitudIndicador($ind);
+        }, 0);
+
+        return round($totalAvance / $meta->indicadores->count(), 2);
+    }
+
+    public function styles(Worksheet $sheet): array {
+        $columns     = range('A', 'M'); // Ajustado a las nuevas columnas
         $columnWidth = 25;
 
         foreach ($columns as $column) {
@@ -156,7 +179,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             ->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Encabezado
-        $sheet->getStyle("A1:J1")->applyFromArray([
+        $sheet->getStyle("A1:M1")->applyFromArray([
             'font' => ['bold' => true],
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
@@ -164,12 +187,22 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             ],
         ]);
 
-        // --- Fusionar celdas (rowSpan) ---
+        // --- Fusionar celdas (rowSpan) para niveles jerárquicos ---
         $startRow = 2;
         $rows     = $this->rows;
         $rowCount = $rows->count();
 
-        foreach (['gestion' => 'A', 'componente' => 'B', 'factor' => 'C', 'objetivo' => 'D', 'meta' => 'E', 'indicador' => 'F'] as $key => $col) {
+        // Columnas que necesitan merge: gestión, componente, factor, objetivo, meta, indicador
+        $mergeColumns = [
+            'gestion'    => 'A',
+            'componente' => 'B',
+            'factor'     => 'C',
+            'objetivo'   => 'D',
+            'meta'       => 'E',
+            'indicador'  => 'F', // Nueva columna de indicador
+        ];
+
+        foreach ($mergeColumns as $key => $col) {
             $currentValue = null;
             $mergeStart   = $startRow;
 
@@ -178,6 +211,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
                 $value    = $this->getRowValue($rows[$i], $key);
 
                 if ($value !== $currentValue) {
+                    // Fusionar bloque anterior si tiene más de 1 fila
                     if ($mergeStart < $excelRow - 1) {
                         $sheet->mergeCells("{$col}{$mergeStart}:{$col}" . ($excelRow - 1));
                         $sheet->getStyle("{$col}{$mergeStart}:{$col}" . ($excelRow - 1))
@@ -189,25 +223,31 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             }
 
             // Cerrar el último bloque
-            if ($mergeStart < $startRow + $rowCount - 1) {
-                $sheet->mergeCells("{$col}{$mergeStart}:{$col}" . ($startRow + $rowCount - 1));
-                $sheet->getStyle("{$col}{$mergeStart}:{$col}" . ($startRow + $rowCount - 1))
-                    ->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            if ($mergeStart <= $startRow + $rowCount - 1) {
+                $endRow = $startRow + $rowCount - 1;
+                if ($mergeStart < $endRow) {
+                    $sheet->mergeCells("{$col}{$mergeStart}:{$col}{$endRow}");
+                    $sheet->getStyle("{$col}{$mergeStart}:{$col}{$endRow}")
+                        ->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                }
             }
         }
 
         return [];
     }
 
-    private function getRowValue($row, $key)
-    {
+    /**
+     * Obtener valor único de fila para comparación en merge
+     */
+    private function getRowValue($row, $key) {
         return match ($key) {
-            'gestion'   => $row['gestion'],
-            'componente'=> $row['componente'],
-            'factor'    => $row['factor']?->descripcion ?? "Sin descripción",
-            'objetivo'  => $row['objetivo']?->descripcion ?? "Sin descripción",
-            'meta'      => $row['meta']?->descripcion ?? "Sin descripción",
-            default     => null,
+            'gestion'    => $row['gestion'],
+            'componente' => $row['componente'],
+            'factor'     => $row['factor']?->id ?? null, // Usar ID para comparación única
+            'objetivo'   => $row['objetivo']?->id ?? null,
+            'meta'       => $row['meta']?->id ?? null,
+            'indicador'  => $row['indicador']?->id ?? null, // Nuevo nivel
+            default      => null,
         };
     }
 }

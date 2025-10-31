@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import CNavigationButton from '@/components/shared/CNavigationButton.jsx';
 
 const FactoresCriticosTable = ({
     csrfToken = '',
@@ -120,11 +121,13 @@ const FactoresCriticosTable = ({
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
                         </div>
-                        <div className="d-flex gap-3">
-                            <button className="btn btn-success btn-sm">
-                                <i className="fas fa-file-excel me-2"></i>
-                                Exportar tabla
-                            </button>
+                        <div class="d-flex gap-3">
+                            <CNavigationButton
+                                label="Exportar tabla"
+                                to={exportarUrl}
+                                icon="fas fa-file-excel"
+                                target="_blank"
+                            />
                         </div>
                     </div>
                 </div>
@@ -158,7 +161,6 @@ const FactoresCriticosTable = ({
                                     </th>
                                     <th className="text-center">Recurso ($)</th>
                                     <th className="text-center">Responsables</th>
-                                    <th className="text-center">% Avance</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -431,24 +433,6 @@ const FactoresCriticosTable = ({
                                             ) : (
                                                 <div className="text-muted fst-italic">
                                                     Sin asignar
-                                                </div>
-                                            )}
-                                        </td>
-
-                                        {/* % Avance */}
-                                        <td>
-                                            {row.actividad?.accumulated !== undefined ? (
-                                                <div className="d-flex flex-column text-center">
-                                                    <span className="fw-bold">
-                                                        {row.actividad?.accumulated}%
-                                                    </span>
-                                                    <span className="small text-muted">
-                                                        ({row.actividad.slug_estado})
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <div className="text-muted fst-italic">
-                                                    Sin avance
                                                 </div>
                                             )}
                                         </td>
