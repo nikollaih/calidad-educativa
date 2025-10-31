@@ -284,6 +284,9 @@ const FactorCriticoEdit = ({
     /**
      * Función para eliminar elementos
      */
+    /**
+     * Función para eliminar elementos
+     */
     const removeElement = (type, itemId) => {
         if (!confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
             return;
@@ -306,6 +309,20 @@ const FactorCriticoEdit = ({
                         })),
                     };
 
+                case 'indicador':
+                    return {
+                        ...prev,
+                        objetivos: prev.objetivos.map((objetivo) => ({
+                            ...objetivo,
+                            metas: (objetivo.metas || []).map((meta) => ({
+                                ...meta,
+                                indicadores: (meta.indicadores || []).filter(
+                                    (ind) => ind.id !== itemId
+                                ),
+                            })),
+                        })),
+                    };
+
                 case 'actividad':
                     return {
                         ...prev,
@@ -313,9 +330,12 @@ const FactorCriticoEdit = ({
                             ...objetivo,
                             metas: (objetivo.metas || []).map((meta) => ({
                                 ...meta,
-                                actividades: (meta.actividades || []).filter(
-                                    (act) => act.id !== itemId
-                                ),
+                                indicadores: (meta.indicadores || []).map((indicador) => ({
+                                    ...indicador,
+                                    actividades: (indicador.actividades || []).filter(
+                                        (act) => act.id !== itemId
+                                    ),
+                                })),
                             })),
                         })),
                     };
@@ -979,7 +999,6 @@ const FactorCriticoEdit = ({
                     <h1 className="h3 mb-0">Edición del factor crítico</h1>
                     <p className="mb-0 text-muted">Factor crítico: {factorCritico.descripcion}</p>
                 </div>
-                {JSON.stringify(formData)}
                 <div className="card-body">
                     <button
                         type="button"
