@@ -8,7 +8,7 @@ use App\Models\PmiMetaVinculada;
 use App\Models\PmiObjetivoVinculado;
 
 class PmiMetasVinculadasService {
-    public function __construct(private PmiActividadVinculadasService $pmiActividadVinculadasService) {
+    public function __construct(private PmiIndicadorVinculadoService $pmiIndicadorVinculadoService ,private PmiActividadVinculadasService $pmiActividadVinculadasService) {
     }
 
     public function syncMetasVinculados(array $metasArray, int $idObjetivo): void {
@@ -57,7 +57,7 @@ class PmiMetasVinculadasService {
                     }
                 }
             }
-            $this->pmiActividadVinculadasService->syncActividades(actividadesArray: $meta['actividades'],metaId:  $metaUpdated->id);
+            $this->pmiIndicadorVinculadoService->syncIndicadoresVinculados(indicadoresArray: $meta['indicadores'], idMeta:  $metaUpdated->id);
             array_push($ids, $metaUpdated->id);
         }
         // Elimina los sobrantes

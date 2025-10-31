@@ -75,7 +75,7 @@ class PMIController extends Controller {
         ]);
     }
 
-    public function actividadesByPmi(Request $request, int $pmiId = null) {
+    public function actividadesByPmi(Request $request, int $pmiId) {
         $actividades = PmiActividadVinculada::whereHas('meta', function ($query) use ($pmiId) {
             $query->whereHas('objetivo', function ($query) use ($pmiId) {
                 $query->whereHas('factor', function ($query) use ($pmiId) {
@@ -88,7 +88,7 @@ class PMIController extends Controller {
         return response()->json($actividades);
     }
 
-    public function create(int $institucionId = null) {
+    public function create(int $institucionId ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
@@ -99,7 +99,7 @@ class PMIController extends Controller {
                 'institucionId' => $institucionId,
             ]);
     }
-    public function store(Request $request, int $institucionId = null) {
+    public function store(Request $request, int $institucionId ) {
         try {
             // Validación manual
             $this->validate($request, [
@@ -148,8 +148,7 @@ class PMIController extends Controller {
         $pmi = PMI::where('id', $pmi)
             ->with(
                 'factoresCriticos.calificacion.grupo.padre',
-                'factoresCriticos.objetivos.metas.actividades',
-                'factoresCriticos.objetivos.metas.indicadorInfo'
+                'factoresCriticos.objetivos.metas.indicadores.actividades',
             )
             ->first();
         return view('pmi.edit',
@@ -203,13 +202,13 @@ class PMIController extends Controller {
         $factorCritico = FactorCritico::where('id', $factorCriticoId)
             ->with([
                 'calificacion.grupo.padre',
-                'objetivos.metas.actividades'
+                'objetivos.metas.indicadores.actividades'
             ])
             ->firstOrFail();
         $factorCriticoCalificacion = FactorCriticoCalificacion::where('indice_calificacion',$factorCritico->calificacion_indice)
             ->firstOrFail();
 
-        $objetivos = PmiObjetivo::with('metas.actividades')->where('factor_id',$factorCriticoCalificacion->id)->get();
+        $objetivos = PmiObjetivo::with('metas')->where('factor_id',$factorCriticoCalificacion->id)->get();
         $indicadores = PmiIndicador::get();
 
         return view('pmi.editFactorCritico',
@@ -227,8 +226,7 @@ class PMIController extends Controller {
             ->where('id', $pmiId)
             ->with(
                 'factoresCriticos.calificacion.grupo.padre',
-                'factoresCriticos.objetivos.metas.actividades',
-                'factoresCriticos.objetivos.metas.indicadorInfo'
+                'factoresCriticos.objetivos.metas.indicadores.actividades',
             )
             ->first();
         return view('pmi.validar',

@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\PMI\PmiIndicadorVinculado;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use PhpOffice\PhpSpreadsheet\Writer\Ods\Meta;
 
-class PmiActividadVinculada extends Model
-{
+class PmiActividadVinculada extends Model {
     use HasFactory;
     protected $fillable = [
         'descripcion',
@@ -17,7 +16,7 @@ class PmiActividadVinculada extends Model
         'recursos',
         'fecha_inicio',
         'fecha_fin',
-        'meta_id',
+        'indicador_id',
         'afecta_indicador',
         'max_suma_indicador',
         'indicador_acumulado'
@@ -25,7 +24,7 @@ class PmiActividadVinculada extends Model
     protected $casts = [
         'afecta_indicador' => 'boolean',
     ];
-    public function meta(){
-        return $this->belongsTo(PmiMetaVinculada::class,'meta_id');
+    public function indicador() {
+        return $this->belongsTo(PmiIndicadorVinculado::class,'indicador_id');
     }
 }
