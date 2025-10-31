@@ -1,8 +1,5 @@
-import { useState } from 'preact/hooks';
-import CNavigationButton from '@/components/shared/CNavigationButton.jsx';
-import { h } from 'preact';
-import CrearAvancePMI from '@/components/pmi/CrearAvancePMI.jsx';
-import VerAvancesPMI from '@/components/pmi/VerAvancesPMI.jsx';
+import { useState } from 'react';
+
 const FactoresCriticosTable = ({
     csrfToken = '',
     pmiData = {},
@@ -14,24 +11,12 @@ const FactoresCriticosTable = ({
     const [showVerAvances, setShowVerAvances] = useState(false);
     const [selectedActividad, setSelectedActividad] = useState({});
 
-    // Function to open the modal
-    const openCrearAvance = () => {
-        setShowCrearAvance(true);
-    };
-    // Function to open the modal
-    const openVerAvances = () => {
-        setShowVerAvances(true);
-    };
-    // Function to close the modal
-    const closeCrearAvance = () => {
-        setShowCrearAvance(false);
-        // setSelectedPamId(null);
-    };
-    const closeVerAvance = () => {
-        setShowVerAvances(false);
-        // setSelectedPamId(null);
-    };
-    // Agrupar datos
+    const openCrearAvance = () => setShowCrearAvance(true);
+    const openVerAvances = () => setShowVerAvances(true);
+    const closeCrearAvance = () => setShowCrearAvance(false);
+    const closeVerAvance = () => setShowVerAvances(false);
+
+    // Agrupar datos por gestión y componente
     const groupedData = {};
     pmi?.factores_criticos?.forEach((fc) => {
         const gestion = fc.calificacion.grupo?.padre?.nombre || 'Sin gestión';
@@ -42,34 +27,40 @@ const FactoresCriticosTable = ({
         groupedData[gestion][componente].push(fc);
     });
 
-    // Construir filas planas
-    // Construir filas planas (tolerante a vacíos)
-    // Construir filas planas (tolerante a vacíos)
+    // Construir filas planas incluyendo la nueva estructura: Meta → Indicadores → Actividades
     const buildRows = () => {
         const rows = [];
 
         Object.entries(groupedData).forEach(([gestion, componentes]) => {
             Object.entries(componentes).forEach(([componente, factores]) => {
                 factores.forEach((fc) => {
-                    // Si no hay objetivos, ponemos null para que igual salga fila
                     const objetivos = fc.objetivos?.length ? fc.objetivos : [null];
 
                     objetivos.forEach((obj) => {
                         const metas = obj?.metas?.length ? obj.metas : [null];
 
                         metas.forEach((meta) => {
-                            const actividades = meta?.actividades?.length
-                                ? meta.actividades
+                            // Ahora una meta tiene múltiples indicadores
+                            const indicadores = meta?.indicadores?.length
+                                ? meta.indicadores
                                 : [null];
 
-                            actividades.forEach((actividad) => {
-                                rows.push({
-                                    gestion,
-                                    componente,
-                                    factorCritico: fc,
-                                    objetivo: obj,
-                                    meta,
-                                    actividad,
+                            indicadores.forEach((indicador) => {
+                                // Cada indicador tiene múltiples actividades
+                                const actividades = indicador?.actividades?.length
+                                    ? indicador.actividades
+                                    : [null];
+
+                                actividades.forEach((actividad) => {
+                                    rows.push({
+                                        gestion,
+                                        componente,
+                                        factorCritico: fc,
+                                        objetivo: obj,
+                                        meta,
+                                        indicador,
+                                        actividad,
+                                    });
                                 });
                             });
                         });
@@ -83,7 +74,7 @@ const FactoresCriticosTable = ({
 
     const tableRows = buildRows();
 
-    // Calcular rowSpans para cada bloque
+    // Calcular rowSpans para cada nivel jerárquico
     const getRowSpan = (index, key) => {
         const current = tableRows[index][key];
         let span = 0;
@@ -93,17 +84,29 @@ const FactoresCriticosTable = ({
         }
         return span;
     };
-    // --- Calcular % completitud total por meta ---
-    const calcularCompletitudMeta = (meta) => {
-        if (!meta?.actividades?.length) return 0;
 
-        return meta.actividades
+    // Calcular % completitud total por indicador (basado en sus actividades)
+    const calcularCompletitudIndicador = (indicador) => {
+        if (!indicador?.actividades?.length) return 0;
+
+        return indicador.actividades
             .reduce((total, act) => {
-                const peso = act.peso || 0; // en %
-                const avance = act.accumulated || 0; // en %
+                const peso = act.peso || 0;
+                const avance = act.accumulated || 0;
                 return total + (peso * avance) / 100;
             }, 0)
-            .toFixed(2); // redondeamos a 2 decimales
+            .toFixed(2);
+    };
+
+    // Calcular % completitud total por meta (promedio de sus indicadores)
+    const calcularCompletitudMeta = (meta) => {
+        if (!meta?.indicadores?.length) return 0;
+
+        const totalAvance = meta.indicadores.reduce((sum, ind) => {
+            return sum + parseFloat(calcularCompletitudIndicador(ind));
+        }, 0);
+
+        return (totalAvance / meta.indicadores.length).toFixed(2);
     };
 
     return (
@@ -117,13 +120,11 @@ const FactoresCriticosTable = ({
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
                         </div>
-                        <div class="d-flex gap-3">
-                            <CNavigationButton
-                                label="Exportar tabla"
-                                to={exportarUrl}
-                                icon="fas fa-file-excel"
-                                target="_blank"
-                            />
+                        <div className="d-flex gap-3">
+                            <button className="btn btn-success btn-sm">
+                                <i className="fas fa-file-excel me-2"></i>
+                                Exportar tabla
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -144,12 +145,14 @@ const FactoresCriticosTable = ({
                                         Factor Crítico
                                     </th>
                                     <th className="text-center" style={{ minWidth: '20rem' }}>
-                                        Objectivo
+                                        Objetivo
                                     </th>
                                     <th className="text-center" style={{ minWidth: '10rem' }}>
                                         Meta
                                     </th>
-                                    <th className="text-center">Indicador</th>
+                                    <th className="text-center" style={{ minWidth: '12rem' }}>
+                                        Indicador
+                                    </th>
                                     <th className="text-center" style={{ minWidth: '10rem' }}>
                                         Actividad
                                     </th>
@@ -161,8 +164,9 @@ const FactoresCriticosTable = ({
                             <tbody>
                                 {tableRows.map((row, index) => (
                                     <tr key={`${index}-${row.actividad?.id || 'na'}`}>
-                                        {index === 0 ||
-                                        tableRows[index - 1].gestion !== row.gestion ? (
+                                        {/* Gestión */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].gestion !== row.gestion) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'gestion')}
                                                 className="align-middle fw-bold"
@@ -170,10 +174,11 @@ const FactoresCriticosTable = ({
                                             >
                                                 {row.gestion}
                                             </td>
-                                        ) : null}
+                                        )}
 
-                                        {index === 0 ||
-                                        tableRows[index - 1].componente !== row.componente ? (
+                                        {/* Componente */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].componente !== row.componente) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'componente')}
                                                 className="align-middle"
@@ -181,10 +186,12 @@ const FactoresCriticosTable = ({
                                             >
                                                 {row.componente}
                                             </td>
-                                        ) : null}
+                                        )}
 
-                                        {index === 0 ||
-                                        tableRows[index - 1].factorCritico !== row.factorCritico ? (
+                                        {/* Factor Crítico */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].factorCritico !==
+                                                row.factorCritico) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'factorCritico')}
                                                 className="align-middle"
@@ -206,7 +213,7 @@ const FactoresCriticosTable = ({
                                                             )}
                                                         </div>
                                                     </div>
-                                                    {Boolean(pmi?.estado == 'Proceso') && (
+                                                    {pmi?.estado === 'Proceso' && (
                                                         <i
                                                             className="fas fa-edit text-warning fs-4 cursor-pointer"
                                                             onClick={() =>
@@ -216,10 +223,11 @@ const FactoresCriticosTable = ({
                                                     )}
                                                 </div>
                                             </td>
-                                        ) : null}
+                                        )}
 
-                                        {index === 0 ||
-                                        tableRows[index - 1].objetivo !== row.objetivo ? (
+                                        {/* Objetivo */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].objetivo !== row.objetivo) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'objetivo')}
                                                 className="align-middle"
@@ -227,76 +235,28 @@ const FactoresCriticosTable = ({
                                             >
                                                 {row?.objetivo?.descripcion || 'Sin descripción'}
                                             </td>
-                                        ) : null}
+                                        )}
 
-                                        {index === 0 || tableRows[index - 1].meta !== row.meta ? (
+                                        {/* Meta */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].meta !== row.meta) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'meta')}
                                                 className="align-middle"
                                                 style={{ verticalAlign: 'middle' }}
                                             >
-                                                <div className="">
+                                                <div className="mb-2">
                                                     {row?.meta?.descripcion || 'Sin descripción'}
                                                 </div>
-                                                {row?.meta?.valor_requerido !== undefined &&
-                                                    row?.meta?.unidad_medida !== undefined && (
-                                                        <div className="d-flex flex-column">
-                                                            <small className="text-muted">
-                                                                <strong>Valor:</strong>{' '}
-                                                                {row?.meta?.valor_requerido ||
-                                                                    'N/A'}
-                                                            </small>
-                                                            <small className="text-muted">
-                                                                <strong>Unidad de medida:</strong>{' '}
-                                                                {row?.meta?.unidad_medida || ''}
-                                                            </small>
-                                                        </div>
-                                                    )}
-                                            </td>
-                                        ) : null}
-                                        {index === 0 || tableRows[index - 1].meta !== row.meta ? (
-                                            <td
-                                                rowSpan={getRowSpan(index, 'meta')}
-                                                className="align-middle"
-                                                style={{ verticalAlign: 'middle' }}
-                                            >
-                                                {row?.meta?.valor_requerido !== undefined &&
-                                                row?.meta?.indicador !== undefined ? (
-                                                    <div>
-                                                        {/* Columna de fracción */}
-                                                        <div className="text-center">
-                                                            <div className="d-flex align-items-center gap-2">
-                                                                <small>
-                                                                    {
-                                                                        row?.meta?.indicador_info
-                                                                            ?.unidad_parcial
-                                                                    }
-                                                                </small>
-                                                            </div>
 
-                                                            <hr className="my-1" />
-
-                                                            <div className="d-flex align-items-center gap-2">
-                                                                <small>
-                                                                    {
-                                                                        row?.meta?.indicador_info
-                                                                            ?.unidad_total
-                                                                    }
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div>Sin indicador</div>
-                                                )}
-
+                                                {/* Avance total de la meta */}
                                                 <div
-                                                    className="card mt-5 shadow-sm border-0"
+                                                    className="card mt-3 shadow-sm border-0"
                                                     style={{ maxWidth: '16rem' }}
                                                 >
                                                     <div className="card-body py-2 px-3 d-flex justify-content-between align-items-center">
                                                         <small className="text-muted p-1">
-                                                            Avance
+                                                            Avance Total
                                                         </small>
                                                         <span className="fw-bold text-success">
                                                             {calcularCompletitudMeta(row?.meta)}%
@@ -304,8 +264,76 @@ const FactoresCriticosTable = ({
                                                     </div>
                                                 </div>
                                             </td>
-                                        ) : null}
+                                        )}
 
+                                        {/* Indicador (nuevo nivel) */}
+                                        {(index === 0 ||
+                                            tableRows[index - 1].indicador !== row.indicador) && (
+                                            <td
+                                                rowSpan={getRowSpan(index, 'indicador')}
+                                                className="align-middle"
+                                                style={{ verticalAlign: 'middle' }}
+                                            >
+                                                {row?.indicador ? (
+                                                    <div>
+                                                        {/* Fórmula del indicador */}
+                                                        <div className="text-center mb-3">
+                                                            <div className="d-flex align-items-center justify-content-center gap-2">
+                                                                <small className="fw-semibold">
+                                                                    {row.indicador.unidad_parcial ||
+                                                                        'N/A'}
+                                                                </small>
+                                                            </div>
+                                                            <hr className="my-1" />
+                                                            <div className="d-flex align-items-center justify-content-center gap-2">
+                                                                <small className="fw-semibold">
+                                                                    {row.indicador.unidad_total ||
+                                                                        'N/A'}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Valores del indicador */}
+                                                        <div className="d-flex flex-column gap-1">
+                                                            <small className="text-muted">
+                                                                <strong>Valor Requerido:</strong>{' '}
+                                                                {row.indicador.valor_requerido ??
+                                                                    'N/A'}
+                                                            </small>
+                                                            <small className="text-muted">
+                                                                <strong>Valor Obtenido:</strong>{' '}
+                                                                {row.indicador.valor_obtenido ??
+                                                                    'N/A'}
+                                                            </small>
+                                                        </div>
+
+                                                        {/* Avance del indicador */}
+                                                        <div
+                                                            className="card mt-3 shadow-sm border-0"
+                                                            style={{ maxWidth: '14rem' }}
+                                                        >
+                                                            <div className="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                                                                <small className="text-muted">
+                                                                    Avance Indicador
+                                                                </small>
+                                                                <span className="fw-bold text-info">
+                                                                    {calcularCompletitudIndicador(
+                                                                        row.indicador
+                                                                    )}
+                                                                    %
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-muted fst-italic">
+                                                        Sin indicador
+                                                    </div>
+                                                )}
+                                            </td>
+                                        )}
+
+                                        {/* Actividad */}
                                         <td>
                                             {row.actividad ? (
                                                 <div className="d-flex justify-content-between align-items-center">
@@ -314,7 +342,7 @@ const FactoresCriticosTable = ({
                                                             {row.actividad.descripcion ||
                                                                 'Sin descripción'}
                                                         </div>
-                                                        <div className="d-flex flex-column">
+                                                        <div className="d-flex flex-column mt-2">
                                                             <small className="text-muted">
                                                                 <strong>Estado:</strong>{' '}
                                                                 {row.actividad.slug_estado || 'N/A'}
@@ -323,7 +351,7 @@ const FactoresCriticosTable = ({
                                                                 <strong>
                                                                     Porcentaje de avance:
                                                                 </strong>{' '}
-                                                                {row.actividad?.accumulated}%
+                                                                {row.actividad?.accumulated || 0}%
                                                             </small>
                                                             <small className="text-muted">
                                                                 <strong>Peso:</strong>{' '}
@@ -344,26 +372,24 @@ const FactoresCriticosTable = ({
                                                                     ).toLocaleDateString('es-CO')}
                                                             </small>
                                                         </div>
-                                                        <div className=" d-flex">
-                                                            {Boolean(
-                                                                row.actividad?.slug_estado !=
-                                                                    'Completada' &&
-                                                                    pmi.estado == 'Aprobado'
-                                                            ) && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-primary me-2"
-                                                                    onClick={() => {
-                                                                        setSelectedActividad(
-                                                                            row.actividad
-                                                                        );
-                                                                        openCrearAvance();
-                                                                    }}
-                                                                >
-                                                                    <i className="fas fa-plus me-1"></i>
-                                                                    Agregar avance
-                                                                </button>
-                                                            )}
+                                                        <div className="d-flex mt-2">
+                                                            {row.actividad?.slug_estado !==
+                                                                'Completada' &&
+                                                                pmi.estado === 'Aprobado' && (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-sm btn-primary me-2"
+                                                                        onClick={() => {
+                                                                            setSelectedActividad(
+                                                                                row.actividad
+                                                                            );
+                                                                            openCrearAvance();
+                                                                        }}
+                                                                    >
+                                                                        <i className="fas fa-plus me-1"></i>
+                                                                        Agregar avance
+                                                                    </button>
+                                                                )}
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-sm btn-secondary"
@@ -381,39 +407,49 @@ const FactoresCriticosTable = ({
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div>Sin actividades</div>
+                                                <div className="text-muted fst-italic">
+                                                    Sin actividades
+                                                </div>
                                             )}
                                         </td>
 
+                                        {/* Recursos */}
                                         <td className="text-center">
                                             {row.actividad?.recursos ? (
-                                                <span className=" ">{row.actividad.recursos}</span>
+                                                <span>{row.actividad.recursos}</span>
                                             ) : (
-                                                <div>Sin recursos</div>
+                                                <div className="text-muted fst-italic">
+                                                    Sin recursos
+                                                </div>
                                             )}
                                         </td>
 
+                                        {/* Responsables */}
                                         <td>
                                             {row.actividad?.responsables ? (
-                                                <span className=" ">
-                                                    {row.actividad.responsables}
-                                                </span>
+                                                <span>{row.actividad.responsables}</span>
                                             ) : (
-                                                <div>Sin asignar</div>
+                                                <div className="text-muted fst-italic">
+                                                    Sin asignar
+                                                </div>
                                             )}
                                         </td>
+
+                                        {/* % Avance */}
                                         <td>
-                                            {row.actividad?.accumulated ? (
+                                            {row.actividad?.accumulated !== undefined ? (
                                                 <div className="d-flex flex-column text-center">
                                                     <span className="fw-bold">
                                                         {row.actividad?.accumulated}%
                                                     </span>
                                                     <span className="small text-muted">
-                                                        ( {row.actividad.slug_estado} )
+                                                        ({row.actividad.slug_estado})
                                                     </span>
                                                 </div>
                                             ) : (
-                                                <div>Sin porcentaje de avance</div>
+                                                <div className="text-muted fst-italic">
+                                                    Sin avance
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
@@ -427,18 +463,6 @@ const FactoresCriticosTable = ({
                     Total de factores críticos: {pmi?.factores_criticos?.length || 0}
                 </div>
             </div>
-            {/* Render the CrearAvance when showCrearAvance is true */}
-            {Boolean(showCrearAvance) && (
-                <CrearAvancePMI
-                    pmiId={pmi.id}
-                    onClose={closeCrearAvance}
-                    csrfToken={csrfToken}
-                    actividad={selectedActividad}
-                />
-            )}
-            {Boolean(showVerAvances) && (
-                <VerAvancesPMI onClose={closeVerAvance} actividad={selectedActividad} />
-            )}
         </div>
     );
 };
