@@ -76,14 +76,16 @@ class PMIController extends Controller {
     }
 
     public function actividadesByPmi(Request $request, int $pmiId) {
-        $actividades = PmiActividadVinculada::whereHas('meta', function ($query) use ($pmiId) {
-            $query->whereHas('objetivo', function ($query) use ($pmiId) {
-                $query->whereHas('factor', function ($query) use ($pmiId) {
-                    $query->where('pmi_id', $pmiId);
+        $actividades = PmiActividadVinculada::whereHas('indicador', function ($query) use ($pmiId) {
+            $query->whereHas('meta', function ($query) use ($pmiId) {
+                $query->whereHas('objetivo', function ($query) use ($pmiId) {
+                    $query->whereHas('factor', function ($query) use ($pmiId) {
+                        $query->where('pmi_id', $pmiId);
+                    });
                 });
             });
         })
-        ->with('meta.indicadorInfo')
+        ->with('indicador.meta')
         ->get();
         return response()->json($actividades);
     }
@@ -316,7 +318,7 @@ class PMIController extends Controller {
     public function storeActividadAvance(Request $request) {
         $pmi = Pmi::where('id', $request->input('pmi_id'))
             ->first();
-        $actividad = PmiActividadVinculada::with('meta')
+        $actividad = PmiActividadVinculada::with('indicador.meta')
             ->where('id', $request->input('actividad_id'))
             ->first();
 
@@ -395,9 +397,9 @@ class PMIController extends Controller {
             $avance->save();
             $actividad->save();
             if ($avance->suma_al_indicador !== 0 ) {
-                $meta  = $actividad->meta;
-                $meta->indicador += $avance->suma_al_indicador;
-                $meta->save();
+                $indicador  = $actividad->indicador;
+                $indicador->valor_obtenido += $avance->suma_al_indicador;
+                $indicador->save();
             }
             // Procesar los archivos
             if ($request->hasFile('adjuntos')) {
@@ -435,13 +437,17 @@ class PMIController extends Controller {
         }
     }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null) {
-        $meta = PmiMetaVinculada::with('indicadorInfo')
-            ->whereHas(relation:  'actividades',
+        $meta = PmiMetaVinculada::with('indicadores')
+            ->whereHas(relation:  'indicadores',
                 callback: function ($query) use ($actividadId) {
-                    $query->where('id', $actividadId);
+                    $query->whereHas(relation:  'actividades',
+                        callback: function ($query) use ($actividadId) {
+                            $query->where('id', $actividadId);
+                        });
                 })
             ->first();
-        $avances = PmiActividadAvance::with('actividad.meta.indicadorInfo', 'adjuntos')
+
+        $avances = PmiActividadAvance::with('actividad.indicador.meta', 'adjuntos')
             ->where('actividad_id', $actividadId)
             ->get();
 

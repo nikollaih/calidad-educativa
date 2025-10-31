@@ -1,25 +1,24 @@
 // src/components/CrearAvance.jsx
-import { useState, useEffect } from "preact/hooks";
-import Select from "react-select";
-import {h} from "preact";
-import CMultiFileUploader from "@/components/shared/CMultiFileUploader.jsx";
-
+import { useState, useEffect } from 'preact/hooks';
+import Select from 'react-select';
+import { h } from 'preact';
+import CMultiFileUploader from '@/components/shared/CMultiFileUploader.jsx';
 
 const CrearAvancePMI = ({
-                         pmiId= undefined,
-                         onClose,
-                         csrfToken='',
-                         actividad=undefined,
-                         institucionId=undefined
+    pmiId = undefined,
+    onClose,
+    csrfToken = '',
+    actividad = undefined,
+    institucionId = undefined,
 }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [formData, setFormData] = useState({
-        fecha_avance: "",
-        actividad_id: "",
-        porcentaje_ejecutado: "",
+        fecha_avance: '',
+        actividad_id: '',
+        porcentaje_ejecutado: '',
         suma_al_indicador: 0,
-        descripcion: "",
+        descripcion: '',
         archivos_adjuntos: [],
     });
     const [actividades, setActividades] = useState([]);
@@ -31,11 +30,11 @@ const CrearAvancePMI = ({
     const closeModal = () => {
         setIsOpen(false);
         setFormData({
-            fecha_avance: "",
-            actividad_id: "",
-            porcentaje_ejecutado: "",
+            fecha_avance: '',
+            actividad_id: '',
+            porcentaje_ejecutado: '',
             suma_al_indicador: 0,
-            descripcion: "",
+            descripcion: '',
             archivos_adjuntos: [],
         });
         setSubmitMessage(null);
@@ -61,7 +60,7 @@ const CrearAvancePMI = ({
     useEffect(() => {
         const fetchActividades = async () => {
             try {
-                const response = await fetch("/pmi/get-actividades/"+pmiId);
+                const response = await fetch('/pmi/get-actividades/' + pmiId);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -71,7 +70,7 @@ const CrearAvancePMI = ({
                 // pero aquí usamos getOptionLabel y getOptionValue para
                 setActividades(data);
             } catch (error) {
-                console.error("Error al cargar las Actividades:", error);
+                console.error('Error al cargar las Actividades:', error);
             } finally {
                 setLoadingActividades(false);
             }
@@ -83,7 +82,7 @@ const CrearAvancePMI = ({
         }
     }, [isOpen, loadingActividades]);
 
-// --- Autoseleccionar la actividad recibida por props ---
+    // --- Autoseleccionar la actividad recibida por props ---
     useEffect(() => {
         if (!loadingActividades && actividad && actividades.length > 0) {
             const encontrada = actividades.find((a) => a.id === actividad.id);
@@ -101,12 +100,12 @@ const CrearAvancePMI = ({
     const handleChange = (e) => {
         const { name, value, files } = e.target;
 
-        if (name === "archivos_adjuntos") {
+        if (name === 'archivos_adjuntos') {
             setFormData((prevData) => ({
                 ...prevData,
                 [name]: prevData.archivos_adjuntos.concat(Array.from(files)),
             }));
-        } else if (name === "suma_al_indicador" && selectedActivity) {
+        } else if (name === 'suma_al_indicador' && selectedActivity) {
             // límite dinámico
             const min = 0;
             const max = selectedActivity.max_suma_indicador - selectedActivity.indicador_acumulado;
@@ -128,23 +127,32 @@ const CrearAvancePMI = ({
         }
     };
 
-// --- Valida antes de enviar ---
+    // --- Valida antes de enviar ---
     const handleSubmit = (e) => {
         // evita que se mande automáticamente
         e.preventDefault();
 
         if (!formData.fecha_avance) {
-            setSubmitMessage({ type: "error", text: "Debes seleccionar la fecha de avance." });
+            setSubmitMessage({ type: 'error', text: 'Debes seleccionar la fecha de avance.' });
             return;
         }
 
-        if (selectedActivity?.afecta_indicador && (!formData.suma_al_indicador || formData.suma_al_indicador <= 0)) {
-            setSubmitMessage({ type: "error", text: "Debes ingresar un valor válido en 'cantidad'." });
+        if (
+            selectedActivity?.afecta_indicador &&
+            (!formData.suma_al_indicador || formData.suma_al_indicador <= 0)
+        ) {
+            setSubmitMessage({
+                type: 'error',
+                text: "Debes ingresar un valor válido en 'cantidad'.",
+            });
             return;
         }
 
         if (!formData.descripcion.trim()) {
-            setSubmitMessage({ type: "error", text: "Debes ingresar una observación o descripción." });
+            setSubmitMessage({
+                type: 'error',
+                text: 'Debes ingresar una observación o descripción.',
+            });
             return;
         }
 
@@ -154,7 +162,6 @@ const CrearAvancePMI = ({
 
     // --- Código modificado: Maneja la selección del componente `Select` para las Actividades ---
     const handleMetaChange = (selectedOption) => {
-        console.log(selectedOption);
         setSelectedActivity(selectedOption);
     };
 
@@ -162,12 +169,11 @@ const CrearAvancePMI = ({
         return null;
     }
     // Función para encontrar la opción seleccionada y pasarla a 'value'
-    const getSelectedMeta = () =>
-        actividades.find((option) => option.id === formData.actividad_id);
+    const getSelectedMeta = () => actividades.find((option) => option.id === formData.actividad_id);
     return (
         <div
             className="modal fade show"
-            style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+            style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
             tabIndex="-1"
             aria-labelledby="advanceFormModalLabel"
             aria-modal="true"
@@ -178,7 +184,6 @@ const CrearAvancePMI = ({
                     <div className="modal-header">
                         <h5 className="modal-title" id="advanceFormModalLabel">
                             Registrar Avance
-
                         </h5>
                         <button
                             type="button"
@@ -191,21 +196,16 @@ const CrearAvancePMI = ({
                         {submitMessage && (
                             <div
                                 className={`alert alert-${
-                                    submitMessage.type === "success"
-                                        ? "success"
-                                        : "danger"
+                                    submitMessage.type === 'success' ? 'success' : 'danger'
                                 }`}
                                 role="alert"
                             >
                                 {submitMessage.text}
                             </div>
                         )}
-                        <form >
+                        <form>
                             <div className="mb-3">
-                                <label
-                                    htmlFor="fecha_avance"
-                                    className="form-label"
-                                >
+                                <label htmlFor="fecha_avance" className="form-label">
                                     Fecha de Avance:
                                 </label>
                                 <input
@@ -215,7 +215,7 @@ const CrearAvancePMI = ({
                                     name="fecha_avance"
                                     value={formData.fecha_avance}
                                     onChange={handleChange}
-                                    max={new Date().toISOString().split("T")[0]}  // 👈 límite: hoy
+                                    max={new Date().toISOString().split('T')[0]} // 👈 límite: hoy
                                     required
                                 />
                             </div>
@@ -233,16 +233,12 @@ const CrearAvancePMI = ({
                                         name="actividad_id"
                                         // Código modificado:
                                         // Se usa getOptionLabel para que el selector muestre la 'descripcion'
-                                        getOptionLabel={(option) =>
-                                            option.descripcion
-                                        }
+                                        getOptionLabel={(option) => option.descripcion}
                                         // Se usa getOptionValue para que el valor de la opción sea el 'id'
                                         getOptionValue={(option) => option.id}
                                         // Se usa la función auxiliar para que el selector sepa cuál opción está seleccionada
                                         value={getSelectedMeta()}
-                                        noOptionsMessage={() =>
-                                            "No se encontraron Actividades"
-                                        }
+                                        noOptionsMessage={() => 'No se encontraron Actividades'}
                                         isDisabled={Boolean(actividad)}
                                     />
                                 )}
@@ -250,14 +246,10 @@ const CrearAvancePMI = ({
                             {selectedActivity && (
                                 <>
                                     <div className="d-flex  gap-2">
-
                                         {Boolean(selectedActivity?.afecta_indicador) && (
                                             <div className="mb-3 w-100 ml-1">
-                                                <label
-                                                    htmlFor="unidades"
-                                                    className="form-label"
-                                                >
-                                                    Cantidad   :
+                                                <label htmlFor="unidades" className="form-label">
+                                                    Cantidad :
                                                 </label>
                                                 <input
                                                     type="number"
@@ -267,19 +259,25 @@ const CrearAvancePMI = ({
                                                     value={formData.suma_al_indicador}
                                                     onChange={handleChange}
                                                     min="0"
-                                                    max={selectedActivity?.max_suma_indicador - selectedActivity?.indicador_acumulado}
+                                                    max={
+                                                        selectedActivity?.max_suma_indicador -
+                                                        selectedActivity?.indicador_acumulado
+                                                    }
                                                     required
                                                 />
-                                                <small>({String(selectedActivity.meta.indicador_info.unidad_parcial)})</small>
+                                                <small>
+                                                    (
+                                                    {String(
+                                                        selectedActivity.indicador.unidad_parcial
+                                                    )}
+                                                    )
+                                                </small>
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="mb-3">
-                                        <label
-                                            htmlFor="descripcion"
-                                            className="form-label"
-                                        >
+                                        <label htmlFor="descripcion" className="form-label">
                                             Observación:
                                         </label>
                                         <textarea
@@ -292,16 +290,17 @@ const CrearAvancePMI = ({
                                         ></textarea>
                                     </div>
                                     <div className="mb-3">
-                                        <label
-                                            className="form-label"
-                                        >
+                                        <label className="form-label">
                                             Archivos adjuntos del avance
                                         </label>
                                         <CMultiFileUploader
                                             onFilesAdded={(newFiles) => {
                                                 setFormData((prevData) => ({
                                                     ...prevData,
-                                                    archivos_adjuntos: [...prevData.archivos_adjuntos, ...newFiles],
+                                                    archivos_adjuntos: [
+                                                        ...prevData.archivos_adjuntos,
+                                                        ...newFiles,
+                                                    ],
                                                 }));
                                             }}
                                             onFilesDelete={(newFiles) => {
@@ -311,11 +310,9 @@ const CrearAvancePMI = ({
                                                 }));
                                             }}
                                         />
-
                                     </div>
                                 </>
                             )}
-
 
                             <div className="modal-footer">
                                 <button
@@ -325,21 +322,40 @@ const CrearAvancePMI = ({
                                 >
                                     Cerrar
                                 </button>
-                                {selectedActivity &&(
+                                {selectedActivity && (
                                     <form
                                         method="POST"
                                         action="/pmi/guardar-avance-actividad"
                                         encType="multipart/form-data"
                                         onSubmit={handleSubmit}
-
                                     >
                                         <input type="hidden" name="_token" value={csrfToken} />
                                         <input type="hidden" name="pmi_id" value={pmiId} />
-                                        <input type="hidden" name="actividad_id" value={formData.actividad_id} />
-                                        <input type="hidden" name="fecha_avance" value={formData.fecha_avance} />
-                                        <input type="hidden" name="porcentaje_ejecutado" value={formData.porcentaje_ejecutado} />
-                                        <input type="hidden" name="suma_al_indicador" value={formData.suma_al_indicador} />
-                                        <input type="hidden" name="descripcion" value={formData.descripcion} />
+                                        <input
+                                            type="hidden"
+                                            name="actividad_id"
+                                            value={formData.actividad_id}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="fecha_avance"
+                                            value={formData.fecha_avance}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="porcentaje_ejecutado"
+                                            value={formData.porcentaje_ejecutado}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="suma_al_indicador"
+                                            value={formData.suma_al_indicador}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="descripcion"
+                                            value={formData.descripcion}
+                                        />
 
                                         {/* Inputs de archivos */}
                                         {formData?.archivos_adjuntos.map((file, index) => (
@@ -347,8 +363,8 @@ const CrearAvancePMI = ({
                                                 key={index}
                                                 type="file"
                                                 name="adjuntos[]"
-                                                style={{ display: "none" }}
-                                                ref={el => {
+                                                style={{ display: 'none' }}
+                                                ref={(el) => {
                                                     if (el) {
                                                         const dataTransfer = new DataTransfer();
                                                         dataTransfer.items.add(file); // asigna el File real
@@ -358,16 +374,11 @@ const CrearAvancePMI = ({
                                             />
                                         ))}
 
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary"
-                                        >
+                                        <button type="submit" className="btn btn-primary">
                                             Guardar Avance
                                         </button>
                                     </form>
-
                                 )}
-
                             </div>
                         </form>
                     </div>

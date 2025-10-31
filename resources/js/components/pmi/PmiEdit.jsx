@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import CNavigationButton from '@/components/shared/CNavigationButton.jsx';
+import CrearAvancePMI from '@/components/pmi/CrearAvancePMI.jsx';
+import VerAvancesPMI from '@/components/pmi/VerAvancesPMI.jsx';
 
 const FactoresCriticosTable = ({
     csrfToken = '',
@@ -447,6 +449,18 @@ const FactoresCriticosTable = ({
                     Total de factores críticos: {pmi?.factores_criticos?.length || 0}
                 </div>
             </div>
+            {/* Render the CrearAvance when showCrearAvance is true */}
+            {Boolean(showCrearAvance) && (
+                <CrearAvancePMI
+                    pmiId={pmi.id}
+                    onClose={closeCrearAvance}
+                    csrfToken={csrfToken}
+                    actividad={selectedActividad}
+                />
+            )}
+            {Boolean(showVerAvances) && (
+                <VerAvancesPMI onClose={closeVerAvance} actividad={selectedActividad} />
+            )}
         </div>
     );
 };

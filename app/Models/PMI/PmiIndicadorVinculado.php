@@ -3,8 +3,10 @@
 namespace App\Models\PMI;
 
 use App\Models\PmiActividadVinculada;
+use App\Models\PmiMetaVinculada;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PmiIndicadorVinculado extends Model {
@@ -19,5 +21,8 @@ class PmiIndicadorVinculado extends Model {
     ];
     public function actividades():HasMany {
         return $this->hasMany(PmiActividadVinculada::class,'indicador_id','id');
+    }
+    public function meta():BelongsTo {
+        return $this->belongsTo(PmiMetaVinculada::class,'meta_id','id');
     }
 }
