@@ -8,6 +8,9 @@ const FactoresCriticosTable = ({
     pmiData = {},
     institucionId = -1,
     exportarUrl = '',
+    sintesisUrl = '',
+    evaluacionUrl = '',
+    cumplimientoUrl = '',
 }) => {
     const [pmi] = useState(pmiData);
     const [showCrearAvance, setShowCrearAvance] = useState(false);
@@ -124,6 +127,24 @@ const FactoresCriticosTable = ({
                             </small>
                         </div>
                         <div class="d-flex gap-3">
+                            <CNavigationButton
+                                label="Síntesis seguimiento"
+                                to={sintesisUrl}
+                                icon="fas fa-file-excel"
+                                target="_blank"
+                            />
+                            <CNavigationButton
+                                label="Cumplimiento objetivos"
+                                to={cumplimientoUrl}
+                                icon="fas fa-file-excel"
+                                target="_blank"
+                            />
+                            <CNavigationButton
+                                label="Evaluación de resultados"
+                                to={evaluacionUrl}
+                                icon="fas fa-file-excel"
+                                target="_blank"
+                            />
                             <CNavigationButton
                                 label="Exportar tabla"
                                 to={exportarUrl}

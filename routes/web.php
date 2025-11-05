@@ -196,6 +196,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pmi/validacion/{pmiId}/cambiar-estado',[PMIController::class, 'pmiCambiarEstado'])->name('pmi.cambiar_estado');
     // Ruta para exportar un pmi a excel
     Route::get('/pmi/exportar/{pmiId}',[PMIController::class, 'exportarPmi'])->name('pmi.exportar');
+    // Ruta para exportar un pmi a excel
+    Route::get('/pmi/exportar/{pmiId}',[PMIController::class, 'exportarPmi'])->name('pmi.exportar');
+    // Ruta para exportar  la sintesis de seguimiento  de un pmi a excel
+    Route::get('/pmi/exportar/sintesis/{pmiId}',[PMIController::class, 'exportarSintesisPmi'])->name('pmi.exportar-sintesis');
+    // Ruta para exportar  la evaluacion de resultados  de un pmi a excel
+    Route::get('/pmi/exportar/evaluacion/{pmiId}',[PMIController::class, 'exportarEvaluacionPmi'])->name('pmi.exportar-evaluacion');
+    // Ruta para exportar  el cumplimiento de objetivos  de un pmi a excel
+    Route::get('/pmi/exportar/cumplimiento/{pmiId}',[PMIController::class, 'exportarCumplimientoPmi'])->name('pmi.exportar-cumplimiento');
     // Ruta que obtiene las actividades de un pmi
     Route::get('/pmi/get-actividades/{pmiId}',[PMIController::class, 'actividadesByPmi'])->name('pmi.get-actividades');
     // Ruta que obtiene la lista de avances de una actividad

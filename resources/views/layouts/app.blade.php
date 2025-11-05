@@ -278,7 +278,7 @@
                                     <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                         <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                             <div class="avatar avatar-online">
-                                                    <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle" />
                                             </div>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
@@ -290,7 +290,7 @@
                                                                 @if( session('icono') )
                                                                     <img src="{{asset('storage/iconos/')}}/{{session('icono')}}" alt class="rounded-circle" />
                                                                 @else
-                                                                    <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                                                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle" />
                                                                 @endif
                                                             </div>
                                                         </div>

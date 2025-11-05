@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\PMI;
 
 use App\DTOs\Result;
+use App\Exports\PmiCumplimientoExport;
+use App\Exports\PmiEvaluacionExport;
 use App\Exports\PmiExport;
+use App\Exports\PmiSintesisExport;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
@@ -197,8 +200,19 @@ class PMIController extends Controller {
     }
     public function exportarPmi(Request $request , int $pmiId) {
         $fileName = 'pmi_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
-
         return Excel::download(new PmiExport($pmiId), $fileName);
+    }
+    public function exportarCumplimientoPmi(Request $request , int $pmiId) {
+        $fileName = 'pmi_cumplimiento_objetivos_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new PmiCumplimientoExport($pmiId), $fileName);
+    }
+    public function exportarSintesisPmi(Request $request , int $pmiId) {
+        $fileName = 'pmi_sintesis_seguimiento_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new PmiSintesisExport($pmiId), $fileName);
+    }
+    public function exportarEvaluacionPmi(Request $request , int $pmiId) {
+        $fileName = 'pmi_evaluacion_de_resultados_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new PmiEvaluacionExport($pmiId), $fileName);
     }
     public function editFactorCritico(Request $request, int $institucionId , int $pmi, int $factorCriticoId) {
         $factorCritico = FactorCritico::where('id', $factorCriticoId)

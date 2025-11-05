@@ -17,6 +17,10 @@
         data-csrf-token="{{ csrf_token() }}"
         data-institucion-id="{{$institucionId}}"
         data-exportar-url="{{ route('pmi.exportar', $pmi->id)  }}"
+        data-sintesis-url="{{ route('pmi.exportar-sintesis', $pmi->id)  }}"
+        data-evaluacion-url="{{ route('pmi.exportar-evaluacion', $pmi->id)  }}"
+        data-cumplimiento-url="{{ route('pmi.exportar-cumplimiento', $pmi->id)  }}"
+
         data-pmi-data='@json($pmi->toArray())'
     >
     </div>
