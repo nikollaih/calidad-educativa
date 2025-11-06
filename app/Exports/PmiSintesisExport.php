@@ -2,43 +2,136 @@
 
 namespace App\Exports;
 
+use App\Models\Pmi;
+use App\Models\PmiMetaVinculada;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class PmiSintesisExport implements FromCollection, WithTitle, WithHeadings, WithStyles, WithColumnWidths, WithEvents {
-    public function collection() {
-        return new Collection([]);
+
+class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
+    private int $pmiId;
+    private string $municipio;
+    private string $institucion;
+    private Collection $rows;
+    private array $dataRows = [];
+
+    public function __construct(int $pmiId) {
+        $this->pmiId = $pmiId;
+        $this->rows  = $this->buildRows();
+        $this->buildDataStructure();
+    }
+
+    /**
+     * Construir filas con la nueva estructura: Meta → Indicadores → Actividades
+     */
+    private function buildRows(): Collection {
+        $pmi = Pmi::with(
+            'institucion.municipio',
+            'factoresCriticos.calificacion.grupo.padre',
+            'factoresCriticos.objetivos.metas.indicadores.actividades'
+        )->findOrFail($this->pmiId);
+
+        $this->municipio = $pmi?->institucion?->municipio?->nombre;
+        $this->institucion = $pmi?->institucion?->nombre;
+
+        $metas = PmiMetaVinculada::whereHas('objetivo.factor', function ($query) {
+            $query->where('pmi_id', $this->pmiId);
+        })
+            ->with('indicadores.actividades')
+            ->get();
+
+        return $metas;
+    }
+
+    /**
+     * Construir la estructura de datos completa
+     */
+    private function buildDataStructure() {
+        $currentRow = 11; // Inicia después de los encabezados (fila 11)
+
+        foreach ($this->rows as $meta) {
+            if ($meta->indicadores->isEmpty()) {
+                // Meta sin indicadores
+                $this->dataRows[] = [
+                    'row' => $currentRow,
+                    'meta' => $meta->descripcion,
+                    'meta_range' => "B{$currentRow}:B{$currentRow}",
+                    'indicador' => '',
+                    'indicador_range' => null,
+                    'instrumentos' => '',
+                    'responsables' => '',
+                    'frecuencia' => '',
+                ];
+                $currentRow++;
+            } else {
+                $metaRowStart = $currentRow;
+
+                foreach ($meta->indicadores as $indicador) {
+                    $indicadorTexto = "{$indicador->unidad_parcial} / {$indicador->unidad_total}";
+
+                    if ($indicador->actividades->isEmpty()) {
+                        // Indicador sin actividades
+                        $this->dataRows[] = [
+                            'row' => $currentRow,
+                            'meta' => null,
+                            'meta_range' => null,
+                            'indicador' => $indicadorTexto,
+                            'indicador_range' => "C{$currentRow}:C{$currentRow}",
+                            'instrumentos' => '',
+                            'responsables' => '',
+                            'frecuencia' => '',
+                        ];
+                        $currentRow++;
+                    } else {
+                        $indicadorRowStart = $currentRow;
+
+                        foreach ($indicador->actividades as $actividad) {
+                            $responsables = $actividad->responsables ?? '';
+
+                            $this->dataRows[] = [
+                                'row' => $currentRow,
+                                'meta' => null,
+                                'meta_range' => null,
+                                'indicador' => null,
+                                'indicador_range' => null,
+                                'instrumentos' => $responsables,
+                                'responsables' => $responsables,
+                                'frecuencia' => $responsables,
+                            ];
+                            $currentRow++;
+                        }
+
+                        // Marcar el rango del indicador
+                        if ($indicador->actividades->count() > 0) {
+                            $indicadorRowEnd = $currentRow - 1;
+                            $this->dataRows[$indicadorRowStart - 11]['indicador'] = $indicadorTexto;
+                            $this->dataRows[$indicadorRowStart - 11]['indicador_range'] = "C{$indicadorRowStart}:C{$indicadorRowEnd}";
+                        }
+                    }
+                }
+
+                // Marcar el rango de la meta
+                $metaRowEnd = $currentRow - 1;
+                if ($metaRowEnd >= $metaRowStart) {
+                    $this->dataRows[$metaRowStart - 11]['meta'] = $meta->descripcion;
+                    $this->dataRows[$metaRowStart - 11]['meta_range'] = "B{$metaRowStart}:B{$metaRowEnd}";
+                }
+            }
+        }
+
+        Log::info('Data Rows construidos:', ['count' => count($this->dataRows), 'data' => $this->dataRows]);
     }
 
     public function title(): string {
         return 'Cumplimiento objetivos PMI';
-    }
-
-    public function headings(): array {
-        return [
-            [''], // Fila 1 vacía
-            ['', '', 'SECRETARÍA DE EDUCACIÓN DEPARTAMENTAL DEL QUINDÍO' . "\n" . 'DIRECCION  CALIDAD EDUCATIVA', '', '', '', '', '', '', '', '', ''], // Fila 2
-            ['', '', 'REVISIÓN  DEL CUMPLIMIENTO DE OBJETIVOS Y METAS' . "\n" . 'DEL PLAN DE MEJORAMIENTO INSTITUCIONAL', '', '', '', '', '', '', '', '', ''], // Fila 3
-            [''], // Fila 4
-            [''], // Fila 5
-            ['', 'MUNICIPIO: ', '', '', '', '', '', '', '', '', '', ''], // Fila 6
-            ['', 'INSTITUCIÓN EDUCATIVA: ', '', '', '', '', '', '', '', '', '', ''], // Fila 7
-            ['', 'AÑO:', '2025', '', '', '', '', '', '', '', '', ''], // Fila 8
-            [''], // Fila 9
-            ['', 'META', 'INDICADORES', 'INSTRUMENTOS DE RECOLECCIÓN', 'RESPONSABLES', 'FRECUENCIA DE RECOLECCIÓN', '', '', '', '', '', ''], // Fila 10
-            ['', '', '', '', '', '', '', '', '', '', '', ''] // Fila 11
-        ];
     }
 
     public function columnWidths(): array {
@@ -58,129 +151,163 @@ class PmiSintesisExport implements FromCollection, WithTitle, WithHeadings, With
         ];
     }
 
-    public function styles(Worksheet $sheet) {
-        return [
-            'C2' => [
-                'font' => ['name' => 'Arial', 'size' => 14, 'bold' => true],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_BOTTOM]
-            ],
-            'C3' => [
-                'font' => ['name' => 'Arial', 'size' => 14, 'bold' => true],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER]
-            ],
-            'B6:B8' => [
-                'font' => ['name' => 'Calibri', 'size' => 14, 'bold' => true],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
-            ],
-            'C6' => [
-                'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
-            ],
-            'C7' => [
-                'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
-            ],
-            'C8' => [
-                'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
-            ],
-            'B10:F10' => [
-                'font' => ['name' => 'Calibri', 'size' => 12, 'bold' => true],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
-                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFC0C0C0']]
-            ],
-        ];
-    }
-
     public function registerEvents(): array {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $sheet = $event->sheet;
+                $sheet = $event->sheet->getDelegate();
 
-                // Fusiones de celdas
+                // ========== ESCRIBIR ENCABEZADOS ==========
+                $sheet->setCellValue('C2', "SECRETARÍA DE EDUCACIÓN DEPARTAMENTAL DEL QUINDÍO\nDIRECCION  CALIDAD EDUCATIVA");
+                $sheet->setCellValue('C3', "REVISIÓN  DEL CUMPLIMIENTO DE OBJETIVOS Y METAS\nDEL PLAN DE MEJORAMIENTO INSTITUCIONAL");
+                $sheet->setCellValue('B6', 'MUNICIPIO: ');
+                $sheet->setCellValue('C6', $this->municipio);
+                $sheet->setCellValue('B7', 'INSTITUCIÓN EDUCATIVA: ');
+                $sheet->setCellValue('C7', $this->institucion);
+                $sheet->setCellValue('B8', 'AÑO:');
+                $sheet->setCellValue('C8', date("Y"));
+
+                // Encabezados de tabla
+                $sheet->setCellValue('B10', 'META');
+                $sheet->setCellValue('C10', 'INDICADORES');
+                $sheet->setCellValue('D10', 'INSTRUMENTOS DE RECOLECCIÓN');
+                $sheet->setCellValue('E10', 'RESPONSABLES');
+                $sheet->setCellValue('F10', 'FRECUENCIA DE RECOLECCIÓN');
+
+                // ========== ESCRIBIR DATOS ==========
+                $processedMetas = [];
+                $processedIndicadores = [];
+
+                foreach ($this->dataRows as $rowData) {
+                    $row = $rowData['row'];
+
+                    // Escribir META
+                    if ($rowData['meta'] && $rowData['meta_range'] && !in_array($rowData['meta_range'], $processedMetas)) {
+                        $sheet->setCellValue("B{$row}", $rowData['meta']);
+                        if (strpos($rowData['meta_range'], ':') !== false) {
+                            $sheet->mergeCells($rowData['meta_range']);
+                        }
+                        $processedMetas[] = $rowData['meta_range'];
+                    }
+
+                    // Escribir INDICADOR
+                    if ($rowData['indicador'] && $rowData['indicador_range'] && !in_array($rowData['indicador_range'], $processedIndicadores)) {
+                        $sheet->setCellValue("C{$row}", $rowData['indicador']);
+                        if (strpos($rowData['indicador_range'], ':') !== false) {
+                            $sheet->mergeCells($rowData['indicador_range']);
+                        }
+                        $processedIndicadores[] = $rowData['indicador_range'];
+                    }
+
+                    // Escribir INSTRUMENTOS, RESPONSABLES, FRECUENCIA
+                    $sheet->setCellValue("D{$row}", $rowData['instrumentos']);
+                    $sheet->setCellValue("E{$row}", $rowData['responsables']);
+                    $sheet->setCellValue("F{$row}", $rowData['frecuencia']);
+                }
+
+                // ========== FUSIONES DE CELDAS DEL ENCABEZADO ==========
                 $sheet->mergeCells('F2:F4');
                 $sheet->mergeCells('C3:E4');
                 $sheet->mergeCells('C2:E2');
                 $sheet->mergeCells('B2:B4');
                 $sheet->mergeCells('C5:F5');
 
-                // Alturas de fila
+                // ========== ALTURAS DE FILA ==========
                 $rowHeights = [
                     1 => 15.75, 2 => 41.25, 3 => 21.0, 4 => 21.0, 5 => 4.15,
                     6 => 26.25, 7 => 26.25, 8 => 26.25, 9 => 10.15, 10 => 41.25,
-                    11 => 24.75, 12 => 33.0
                 ];
 
                 foreach ($rowHeights as $row => $height) {
                     $sheet->getRowDimension($row)->setRowHeight($height);
                 }
 
-                // Filas de datos (13 en adelante)
-                for ($i = 13; $i <= 32; $i++) {
+                // Altura para filas de datos
+                $dataRowCount = count($this->dataRows);
+                for ($i = 11; $i <= (10 + $dataRowCount); $i++) {
                     $sheet->getRowDimension($i)->setRowHeight(18.0);
                 }
 
-                // Ajuste de texto en todas las celdas
-                $sheet->getStyle('A1:F12')->getAlignment()->setWrapText(true);
+                // ========== ESTILOS ==========
+                $lastRow = 10 + $dataRowCount;
 
-                // Bordes según especificaciones
-                // Bordes MEDIUM para los rectángulos principales
+                // Estilos de encabezado
+                $sheet->getStyle('C2')->applyFromArray([
+                    'font' => ['name' => 'Arial', 'size' => 14, 'bold' => true],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_BOTTOM, 'wrapText' => true]
+                ]);
+
+                $sheet->getStyle('C3')->applyFromArray([
+                    'font' => ['name' => 'Arial', 'size' => 14, 'bold' => true],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true]
+                ]);
+
+                $sheet->getStyle('B6:B8')->applyFromArray([
+                    'font' => ['name' => 'Calibri', 'size' => 14, 'bold' => true],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
+                ]);
+
+                $sheet->getStyle('C6:C8')->applyFromArray([
+                    'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
+                ]);
+
+                $sheet->getStyle('B10:F10')->applyFromArray([
+                    'font' => ['name' => 'Calibri', 'size' => 12, 'bold' => true],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
+                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFC0C0C0']]
+                ]);
+
+                // Ajuste de texto y alineación en datos
+                $sheet->getStyle("B11:F{$lastRow}")->applyFromArray([
+                    'alignment' => ['wrapText' => true, 'vertical' => Alignment::VERTICAL_TOP, 'horizontal' => Alignment::HORIZONTAL_LEFT]
+                ]);
+
+                // ========== BORDES ==========
+                // Bordes del encabezado
                 $sheet->getStyle('B2:B4')->applyFromArray([
-                    'borders' => [
-                        'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
-                    ],
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
                 $sheet->getStyle('C2:F4')->applyFromArray([
-                    'borders' => [
-                        'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
-                    ],
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
                 $sheet->getStyle('F2:F4')->applyFromArray([
-                    'borders' => [
-                        'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
-                    ],
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
                 $sheet->getStyle('B5:F10')->applyFromArray([
-                    'borders' => [
-                        'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
-                    ],
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
-                // C6, C7, C8: thin borders internos
                 $sheet->getStyle('C6')->applyFromArray([
-                    'borders' => [
-                        'bottom' => ['borderStyle' => Border::BORDER_THIN],
-                    ],
+                    'borders' => ['bottom' => ['borderStyle' => Border::BORDER_THIN]],
                 ]);
                 $sheet->getStyle('C7')->applyFromArray([
-                    'borders' => [
-                        'bottom' => ['borderStyle' => Border::BORDER_THIN],
-                    ],
+                    'borders' => ['bottom' => ['borderStyle' => Border::BORDER_THIN]],
                 ]);
                 $sheet->getStyle('C8')->applyFromArray([
-                    'borders' => [
-                        'bottom' => ['borderStyle' => Border::BORDER_THIN],
-                    ],
-                ]);
-                // Bordes para encabezados de tabla (interno thin)
-                $sheet->getStyle('B10:F10')->applyFromArray([
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                        ],
-                    ],
+                    'borders' => ['bottom' => ['borderStyle' => Border::BORDER_THIN]],
                 ]);
 
-                // Borde exterior MEDIUM para la tabla de encabezados
                 $sheet->getStyle('B10:F10')->applyFromArray([
-                    'borders' => [
-                        'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
-                    ],
+                    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
                 ]);
-                // Agregar imagen en K2:L4
+
+                $sheet->getStyle('B10:F10')->applyFromArray([
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
+                ]);
+
+                // Bordes para las filas de datos
+                $sheet->getStyle("B11:F{$lastRow}")->applyFromArray([
+                    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+                ]);
+
+                $sheet->getStyle("B11:F{$lastRow}")->applyFromArray([
+                    'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
+                ]);
+
+                // ========== AGREGAR IMAGEN ==========
                 $imagePath = public_path('imagenes/educacion_menu.png');
                 if (file_exists($imagePath)) {
                     $drawing = new Drawing();
@@ -188,25 +315,11 @@ class PmiSintesisExport implements FromCollection, WithTitle, WithHeadings, With
                     $drawing->setDescription('Logo');
                     $drawing->setPath($imagePath);
                     $drawing->setCoordinates('F2');
-
-                    // Sin offsets para que ocupe todo el espacio
                     $drawing->setOffsetX(0);
                     $drawing->setOffsetY(0);
-
-                    // Calcular el tamaño de la celda combinada K2:L4
-                    // Altura: fila 2 (41.25) + fila 3 (21.0) + fila 4 (21.0) = 83.25 puntos
-                    // Convertir puntos a píxeles (1 punto = 1.33 píxeles aprox)
                     $heightInPixels = 83.25 * 1.33;
-
-                    // Establecer altura para llenar la celda
                     $drawing->setHeight((int)$heightInPixels);
-
-                    // Opcionalmente, si quieres controlar también el ancho:
-                    // Ancho de K + L = aproximadamente 45.41 puntos
-                    // $widthInPixels = 45.41 * 7; // 1 unidad de ancho Excel ≈ 7 píxeles
-                    // $drawing->setWidth((int)$widthInPixels);
-
-                    $drawing->setWorksheet($sheet->getDelegate());
+                    $drawing->setWorksheet($sheet);
                 }
             },
         ];
