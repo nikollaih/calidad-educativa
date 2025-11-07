@@ -369,6 +369,15 @@ const FactoresCriticosTable = ({
             )}
         </td>
     );
+    const CeldaInstrumentosRecoleccion = ({ row }) => (
+        <td>
+            {row.actividad?.instrumentos_recoleccion ? (
+                <span>{row.actividad.instrumentos_recoleccion}</span>
+            ) : (
+                <div className="text-muted fst-italic">Sin asignar</div>
+            )}
+        </td>
+    );
 
     return (
         <div className="container-fluid mt-4">
@@ -423,6 +432,7 @@ const FactoresCriticosTable = ({
                                     </th>
                                     <th className="text-center">Recurso ($)</th>
                                     <th className="text-center">Responsables</th>
+                                    <th className="text-center">Instrumentos de recolección</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -437,6 +447,7 @@ const FactoresCriticosTable = ({
                                         <CeldaActividad row={row} />
                                         <CeldaRecursos row={row} />
                                         <CeldaResponsables row={row} />
+                                        <CeldaInstrumentosRecoleccion row={row} />
                                     </tr>
                                 ))}
                             </tbody>

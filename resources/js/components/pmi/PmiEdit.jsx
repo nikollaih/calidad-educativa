@@ -184,6 +184,7 @@ const FactoresCriticosTable = ({
                                     </th>
                                     <th className="text-center">Recurso ($)</th>
                                     <th className="text-center">Responsables</th>
+                                    <th className="text-center">Instrumentos de recolección</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -453,6 +454,18 @@ const FactoresCriticosTable = ({
                                         <td>
                                             {row.actividad?.responsables ? (
                                                 <span>{row.actividad.responsables}</span>
+                                            ) : (
+                                                <div className="text-muted fst-italic">
+                                                    Sin asignar
+                                                </div>
+                                            )}
+                                        </td>
+                                        {/* Instrumentos de recolección */}
+                                        <td>
+                                            {row.actividad?.instrumentos_recoleccion ? (
+                                                <span>
+                                                    {row.actividad.instrumentos_recoleccion}
+                                                </span>
                                             ) : (
                                                 <div className="text-muted fst-italic">
                                                     Sin asignar

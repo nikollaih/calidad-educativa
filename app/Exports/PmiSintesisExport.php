@@ -5,7 +5,6 @@ namespace App\Exports;
 use App\Models\Pmi;
 use App\Models\PmiMetaVinculada;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -35,8 +34,6 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
     private function buildRows(): Collection {
         $pmi = Pmi::with(
             'institucion.municipio',
-            'factoresCriticos.calificacion.grupo.padre',
-            'factoresCriticos.objetivos.metas.indicadores.actividades'
         )->findOrFail($this->pmiId);
 
         $this->municipio = $pmi?->institucion?->municipio?->nombre;
@@ -95,6 +92,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
                         foreach ($indicador->actividades as $actividad) {
                             $responsables = $actividad->responsables ?? '';
+                            $instrumentos = $actividad->instrumentos_recoleccion ?? '';
 
                             $this->dataRows[] = [
                                 'row' => $currentRow,
@@ -102,7 +100,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                                 'meta_range' => null,
                                 'indicador' => null,
                                 'indicador_range' => null,
-                                'instrumentos' => $responsables,
+                                'instrumentos' => $instrumentos,
                                 'responsables' => $responsables,
                                 'frecuencia' => $responsables,
                             ];
@@ -126,8 +124,6 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                 }
             }
         }
-
-        Log::info('Data Rows construidos:', ['count' => count($this->dataRows), 'data' => $this->dataRows]);
     }
 
     public function title(): string {

@@ -202,6 +202,7 @@ const FactorCriticoEdit = ({
                 max_suma_indicador: actividad.max_suma_indicador ?? 0,
                 afecta_indicador: actividad.afecta_indicador ?? 0,
                 responsables: '',
+                instrumentos_recoleccion: '',
                 recursos: '',
                 fecha_inicio: '',
                 fecha_fin: '',
@@ -240,6 +241,7 @@ const FactorCriticoEdit = ({
                                           max_suma_indicador: 0,
                                           afecta_indicador: 0,
                                           responsables: '',
+                                          instrumentos_recoleccion: '',
                                           recursos: '',
                                           fecha_inicio: '',
                                           fecha_fin: '',
@@ -479,6 +481,23 @@ const FactorCriticoEdit = ({
                                     updateField(
                                         actividad.id,
                                         'responsables',
+                                        joinedTags,
+                                        'actividad'
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label className="form-label fw-bold">
+                                Instrumentos de recolección:
+                            </label>
+                            <TextMultipleTags
+                                initialValue={actividad.instrumentos_recoleccion}
+                                label={''}
+                                onTagsChange={(joinedTags) => {
+                                    updateField(
+                                        actividad.id,
+                                        'instrumentos_recoleccion',
                                         joinedTags,
                                         'actividad'
                                     );
@@ -956,7 +975,24 @@ const FactorCriticoEdit = ({
                             });
                             return;
                         }
-
+                        // Validación de instrumentos de recolección
+                        if (!actividad.instrumentos_recoleccion) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Instrumentos de recolección',
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener almenos un instrumento de recolección.`,
+                            });
+                            return;
+                        }
+                        // Validación de responsables
+                        if (!actividad.responsables) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Responsables',
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener almenos un responsable.`,
+                            });
+                            return;
+                        }
                         if (new Date(actividad.fecha_inicio) > new Date(actividad.fecha_fin)) {
                             Swal.fire({
                                 icon: 'error',
@@ -1128,6 +1164,13 @@ const FactorCriticoEdit = ({
                                                                             name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][responsables]`}
                                                                             value={
                                                                                 actividad.responsables
+                                                                            }
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][instrumentos_recoleccion]`}
+                                                                            value={
+                                                                                actividad.instrumentos_recoleccion
                                                                             }
                                                                         />
                                                                         <input

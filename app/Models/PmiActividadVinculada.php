@@ -13,6 +13,7 @@ class PmiActividadVinculada extends Model {
         'peso',
         'accumulated',
         'responsables',
+        'instrumentos_recoleccion',
         'recursos',
         'fecha_inicio',
         'fecha_fin',
