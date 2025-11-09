@@ -127,7 +127,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
     }
 
     public function title(): string {
-        return 'Cumplimiento objetivos PMI';
+        return 'Síntesis seguimiento PMI';
     }
 
     public function columnWidths(): array {
