@@ -152,7 +152,7 @@ const FactorCriticoEdit = ({
                     indicador_id: '',
                     valor_requerido: 0,
                     objetivo_id: objetivoId,
-                    actividades: [],
+                    indicadores: [],
                 },
             ],
         };
