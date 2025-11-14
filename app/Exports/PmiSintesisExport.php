@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
     private int $pmiId;
+    private Pmi $pmi;
     private string $municipio;
     private string $institucion;
     private Collection $rows;
@@ -38,6 +39,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
         $this->municipio = $pmi?->institucion?->municipio?->nombre;
         $this->institucion = $pmi?->institucion?->nombre;
+        $this->pmi = $pmi;
 
         $metas = PmiMetaVinculada::whereHas('objetivo.factor', function ($query) {
             $query->where('pmi_id', $this->pmiId);
@@ -160,7 +162,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                 $sheet->setCellValue('B7', 'INSTITUCIÓN EDUCATIVA: ');
                 $sheet->setCellValue('C7', $this->institucion);
                 $sheet->setCellValue('B8', 'AÑO:');
-                $sheet->setCellValue('C8', date("Y"));
+                $sheet->setCellValue('C8', $this->pmi?->anio_inicio . ' - ' . $this->pmi?->anio_fin);
 
                 // Encabezados de tabla
                 $sheet->setCellValue('B10', 'META');

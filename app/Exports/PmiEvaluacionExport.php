@@ -21,6 +21,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, WithStyles, WithColumnWidths, WithEvents {
     private int $pmiId;
+    private Pmi $pmi;
     private string $municipio;
     private string $institucion;
     private Collection $rows;
@@ -40,6 +41,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
 
         $this->municipio = $pmi?->institucion?->municipio?->nombre ?? '';
         $this->institucion = $pmi?->institucion?->nombre ?? '';
+        $this->pmi = $pmi;
 
         $objetivos = PmiObjetivoVinculado::whereHas('factor', function ($query) {
             $query->where('pmi_id', $this->pmiId);
@@ -184,7 +186,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
             [''], // Fila 5
             ['', 'MUNICIPIO: ', $this->municipio, '', '', '', '', '', '', '', '', ''], // Fila 6
             ['', 'INSTITUCIÓN EDUCATIVA: ', $this->institucion, '', '', '', '', '', '', '', '', ''], // Fila 7
-            ['', 'AÑO:', date('Y'), '', '', '', '', '', '', '', '', ''], // Fila 8
+            ['', 'AÑO:', $this->pmi?->anio_inicio . ' - ' . $this->pmi?->anio_fin, '', '', '', '', '', '', '', '', ''], // Fila 8
             [''], // Fila 9
             ['', 'OBJETIVO', 'INDICADOR', 'LÍNEA DE BASE', 'AÑO', '', '', '', '', '', '', ''], // Fila 10
             ['', '', '', '', 'META', 'RESULTADO', '', '', '', '', '', ''] // Fila 11

@@ -21,6 +21,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, WithStyles, WithColumnWidths, WithEvents {
     private int $pmiId;
+    private Pmi $pmi;
     private string $municipio;
     private string $institucion;
     private Collection $rows;
@@ -40,6 +41,7 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
         )->findOrFail($this->pmiId);
         $this->municipio = $pmi?->institucion?->municipio?->nombre;
         $this->institucion = $pmi?->institucion?->nombre;
+        $this->pmi = $pmi;
 
         $metas = PmiMetaVinculada::whereHas('objetivo.factor', function ($query) {
             $query->where('pmi_id', $this->pmiId);
@@ -142,7 +144,7 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
             [''], // Fila 5
             ['', 'MUNICIPIO: ', $this->municipio, '', '', '', '', '', '', '', '', ''], // Fila 6
             ['', 'INSTITUCIÓN EDUCATIVA: ', $this->institucion, '', '', '', '', '', '', '', '', ''], // Fila 7
-            ['', 'AÑO:',date("Y") , '', '', '', '', '', '', '', '', ''], // Fila 8
+            ['', 'AÑO:',$this->pmi?->anio_inicio . ' - ' . $this->pmi?->anio_fin , '', '', '', '', '', '', '', '', ''], // Fila 8
             [''], // Fila 9
             ['', 'FECHA DE SEGUIMIENTO:    DÍA '. date('d') .'   MES '. date('m')  .'  AÑO ' . date('Y'), '', '', '', '', '', '', '', '', '', ''], // Fila 10
             [''], // Fila 11

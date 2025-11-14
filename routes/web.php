@@ -25,6 +25,11 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\UserController;
 use App\Models\Municipio;
+use App\Models\Institucion;
+use App\Models\Sede;
+use App\Models\Pmi;
+use App\Models\Autoevaluacion;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,7 +46,96 @@ Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
     $municipios = Municipio::get();
-    return view('dashboard', ['municipios' => $municipios]);
+
+    $institucionesCount = Institucion::count();
+    $sedesCount = Sede::count();
+    $avgSedesPorInstitucion = $institucionesCount > 0 ? round($sedesCount / $institucionesCount, 2) : 0;
+
+    $pmiTotal = Pmi::count();
+    $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
+        ->groupBy('estado')
+        ->pluck('total', 'estado');
+
+    $pmiAprobados = $pmiPorEstado['Aprobado'] ?? 0;
+    $pmiPresentados = $pmiPorEstado['Presentado'] ?? 0;
+    $pmiProceso = $pmiPorEstado['Proceso'] ?? 0;
+
+    $porcAprobados = $pmiTotal > 0 ? round(($pmiAprobados / $pmiTotal) * 100, 1) : 0;
+    $porcPresentados = $pmiTotal > 0 ? round(($pmiPresentados / $pmiTotal) * 100, 1) : 0;
+    $porcProceso = $pmiTotal > 0 ? round(($pmiProceso / $pmiTotal) * 100, 1) : 0;
+
+    $topMunicipiosInstituciones = Institucion::select('municipio_id', DB::raw('count(*) as total'))
+        ->with('municipio')
+        ->groupBy('municipio_id')
+        ->orderByDesc('total')
+        ->limit(5)
+        ->get()
+        ->map(function ($row) {
+            return [
+                'nombre' => $row->municipio?->nombre ?? 'Sin municipio',
+                'total' => (int) $row->total,
+            ];
+        });
+
+    // Autoevaluaciones por estado
+    $autoevaluacionesTotal = Autoevaluacion::count();
+    $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
+        ->groupBy('alias_estado')
+        ->pluck('total', 'alias_estado');
+    $autoProceso = $autoevaluacionesPorEstado['PROCESO'] ?? 0;
+    $autoValidacion = $autoevaluacionesPorEstado['VALIDACION'] ?? 0;
+
+    // Sedes por municipio (Top 5)
+    $topMunicipiosSedes = DB::table('sedes')
+        ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
+        ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
+        ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
+        ->groupBy('municipios.nombre')
+        ->orderByDesc('total')
+        ->limit(5)
+        ->get();
+
+    return view('dashboard', [
+        'municipios' => $municipios,
+        'stats' => [
+            'instituciones' => $institucionesCount,
+            'sedes' => $sedesCount,
+            'promedio_sedes_por_institucion' => $avgSedesPorInstitucion,
+            'pmi_total' => $pmiTotal,
+            'pmi_aprobados' => $pmiAprobados,
+            'pmi_presentados' => $pmiPresentados,
+            'pmi_proceso' => $pmiProceso,
+            'porc_aprobados' => $porcAprobados,
+            'porc_presentados' => $porcPresentados,
+            'porc_proceso' => $porcProceso,
+            // Autoevaluaciones
+            'autoevaluaciones_total' => $autoevaluacionesTotal,
+            'autoevaluaciones_proceso' => $autoProceso,
+            'autoevaluaciones_validacion' => $autoValidacion,
+        ],
+        'charts' => [
+            'pmi_por_estado' => [
+                'labels' => array_values(['Proceso','Presentado','Aprobado']),
+                'series' => [
+                    (int) ($pmiPorEstado['Proceso'] ?? 0),
+                    (int) ($pmiPorEstado['Presentado'] ?? 0),
+                    (int) ($pmiPorEstado['Aprobado'] ?? 0),
+                ],
+            ],
+            'instituciones_por_municipio' => [
+                'labels' => $topMunicipiosInstituciones->pluck('nombre')->values(),
+                'series' => $topMunicipiosInstituciones->pluck('total')->values(),
+            ],
+            'autoevaluaciones_por_estado' => [
+                'labels' => array_values($autoevaluacionesPorEstado->keys()->toArray()),
+                'series' => array_values($autoevaluacionesPorEstado->toArray()),
+            ],
+            'sedes_por_municipio' => [
+                'labels' => $topMunicipiosSedes->pluck('nombre')->values(),
+                'series' => $topMunicipiosSedes->pluck('total')->values(),
+            ],
+        ],
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
