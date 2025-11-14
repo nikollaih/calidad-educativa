@@ -73,7 +73,7 @@
             <div class="layout-container">
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                     <div class="app-brand demo justify-content-center">
-                        <a href="{{  url('usuarios') }}" class="app-brand-link">
+                        <a href="{{  url('dashboard') }}" class="app-brand-link">
                             <!-- Logo completo para menú expandido -->
                             <img src="{{asset('imagenes/educacion_menu-nobg.png')}}"
                                  class="logo-full"
