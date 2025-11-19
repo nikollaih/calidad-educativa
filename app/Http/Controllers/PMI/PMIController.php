@@ -450,6 +450,19 @@ class PMIController extends Controller {
             return $e->getMessage();
         }
     }
+    public function show(Request $request, int $institucionId , int $pmi) {
+        $pmi = PMI::where('id', $pmi)
+            ->with(
+                'factoresCriticos.calificacion.grupo.padre',
+                'factoresCriticos.objetivos.metas.indicadores.actividades',
+            )
+            ->first();
+        return view('pmi.show',
+            [
+                'pmi' => $pmi,
+                'institucionId' => $institucionId,
+            ]);
+    }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null) {
         $meta = PmiMetaVinculada::with('indicadores')
             ->whereHas(relation:  'indicadores',

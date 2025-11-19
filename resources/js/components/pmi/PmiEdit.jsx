@@ -7,6 +7,7 @@ const FactoresCriticosTable = ({
     csrfToken = '',
     pmiData = {},
     institucionId = -1,
+    canEdit = true,
     exportarUrl = '',
     sintesisUrl = '',
     evaluacionUrl = '',
@@ -239,7 +240,7 @@ const FactoresCriticosTable = ({
                                                             )}
                                                         </div>
                                                     </div>
-                                                    {pmi?.estado === 'Proceso' && (
+                                                    {pmi?.estado === 'Proceso' && canEdit && (
                                                         <i
                                                             className="fas fa-edit text-warning fs-4 cursor-pointer"
                                                             onClick={() =>
@@ -401,7 +402,8 @@ const FactoresCriticosTable = ({
                                                         <div className="d-flex mt-2">
                                                             {row.actividad?.slug_estado !==
                                                                 'Completada' &&
-                                                                pmi.estado === 'Aprobado' && (
+                                                                pmi.estado === 'Aprobado' &&
+                                                                canEdit && (
                                                                     <button
                                                                         type="button"
                                                                         className="btn btn-sm btn-primary me-2"

@@ -106,19 +106,29 @@ export default function IndexPMI({
                             <td>{pmi.estado}</td>
                             <td class="d-flex gap-1">
                                 <a
-                                    href={`/${institucionId}/pmi/${pmi.id}/edit`}
+                                    href={`/${institucionId}/pmi/${pmi.id}`}
                                     className="btn btn-primary btn-sm"
                                 >
                                     Ver detalles
                                 </a>
-                                <a
-                                    href={`/${institucionId}/pmi/${pmi.id}/edit`}
-                                    className="btn btn-warning btn-sm"
-                                >
-                                    Editar
-                                </a>
+                                {pmi.estado == 'Aprobado' && (
+                                    <a
+                                        href={`/${institucionId}/pmi/${pmi.id}/edit`}
+                                        className="btn btn-warning btn-sm"
+                                    >
+                                        Gestionar
+                                    </a>
+                                )}
+
                                 {pmi.estado === 'Proceso' && (
                                     <>
+                                        <a
+                                            href={`/${institucionId}/pmi/${pmi.id}/edit`}
+                                            className="btn btn-warning btn-sm"
+                                        >
+                                            Editar
+                                        </a>
+
                                         <form
                                             action={`/${institucionId}/pmi/${pmi.id}/presentar`}
                                             method="POST"
