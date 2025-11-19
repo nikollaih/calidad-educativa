@@ -1,15 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{ route('institution.show', $institucionId) }}" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('institution.show', $institucionId) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
-            <a href="{{ route('institution.pei', $institucionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
-            <a href="{{ route('pmi.index', $institucionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="#" class="btn btn-warning btn-sm">PPT</a>
-        </div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.show', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-pei-url="{{ route('institution.pei', $institucionId) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
+        data-pmi-url="{{ route('pmi.index', $institucionId) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
+        data-institution-name="{{ $institucionNombre ?? '' }}"
+    >
     </div>
     <div
         data-component="ListaProyectoTransversal"

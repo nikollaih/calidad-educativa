@@ -33,6 +33,7 @@ class ProyectoTransversalController extends Controller {
             'institucionId' => $institucionId,
             'proyectosTransversales' => $proyectosTransversales,
             'esRector' => $esRector,
+            'institucionNombre' => Institucion::find($institucionId)?->nombre,
         ]);
     }
 

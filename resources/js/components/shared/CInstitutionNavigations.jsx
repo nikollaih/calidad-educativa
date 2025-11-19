@@ -9,6 +9,7 @@ const CInstitutionNavigations = ({
     autevaluacionUrl = '',
     pmiUrl = '',
     proyectosTransversalesUrl = '',
+    institutionName = '',
 }) => {
     const getBtnClass = (url, baseClass) => {
         // Si la url es "#", usamos btn-baseClass (sólido)
@@ -25,6 +26,13 @@ const CInstitutionNavigations = ({
                 label="Volver"
                 isContainer={false}
             />
+            {institutionName && (
+                <div class="flex-grow-1 text-center mx-2">
+                    <span class="fw-semibold text-truncate d-inline-block" style={{ maxWidth: '60vw' }} title={institutionName}>
+                        {institutionName}
+                    </span>
+                </div>
+            )}
             <div class="d-flex gap-2">
                 <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
                    Perfil
@@ -50,4 +58,5 @@ const CInstitutionNavigations = ({
 };
 
 export default CInstitutionNavigations;
+
 

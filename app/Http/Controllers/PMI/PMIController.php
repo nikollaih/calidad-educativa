@@ -54,6 +54,7 @@ class PMIController extends Controller {
         return view('pmi.index', [
             'institucionId' => $institucionId,
             'pmis' => $pmis,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
         ]);
     }
     /*
@@ -98,11 +99,11 @@ class PMIController extends Controller {
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
             ->get();
-        return view('pmi.create',
-            [
-                'autoevaluaciones' => $autoevaluaciones,
-                'institucionId' => $institucionId,
-            ]);
+        return view('pmi.create', [
+            'autoevaluaciones' => $autoevaluaciones,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function store(Request $request, int $institucionId ) {
         try {
@@ -156,11 +157,11 @@ class PMIController extends Controller {
                 'factoresCriticos.objetivos.metas.indicadores.actividades',
             )
             ->first();
-        return view('pmi.edit',
-            [
-                'pmi' => $pmi,
-                'institucionId' => $institucionId,
-            ]);
+        return view('pmi.edit', [
+            'pmi' => $pmi,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function presentarPmi(Request $request, int $institucionId , int $pmiId) {
         $pmi = Pmi::find($pmiId);
@@ -457,11 +458,11 @@ class PMIController extends Controller {
                 'factoresCriticos.objetivos.metas.indicadores.actividades',
             )
             ->first();
-        return view('pmi.show',
-            [
-                'pmi' => $pmi,
-                'institucionId' => $institucionId,
-            ]);
+        return view('pmi.show', [
+            'pmi' => $pmi,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null) {
         $meta = PmiMetaVinculada::with('indicadores')

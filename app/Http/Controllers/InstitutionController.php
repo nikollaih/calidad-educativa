@@ -85,7 +85,17 @@ class InstitutionController extends Controller {
     }
     public function fortalezasDebilidades(int $autoevaluacionId) {
         $fortalezasDebilidades = $this->autoevaluacionService->getFortalezasDebilidades(autoevaluacionId:$autoevaluacionId);
-        return view('institutional_profile.institution.resultados.form', $fortalezasDebilidades);
+        $autoevaluacionOwner = Autoevaluacion::find($autoevaluacionId);
+        $institucionNombre = null;
+        if ($autoevaluacionOwner) {
+            $institucionNombre = Institucion::find($autoevaluacionOwner->institucion_id)?->nombre;
+        }
+        return view(
+            'institutional_profile.institution.resultados.form',
+            array_merge($fortalezasDebilidades, [
+                'institucionNombre' => $institucionNombre,
+            ])
+        );
     }
 
     public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId) {
@@ -141,9 +151,12 @@ class InstitutionController extends Controller {
     }
     public function autoevaluaciones(int $institution ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->paginate(10);
-        // $roles = Role::all();
-        return view('institutional_profile.institution.autoevaluaciones.index',
-            ['institutionId' => $institution, 'autoevaluaciones' => $autoevaluaciones]);
+        $institucionNombre = Institucion::find($institution)?->nombre;
+        return view('institutional_profile.institution.autoevaluaciones.index', [
+            'institutionId' => $institution,
+            'autoevaluaciones' => $autoevaluaciones,
+            'institucionNombre' => $institucionNombre,
+        ]);
     }
     public function autoevaluacionesCrear(int $institution ) {
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
@@ -234,14 +247,13 @@ class InstitutionController extends Controller {
                     'ponderados' => $ponderados,
                 ];
             });
-        return view('institutional_profile.institution.autoevaluaciones.ver',
-            [
-                'gruposCalificaciones' => $gruposCalificaciones,
-                'autoevaluacion' => $autoevaluacion,
-                'statistics' => $statistics,
-                'institucionId' => $autoevaluacion->institucion_id,
-            ]
-        );
+        return view('institutional_profile.institution.autoevaluaciones.ver', [
+            'gruposCalificaciones' => $gruposCalificaciones,
+            'autoevaluacion' => $autoevaluacion,
+            'statistics' => $statistics,
+            'institucionId' => $autoevaluacion->institucion_id,
+            'institucionNombre' => Institucion::find($autoevaluacion->institucion_id)?->nombre,
+        ]);
     }
     public function autoevaluacionesAlmacenar(Request $request) {
         $autoevaluacionData =  $request->input('autoevaluacion');

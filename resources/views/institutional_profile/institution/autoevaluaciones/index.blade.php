@@ -42,6 +42,7 @@
         data-autevaluacion-url="#"
         data-pmi-url="{{ route('pmi.index', $institutionId) }}"
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institutionId) }}"
+        data-institution-name="{{ $institucionNombre ?? '' }}"
     >
     </div>
     <div
