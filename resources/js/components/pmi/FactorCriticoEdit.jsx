@@ -661,7 +661,7 @@ const FactorCriticoEdit = ({
                                         'indicador'
                                     )
                                 }
-                                placeholder="Ej: Estudiantes"
+                                placeholder="Ej: Total de estudiantes beneficiados"
                             />
                         </div>
                         <div className="col-md-4">
@@ -678,7 +678,7 @@ const FactorCriticoEdit = ({
                                         'indicador'
                                     )
                                 }
-                                placeholder="Ej: Graduados"
+                                placeholder="Ej: Número de estudiantes beneficiados"
                             />
                         </div>
                         <div className="col-md-4">
