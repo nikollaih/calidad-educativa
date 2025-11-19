@@ -87,16 +87,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-xl-6 d-flex">
-        <div class="card chart-card h-100 w-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Top municipios por instituciones</h5>
-            </div>
-            <div class="card-body">
-                <div id="chart-instituciones-municipio"></div>
-            </div>
-        </div>
-    </div>
+
     <!-- Fila 2 de gráficos -->
     <div class="col-12 col-xl-6 d-flex">
         <div class="card chart-card h-100 w-100">
@@ -105,6 +96,16 @@
             </div>
             <div class="card-body">
                 <div id="chart-autoevaluaciones-estado"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-12 d-flex">
+        <div class="card chart-card h-100 w-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Top municipios por instituciones</h5>
+            </div>
+            <div class="card-body">
+                <div id="chart-instituciones-municipio"></div>
             </div>
         </div>
     </div>
