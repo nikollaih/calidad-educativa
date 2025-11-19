@@ -181,7 +181,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
         return [
             [''], // Fila 1 vacía
             ['', '', 'SECRETARÍA DE EDUCACIÓN DEPARTAMENTAL DEL QUINDÍO' . "\n" . 'DIRECCION  CALIDAD EDUCATIVA', '', '', '', '', '', '', '', '', ''], // Fila 2
-            ['', '', 'REVISIÓN  DEL CUMPLIMIENTO DE OBJETIVOS Y METAS' . "\n" . 'DEL PLAN DE MEJORAMIENTO INSTITUCIONAL', '', '', '', '', '', '', '', '', ''], // Fila 3
+            ['', '', 'EVALUACIÓN DE RESULTADOS FINALES' . "\n" . 'DEL PLAN DE MEJORAMIENTO INSTITUCIONAL', '', '', '', '', '', '', '', '', ''], // Fila 3
             [''], // Fila 4
             [''], // Fila 5
             ['', 'MUNICIPIO: ', $this->municipio, '', '', '', '', '', '', '', '', ''], // Fila 6

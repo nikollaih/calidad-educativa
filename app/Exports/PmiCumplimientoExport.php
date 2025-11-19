@@ -5,7 +5,6 @@ namespace App\Exports;
 use App\Models\Pmi;
 use App\Models\PmiMetaVinculada;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -46,10 +45,9 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
         $metas = PmiMetaVinculada::whereHas('objetivo.factor', function ($query) {
             $query->where('pmi_id', $this->pmiId);
         })
-            ->with('indicadores.actividades')
+            ->with('indicadores.actividades.avances')
             ->get();
 
-        Log::info(json_encode($metas));
         return $metas;
     }
 
@@ -72,7 +70,7 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
                     'fecha_inicio' => '',
                     'fecha_fin' => '',
                     'accumulated' => null,
-                    'slug_estado' => '',
+                    'observaciones' => '',
                 ];
                 $currentRow++;
             } else {
@@ -88,7 +86,7 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
                             'fecha_inicio' => '',
                             'fecha_fin' => '',
                             'accumulated' => null,
-                            'slug_estado' => '',
+                            'observaciones' => '',
                         ];
                         $currentRow++;
                     } else {
@@ -99,8 +97,9 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
                             $fechaInicio = $actividad->fecha_inicio ?? '';
                             $fechaFin = $actividad->fecha_fin ?? '';
                             $accumulated = $actividad->accumulated ?? 0;
-                            $slugEstado = $actividad->slug_estado ?? '';
-
+                            $observaciones =  $actividad->avances->isEmpty()
+                                    ? 'Sin informacion'
+                                    : $actividad->avances->pluck('descripcion')->filter()->join(' - ');
                             $this->dataRows[] = [
                                 'row' => $currentRow,
                                 'meta' => null,
@@ -109,7 +108,7 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
                                 'fecha_inicio' => $fechaInicio,
                                 'fecha_fin' => $fechaFin,
                                 'accumulated' => $accumulated,
-                                'slug_estado' => $slugEstado,
+                                'observaciones' => $observaciones,
                             ];
                             $currentRow++;
                         }
@@ -276,8 +275,8 @@ class PmiCumplimientoExport implements FromCollection, WithTitle, WithHeadings, 
                     }
 
                     // Observaciones (columna L)
-                    if (isset($dataRow['slug_estado']) && $dataRow['slug_estado']) {
-                        $sheet->setCellValue("L{$currentRow}", $dataRow['slug_estado']);
+                    if (isset($dataRow['observaciones']) && $dataRow['observaciones']) {
+                        $sheet->setCellValue("L{$currentRow}", $dataRow['observaciones']);
                     }
 
                     $currentRow++;

@@ -28,4 +28,7 @@ class PmiActividadVinculada extends Model {
     public function indicador() {
         return $this->belongsTo(PmiIndicadorVinculado::class,'indicador_id');
     }
+    public function avances() {
+        return $this->hasMany(PmiActividadAvance::class,'actividad_id');
+    }
 }

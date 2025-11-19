@@ -156,7 +156,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
                 // ========== ESCRIBIR ENCABEZADOS ==========
                 $sheet->setCellValue('C2', "SECRETARÍA DE EDUCACIÓN DEPARTAMENTAL DEL QUINDÍO\nDIRECCION  CALIDAD EDUCATIVA");
-                $sheet->setCellValue('C3', "REVISIÓN  DEL CUMPLIMIENTO DE OBJETIVOS Y METAS\nDEL PLAN DE MEJORAMIENTO INSTITUCIONAL");
+                $sheet->setCellValue('C3', "SÍNTESIS DE SEGUIMIENTO AL PLAN DE MEJORAMIENTO INSTITUCIONAL");
                 $sheet->setCellValue('B6', 'MUNICIPIO: ');
                 $sheet->setCellValue('C6', $this->municipio);
                 $sheet->setCellValue('B7', 'INSTITUCIÓN EDUCATIVA: ');
@@ -243,7 +243,6 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                     'font' => ['name' => 'Calibri', 'size' => 14, 'bold' => true],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
                 ]);
-
                 $sheet->getStyle('C6:C8')->applyFromArray([
                     'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
