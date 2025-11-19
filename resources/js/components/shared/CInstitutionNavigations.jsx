@@ -27,9 +27,24 @@ const CInstitutionNavigations = ({
                 isContainer={false}
             />
             {institutionName && (
-                <div class="flex-grow-1 text-center mx-2">
-                    <span class="fw-semibold text-truncate d-inline-block" style={{ maxWidth: '60vw' }} title={institutionName}>
-                        {institutionName}
+                <div class="flex-grow-1 d-flex justify-content-center px-2">
+                    <span
+                        class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border shadow-sm"
+                        style={{ background: 'linear-gradient(90deg, #f8f9fa 0%, #eef5ff 100%)', borderColor: 'rgba(13,110,253,.25)' }}
+                    >
+                        <span
+                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary"
+                            style={{ width: '28px', height: '28px' }}
+                        >
+                            <i class="fas fa-school text-white"></i>
+                        </span>
+                        <span
+                            class="fw-semibold text-truncate"
+                            style={{ maxWidth: '50vw', fontSize: '0.95rem', letterSpacing: '0.2px' }}
+                            title={institutionName}
+                        >
+                            {institutionName}
+                        </span>
                     </span>
                 </div>
             )}
