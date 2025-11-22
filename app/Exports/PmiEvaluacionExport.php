@@ -67,7 +67,6 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                     'objetivo' => $objetivo->descripcion,
                     'objetivo_range' => "B{$currentRow}:B{$currentRow}",
                     'indicador' => '',
-                    'linea_base' => '',
                     'ano' => date('Y'),
                     'meta' => '',
                     'meta_range' => null,
@@ -85,10 +84,9 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                             'objetivo' => null,
                             'objetivo_range' => null,
                             'indicador' => '',
-                            'linea_base' => '',
                             'ano' => date('Y'),
                             'meta' => $meta->descripcion,
-                            'meta_range' => "E{$currentRow}:E{$currentRow}",
+                            'meta_range' => "D{$currentRow}:D{$currentRow}",
                             'resultado' => '0%',
                         ];
                         $currentRow++;
@@ -134,7 +132,6 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                                 'objetivo' => null,
                                 'objetivo_range' => null,
                                 'indicador' => $descripcionIndicador,
-                                'linea_base' => $descripcionIndicador,
                                 'ano' => date('Y'),
                                 'meta' => null,
                                 'meta_range' => null,
@@ -149,7 +146,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                             $firstMetaIndex = array_search($metaRowStart, array_column($this->dataRows, 'row'));
                             if ($firstMetaIndex !== false) {
                                 $this->dataRows[$firstMetaIndex]['meta'] = $meta->descripcion;
-                                $this->dataRows[$firstMetaIndex]['meta_range'] = "E{$metaRowStart}:E{$metaRowEnd}";
+                                $this->dataRows[$firstMetaIndex]['meta_range'] = "D{$metaRowStart}:D{$metaRowEnd}";
                                 $this->dataRows[$firstMetaIndex]['resultado'] = $porcentajeMeta . '%';
                             }
                         }
@@ -188,8 +185,8 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
             ['', 'INSTITUCIÓN EDUCATIVA: ', $this->institucion, '', '', '', '', '', '', '', '', ''], // Fila 7
             ['', 'AÑO:', $this->pmi?->anio_inicio . ' - ' . $this->pmi?->anio_fin, '', '', '', '', '', '', '', '', ''], // Fila 8
             [''], // Fila 9
-            ['', 'OBJETIVO', 'INDICADOR', 'LÍNEA DE BASE', 'AÑO', '', '', '', '', '', '', ''], // Fila 10
-            ['', '', '', '', 'META', 'RESULTADO', '', '', '', '', '', ''] // Fila 11
+            ['', 'OBJETIVO', 'INDICADOR', 'AÑO', '', '', '', '', '', '', '', ''], // Fila 10
+            ['', '', '', 'META', 'RESULTADO', '', '', '', '', '', '', ''] // Fila 11
         ];
     }
 
@@ -198,9 +195,9 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
             'A' => 1.42,
             'B' => 39.28,
             'C' => 51.71,
-            'D' => 51.71,
-            'E' => 15.71,
-            'F' => 39.28,
+            'D' => 15.71,
+            'E' => 39.28,
+            'F' => 10.13,
             'G' => 10.13,
             'H' => 10.13,
             'I' => 10.13,
@@ -236,7 +233,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                 'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
             ],
-            'B10:F11' => [
+            'B10:E11' => [
                 'font' => ['name' => 'Calibri', 'size' => 12, 'bold' => true],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
                 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFC0C0C0']]
@@ -250,19 +247,18 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                 $sheet = $event->sheet;
 
                 // Fusiones de celdas del encabezado
-                $sheet->mergeCells('F2:F4');
-                $sheet->mergeCells('C3:E4');
+                $sheet->mergeCells('E2:E4'); // Logo
+                $sheet->mergeCells('C3:D4');
                 $sheet->mergeCells('B10:B11');
                 $sheet->mergeCells('C10:C11');
-                $sheet->mergeCells('C2:E2');
+                $sheet->mergeCells('C2:D2');
                 $sheet->mergeCells('B2:B4');
-                $sheet->mergeCells('C5:F5');
-                $sheet->mergeCells('D10:D11');
-                $sheet->mergeCells('E10:F10');
+                $sheet->mergeCells('C5:D5');
+                $sheet->mergeCells('D10:E10');
 
                 // Alturas de fila
                 $rowHeights = [
-                    1 => 15.75, 2 => 41.25, 3 => 21.0, 4 => 21.0, 5 => 4.15,
+                    1 => 15.75, 2 => 55.25, 3 => 21.0, 4 => 21.0, 5 => 4.15,
                     6 => 26.25, 7 => 26.25, 8 => 26.25, 9 => 10.15, 10 => 18.75,
                     11 => 24.75
                 ];
@@ -284,22 +280,14 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                         $sheet->setCellValue("C{$currentRow}", $dataRow['indicador']);
                     }
 
-                    // Línea de Base (columna D)
-                    if (isset($dataRow['linea_base']) && $dataRow['linea_base']) {
-                        $sheet->setCellValue("D{$currentRow}", $dataRow['linea_base']);
-                    }
-
-                    // Año (siempre se llena en todas las filas - columna E)
-                    $sheet->setCellValue("E{$currentRow}", date('Y'));
-
-                    // Meta (columna E bajo "META", solo en la primera fila de cada meta)
+                    // Meta (columna D, solo en la primera fila de cada meta)
                     if (isset($dataRow['meta']) && $dataRow['meta']) {
-                        $sheet->setCellValue("E{$currentRow}", $dataRow['meta']);
+                        $sheet->setCellValue("D{$currentRow}", $dataRow['meta']);
                     }
 
-                    // Resultado (columna F, solo en la primera fila de cada meta)
+                    // Resultado (columna E, solo en la primera fila de cada meta)
                     if (isset($dataRow['resultado']) && $dataRow['resultado']) {
-                        $sheet->setCellValue("F{$currentRow}", $dataRow['resultado']);
+                        $sheet->setCellValue("E{$currentRow}", $dataRow['resultado']);
                     }
 
                     $currentRow++;
@@ -312,7 +300,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                 }
 
                 // Ajuste de texto en todas las celdas
-                $sheet->getStyle("A1:F{$totalRows}")->getAlignment()->setWrapText(true);
+                $sheet->getStyle("A1:E{$totalRows}")->getAlignment()->setWrapText(true);
 
                 // Fusionar celdas para objetivos
                 foreach ($this->dataRows as $dataRow) {
@@ -330,8 +318,8 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                         $sheet->getStyle($dataRow['meta_range'])->getAlignment()
                             ->setVertical(Alignment::VERTICAL_CENTER);
 
-                        // También fusionar la columna de resultado (F) con el mismo rango
-                        $resultadoRange = str_replace('E', 'F', $dataRow['meta_range']);
+                        // También fusionar la columna de resultado (E) con el mismo rango
+                        $resultadoRange = str_replace('D', 'E', $dataRow['meta_range']);
                         $sheet->mergeCells($resultadoRange);
                         $sheet->getStyle($resultadoRange)->getAlignment()
                             ->setVertical(Alignment::VERTICAL_CENTER);
@@ -340,7 +328,7 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
 
                 // Aplicar bordes a las filas de datos
                 $lastDataRow = 11 + count($this->dataRows);
-                $sheet->getStyle("B12:F{$lastDataRow}")->applyFromArray([
+                $sheet->getStyle("B12:E{$lastDataRow}")->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -349,14 +337,14 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                 ]);
 
                 // Borde exterior MEDIUM para toda la tabla de datos
-                $sheet->getStyle("B10:F{$lastDataRow}")->applyFromArray([
+                $sheet->getStyle("B10:E{$lastDataRow}")->applyFromArray([
                     'borders' => [
                         'outline' => ['borderStyle' => Border::BORDER_MEDIUM],
                     ],
                 ]);
 
-                // Centrar el contenido de las columnas E y F
-                $sheet->getStyle("E12:F{$lastDataRow}")->getAlignment()
+                // Centrar el contenido de las columnas D y E
+                $sheet->getStyle("D12:E{$lastDataRow}")->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
@@ -365,15 +353,15 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                     'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
-                $sheet->getStyle('C2:E4')->applyFromArray([
+                $sheet->getStyle('C2:D4')->applyFromArray([
                     'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
-                $sheet->getStyle('F2:F4')->applyFromArray([
+                $sheet->getStyle('E2:E4')->applyFromArray([
                     'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
-                $sheet->getStyle('B5:F10')->applyFromArray([
+                $sheet->getStyle('B5:E10')->applyFromArray([
                     'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
@@ -389,25 +377,25 @@ class PmiEvaluacionExport implements FromCollection, WithTitle, WithHeadings, Wi
                 ]);
 
                 // Bordes para encabezados de tabla
-                $sheet->getStyle('B10:F11')->applyFromArray([
+                $sheet->getStyle('B10:E11')->applyFromArray([
                     'borders' => [
                         'allBorders' => ['borderStyle' => Border::BORDER_THIN],
                     ],
                 ]);
 
                 // Borde exterior MEDIUM para encabezados
-                $sheet->getStyle('B10:F11')->applyFromArray([
+                $sheet->getStyle('B10:E11')->applyFromArray([
                     'borders' => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM]],
                 ]);
 
-                // Agregar imagen en F2:F4
+                // Agregar imagen en E2:E4
                 $imagePath = public_path('imagenes/educacion_menu.png');
                 if (file_exists($imagePath)) {
                     $drawing = new Drawing();
                     $drawing->setName('Logo');
                     $drawing->setDescription('Logo');
                     $drawing->setPath($imagePath);
-                    $drawing->setCoordinates('F2');
+                    $drawing->setCoordinates('E2');
 
                     $drawing->setOffsetX(0);
                     $drawing->setOffsetY(0);
