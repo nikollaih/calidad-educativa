@@ -4,7 +4,7 @@
 
 <div class="row g-4">
     <div class="col-12">
-        <h4 class="mb-3">Panel de control</h4>
+        <h4 class="mb-3">Información general</h4>
     </div>
 
     <!-- Fila 1: KPIs numéricos -->
