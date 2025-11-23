@@ -14,6 +14,7 @@ use App\Http\Services\MailService;
 use App\Http\Services\PMI\PmiObjetivoVinculadoService;
 use App\Http\Services\PmiService;
 use App\Models\Autoevaluacion;
+use App\Models\Enums\PmiActividad\FrecuenciaRecoleccionEnum;
 use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
@@ -236,6 +237,7 @@ class PMIController extends Controller {
                 'objetivos' => $objetivos,
                 'indicadores' => $indicadores,
                 'institucionId' => $institucionId,
+                'frecuenciasRecoleccion' => FrecuenciaRecoleccionEnum::cases()
             ]);
     }
     public function pmiValidar(Request $request, int $pmiId ) {

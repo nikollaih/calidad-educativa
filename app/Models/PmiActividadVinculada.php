@@ -20,7 +20,8 @@ class PmiActividadVinculada extends Model {
         'indicador_id',
         'afecta_indicador',
         'max_suma_indicador',
-        'indicador_acumulado'
+        'indicador_acumulado',
+        'frecuencia_recoleccion',
     ];
     protected $casts = [
         'afecta_indicador' => 'boolean',

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
 import TextMultipleTags from '@/components/shared/TextMultipleTags.jsx';
 
@@ -13,6 +14,7 @@ const FactorCriticoEdit = ({
     objetivosGenerales,
     agregarUrl = '',
     indicadores = [],
+    frecuenciasRecoleccion = [],
 }) => {
     const [formData, setFormData] = useState({
         objetivos: [], // Array de objetivos
@@ -246,6 +248,7 @@ const FactorCriticoEdit = ({
                                           fecha_inicio: '',
                                           fecha_fin: '',
                                           indicador_id: indicadorId,
+                                          frecuencia_recoleccion: '',
                                       },
                                   ],
                               }
@@ -499,6 +502,34 @@ const FactorCriticoEdit = ({
                                         actividad.id,
                                         'instrumentos_recoleccion',
                                         joinedTags,
+                                        'actividad'
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label className="form-label fw-bold">Frecuencia de recolección:</label>
+                            <Select
+                                value={
+                                    actividad.frecuencia_recoleccion
+                                        ? {
+                                              value: actividad.frecuencia_recoleccion,
+                                              label: actividad.frecuencia_recoleccion,
+                                          }
+                                        : null
+                                }
+                                options={frecuenciasRecoleccion.map((frecuencia) => ({
+                                    value: frecuencia,
+                                    label: frecuencia,
+                                }))}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                placeholder="Selecciona la frecuencia de recolección..."
+                                onChange={(frecuencia) => {
+                                    updateField(
+                                        actividad.id,
+                                        'frecuencia_recoleccion',
+                                        frecuencia.value,
                                         'actividad'
                                     );
                                 }}
@@ -984,6 +1015,15 @@ const FactorCriticoEdit = ({
                             });
                             return;
                         }
+                        // Validación de frecuencia de recolección
+                        if (!actividad.frecuencia_recoleccion) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Frecuencia de recolección',
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener una frecuencia de recolección.`,
+                            });
+                            return;
+                        }
                         // Validación de responsables
                         if (!actividad.responsables) {
                             Swal.fire({
@@ -1171,6 +1211,13 @@ const FactorCriticoEdit = ({
                                                                             name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][instrumentos_recoleccion]`}
                                                                             value={
                                                                                 actividad.instrumentos_recoleccion
+                                                                            }
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][frecuencia_recoleccion]`}
+                                                                            value={
+                                                                                actividad.frecuencia_recoleccion
                                                                             }
                                                                         />
                                                                         <input

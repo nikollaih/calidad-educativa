@@ -94,6 +94,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
                         foreach ($indicador->actividades as $actividad) {
                             $responsables = $actividad->responsables ?? '';
+                            $frecuencia = $actividad->frecuencia_recoleccion ?? '';
                             $instrumentos = $actividad->instrumentos_recoleccion ?? '';
 
                             $this->dataRows[] = [
@@ -104,7 +105,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                                 'indicador_range' => null,
                                 'instrumentos' => $instrumentos,
                                 'responsables' => $responsables,
-                                'frecuencia' => $responsables,
+                                'frecuencia' => $frecuencia,
                             ];
                             $currentRow++;
                         }
