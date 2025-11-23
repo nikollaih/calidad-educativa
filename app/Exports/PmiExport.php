@@ -33,6 +33,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
         )->findOrFail($this->pmiId);
 
         $rows = collect();
+        $uniqueCounter = 0; // Contador para generar IDs únicos
 
         foreach ($pmi->factoresCriticos as $fc) {
             $gestion    = $fc->calificacion->grupo->padre->nombre ?? "Sin gestión";
@@ -62,6 +63,8 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
                                 'meta'       => $meta,
                                 'indicador'  => $indicador,
                                 'actividad'  => $actividad,
+                                // ID único para cada fila sin indicador
+                                'unique_id'  => $indicador ? null : ++$uniqueCounter,
                             ]);
                         }
                     }
@@ -157,7 +160,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
     }
 
     public function styles(Worksheet $sheet): array {
-        $columns     = range('A', 'M'); // Ajustado a las nuevas columnas
+        $columns     = range('A', 'J'); // Solo 10 columnas (A-J)
         $columnWidth = 25;
 
         foreach ($columns as $column) {
@@ -165,7 +168,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             $sheet->getColumnDimension($column)->setAutoSize(false);
         }
 
-        $highestColumn = $sheet->getHighestColumn();
+        $highestColumn = 'J'; // Última columna con datos
         $highestRow    = $sheet->getHighestRow();
 
         // Ajustes generales
@@ -179,7 +182,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             ->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Encabezado
-        $sheet->getStyle("A1:M1")->applyFromArray([
+        $sheet->getStyle("A1:J1")->applyFromArray([
             'font' => ['bold' => true],
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
@@ -243,10 +246,10 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
         return match ($key) {
             'gestion'    => $row['gestion'],
             'componente' => $row['componente'],
-            'factor'     => $row['factor']?->id ?? null, // Usar ID para comparación única
+            'factor'     => $row['factor']?->id ?? null,
             'objetivo'   => $row['objetivo']?->id ?? null,
             'meta'       => $row['meta']?->id ?? null,
-            'indicador'  => $row['indicador']?->id ?? null, // Nuevo nivel
+            'indicador'  => $row['indicador']?->id ?? $row['unique_id'] ?? null, // Usa ID único si no hay indicador
             default      => null,
         };
     }
