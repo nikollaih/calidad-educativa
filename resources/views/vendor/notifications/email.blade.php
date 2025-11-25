@@ -46,12 +46,9 @@
 {{-- Subcopy --}}
 @isset($actionText)
 <x-slot:subcopy>
-@lang(
-    "Si tiene problemas para hacer clic en el botón Restablecer contraseña, copie y pegue la siguiente URL en su navegador web:',
-    [
-        'actionText' => $actionText,
-    ]
-) <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
+
+    Si tiene problemas para hacer clic en el botón Restablecer contraseña, copie y pegue la siguiente URL en su navegador web:
+ <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
 </x-slot:subcopy>
 @endisset
 </x-mail::message>
