@@ -64,4 +64,8 @@ class User extends Authenticatable {
             'role_id'               // Clave foránea del modelo relacionado
         );
     }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
 }
