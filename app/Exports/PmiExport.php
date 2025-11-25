@@ -63,8 +63,10 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
                                 'meta'       => $meta,
                                 'indicador'  => $indicador,
                                 'actividad'  => $actividad,
-                                // ID único para cada fila sin indicador
-                                'unique_id'  => $indicador ? null : ++$uniqueCounter,
+                                // IDs únicos para cada fila sin datos
+                                'unique_objetivo_id'  => $obj ? null : ++$uniqueCounter,
+                                'unique_meta_id'      => $meta ? null : ++$uniqueCounter,
+                                'unique_indicador_id' => $indicador ? null : ++$uniqueCounter,
                             ]);
                         }
                     }
@@ -202,7 +204,7 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'factor'     => 'C',
             'objetivo'   => 'D',
             'meta'       => 'E',
-            'indicador'  => 'F', // Nueva columna de indicador
+            'indicador'  => 'F',
         ];
 
         foreach ($mergeColumns as $key => $col) {
@@ -247,9 +249,9 @@ class PmiExport implements FromCollection, WithHeadings, WithMapping, WithStyles
             'gestion'    => $row['gestion'],
             'componente' => $row['componente'],
             'factor'     => $row['factor']?->id ?? null,
-            'objetivo'   => $row['objetivo']?->id ?? null,
-            'meta'       => $row['meta']?->id ?? null,
-            'indicador'  => $row['indicador']?->id ?? $row['unique_id'] ?? null, // Usa ID único si no hay indicador
+            'objetivo'   => $row['objetivo']?->id ?? $row['unique_objetivo_id'] ?? null,
+            'meta'       => $row['meta']?->id ?? $row['unique_meta_id'] ?? null,
+            'indicador'  => $row['indicador']?->id ?? $row['unique_indicador_id'] ?? null,
             default      => null,
         };
     }
