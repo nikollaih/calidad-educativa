@@ -7,6 +7,9 @@ use App\Models\Seguridad\Role\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+
 
 class UserController extends Controller {
     public function index() {
@@ -38,15 +41,9 @@ class UserController extends Controller {
     }
 
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'roles' => 'required|array|min:1',
-            'roles.*' => 'exists:roles,name',
-            'institucion_id' => 'nullable|exists:institucions,id',
-        ]);
+
+    public function store(StoreUserRequest $request) {
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $validated['name'],
@@ -84,15 +81,9 @@ class UserController extends Controller {
         return view('usuarios.edit',['usuario'=>$usuario,'roles'=>$roles, 'institutionsWithoutRector'=>$institutionsWithoutRector]);
     }
 
-    public function update(Request $request, User $usuario) {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => "required|email|unique:users,email,{$usuario->id}",
-            'password' => 'nullable|min:6|confirmed',
-            'roles' => 'required|array|min:1',
-            'roles.*' => 'exists:roles,name',
-            'institucion_id' => 'nullable|exists:institucions,id',
-        ]);
+
+    public function update(UpdateUserRequest $request, User $usuario) {
+        $validated = $request->validated();
 
 
         $usuario->update([

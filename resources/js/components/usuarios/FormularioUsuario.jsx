@@ -6,7 +6,7 @@ import CPasswordInput from "@/components/shared/CPasswordInput.jsx";
 export default function FormularioUsuario({ roles, institutionsWithoutRector, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [showInstitutionField, setShowInstitutionField] = useState(false);
-    const [institucionSelected,setInstitucionSelected] = useState(undefined);
+    const [institucionSelected, setInstitucionSelected] = useState(undefined);
 
     const handleRolesChange = (selected) => {
         setSelectedRoles(selected || []);
@@ -23,7 +23,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
             // Si el usuario tiene el rol 'rector', muestra el campo
             const hasRector = mappedRoles.some(r => r.value === 'rector');
             setShowInstitutionField(hasRector);
-            if(user?.institucion){
+            if (user?.institucion) {
                 setInstitucionSelected(user.institucion.id);
             }
         }
@@ -33,13 +33,13 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
     return (
         <div class="col-md-12">
             <div class="card">
-                <h1 class="card-header">{Boolean(user) ? 'Edición de usuarios' : 'Crear Usuario' }</h1>
+                <h1 class="card-header">{Boolean(user) ? 'Edición de usuarios' : 'Crear Usuario'}</h1>
                 <div class="card-body">
                     <div class="col-md-12">
                         <form action={storeUrl} method="POST">
                             {/* CSRF */}
                             <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').content} />
-                             {/* Si hay usuario, simula PATCH */}
+                            {/* Si hay usuario, simula PATCH */}
                             {user && (
                                 <input type="hidden" name="_method" value="PATCH" />
                             )}
@@ -61,10 +61,10 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                                 <label htmlFor="password" class="form-label">Contraseña</label>
                                 <CPasswordInput
                                     name="password"
-                                    isRequired={true}
+                                    isRequired={!user}
                                     minLength={8}
                                     maxLength={40}
-                                    />
+                                />
                             </div>
 
                             {/* Confirmar contraseña */}
@@ -72,7 +72,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                                 <label htmlFor="password_confirmation" class="form-label">Confirmar Contraseña</label>
                                 <CPasswordInput
                                     name="password_confirmation"
-                                    isRequired={true}
+                                    isRequired={!user}
                                     minLength={8}
                                     maxLength={40}
                                 />
@@ -100,14 +100,14 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                                 <div class="mb-3">
                                     <label htmlFor="institucion_id" class="form-label">Institución del rector</label>
                                     <CAutocompleteFromArray
-                                            key={institucionSelected || 'no-institucion'}
-                                            data={institutionsWithoutRector}
-                                            fieldName={"institucion_id"}
-                                            initialValue={institucionSelected}
-                                            orderBy={{ field: 'indice', direction: 'asc' }}
-                                            searchFields={['nombre', 'nit']}
-                                            labelFields={['nombre','nit']}
-                                        />
+                                        key={institucionSelected || 'no-institucion'}
+                                        data={institutionsWithoutRector}
+                                        fieldName={"institucion_id"}
+                                        initialValue={institucionSelected}
+                                        orderBy={{ field: 'indice', direction: 'asc' }}
+                                        searchFields={['nombre', 'nit']}
+                                        labelFields={['nombre', 'nit']}
+                                    />
                                 </div>
                             )}
 
