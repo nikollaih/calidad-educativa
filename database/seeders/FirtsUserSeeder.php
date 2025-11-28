@@ -12,11 +12,14 @@ class FirtsUserSeeder extends Seeder {
      * Run the database seeds.
      */
     public function run(): void {
-        $firstUser = User::create([
+        $currentFirstUser = User::where("email","admin@gmail.com")->first();
+        if(empty($currentFirstUser)){
+            $currentFirstUser = User::create([
              'name' => 'administrador',
              'email' => 'admin@gmail.com',
              'password'=> bcrypt('password')
         ]);
+        }
 
         $superAdmin = Role::where("name","super_admin")
             ->firstOrFail();
@@ -24,7 +27,7 @@ class FirtsUserSeeder extends Seeder {
         // Asignar permisos a los roles
         $superAdmin->givePermissionTo(Permission::all());
         // Asignar rol a un usuario por defecto
-        $firstUser->assignRole('super_admin');
-        $firstUser->save();
+        $currentFirstUser->assignRole('super_admin');
+        $currentFirstUser->save();
     }
 }

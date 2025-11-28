@@ -6,7 +6,9 @@
         <h1 class="card-header">Edición del rol</h1>
         <div class="card-body">
             <div class="col-md-12">
+                @can('s-role-crear')
                 <a href="{{ route('roles.create') }}" class="btn btn-primary">Crear rol</a>
+                @endcan
                 <table class="table mt-3">
                     <thead>
                         <tr>
@@ -21,11 +23,15 @@
                             <td>{{ $role->name_translated}}</td>
                             <td>{{ $role->permissions->pluck('name_translated')->join(', ') }}</td>
                             <td>
+                                @can('s-role-editar')
                                 <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
+                                @endcan
+                                @can('s-role-eliminar')
                                 <form action="{{ route('roles.destroy', $role) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar rol?')">Eliminar</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

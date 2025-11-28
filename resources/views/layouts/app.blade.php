@@ -91,35 +91,41 @@
                     <div class="menu-divider mt-0"></div>
                     <div class="menu-inner-shadow"></div>
                     <ul class="menu-inner py-1">
-                       @hasanyrole('super_admin|administrador')
+                       @if(auth()->user()->can('hr-usuario-ver') || auth()->user()->can('s-role-ver') || auth()->user()->can('s-permission-ver'))
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons fa fa-building"></i>
                                 <div data-i18n="Administracion">Administracion</div>
                             </a>
                             <ul class="menu-sub">
+                                @can('hr-usuario-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('usuarios')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-users"></i>
                                         <div data-i18n="Usuarios"> Usuarios</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-role-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('roles')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-cogs"></i>
                                         <div data-i18n="Roles"> Roles</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-permission-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('permissions')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-check"></i>
                                         <div data-i18n="Permisos"> Permisos</div>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
-                    @endrole
-                    @hasanyrole('super_admin|administrador|rector|secretaria_educacion')
+                    @endif
+                    @can('s-institucion-ver')
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -155,84 +161,106 @@
                             @endif
                             </ul>
                         </li>
-                    @endrole
-                    @hasanyrole('super_admin|administrador|rector|secretaria_educacion')
+                    @endcan
+                    @if(auth()->user()->can('s-municipio-ver') || auth()->user()->can('s-ajuste-ver') || auth()->user()->can('s-modelo-educacional-ver') || auth()->user()->can('s-modelo-pedagogico-ver') || auth()->user()->can('s-red-aprendizaje-ver') || auth()->user()->can('s-unidad-meta-ver') || auth()->user()->can('s-componente-ver') || auth()->user()->can('s-objetivo-pmi-ver') || auth()->user()->can('s-indicador-pmi-ver') || auth()->user()->can('s-red-actividad-ver'))
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
                                 <div data-i18n="Parámetros">Parámetros</div>
                             </a>
                             <ul class="menu-sub">
+                                @can('s-municipio-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('municipios')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-map"></i>
                                         <div data-i18n="Municipios"> Municipios</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-ajuste-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('ajustes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-gears"></i>
                                         <div data-i18n="Ajustes de la página"> Ajustes de la página"</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-modelo-educacional-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-educacionales')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-lightbulb"></i>
                                         <div data-i18n="Modelos flexibles"> Modelos flexibles</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-modelo-pedagogico-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-pedagogicos')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-chalkboard-teacher"></i>
                                         <div data-i18n="Estrategias pedagógicas"> Estrategias pedagógicas</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('s-red-aprendizaje-ver')
                                 <li class="menu-item">
                                     <a href="{{ url('redes-aprendizajes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-graduation-cap"></i>
                                         <div data-i18n="Redes de aprendizaje"> Redes de aprendizaje</div>
                                     </a>
                                 </li>
+                                @endcan
+                                @if(auth()->user()->can('s-unidad-meta-ver') || auth()->user()->can('s-componente-ver'))
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-clipboard-list"></i>
                                         <div data-i18n="PAM"> PAM</div>
                                     </a>
                                     <ul class="menu-sub">
+                                        @can('s-unidad-meta-ver')
                                         <li class="menu-item">
                                             <a href="{{ url('unidades-meta')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Indicadores"> Indicadores</div>
                                             </a>
                                         </li>
+                                        @endcan
+                                        @can('s-componente-ver')
                                         <li class="menu-item">
                                             <a href="{{ url('componentes')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Componentes"> Componentes</div>
                                             </a>
                                         </li>
+                                        @endcan
                                     </ul>
                                 </li>
+                                @endif
+                                @if(auth()->user()->can('s-objetivo-pmi-ver') || auth()->user()->can('s-indicador-pmi-ver'))
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-shapes"></i>
                                         <div data-i18n="PMI">PMI</div>
                                     </a>
                                     <ul class="menu-sub">
+                                        @can('s-objetivo-pmi-ver')
                                         <li class="menu-item">
                                             <a  href="{{ url('objetivo-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
                                                 <div data-i18n="Objetivos"> Objetivos</div>
                                             </a>
                                         </li>
+                                        @endcan
+                                        @can('s-indicador-pmi-ver')
                                         <li class="menu-item">
                                             <a  href="{{ url('indicadores-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-ruler-horizontal"></i>
                                                 <div data-i18n="Indicadores"> Indicadores</div>
                                             </a>
                                         </li>
+                                        @endcan
                                     </ul>
                                 </li>
+                                @endif
                             </ul>
                         </li>
                         <li class="menu-item">
@@ -241,21 +269,23 @@
                                 <div data-i18n="PAM"> PAM</div>
                             </a>
                         </li>
+                        @can('s-red-actividad-ver')
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">
                                 <i class="menu-icon fa fa-graduation-cap"></i>
                                 <div data-i18n="Redes pedagógicas"> Redes pedagógicas</div>
                             </a>
                         </li>
-                    @endrole
-                    @hasanyrole('super_admin|administrador|secretaria_educacion|secretaria_educacion')
+                        @endcan
+                    @endif
+                    @can('s-pmi-validacion-ver')
                         <li class="menu-item">
                             <a href="{{ url('pmi/validacion')}}" class="menu-link ">
                                 <i class="menu-icon fas fa-tasks"></i>
                                 <div data-i18n="Validación de PMI">Validación de PMI</div>
                             </a>
                         </li>
-                    @endrole
+                    @endcan
                         <li class="menu-item">
                                 <a class="layout-menu-toggle menu-link " href="javascript:void(0)">
                                     <i class="bx bx-menu bx-sm"></i>
@@ -427,6 +457,13 @@
                     setTimeout(updateLogo, i * 1000);
                 }
             });
+        </script>
+        <script>
+            window.auth = {
+                user: {!! Auth::check() ? json_encode(Auth::user()->only(['id', 'name', 'email'])) : 'null' !!},
+                permissions: {!! Auth::check() ? json_encode(Auth::user()->getAllPermissions()->pluck('name')) : '[]' !!},
+                roles: {!! Auth::check() ? json_encode(Auth::user()->roles->pluck('name')) : '[]' !!}
+            };
         </script>
         @yield('javascripts')
     </body>

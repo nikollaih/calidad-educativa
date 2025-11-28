@@ -7,8 +7,13 @@ use App\Models\Seguridad\Role\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
+use Illuminate\Support\Facades\Gate;
+
 class RoleController extends Controller {
     public function index() {
+        Gate::authorize('s-role-ver');
         $roles = Role::with('permissions')
             ->whereNot('name','super_admin')
             ->paginate(10);
@@ -39,12 +44,8 @@ class RoleController extends Controller {
         return view('roles.create', compact('permissions'));
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permissions' => 'required|array',
-            'permissions.*' => 'exists:permissions,id'
-        ]);
+    public function store(StoreRoleRequest $request) {
+
 
         $role = Role::create(['name' => $request->name]);
 
@@ -63,12 +64,8 @@ class RoleController extends Controller {
         return view('roles.edit', compact('role', 'permissions'));
     }
 
-    public function update(Request $request, Role $role) {
-        $request->validate([
-            'name' => "required|unique:roles,name,{$role->id}",
-            'permissions' => 'required|array',
-            'permissions.*' => 'exists:permissions,id' // Asegurar que sean IDs válidos
-        ]);
+    public function update(UpdateRoleRequest $request, Role $role) {
+
 
         // Actualizar nombre del rol
         $role->update(['name' => $request->name]);
@@ -81,6 +78,7 @@ class RoleController extends Controller {
 
 
     public function destroy(Role $role) {
+        Gate::authorize('s-role-eliminar');
         $role->delete();
         return redirect()->route('roles.index')->with('success', 'Rol eliminado correctamente.');
     }
