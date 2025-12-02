@@ -185,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('institution/{autoevaluacionId}/autoevaluaciones-ver'            , [InstitutionController::class, 'autoevaluacionesVer'])->name('institution.autoevaluaciones-ver');
         Route::post('institution/{institution}/autoevaluaciones-almacenar'        , [InstitutionController::class, 'autoevaluacionesAlmacenar'])->name('institution.autoevaluaciones-almacenar');
         Route::post('institution/{autoevaluacionId}/autoevaluaciones-actualizar/' , [InstitutionController::class, 'autoevaluacionesAlmacenarActualizacion'])->name('institution.autoevaluaciones-actualizar');
+        Route::post('institution/{autoevaluacionId}/autoevaluaciones-actualizar-hijo/{hijoId}' , [InstitutionController::class, 'autoevaluacionesActualizarHijo'])->name('institution.autoevaluaciones-actualizar-hijo');
         Route::post('institution/{autoevaluacionId}/autoevaluaciones-validar/' , [InstitutionController::class, 'autoevaluacionesValidar'])->name('institution.autoevaluaciones-validar');
 
         Route::resource('institution'             , InstitutionController::class);

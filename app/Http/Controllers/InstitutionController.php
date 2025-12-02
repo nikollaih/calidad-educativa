@@ -319,6 +319,46 @@ class InstitutionController extends Controller {
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación actualizada correctamente");
     }
+
+    public function autoevaluacionesActualizarHijo(Request $request, int $autoevaluacionId, int $hijoId) {
+        $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
+        $notas = $request->input('notas');
+
+        if (!$autoevaluacion) {
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+        }
+
+        // Obtener el hijo (grupo) para validar
+        $hijo = GrupoCalificacion::with('calificaciones')->find($hijoId);
+        
+        if (!$hijo) {
+            return redirect()->back()->with('flash_error_message', 'Componente no encontrado.');
+        }
+
+        // Obtener los IDs de las calificaciones que pertenecen a este hijo
+        $calificacionesDelHijo = $hijo->calificaciones->pluck('id')->toArray();
+
+        if ($notas) {
+            $syncData = [];
+
+            foreach ($notas as $nota) {
+                // Verificar que la nota pertenece a una calificación de este hijo
+                $notaCalificacion = \App\Models\NotaCalificacion::with('calificacion')->find($nota['nota_calificacion_id']);
+                
+                if ($notaCalificacion && in_array($notaCalificacion->calificacion->id, $calificacionesDelHijo)) {
+                    $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
+                }
+            }
+
+            // Sincronizar solo las notas de este hijo (sin desconectar las demás)
+            if (!empty($syncData)) {
+                $autoevaluacion->notas()->syncWithoutDetaching($syncData);
+            }
+        }
+
+        return redirect()->route('institution.autoevaluaciones-editar', ['autoevaluacionId' => $autoevaluacionId])
+            ->with('flash_success_message', "Componente '{$hijo->nombre}' actualizado correctamente");
+    }
     public function create() {
         $municipios = Municipio::get();
         // Lista de rectores disponibles

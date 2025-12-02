@@ -1,13 +1,13 @@
 import { h } from 'preact';
-import {useEffect, useState} from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { addLineBreaks } from '@utils/string.js';
 
 
-export default function Editar({  editarUrl = '#',
-                                  gruposCalificaciones = [],
-                                  csrfToken = '',
-                                  autoevaluacion = {}
-                        }) {
+export default function Editar({ editarUrl = '#',
+    gruposCalificaciones = [],
+    csrfToken = '',
+    autoevaluacion = {}
+}) {
 
     const [activeTab, setActiveTab] = useState(0);
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
@@ -89,7 +89,7 @@ export default function Editar({  editarUrl = '#',
     useEffect(() => {
         if (autoevaluacion?.notas?.length) {
             autoevaluacion.notas.forEach(nota => {
-                handleNotaClick(nota?.calificacion?.id,nota);
+                handleNotaClick(nota?.calificacion?.id, nota);
                 handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
             });
         }
@@ -100,8 +100,7 @@ export default function Editar({  editarUrl = '#',
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-0">Editar autoevaluación</h2>
             </div>
-            <form method="POST" action={editarUrl}>
-                <input type="hidden" name="_token" value={csrfToken} />
+            <div>
 
                 <div className="mb-1 d-flex justify-content-end gap-4">
                     <label className="form-label" htmlFor="anio-vigencia">
@@ -139,7 +138,7 @@ export default function Editar({  editarUrl = '#',
                         {gruposCalificaciones.map((grupo, index) => (
                             <div
                                 key={`content-${grupo.id}`}
-                                style={{display: activeTab === index ? 'block' : 'none'}}
+                                style={{ display: activeTab === index ? 'block' : 'none' }}
                             >
                                 {grupo.calificaciones?.length > 0 && (
                                     <>
@@ -162,118 +161,134 @@ export default function Editar({  editarUrl = '#',
 
                                 {grupo.hijos?.length > 0 && (
                                     <div>
-                                        {grupo.hijos.map((hijo) => (
-                                            <div class="mb-4 p-3 border rounded" key={hijo.id}>
-                                                <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
-                                                {hijo.calificaciones?.length > 0 ? (
-                                                    <>
-                                                        <ul class="list-group">
-                                                            {hijo.calificaciones.map((cal) => {
-                                                                const notaSeleccionada = notasSeleccionadas[cal.id];
-                                                                return (
-                                                                    <li className="list-group-item">
-                                                                        <div className="row g-3">
-                                                                            {/* Nombre de calificación */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <strong>{cal.indice}</strong>
-                                                                                <div>{cal.nombre}</div>
-                                                                            </div>
+                                        {grupo.hijos.map((hijo) => {
+                                            // Filtrar las notas que pertenecen a este hijo
+                                            const notasDelHijo = Object.entries(notasSeleccionadas)
+                                                .filter(([calId, nota]) => {
+                                                    return hijo.calificaciones?.some(cal => cal.id == calId);
+                                                });
 
-                                                                            {/* Notas seleccionables */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
-                                                                                <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
-                                                                                    {cal.notas_calificacion
-                                                                                        .sort((a, b) => a.valor - b.valor)
-                                                                                        .map(nota => (
-                                                                                            <div
-                                                                                                key={nota.id}
-                                                                                                title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
-                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                style={{ cursor: 'pointer' }}
-                                                                                                onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                            >
-                                                                                                {nota.valor}
-                                                                                            </div>
-                                                                                        ))}
-                                                                                </div>
-                                                                            </div>
+                                            const saveUrl = `/institutional_profile/institution/${autoevaluacion?.id}/autoevaluaciones-actualizar-hijo/${hijo.id}`;
 
+                                            return (
+                                                <form method="POST" action={saveUrl} key={hijo.id}>
+                                                    <input type="hidden" name="_token" value={csrfToken} />
 
-                                                                            {/* Categoría y valor */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
-                                                                                {notaSeleccionada ? (
-                                                                                    <>
-                                                                                        <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
-                                                                                            {notaSeleccionada.valor}
-                                                                                        </span>
-                                                                                        <div>
-                                                                                            <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
+                                                    <div class="mb-4 p-3 border rounded">
+                                                        <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
+                                                        {hijo.calificaciones?.length > 0 ? (
+                                                            <>
+                                                                <ul class="list-group">
+                                                                    {hijo.calificaciones.map((cal) => {
+                                                                        const notaSeleccionada = notasSeleccionadas[cal.id];
+                                                                        return (
+                                                                            <li className="list-group-item" key={cal.id}>
+                                                                                <div className="row g-3">
+                                                                                    {/* Nombre de calificación */}
+                                                                                    <div className="col-12 col-md-3">
+                                                                                        <strong>{cal.indice}</strong>
+                                                                                        <div>{cal.nombre}</div>
+                                                                                    </div>
+
+                                                                                    {/* Notas seleccionables */}
+                                                                                    <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
+                                                                                        <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
+                                                                                            {cal.notas_calificacion
+                                                                                                .sort((a, b) => a.valor - b.valor)
+                                                                                                .map(nota => (
+                                                                                                    <div
+                                                                                                        key={nota.id}
+                                                                                                        title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
+                                                                                                        className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                        style={{ cursor: 'pointer' }}
+                                                                                                        onClick={() => handleNotaClick(cal.id, nota)}
+                                                                                                    >
+                                                                                                        {nota.valor}
+                                                                                                    </div>
+                                                                                                ))}
                                                                                         </div>
-                                                                                    </>
-                                                                                ) : (
-                                                                                    <div className="text-muted">No seleccionado</div>
-                                                                                )}
-                                                                            </div>
+                                                                                    </div>
 
 
-                                                                            {/* Evidencia */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="form-label">Evidencia</label>
-                                                                                <textarea
-                                                                                    id={`evidencia-${cal.id}`}
-                                                                                    className="form-control"
-                                                                                    rows="1"
-                                                                                    maxLength="400"
-                                                                                    value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
-                                                                                ></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                );
-                                                            })}
-                                                        </ul>
+                                                                                    {/* Categoría y valor */}
+                                                                                    <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
+                                                                                        {notaSeleccionada ? (
+                                                                                            <>
+                                                                                                <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
+                                                                                                    {notaSeleccionada.valor}
+                                                                                                </span>
+                                                                                                <div>
+                                                                                                    <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
+                                                                                                </div>
+                                                                                            </>
+                                                                                        ) : (
+                                                                                            <div className="text-muted">No seleccionado</div>
+                                                                                        )}
+                                                                                    </div>
 
-                                                        {/* Total proceso siempre visible */}
-                                                        <div class="mt-3 p-3 bg-light rounded border">
-                                                            <strong>Total proceso:</strong>{' '}
-                                                            <span class="badge bg-dark">
-                                                                {calcularPromedio(hijo)}
-                                                            </span>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <small class="text-muted">Sin calificaciones</small>
-                                                )}
-                                            </div>
-                                        ))}
+
+                                                                                    {/* Evidencia */}
+                                                                                    <div className="col-12 col-md-3">
+                                                                                        <label htmlFor={`evidencia-${cal.id}`}
+                                                                                            className="form-label">Evidencia</label>
+                                                                                        <textarea
+                                                                                            id={`evidencia-${cal.id}`}
+                                                                                            className="form-control"
+                                                                                            rows="1"
+                                                                                            maxLength="400"
+                                                                                            value={evidencias[cal.id] || ''}
+                                                                                            onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
+                                                                                        ></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
+
+                                                                {/* Hidden inputs for notes belonging to this hijo */}
+                                                                {notasDelHijo.map(([calId, nota], index) => (
+                                                                    <div key={`nota-hidden-${calId}`}>
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`notas[${index}][nota_calificacion_id]`}
+                                                                            value={nota.id}
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`notas[${index}][evidencia]`}
+                                                                            value={evidencias[calId] || ''}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+
+                                                                {/* Total proceso with save button */}
+                                                                <div class="mt-3 p-3 bg-light rounded border d-flex justify-content-between align-items-center">
+                                                                    <div>
+                                                                        <strong>Total proceso:</strong>{' '}
+                                                                        <span class="badge bg-dark">
+                                                                            {calcularPromedio(hijo)}
+                                                                        </span>
+                                                                    </div>
+                                                                    <button type="submit" className="btn btn-primary btn-sm">
+                                                                        Guardar {hijo.nombre}
+                                                                    </button>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <small class="text-muted">Sin calificaciones</small>
+                                                        )}
+                                                    </div>
+                                                </form>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>
                         ))}
                     </div>
                 </div>
-                {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
-                    <div key={`nota-hidden-${calId}`}>
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][nota_calificacion_id]`}
-                            value={nota.id}
-                        />
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][evidencia]`}
-                            value={evidencias[calId] || ''}
-                        />
-                    </div>
-                ))}
-
-
-                <button type="submit" className="btn btn-primary mt-4">
-                    Guardar Autoevaluación
-                </button>
-            </form>
+            </div>
         </div>
     );
 }
