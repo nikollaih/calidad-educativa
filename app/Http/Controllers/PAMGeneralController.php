@@ -6,6 +6,7 @@ use App\Models\Enums\PamEstadoEnum;
 use App\Models\Pam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class PAMGeneralController extends Controller {
@@ -14,6 +15,7 @@ class PAMGeneralController extends Controller {
      *
      */
     public function index() {
+        Gate::authorize('s-pam-gestionar');
         // Ordenar los registros por fecha de creación descendente
         $pams = Pam::orderBy('created_at', 'desc')->paginate(10);
 
@@ -23,6 +25,7 @@ class PAMGeneralController extends Controller {
     }
 
     public function create() {
+        Gate::authorize('s-pam-gestionar');
         return view('pamGeneral.create');
     }
 
@@ -32,6 +35,7 @@ class PAMGeneralController extends Controller {
      * @param int $id
      */
     public function show($id): View {
+        Gate::authorize('s-pam-gestionar');
         return view('pamGeneral.edit', compact('id'));
     }
 
@@ -46,6 +50,7 @@ class PAMGeneralController extends Controller {
      * @return JsonResponse
      */
     public function edit($id) {
+        Gate::authorize('s-pam-gestionar');
         try {
             // Carga la acción con todas sus relaciones anidadas en el nuevo orden
             $pam = Pam::find($id);
@@ -69,6 +74,7 @@ class PAMGeneralController extends Controller {
      * @param Request $request Datos del formulario
      */
     public function store(Request $request) {
+        Gate::authorize('s-pam-gestionar');
         $pamData = $request->input('pam');
 
         // Obtiene el último consecutivo
@@ -102,6 +108,7 @@ class PAMGeneralController extends Controller {
      * @param int $id id de la accion
      */
     public function destroy(int $id): JsonResponse {
+        Gate::authorize('s-pam-gestionar');
         try {
             $pam = Pam::findOrFail($id);
             $pam->delete();
@@ -126,6 +133,7 @@ class PAMGeneralController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request,int $id) {
+        Gate::authorize('s-pam-gestionar');
         $data = $request->all()['pam'];
         $pam = Pam::findOrFail($id);
         $pam->update($data);
@@ -135,6 +143,7 @@ class PAMGeneralController extends Controller {
 
 
     public function presentarPam(Request $request, int $pamId) {
+        Gate::authorize('s-pam-gestionar');
         $pam = Pam::findOrFail($pamId);
         $pam->estado = PamEstadoEnum::Presentado->value;
         $pam->save();

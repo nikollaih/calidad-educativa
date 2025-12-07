@@ -99,8 +99,11 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-pmi-validacion-editar'],
             ['name'=>'s-pmi-validacion-eliminar'],
 
-            // Parámetros del Sistema (Permiso Unificado)
+            // Parámetros del sistema
             ['name'=>'s-parametro-editar'],
+
+            // PAM
+            ['name'=>'s-pam-gestionar'],
         ];
 
         foreach ($permissions as $permission) {

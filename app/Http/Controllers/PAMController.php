@@ -18,6 +18,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,7 @@ class PAMController extends Controller {
      *
      */
     public function index(int $pamId): View {
+        Gate::authorize('s-pam-gestionar');
         $isInProceso = Pam::find($pamId)->estado === PamEstadoEnum::Proceso->value;
 
         return view('pam.index', [
@@ -48,6 +50,7 @@ class PAMController extends Controller {
      *
      */
     public function create(int $pamId): View {
+        Gate::authorize('s-pam-gestionar');
         return view('pam.pam_form', ['pamGeneralId' => $pamId]);
     }
 
@@ -57,6 +60,7 @@ class PAMController extends Controller {
      * @param int $id
      */
     public function show($id): View {
+        Gate::authorize('s-pam-gestionar');
         return view('pam.edit', compact('id'));
     }
 
@@ -66,6 +70,7 @@ class PAMController extends Controller {
      * @param int $id
      */
     public function vistaCompleta($id): View {
+        Gate::authorize('s-pam-gestionar');
         return view('pam.vista_completa', compact('id'));
     }
 
@@ -77,6 +82,7 @@ class PAMController extends Controller {
      * Obtiene todos los registros PAM, cargando todas sus relaciones anidadas.
      */
     public function all(int $pamId): JsonResponse {
+        Gate::authorize('s-pam-gestionar');
         try {
             // Carga todas las acciones con sus relaciones completas y anidadas
             $actions = PamAccion::where('pam_id', $pamId)->with([
@@ -155,6 +161,7 @@ class PAMController extends Controller {
      * @return JsonResponse
      */
     public function edit($id) {
+        Gate::authorize('s-pam-gestionar');
         try {
             // Carga la acción con todas sus relaciones anidadas en el nuevo orden
             $accion = PamAccion::with([
@@ -229,6 +236,7 @@ class PAMController extends Controller {
      * @param Request $request Datos del formulario
      */
     public function store(Request $request, int $pamGeneralId): JsonResponse {
+        Gate::authorize('s-pam-gestionar');
         // Reglas de validación para la estructura anidada
         $validator = Validator::make($request->all(), [
             'componentes' => 'required|array|min:1',
@@ -344,6 +352,7 @@ class PAMController extends Controller {
      * @param int $id id de la accion
      */
     public function destroy(int $id): JsonResponse {
+        Gate::authorize('s-pam-gestionar');
         try {
             $pam = PamAccion::findOrFail($id);
             $pam->delete();
@@ -369,6 +378,7 @@ class PAMController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse {
+        Gate::authorize('s-pam-gestionar');
         // Reglas de validación para la estructura anidada.
         // Son idénticas a las del método 'store' para asegurar consistencia.
         $validator = Validator::make($request->all(), [
@@ -527,6 +537,7 @@ class PAMController extends Controller {
      * Guarda avances por accion
      */
     public function storeAvance(Request $request) {
+        Gate::authorize('s-pam-gestionar');
         try {
             // Validar los datos de la solicitud entrante
             $validatedData = $request->validate([
@@ -604,39 +615,55 @@ class PAMController extends Controller {
      * @param int $accionId
      */
     public function getAvancesPorAccion(int $accionId) {
-        $avances = PamAvance::where('accion_id', $accionId)
-            ->with(['meta', 'accion', 'archivosAdjuntos'])
-            ->orderBy('fecha_avance', 'desc')
-            ->get();
+        Gate::authorize('s-pam-gestionar');
+        try {
+            $avances = PamAvance::where('accion_id', $accionId)
+                ->with(['meta', 'accion', 'archivosAdjuntos'])
+                ->orderBy('fecha_avance', 'desc')
+                ->get();
 
-        $formattedAvances = $avances->map(function ($avance) {
-            return [
-                'id' => $avance->id,
-                'fecha_avance' => $avance->fecha_avance->format('Y-m-d'),
-                'cantidad_ejecutada' => $avance->cantidad_ejecutada,
-                'observacion' => $avance->observacion,
-                'meta_descripcion' => $avance->meta->descripcion ?? 'N/A',
-                'accion_descripcion' => $avance->accion->descripcion ?? 'N/A',
-                'archivos_adjuntos' => $avance->archivosAdjuntos->map(function($file) {
-                    return [
-                        'id' => $file->id,
-                        'nombre' => $file->nombre_original,
-                        'url' => Storage::url($file->ruta_archivo),
-                    ];
-                })->toArray(),
-            ];
-        });
+            $formattedAvances = $avances->map(function ($avance) {
+                return [
+                    'id' => $avance->id,
+                    'fecha_avance' => $avance->fecha_avance->format('Y-m-d'),
+                    'cantidad_ejecutada' => $avance->cantidad_ejecutada,
+                    'observacion' => $avance->observacion,
+                    'meta_descripcion' => $avance->meta->descripcion ?? 'N/A',
+                    'accion_descripcion' => $avance->accion->descripcion ?? 'N/A',
+                    'archivos_adjuntos' => $avance->archivosAdjuntos->map(function($file) {
+                        return [
+                            'id' => $file->id,
+                            'nombre' => $file->nombre_original,
+                            'url' => Storage::url($file->ruta_archivo),
+                        ];
+                    })->toArray(),
+                ];
+            });
 
-        return response()->json($formattedAvances);
+            return response()->json($formattedAvances);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los avances: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Exportar PAM a Excel
      */
     public function export(int $pamGeneralId) {
-        $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        Gate::authorize('s-pam-gestionar');
+        try {
+            $fileName = 'pam_export_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
-        return Excel::download(new PamExport($pamGeneralId), $fileName);
+            return Excel::download(new PamExport($pamGeneralId), $fileName);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al exportar el PAM: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     // --------------------
@@ -644,24 +671,33 @@ class PAMController extends Controller {
     // --------------------
 
     public function getMetas(Request $request): JsonResponse {
-        $query = PamMeta::query();
+        Gate::authorize('s-pam-gestionar');
+        try {
+            $query = PamMeta::query();
 
-        $pamGeneralId = (int) $request->input('pam_general_id');
+            $pamGeneralId = (int) $request->input('pam_general_id');
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('descripcion', 'like', '%' . $searchTerm . '%');
+            if ($request->has('search')) {
+                $searchTerm = $request->input('search');
+                $query->where('descripcion', 'like', '%' . $searchTerm . '%');
+            }
+
+            $metas = $query->whereHas('indicador', function ($q) use ($pamGeneralId) {
+                $q->whereHas('meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente', function ($query) use ($pamGeneralId) {
+                    $query->where('pam_id', $pamGeneralId);
+                });
+            })->with(['indicador'])->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $metas
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener las metas: ' . $e->getMessage()
+            ], 500);
         }
-
-        $metas = $query->whereHas('indicador', function ($q) use ($pamGeneralId) {
-            $q->whereHas('accionHasOne', function ($q) use ($pamGeneralId) {
-                $q->where('pam_id', $pamGeneralId);
-            });
-        })->select('id', 'descripcion')->get();
-
-        return response()->json($metas);
     }
 
 }
-
-
