@@ -104,5 +104,6 @@ return [
     's-parametro-editar' => 'Editar parámetros del sistema',
 
     // PAM
-    's-pam-gestionar' => 'Gestionar y consultar PAM',
+    's-pam-gestionar' => 'Gestionar PAM (crear, editar, eliminar)',
+    's-pam-consultar' => 'Consultar PAM (solo lectura)',
 ];

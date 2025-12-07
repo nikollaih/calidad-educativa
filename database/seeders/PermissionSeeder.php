@@ -104,6 +104,7 @@ class PermissionSeeder extends Seeder {
 
             // PAM
             ['name'=>'s-pam-gestionar'],
+            ['name'=>'s-pam-consultar'],
         ];
 
         foreach ($permissions as $permission) {

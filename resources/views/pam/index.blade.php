@@ -7,6 +7,7 @@
         data-pam-general-id="{{ $pamGeneralId }}"
         data-is-in-proceso="{{ json_encode($isInProceso) }}"
         data-can-gestionar-pam="{{ auth()->user()->can('s-pam-gestionar') ? 'true' : 'false' }}"
+        data-can-consultar-pam="{{ auth()->user()->can('s-pam-consultar') ? 'true' : 'false' }}"
     ></div>
     
     @vite('resources/js/app.js')

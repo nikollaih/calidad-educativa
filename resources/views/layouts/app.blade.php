@@ -263,14 +263,14 @@
                                 @endif
                             </ul>
                         </li>
-                        @can('s-pam-gestionar')
+                        @if(auth()->user()->can('s-pam-consultar') || auth()->user()->can('s-pam-gestionar'))
                         <li class="menu-item">
                             <a href="{{ url('pams/index')}}" class="menu-link ">
                                 <i class="menu-icon fa-solid fa-table"></i>
                                 <div data-i18n="PAM"> PAM</div>
                             </a>
                         </li>
-                        @endcan
+                        @endif
                         @can('s-red-actividad-ver')
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">

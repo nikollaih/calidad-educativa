@@ -36,7 +36,7 @@ class PAMController extends Controller {
      *
      */
     public function index(int $pamId): View {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         $isInProceso = Pam::find($pamId)->estado === PamEstadoEnum::Proceso->value;
 
         return view('pam.index', [
@@ -70,7 +70,7 @@ class PAMController extends Controller {
      * @param int $id
      */
     public function vistaCompleta($id): View {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         return view('pam.vista_completa', compact('id'));
     }
 
@@ -82,7 +82,7 @@ class PAMController extends Controller {
      * Obtiene todos los registros PAM, cargando todas sus relaciones anidadas.
      */
     public function all(int $pamId): JsonResponse {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         try {
             // Carga todas las acciones con sus relaciones completas y anidadas
             $actions = PamAccion::where('pam_id', $pamId)->with([
@@ -615,7 +615,7 @@ class PAMController extends Controller {
      * @param int $accionId
      */
     public function getAvancesPorAccion(int $accionId) {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         try {
             $avances = PamAvance::where('accion_id', $accionId)
                 ->with(['meta', 'accion', 'archivosAdjuntos'])
@@ -671,7 +671,7 @@ class PAMController extends Controller {
     // --------------------
 
     public function getMetas(Request $request): JsonResponse {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         try {
             $query = PamMeta::query();
 

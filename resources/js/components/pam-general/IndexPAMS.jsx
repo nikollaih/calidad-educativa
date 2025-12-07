@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from "preact/hooks";
 import CPagination from '@/components/shared/CPagination.jsx';
 
-export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = '' }) {
+export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = '', canGestionarPam = false }) {
     const [pams, setPams] = useState([]);
 
     useEffect(() => {
@@ -39,41 +39,41 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
 
     const deleteRow = async (id) => {
         try {
-        const result = await Swal.fire({
-            title: '¿Estás seguro?',
-            text: "¡No podrás revertir esta acción!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true
-        });
-
-        if (result.isConfirmed) {
-            // Hacer petición DELETE al servidor
-            const response = await fetch(`/pams/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
             });
 
-            if (!response.ok) {
-            throw new Error('Error al eliminar el registro');
-            }
+            if (result.isConfirmed) {
+                // Hacer petición DELETE al servidor
+                const response = await fetch(`/pams/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                });
 
-            // Mostrar notificación de éxito
-            await Swal.fire(
-            '¡Eliminado!',
-            'El registro ha sido eliminado.',
-            'success'
-            );
-            window.location.reload()
-        }
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el registro');
+                }
+
+                // Mostrar notificación de éxito
+                await Swal.fire(
+                    '¡Eliminado!',
+                    'El registro ha sido eliminado.',
+                    'success'
+                );
+                window.location.reload()
+            }
         } catch (error) {
             console.error('Error al eliminar:', error);
             Swal.fire(
@@ -137,9 +137,11 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
         <div class="container mt-4">
             <h1 class="mb-4">PLAN DE APOYO AL MEJORAMIENTO</h1>
             <h2 class="mb-4">HISTÓRICO</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar nuevo registro
-            </button>
+            {canGestionarPam && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar nuevo registro
+                </button>
+            )}
 
             <table class="table">
                 <thead>
@@ -147,7 +149,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                         <th>VIGENCIA</th>
                         <th>FECHA DE CREACIÓN</th>
                         <th>ESTADO</th>
-                        <th>ACCIONES</th>
+                        {canGestionarPam && <th>ACCIONES</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -157,34 +159,41 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                 <td>{pam.anio_inicio} - {pam.anio_fin}</td>
                                 <td>{formatFecha(pam.created_at)}</td>
                                 <td>{pam.estado}</td>
-                                <td>
-                                    <a href={`/pams/${pam.id}/edit`} className="btn btn-warning btn-sm me-2" >
-                                        Editar
-                                    </a>
+                                {canGestionarPam ? (
+                                    <td>
+                                        <a href={`/pams/${pam.id}/edit`} className="btn btn-warning btn-sm me-2" >
+                                            Editar
+                                        </a>
 
-                                    <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
-                                        Gestionar
-                                    </a>
+                                        <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
+                                            Gestionar
+                                        </a>
 
-                                    <button
-                                        className="btn btn-sm btn-danger me-2" // [MODIFICACIÓN] Agregado margen para separar los botones.
-                                        onClick={() => deleteRow(pam.id)}
-                                        title="Eliminar PAM"
-                                    >
-                                        Eliminar
-                                    </button>
-                                    { Boolean(pam.estado == "Proceso") && (
-                                        // Se cambió el tipo de botón a "button" para que no envíe el formulario.
                                         <button
-                                            type="button"
-                                            className="btn btn-success btn-sm"
-                                            onClick={() => handlePresentarClick(pam.id)}
-                                            alt="Presentar PAM"
+                                            className="btn btn-sm btn-danger me-2"
+                                            onClick={() => deleteRow(pam.id)}
+                                            title="Eliminar PAM"
                                         >
-                                            Presentar PAM
+                                            Eliminar
                                         </button>
-                                    )}
-                                </td>
+                                        {Boolean(pam.estado == "Proceso") && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-success btn-sm"
+                                                onClick={() => handlePresentarClick(pam.id)}
+                                                alt="Presentar PAM"
+                                            >
+                                                Presentar PAM
+                                            </button>
+                                        )}
+                                    </td>
+                                ) : (
+                                    <td>
+                                        <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
+                                            Gestionar
+                                        </a>
+                                    </td>
+                                )}
                             </tr>
                         ))
                     ) : (
@@ -194,7 +203,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                     )}
                 </tbody>
             </table>
-            <CPagination  pagination={pamsPaginated} />
+            <CPagination pagination={pamsPaginated} />
         </div>
     );
 }

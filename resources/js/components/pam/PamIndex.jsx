@@ -5,7 +5,7 @@ import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
 import VerAvance from './VerAvance';
 
-const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false }) => {
+const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false, canConsultarPam = false }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -274,7 +274,10 @@ const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false }) => {
   return (
     <div className="container-fluid mt-4">
       <div className="d-flex justify-content-start gap-2 mb-4">
-        {/* <CBackButton /> */}
+        {/* Back button visible for all users with any PAM permission */}
+        {(canGestionarPam || canConsultarPam) && (
+          <CNavigationButton label="Volver" to="/pams/index" icon="fas fa-arrow-left" />
+        )}
         {canGestionarPam && isInProceso && (
           <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
         )}
@@ -286,7 +289,8 @@ const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false }) => {
             onClick={openCrearAvance}
           />
         )}
-        {canGestionarPam && (
+        {/* Export button visible for users with either permission */}
+        {(canGestionarPam || canConsultarPam) && (
           <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable} />
         )}
         <CNavigationButton

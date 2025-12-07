@@ -15,7 +15,7 @@ class PAMGeneralController extends Controller {
      *
      */
     public function index() {
-        Gate::authorize('s-pam-gestionar');
+        Gate::any(['s-pam-consultar', 's-pam-gestionar']);
         // Ordenar los registros por fecha de creación descendente
         $pams = Pam::orderBy('created_at', 'desc')->paginate(10);
 
