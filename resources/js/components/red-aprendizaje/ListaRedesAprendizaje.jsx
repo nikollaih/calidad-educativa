@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 
-export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '' }) {
+export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '', canEditParametros = false }) {
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar');
@@ -168,27 +168,27 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
     };
 
     const handleSubmit = (e) => {
-      // Esta función ahora solo realiza la validación.
-      // Si la validación falla, se evita el envío del formulario.
-      // MODIFICACION: Validar que el campo de correo no esté vacío
-      if (!nombre.trim() || !representanteId || !correoElectronico.trim()) {
-          showAlert('Por favor, completa los campos obligatorios (Nombre, Representante y Correo Electrónico).');
-          e.preventDefault(); // Detiene el envío nativo del formulario
-          return;
-      }
-      // MODIFICACION: Validar el formato del correo electrónico
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(correoElectronico)) {
-          showAlert('Por favor, introduce un correo electrónico válido.');
-          e.preventDefault();
-          return;
-      }
+        // Esta función ahora solo realiza la validación.
+        // Si la validación falla, se evita el envío del formulario.
+        // MODIFICACION: Validar que el campo de correo no esté vacío
+        if (!nombre.trim() || !representanteId || !correoElectronico.trim()) {
+            showAlert('Por favor, completa los campos obligatorios (Nombre, Representante y Correo Electrónico).');
+            e.preventDefault(); // Detiene el envío nativo del formulario
+            return;
+        }
+        // MODIFICACION: Validar el formato del correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correoElectronico)) {
+            showAlert('Por favor, introduce un correo electrónico válido.');
+            e.preventDefault();
+            return;
+        }
 
-      if (modalMode === 'agregar' && !actoAdministrativo) {
-          showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
-          e.preventDefault(); // Detiene el envío nativo del formulario
-          return;
-      }
+        if (modalMode === 'agregar' && !actoAdministrativo) {
+            showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
+            e.preventDefault(); // Detiene el envío nativo del formulario
+            return;
+        }
     };
 
     // Maneja la acción de eliminar
@@ -227,9 +227,11 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Redes de Aprendizaje</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar red de aprendizaje
-            </button>
+            {canEditParametros && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar red de aprendizaje
+                </button>
+            )}
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
 
             <table class="table">
@@ -240,7 +242,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                         <th>Representante</th>
                         <th>Correo Electrónico</th>
                         <th>Acto Administrativo</th>
-                        <th>Acciones</th>
+                        {canEditParametros && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -258,34 +260,36 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     'sin información'
                                 )}
                             </td>
-                            <td>
-                                <button
-                                    onClick={() => handleVerClick(redAprendizaje)}
-                                    className="btn btn-info btn-sm me-2"
-                                >
-                                    Ver
-                                </button>
-                                <button
-                                    onClick={() => handleEditarClick(redAprendizaje)}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => handleDelete(redAprendizaje.id)}
-                                >
-                                    Eliminar
-                                </button>
-                            </td>
+                            {canEditParametros && (
+                                <td>
+                                    <button
+                                        onClick={() => handleVerClick(redAprendizaje)}
+                                        className="btn btn-info btn-sm me-2"
+                                    >
+                                        Ver
+                                    </button>
+                                    <button
+                                        onClick={() => handleEditarClick(redAprendizaje)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => handleDelete(redAprendizaje.id)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
 
             {/* Modal de formulario (agregar/editar) */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -424,7 +428,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
             {/* NUEVO: Modal para ver actividades e integrantes */}
             {showViewModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -465,7 +469,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                                                 <small>{actividad.fecha ? new Date(actividad.fecha).toLocaleDateString() : ''}</small>
                                                             </div>
                                                             {actividad.descripcion && (
-                                                                <p class="mb-1 text-muted small" style={{wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal'}}>{actividad.descripcion}</p>
+                                                                <p class="mb-1 text-muted small" style={{ wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{actividad.descripcion}</p>
                                                             )}
                                                         </div>
                                                     ))}
@@ -538,10 +542,10 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                 </div>
             )}
 
-            <CPagination  pagination={redesAprendizajes} />
+            <CPagination pagination={redesAprendizajes} />
             {/* Modal de alerta personalizado */}
             {showAlertModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -561,7 +565,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
             {/* Modal de confirmación personalizado */}
             {showConfirmModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

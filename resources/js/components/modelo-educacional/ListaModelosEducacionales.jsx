@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 
-export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
+export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
     const [currentMunicipio, setCurrentMunicipio] = useState(null);
@@ -83,54 +83,58 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Modelos flexibles</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar modelo flexible
-            </button>
+            {canEditParametros && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar modelo flexible
+                </button>
+            )}
 
             <table class="table">
                 <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Acciones</th>
-                </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        {canEditParametros && <th>Acciones</th>}
+                    </tr>
                 </thead>
                 <tbody>
-                {modelosEducacionales.data.map((modeloEducacional) => (
-                    <tr key={modeloEducacional.id}>
-                        <td>{modeloEducacional.name}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEditarClick(modeloEducacional)}
-                                className="btn btn-warning btn-sm me-2"
-                            >
-                                Editar
-                            </button>
-                            <form
-                                action={`/modelos-educacionales/${modeloEducacional.id}`}
-                                method="POST"
-                                style={{display: 'inline'}}
-                                onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este modeloEducacional?')) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                <input type="hidden" name="_token" value={csrfToken}/>
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" className="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                ))}
+                    {modelosEducacionales.data.map((modeloEducacional) => (
+                        <tr key={modeloEducacional.id}>
+                            <td>{modeloEducacional.name}</td>
+                            {canEditParametros && (
+                                <td>
+                                    <button
+                                        onClick={() => handleEditarClick(modeloEducacional)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Editar
+                                    </button>
+                                    <form
+                                        action={`/modelos-educacionales/${modeloEducacional.id}`}
+                                        method="POST"
+                                        style={{ display: 'inline' }}
+                                        onSubmit={(e) => {
+                                            if (!confirm('¿Estás seguro de que quieres eliminar este modeloEducacional?')) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <input type="hidden" name="_token" value={csrfToken} />
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <button type="submit" className="btn btn-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            )}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
-            <CPagination  pagination={modelosEducacionales} />
+            <CPagination pagination={modelosEducacionales} />
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -144,7 +148,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                 ></button>
                             </div>
                             <form onSubmit={handleSubmit}>
-                            <div class="modal-body">
+                                <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">
                                             Nombre del modelo educacional

@@ -100,5 +100,8 @@ return [
     's-pmi-validacion-editar'   => 'Editar validación PMI',
     's-pmi-validacion-eliminar' => 'Eliminar validación PMI',
 
+    // Parámetros del Sistema (Permiso Unificado)
+    's-parametro-editar' => 'Editar parámetros del sistema',
+
 ];
 

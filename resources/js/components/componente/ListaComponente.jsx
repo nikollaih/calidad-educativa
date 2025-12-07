@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 
-export default function ListaComponente({ agregarUrl, componentes, csrfToken = '' }) {
+export default function ListaComponente({ agregarUrl, componentes, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
     const [currentComponente, setCurrentComponente] = useState(null);
@@ -74,53 +74,57 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Componentes</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar componente
-            </button>
+            {canEditParametros && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar componente
+                </button>
+            )}
 
             <table class="table">
                 <thead>
                     <tr>
                         <th>Descripción</th>
-                        <th>Acciones</th>
+                        {canEditParametros && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {componentes.data.map((componente) => (
                         <tr key={componente.id}>
                             <td>{componente.descripcion}</td>
-                            <td>
-                                <button
-                                    onClick={() => handleEditarClick(componente)}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <form
-                                    action={`/componentes/${componente.id}`}
-                                    method="POST"
-                                    style={{display: 'inline'}}
-                                    onSubmit={(e) => {
-                                        if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <input type="hidden" name="_token" value={csrfToken}/>
-                                    <input type="hidden" name="_method" value="DELETE"/>
-                                    <button type="submit" className="btn btn-danger btn-sm">
-                                        Eliminar
+                            {canEditParametros && (
+                                <td>
+                                    <button
+                                        onClick={() => handleEditarClick(componente)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Editar
                                     </button>
-                                </form>
-                            </td>
+                                    <form
+                                        action={`/componentes/${componente.id}`}
+                                        method="POST"
+                                        style={{ display: 'inline' }}
+                                        onSubmit={(e) => {
+                                            if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <input type="hidden" name="_token" value={csrfToken} />
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <button type="submit" className="btn btn-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <CPagination  pagination={componentes} />
+            <CPagination pagination={componentes} />
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualizarImagenesUrl = '' }) {
+export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualizarImagenesUrl = '', canEditParametros = false }) {
 
     const [faviconFile, setFaviconFile] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
@@ -90,6 +90,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualiza
                                                     className="btn btn-outline-primary btn-lg rounded-pill"
                                                     type="button"
                                                     onClick={() => document.getElementById('faviconUpload').click()}
+                                                    disabled={!canEditParametros}
                                                 >
                                                     <i className="fas fa-cloud-upload-alt me-2"></i>
                                                     Subir Favicon
@@ -151,6 +152,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualiza
                                                     className="btn btn-outline-warning btn-lg rounded-pill"
                                                     type="button"
                                                     onClick={() => document.getElementById('logoUpload').click()}
+                                                    disabled={!canEditParametros}
                                                 >
                                                     <i className="fas fa-cloud-upload-alt me-2"></i>
                                                     Subir Logo
@@ -176,7 +178,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualiza
                                     </div>
                                 </div>
 
-                                <form method="POST" action={actualizarImagenesUrl}  enctype="multipart/form-data">
+                                <form method="POST" action={actualizarImagenesUrl} enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value={csrfToken} />
                                     {/* Input de archivo oculto */}
                                     <input
@@ -202,6 +204,7 @@ export default function Ajustes({ faviconUrl, logoUrl, csrfToken = '', actualiza
                                             <button
                                                 className="btn btn-success rounded-pill px-4"
                                                 onClick={handleSaveChanges}
+                                                disabled={!canEditParametros}
                                             >
                                                 <i className="fas fa-save me-2"></i>
                                                 Guardar Cambios

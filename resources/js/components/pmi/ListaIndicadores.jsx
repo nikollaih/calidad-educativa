@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 
-export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '' }) {
+export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar');
     // 'agregar' o 'editar'
@@ -102,56 +102,60 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Indicadores</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar indicador
-            </button>
+            {canEditParametros && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar indicador
+                </button>
+            )}
 
             <table class="table">
                 <thead>
-                <tr>
-                    <th>Unidad parcial</th>
-                    <th>Unidad total</th>
-                    <th>Acciones</th>
-                </tr>
+                    <tr>
+                        <th>Unidad parcial</th>
+                        <th>Unidad total</th>
+                        {canEditParametros && <th>Acciones</th>}
+                    </tr>
                 </thead>
                 <tbody>
-                {indicadores.data.map((indicador) => (
-                    <tr key={indicador.id}>
-                        <td>{indicador.unidad_parcial}</td>
-                        <td>{indicador.unidad_total}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEditarClick(indicador)}
-                                className="btn btn-warning btn-sm me-2"
-                            >
-                                Editar
-                            </button>
-                            <form
-                                action={`/indicadores-pmi/${indicador.id}`}
-                                method="POST"
-                                style={{display: 'inline'}}
-                                onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                <input type="hidden" name="_token" value={csrfToken}/>
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" className="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                ))}
+                    {indicadores.data.map((indicador) => (
+                        <tr key={indicador.id}>
+                            <td>{indicador.unidad_parcial}</td>
+                            <td>{indicador.unidad_total}</td>
+                            {canEditParametros && (
+                                <td>
+                                    <button
+                                        onClick={() => handleEditarClick(indicador)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Editar
+                                    </button>
+                                    <form
+                                        action={`/indicadores-pmi/${indicador.id}`}
+                                        method="POST"
+                                        style={{ display: 'inline' }}
+                                        onSubmit={(e) => {
+                                            if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <input type="hidden" name="_token" value={csrfToken} />
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <button type="submit" className="btn btn-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            )}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
-            <CPagination  pagination={indicadores} />
+            <CPagination pagination={indicadores} />
 
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

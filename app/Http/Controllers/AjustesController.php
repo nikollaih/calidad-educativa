@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -39,6 +40,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\Http\RedirectResponse Redirección a la página de ajustes con mensaje de éxito o error.
          */
     public function actualizarImagenesSistema(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $msg = '';
         if ($request->hasFile('favicon')) {
             // Intenta almacenar el Adjunto
@@ -71,6 +73,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\View\View Vista del formulario de creación de roles.
          */
     public function create() {
+        Gate::authorize('s-parametro-editar');
         $permissions = Permission::all();
         return view('roles.create', compact('permissions'));
     }
@@ -82,6 +85,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\Http\RedirectResponse Redirección a la lista de roles con mensaje de éxito.
          */
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'name' => 'required|unique:roles,name',
             'permissions' => 'required|array',
@@ -107,6 +111,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\View\View Vista del formulario de edición de roles.
          */
     public function edit(Role $role) {
+        Gate::authorize('s-parametro-editar');
         $permissions = Permission::all();
         return view('roles.edit', compact('role', 'permissions'));
     }
@@ -119,6 +124,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\Http\RedirectResponse Redirección a la lista de roles con mensaje de éxito.
          */
     public function update(Request $request, Role $role) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'name' => "required|unique:roles,name,{$role->id}",
             'permissions' => 'required|array',
@@ -142,6 +148,7 @@ class AjustesController extends Controller {
          * @return \Illuminate\Http\RedirectResponse Redirección a la lista de roles con mensaje de éxito.
          */
     public function destroy(Role $role) {
+        Gate::authorize('s-parametro-editar');
         $role->delete();
         return redirect()->route('roles.index')->with('success', 'Rol eliminado correctamente.');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PMI;
 use App\Http\Controllers\Controller;
 use App\Models\PMI\PmiIndicador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -20,6 +21,7 @@ class IndicadoresController extends Controller {
     }
 
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $indicador = $request->all();
         if ( PmiIndicador::where('unidad_total', $indicador['unidad_total'])->where('unidad_parcial',$indicador['unidad_parcial'])->first() ) {
             return redirect()->route('indicadores-pmi.index')->with('flash_error_message', 'El indicadoor ya existe.');
@@ -35,6 +37,7 @@ class IndicadoresController extends Controller {
     }
 
     public function update(Request $request, int $id) {
+        Gate::authorize('s-parametro-editar');
         $indicadorData = $request->all();
         $indicadorToUpdate = PmiIndicador::find($id);
         if ( $indicadorToUpdate ) {
@@ -48,6 +51,7 @@ class IndicadoresController extends Controller {
 
 
     public function destroy(int $id) {
+        Gate::authorize('s-parametro-editar');
         $indicadorToDel = PmiIndicador::find($id);
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ModeloPedagogico;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ModeloPedagogicoController extends Controller {
     public function index() {
@@ -14,6 +15,7 @@ class ModeloPedagogicoController extends Controller {
     }
 
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'nombre' => 'required|string',
         ]);
@@ -27,6 +29,7 @@ class ModeloPedagogicoController extends Controller {
     }
 
     public function update(Request $request, ModeloPedagogico $modelos_pedagogico) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'nombre' => 'required|string',
         ]);
@@ -40,6 +43,7 @@ class ModeloPedagogicoController extends Controller {
 
 
     public function destroy(ModeloPedagogico $modelos_pedagogico) {
+        Gate::authorize('s-parametro-editar');
         $modelos_pedagogico->delete();
         return redirect()->route('modelos-pedagogicos.index')->with('flash_success_message', 'Modelo pedagógico eliminado correctamente.');
     }

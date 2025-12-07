@@ -6,6 +6,7 @@ export default function ListaUnidadMeta({
     agregarUrl,
     unidadesMeta,
     csrfToken = "",
+    canEditParametros = false,
 }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState("agregar"); // 'agregar' o 'editar'
@@ -94,9 +95,11 @@ export default function ListaUnidadMeta({
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Indicadores</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar indicador
-            </button>
+            {canEditParametros && (
+                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                    Agregar indicador
+                </button>
+            )}
 
             <table class="table">
                 <thead>
@@ -104,7 +107,7 @@ export default function ListaUnidadMeta({
                         {/* Eliminado: La columna 'Código' */}
                         <th>Unidad parcial</th>
                         <th>Unidad total</th>
-                        <th>Acciones</th>
+                        {canEditParametros && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -113,55 +116,57 @@ export default function ListaUnidadMeta({
                             {/* Eliminado: La celda 'código' */}
                             <td>{unidadMeta.unidad_parcial}</td>
                             <td>{unidadMeta.unidad_total}</td>
-                            <td>
-                                <button
-                                    onClick={() =>
-                                        handleEditarClick(unidadMeta)
-                                    }
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <form
-                                    action={`/unidades-meta/${unidadMeta.id}`}
-                                    method="POST"
-                                    style={{ display: "inline" }}
-                                    onSubmit={(e) => {
-                                        if (
-                                            !confirm(
-                                                "¿Estás seguro de que quieres eliminar esta unidad de meta?"
-                                            )
-                                        ) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="_token"
-                                        value={csrfToken}
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="_method"
-                                        value="DELETE"
-                                    />
+                            {canEditParametros && (
+                                <td>
                                     <button
-                                        type="submit"
-                                        className="btn btn-danger btn-sm"
+                                        onClick={() =>
+                                            handleEditarClick(unidadMeta)
+                                        }
+                                        className="btn btn-warning btn-sm me-2"
                                     >
-                                        Eliminar
+                                        Editar
                                     </button>
-                                </form>
-                            </td>
+                                    <form
+                                        action={`/unidades-meta/${unidadMeta.id}`}
+                                        method="POST"
+                                        style={{ display: "inline" }}
+                                        onSubmit={(e) => {
+                                            if (
+                                                !confirm(
+                                                    "¿Estás seguro de que quieres eliminar esta unidad de meta?"
+                                                )
+                                            ) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="_token"
+                                            value={csrfToken}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="_method"
+                                            value="DELETE"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="btn btn-danger btn-sm"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <CPagination  pagination={unidadesMeta} />
+            <CPagination pagination={unidadesMeta} />
             {/* Modal */}
-            {showModal && (
+            {showModal && canEditParametros && (
                 <div
                     class="modal d-block"
                     style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
