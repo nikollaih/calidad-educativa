@@ -162,14 +162,14 @@
                             </ul>
                         </li>
                     @endcan
-                    @if(auth()->user()->can('s-municipio-ver') || auth()->user()->can('s-ajuste-ver') || auth()->user()->can('s-modelo-educacional-ver') || auth()->user()->can('s-modelo-pedagogico-ver') || auth()->user()->can('s-red-aprendizaje-ver') || auth()->user()->can('s-unidad-meta-ver') || auth()->user()->can('s-componente-ver') || auth()->user()->can('s-objetivo-pmi-ver') || auth()->user()->can('s-indicador-pmi-ver') || auth()->user()->can('s-red-actividad-ver'))
+                    @if(auth()->user()->can('s-parametro-editar'))
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
                                 <i class="menu-icon fas fa-wrench"></i>
                                 <div data-i18n="Parámetros">Parámetros</div>
                             </a>
                             <ul class="menu-sub">
-                                @can('s-municipio-ver')
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="{{ url('municipios')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-map"></i>
@@ -177,7 +177,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('s-ajuste-ver')
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="{{ url('ajustes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fa-solid fa-gears"></i>
@@ -185,7 +185,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('s-modelo-educacional-ver')
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-educacionales')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-lightbulb"></i>
@@ -193,7 +193,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('s-modelo-pedagogico-ver')
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="{{ url('modelos-pedagogicos')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-chalkboard-teacher"></i>
@@ -201,7 +201,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('s-red-aprendizaje-ver')
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="{{ url('redes-aprendizajes')}}" class="menu-link gap-2">
                                         <i class="menu-icon fas fa-graduation-cap"></i>
@@ -209,14 +209,14 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @if(auth()->user()->can('s-unidad-meta-ver') || auth()->user()->can('s-componente-ver'))
+                                @can('s-parametro-editar')
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-clipboard-list"></i>
                                         <div data-i18n="PAM"> PAM</div>
                                     </a>
                                     <ul class="menu-sub">
-                                        @can('s-unidad-meta-ver')
+                                        @can('s-parametro-editar')
                                         <li class="menu-item">
                                             <a href="{{ url('unidades-meta')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
@@ -224,7 +224,7 @@
                                             </a>
                                         </li>
                                         @endcan
-                                        @can('s-componente-ver')
+                                        @can('s-parametro-editar')
                                         <li class="menu-item">
                                             <a href="{{ url('componentes')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
@@ -235,14 +235,14 @@
                                     </ul>
                                 </li>
                                 @endif
-                                @if(auth()->user()->can('s-objetivo-pmi-ver') || auth()->user()->can('s-indicador-pmi-ver'))
+                                @if(auth()->user()->can('s-parametro-editar'))
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link gap-2 menu-toggle">
                                         <i class="menu-icon fas fa-shapes"></i>
                                         <div data-i18n="PMI">PMI</div>
                                     </a>
                                     <ul class="menu-sub">
-                                        @can('s-objetivo-pmi-ver')
+                                        @can('s-parametro-editar')
                                         <li class="menu-item">
                                             <a  href="{{ url('objetivo-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-bullseye"></i>
@@ -250,7 +250,7 @@
                                             </a>
                                         </li>
                                         @endcan
-                                        @can('s-indicador-pmi-ver')
+                                        @can('s-parametro-editar')
                                         <li class="menu-item">
                                             <a  href="{{ url('indicadores-pmi')}}" class="menu-link gap-2">
                                                 <i class="menu-icon fas fa-ruler-horizontal"></i>
