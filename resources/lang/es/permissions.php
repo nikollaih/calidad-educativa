@@ -94,16 +94,12 @@ return [
     's-red-actividad-editar'   => 'Editar redes pedagógicas',
     's-red-actividad-eliminar' => 'Eliminar redes pedagógicas',
 
-    // Validación PMI
-    's-pmi-validacion-ver'      => 'Ver validación PMI',
-    's-pmi-validacion-crear'    => 'Crear validación PMI',
-    's-pmi-validacion-editar'   => 'Editar validación PMI',
-    's-pmi-validacion-eliminar' => 'Eliminar validación PMI',
-
     // Parámetros del sistema
     's-parametro-editar' => 'Editar parámetros del sistema',
 
     // PAM
     's-pam-gestionar' => 'Gestionar PAM (crear, editar, eliminar)',
     's-pam-consultar' => 'Consultar PAM (solo lectura)',
+    // PMI
+    's-pmi-validar' => 'Validar PMI',
 ];

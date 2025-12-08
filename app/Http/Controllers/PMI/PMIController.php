@@ -8,6 +8,7 @@ use App\Exports\PmiEvaluacionExport;
 use App\Exports\PmiExport;
 use App\Exports\PmiSintesisExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PMI\GestionValidarPMI;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\MailService;
@@ -61,7 +62,7 @@ class PMIController extends Controller {
     /*
     * Obtiene los pmis en estado de validacion, y renderiza la vista de pmis en estado de validacion
     */
-    public function pmiValidacion(Request $request) {
+    public function pmiValidacion(GestionValidarPMI $request) {
         $pmis = Pmi::with('institucion')
             ->whereIn('estado', [
                 PmiEstadoEnum::Presentado->value,
@@ -240,7 +241,7 @@ class PMIController extends Controller {
                 'frecuenciasRecoleccion' => FrecuenciaRecoleccionEnum::cases()
             ]);
     }
-    public function pmiValidar(Request $request, int $pmiId ) {
+    public function pmiValidar(GestionValidarPMI $request, int $pmiId ) {
         $pmi = PMI::with('institucion','comentarios')
             ->where('id', $pmiId)
             ->with(
@@ -253,7 +254,7 @@ class PMIController extends Controller {
                 'pmi' => $pmi,
             ]);
     }
-    public function pmiAlmacenarComentario(Request $request) {
+    public function pmiAlmacenarComentario(GestionValidarPMI $request) {
         // se obtienen los datos
         $input = $request->all();
         $input['estado'] = PmiEstadoComentario::Activo->value;
@@ -298,7 +299,7 @@ class PMIController extends Controller {
                        ->withInput()
                 ->with('flash_error_message', ' Comentario no encontrado.');
     }
-    public function pmiCambiarEstado(Request $request, int $pmiId) {
+    public function pmiCambiarEstado(GestionValidarPMI $request, int $pmiId) {
         $pmi = Pmi::with('comentarios')->where('id',$pmiId)->first();
         if (!$pmi) {
             return redirect()->back()

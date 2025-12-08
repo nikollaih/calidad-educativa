@@ -280,7 +280,7 @@
                         </li>
                         @endcan
                     @endif
-                    @can('s-pmi-validacion-ver')
+                    @can('s-pmi-validar')
                         <li class="menu-item">
                             <a href="{{ url('pmi/validacion')}}" class="menu-link ">
                                 <i class="menu-icon fas fa-tasks"></i>

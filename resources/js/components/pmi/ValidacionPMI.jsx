@@ -4,6 +4,7 @@ import CPagination from '@/components/shared/CPagination.jsx';
 export default function IndexPMI({
     agregarUrl,
     institucionId = undefined,
+    canManage = false,
     pmisPaginated = {},
     csrfToken = '',
 }) {
@@ -65,7 +66,7 @@ export default function IndexPMI({
                                     <td>{pmi.descripcion}</td>
                                     <td>{pmi.estado}</td>
                                     <td>
-                                        {pmi.estado === 'Presentado' && (
+                                        {pmi.estado === 'Presentado' && canManage && (
                                             <a
                                                 href={`/pmi/validacion/${pmi.id}`}
                                                 className="btn btn-warning btn-sm me-2"

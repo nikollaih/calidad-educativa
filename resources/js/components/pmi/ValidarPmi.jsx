@@ -5,6 +5,7 @@ import FormularioComentarioFactor from '@/components/pmi/FormularioComentarioFac
 const FactoresCriticosTable = ({
     csrfToken = '',
     pmiData = {},
+    canManage = false,
     institucionId = -1,
     exportarUrl = '',
 }) => {
@@ -225,7 +226,7 @@ const FactoresCriticosTable = ({
                         {pmi?.comentarios?.some(
                             ({ factor_id, estado }) =>
                                 factor_id === row?.factorCritico?.id && estado === 'activo'
-                        )
+                        ) && canManage
                             ? 'Editar comentario'
                             : 'Agregar comentario'}
                     </button>
@@ -391,14 +392,18 @@ const FactoresCriticosTable = ({
                             </small>
                         </div>
                         <div className="d-flex gap-3">
-                            <button className="btn btn-warning" onClick={devolverPmi}>
-                                <i className="fa-solid fa-rotate-left me-2"></i>
-                                Devolver PMI
-                            </button>
-                            <button className="btn btn-success" onClick={aprobarPmi}>
-                                <i className="fa-solid fa-check me-2"></i>
-                                Aprobar PMI
-                            </button>
+                            {canManage && (
+                                <>
+                                    <button className="btn btn-warning" onClick={devolverPmi}>
+                                        <i className="fa-solid fa-rotate-left me-2"></i>
+                                        Devolver PMI
+                                    </button>
+                                    <button className="btn btn-success" onClick={aprobarPmi}>
+                                        <i className="fa-solid fa-check me-2"></i>
+                                        Aprobar PMI
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

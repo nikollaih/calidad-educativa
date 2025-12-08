@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-role-crear'],
             ['name'=>'s-role-editar'],
             ['name'=>'s-role-eliminar'],
-            
+
             // Permisos
             ['name'=>'s-permission-ver'],
             ['name'=>'s-permission-crear'],
@@ -93,18 +93,14 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-red-actividad-editar'],
             ['name'=>'s-red-actividad-eliminar'],
 
-            // Validacion PMI
-            ['name'=>'s-pmi-validacion-ver'],
-            ['name'=>'s-pmi-validacion-crear'],
-            ['name'=>'s-pmi-validacion-editar'],
-            ['name'=>'s-pmi-validacion-eliminar'],
-
             // Parámetros del sistema
             ['name'=>'s-parametro-editar'],
 
             // PAM
             ['name'=>'s-pam-gestionar'],
             ['name'=>'s-pam-consultar'],
+            // PMI
+            ['name'=>'s-pmi-validar'],
         ];
 
         foreach ($permissions as $permission) {
