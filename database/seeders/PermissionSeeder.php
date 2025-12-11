@@ -33,6 +33,21 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-institucion-editar'],
             ['name'=>'s-institucion-eliminar'],
 
+            // Parámetros del sistema
+            ['name'=>'s-parametro-editar'],
+
+            // PAM
+            ['name'=>'s-pam-gestionar'],
+            ['name'=>'s-pam-consultar'],
+            // PMI
+            ['name'=>'s-pmi-validar'],
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::updateOrCreate($permission,$permission);
+        }
+
+        $permissionsToDel = [
             // Municipios
             ['name'=>'s-municipio-ver'],
             ['name'=>'s-municipio-crear'],
@@ -92,19 +107,11 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-red-actividad-crear'],
             ['name'=>'s-red-actividad-editar'],
             ['name'=>'s-red-actividad-eliminar'],
-
-            // Parámetros del sistema
-            ['name'=>'s-parametro-editar'],
-
-            // PAM
-            ['name'=>'s-pam-gestionar'],
-            ['name'=>'s-pam-consultar'],
-            // PMI
-            ['name'=>'s-pmi-validar'],
         ];
+        // Extraer solo los nombres
+        $permissionNames = array_column($permissionsToDel, 'name');
 
-        foreach ($permissions as $permission) {
-            Permission::updateOrCreate($permission,$permission);
-        }
+        // Eliminar todos los permisos que coincidan
+        Permission::whereIn('name', $permissionNames)->delete();
     }
 }
