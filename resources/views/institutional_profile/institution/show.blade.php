@@ -163,12 +163,16 @@
             </div>
             <div class="py-3 d-flex justify-content-center">
                 <div class="d-flex gap-2">
-                    <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
-                    <form action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
-                    </form>
+                    @if(auth()->user()->can('s-institucion-editar'))
+                        <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+                    @endif
+                    @if(auth()->user()->can('s-institucion-eliminar'))
+                        <form action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

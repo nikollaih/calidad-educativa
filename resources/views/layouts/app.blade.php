@@ -125,7 +125,7 @@
                             </ul>
                         </li>
                     @endif
-                    @can('s-institucion-ver')
+                        @if(auth()->user()->can('s-institucion-ver') || auth()->user()->hasRole('rector'))
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -161,7 +161,7 @@
                             @endif
                             </ul>
                         </li>
-                    @endcan
+                    @endif
                     @if(auth()->user()->can('s-parametro-editar'))
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
@@ -271,14 +271,14 @@
                             </a>
                         </li>
                         @endif
-                        @can('s-red-actividad-gestionar')
+                        @if(auth()->user()->can('s-red-actividad-gestionar') || auth()->user()->hasRole('rector'))
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">
                                 <i class="menu-icon fa fa-graduation-cap"></i>
                                 <div data-i18n="Redes pedagógicas"> Redes pedagógicas</div>
                             </a>
                         </li>
-                        @endcan
+                        @endif
                     @endif
                     @can('s-pmi-validar')
                         <li class="menu-item">
