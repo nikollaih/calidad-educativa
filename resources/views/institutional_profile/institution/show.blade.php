@@ -163,10 +163,10 @@
             </div>
             <div class="py-3 d-flex justify-content-center">
                 <div class="d-flex gap-2">
-                    @if(auth()->user()->can('s-institucion-editar'))
+                    @if(auth()->user()->can('s-institucion-editar') || auth()->user()->hasRole('rector'))
                         <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
                     @endif
-                    @if(auth()->user()->can('s-institucion-eliminar'))
+                    @if(auth()->user()->can('s-institucion-eliminar') || auth()->user()->hasRole('rector'))
                         <form action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
                             @csrf
                             @method('DELETE')

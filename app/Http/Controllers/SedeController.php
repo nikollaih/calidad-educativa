@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SedeRequest as Request;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\EducationalModelService;
 use App\Http\Services\EducationalOfferService;
@@ -16,7 +17,6 @@ use App\Models\EducationalOffer;
 use App\Models\Enums\TitularityTypes;
 use App\Models\ModeloPedagogico;
 use App\Models\Sede;
-use Illuminate\Http\Request;
 class SedeController extends Controller {
     public function __construct(
         private SedesService $sedesService,
@@ -32,11 +32,11 @@ class SedeController extends Controller {
     }
 
 
-    public function index() {
+    public function index(Request $request) {
         return view('institutional_profile.sede.index');
     }
 
-    public function create(int $institutionId = null) {
+    public function create(Request $request, int $institutionId = null) {
         $eduactionalModels = EducationalModel::get();
         $modelosPedagogicos = ModeloPedagogico::get();
         $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
@@ -141,7 +141,7 @@ class SedeController extends Controller {
         return redirect()->back()->with('success', 'Sede creada correctamente.');
     }
 
-    public function edit(int $institutionId = null,int $sede = null) {
+    public function edit(Request $request, int $institutionId = null,int $sede = null) {
         $sede = Sede::where('id',$sede)->with(
             'administrativeAct',
             'parentSede:id,name,dane',
@@ -170,7 +170,7 @@ class SedeController extends Controller {
                 'availableSedes'=>$availableSedes
             ]);
     }
-    public function show(int $institutionId = null,int $sede = null) {
+    public function show(Request $request, int $institutionId = null,int $sede = null) {
         $sede = Sede::where('id',$sede)->with(
             'administrativeAct',
             'parentSede:id,name,dane',
@@ -309,7 +309,7 @@ class SedeController extends Controller {
         //return redirect()->route('sede.edit',['institution'=>$sedeToUpdate->institution_id,  'sede' => $sedeToUpdate->id])->with('success', 'Sede actualizada correctamente.');
     }
 
-    public function destroy(int $sede = null) {
+    public function destroy(Request $request, int $sede = null) {
         $sedeToDel = Sede::find($sede);
         if (empty($sedeToDel)) {
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');

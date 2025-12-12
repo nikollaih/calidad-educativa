@@ -43,6 +43,7 @@ trait AuthorizesControllerActions {
 
     /**
      * Normaliza el authorizationMap para soportar múltiples métodos con la misma configuración
+     * Formato: 'method1,method2,method3' => [config]
      *
      * @return array
      */
@@ -50,9 +51,10 @@ trait AuthorizesControllerActions {
         $normalized = [];
 
         foreach ($this->authorizationMap() as $key => $config) {
-            // Si la key es un array, aplicar la misma configuración a todos los métodos
-            if (is_array($key)) {
-                foreach ($key as $method) {
+            // Si la key contiene comas, dividir y aplicar a cada método
+            if (str_contains($key, ',')) {
+                $methods = array_map('trim', explode(',', $key));
+                foreach ($methods as $method) {
                     $normalized[$method] = $config;
                 }
             } else {
