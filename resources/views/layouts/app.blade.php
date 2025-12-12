@@ -271,7 +271,7 @@
                             </a>
                         </li>
                         @endif
-                        @can('s-red-actividad-ver')
+                        @can('s-red-actividad-gestionar')
                         <li class="menu-item">
                             <a href="{{ url('red-actividades')}}" class="menu-link">
                                 <i class="menu-icon fa fa-graduation-cap"></i>

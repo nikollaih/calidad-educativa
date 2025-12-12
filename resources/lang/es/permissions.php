@@ -93,6 +93,7 @@ return [
     's-red-actividad-crear'    => 'Crear redes pedagógicas',
     's-red-actividad-editar'   => 'Editar redes pedagógicas',
     's-red-actividad-eliminar' => 'Eliminar redes pedagógicas',
+    's-red-actividad-gestionar'=> 'Gestionar redes pedagógicas',
 
     // Parámetros del sistema
     's-parametro-editar' => 'Editar parámetros del sistema',

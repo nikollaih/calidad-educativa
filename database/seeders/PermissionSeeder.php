@@ -41,6 +41,8 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-pam-consultar'],
             // PMI
             ['name'=>'s-pmi-validar'],
+            // Gestionar redes pedagogicas
+            ['name'=>'s-red-actividad-gestionar'],
         ];
 
         foreach ($permissions as $permission) {
