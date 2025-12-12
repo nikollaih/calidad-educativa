@@ -103,6 +103,13 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-indicador-pmi-crear'],
             ['name'=>'s-indicador-pmi-editar'],
             ['name'=>'s-indicador-pmi-eliminar'],
+            // PMI
+            ['name'=>'s-pmi-validacion-ver'],
+            ['name'=>'s-pmi-validacion-crear'],
+            ['name'=>'s-pmi-validacion-editar'],
+            ['name'=>'s-pmi-validacion-eliminar'],
+
+
 
             // Redes Pedagogicas (Actividades)
             ['name'=>'s-red-actividad-ver'],
