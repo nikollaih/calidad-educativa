@@ -29,25 +29,32 @@
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-auth.css')}}"/>
+        <style>
+            /* Custom login styles - Force cyan borders */
+            .card {
+                border: 2px solid #95d0e8 !important;
+            }
+            #email,
+            #password {
+                border: 2px solid #95d0e8 !important;
+            }
+            #email:focus,
+            #password:focus {
+                border-color: #95d0e8 !important;
+                box-shadow: 0 0 0 0.2rem rgba(149, 208, 232, 0.25) !important;
+            }
+        </style>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
     </head>
 
-    <body>
+    <body style="background-color: #e8e8e8;">
         <div class="container-xxl">
             <div class="authentication-wrapper authentication-basic container-p-y">
                 <div class="authentication-inner py-4">
-                    <div class="card">
-                        <div class="card-header">
-                            @if (Session::has('flash_error_message'))
-                                <div class="alert alert-danger" role="alert">{{ Session::get('flash_error_message') }}</div>
-                            @endif
-                            @if (Session::has('flash_success_message'))
-                                <div class="alert alert-success" role="alert">{{ Session::get('flash_success_message') }}</div>
-                            @endif
-                        </div>
+                    <div class="card" style="max-width: 350px; margin: 0 auto; border-radius: 15px; border: 2px solid #95d0e8 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         @if ($errors->any())
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger mx-4">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -57,14 +64,13 @@
                         @endif
                         @yield('content')
                     </div>
-                    <footer class="content-footer footer bg-footer-theme">
-                        <div class="container-fluid d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                            <div class="mb-2 mb-md-0">
-                                ©
+                    <footer class="content-footer footer bg-footer-theme" style="background-color: transparent !important;">
+                        <div class="container-fluid d-flex flex-wrap justify-content-center py-2">
+                            <div class="mb-2 mb-md-0" style="color: #666; font-size: 14px;">
                                 <script>
                                     document.write(new Date().getFullYear());
                                 </script>
-                                {{env('APP_NAME')}}
+                                calidad
                             </div>
                         </div>
                     </footer>
