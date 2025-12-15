@@ -12,11 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pmi_metas', function (Blueprint $table) {
-            try{
-                $table->dropColumn('unidad_medida');
-                $table->dropColumn('valor_requerido');
-            }catch (\Illuminate\Database\QueryException $e){}
-
             $table->unsignedBigInteger('indicador_id')
                 ->nullable(false)
                 ->after('descripcion');
