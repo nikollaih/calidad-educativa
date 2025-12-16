@@ -40,6 +40,7 @@
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
         <style>
+
             .light-style .menu .app-brand.demo {height: 80px !important;}
 
             /* Hacer visible el botón de toggle en todas las pantallas */
@@ -305,7 +306,8 @@
                                     <i class="bx bx-menu bx-sm"></i>
                                 </a>
                             </div>
-                            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                            <div id="navbar-item-1" class="d-flex w-full"> </div>
+                            <div class="navbar-nav d-flex align-items-center" id="navbar-collapse">
                                 <ul class="navbar-nav flex-row align-items-center ms-auto">
                                     <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                         <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">

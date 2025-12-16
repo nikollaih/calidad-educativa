@@ -33,12 +33,13 @@ return [
     's-institucion-crear'    => 'Crear instituciones',
     's-institucion-editar'   => 'Editar instituciones',
     's-institucion-eliminar' => 'Eliminar instituciones',
+    's-institucion-pertenecer_una' => 'Pertenecer a una intitución',
 
     // Municipios
-    's-municipio-ver'      => 'Ver municipios',
-    's-municipio-crear'    => 'Crear municipios',
-    's-municipio-editar'   => 'Editar municipios',
-    's-municipio-eliminar' => 'Eliminar municipios',
+    's-municipio-ver'              => 'Ver municipios',
+    's-municipio-crear'            => 'Crear municipios',
+    's-municipio-editar'           => 'Editar municipios',
+    's-municipio-eliminar'         => 'Eliminar municipios',
 
     // Ajustes
     's-ajuste-ver'      => 'Ver ajustes',
@@ -103,4 +104,9 @@ return [
     's-pam-consultar' => 'Consultar PAM (solo lectura)',
     // PMI
     's-pmi-validar' => 'Validar PMI',
+    // Autoevaluacion
+    's-autoevaluacion-calificar-gestion_directiva'     => 'Calificar gestión directiva',
+    's-autoevaluacion-calificar-gestion_academica'     => 'Calificar gestión acádemica',
+    's-autoevaluacion-calificar-gestion_admin_financi' => 'Calificar gestión administrativa y financiera',
+    's-autoevaluacion-calificar-gestion_comunidad'     => 'Calificar gestión de la comunidad',
 ];

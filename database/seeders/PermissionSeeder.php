@@ -32,6 +32,7 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-institucion-crear'],
             ['name'=>'s-institucion-editar'],
             ['name'=>'s-institucion-eliminar'],
+            ['name'=>'s-institucion-pertenecer_una'],
 
             // Parámetros del sistema
             ['name'=>'s-parametro-editar'],
@@ -41,6 +42,11 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-pam-consultar'],
             // PMI
             ['name'=>'s-pmi-validar'],
+            // Autoevaluacion
+            ['name'=>'s-autoevaluacion-calificar-gestion_directiva'],
+            ['name'=>'s-autoevaluacion-calificar-gestion_academica'],
+            ['name'=>'s-autoevaluacion-calificar-gestion_admin_financi'],
+            ['name'=>'s-autoevaluacion-calificar-gestion_comunidad'],
             // Gestionar redes pedagogicas
             ['name'=>'s-red-actividad-gestionar'],
         ];

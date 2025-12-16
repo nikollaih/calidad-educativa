@@ -1,16 +1,17 @@
-
-import { h } from 'preact';
+import { h, render } from 'preact';
+import { useEffect } from 'preact/hooks';
 import CBackButton from '@/components/shared/CBackButton.jsx';
 
 const CInstitutionNavigations = ({
-    backUrl = '',
-    detailUrl = '',
-    peiUrl = '',
-    autevaluacionUrl = '',
-    pmiUrl = '',
-    proyectosTransversalesUrl = '',
-    institutionName = '',
-}) => {
+                                     backUrl = '',
+                                     detailUrl = '',
+                                     peiUrl = '',
+                                     autevaluacionUrl = '',
+                                     pmiUrl = '',
+                                     proyectosTransversalesUrl = '',
+                                     institutionName = '',
+                                     mountToNavbar = true, // Nueva prop para controlar si se monta en el navbar
+                                 }) => {
     const getBtnClass = (url, baseClass) => {
         // Si la url es "#", usamos btn-baseClass (sólido)
         // Si no, usamos btn-outline-baseClass
@@ -19,14 +20,53 @@ const CInstitutionNavigations = ({
             : `btn btn-outline-${baseClass} btn-sm`;
     };
 
+    // Hook para montar el nombre de la institución en el navbar
+    useEffect(() => {
+        if (mountToNavbar && institutionName) {
+            const targetElement = document.getElementById('navbar-item-1');
+
+            if (targetElement) {
+                // Crear el contenido para el navbar
+                const navbarContent = (
+                    <div className="d-flex justify-content-center px-2">
+                        <span
+                            className="text-uppercase fw-bold text-primary text-truncate"
+                            style={{
+                                maxWidth: '40vw',
+                                fontSize: '1.5rem',
+                                letterSpacing: '2px',
+                                fontWeight: '700'
+                            }}
+                            title={institutionName}
+                        >
+                           Institución Educativa {institutionName}
+                        </span>
+                    </div>
+                );
+
+                // Renderizar en el navbar
+                render(navbarContent, targetElement);
+            }
+
+            // Cleanup: limpiar el navbar cuando el componente se desmonte
+            return () => {
+                const targetElement = document.getElementById('navbar-item-1');
+                if (targetElement) {
+                    render(null, targetElement);
+                    targetElement.innerHTML = '';
+                }
+            };
+        }
+    }, [mountToNavbar, institutionName]);
+
     return (
         <div class="d-flex align-items-center justify-content-between container">
-            <CBackButton
+        <CBackButton
                 to={backUrl}
                 label="Volver"
                 isContainer={false}
             />
-            {institutionName && (
+            {!mountToNavbar && institutionName && (
                 <div class="flex-grow-1 d-flex justify-content-center px-2">
                     <span
                         class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border shadow-sm"
@@ -50,7 +90,7 @@ const CInstitutionNavigations = ({
             )}
             <div class="d-flex gap-2">
                 <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
-                   Perfil
+                    Perfil
                 </a>
                 <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
                     PEI
@@ -73,5 +113,3 @@ const CInstitutionNavigations = ({
 };
 
 export default CInstitutionNavigations;
-
-
