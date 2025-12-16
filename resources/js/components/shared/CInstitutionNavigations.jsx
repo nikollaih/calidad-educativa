@@ -30,7 +30,7 @@ const CInstitutionNavigations = ({
                 const navbarContent = (
                     <div className="d-flex justify-content-center px-2">
                         <span
-                            className="text-uppercase fw-bold text-primary text-truncate"
+                            className="text-uppercase fw-bold text-primary"
                             style={{
                                 maxWidth: '40vw',
                                 fontSize: '1.5rem',
