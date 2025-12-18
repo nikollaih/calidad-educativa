@@ -3,28 +3,38 @@ import Select from 'react-select';
 import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
 import CPasswordInput from "@/components/shared/CPasswordInput.jsx";
 
-export default function FormularioUsuario({ roles, institutionsWithoutRector, storeUrl, indexUrl, user }) {
+export default function FormularioUsuario({ roles, institutionsWithoutRector,institutions, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [showInstitutionField, setShowInstitutionField] = useState(false);
     const [institucionSelected, setInstitucionSelected] = useState(undefined);
+    const [showInstitutionToBelong, setShowInstitutionToBelong] = useState(false);
+    const [institucionToBelongSelected, setInstitucionToBelongSelected] = useState(undefined);
+
 
     const handleRolesChange = (selected) => {
         setSelectedRoles(selected || []);
         const hasRector = (selected || []).some(role => role.value === 'rector');
+        const canBelongToInstitution = ((selected || []).some(role => (role.permissions || []).some(permission => permission.name === 's-institucion-pertenecer_una')));
         setShowInstitutionField(hasRector);
+        setShowInstitutionToBelong(canBelongToInstitution);
     };
     useEffect(() => {
         if (user?.roles?.length) {
             const mappedRoles = user.roles.map(role => ({
                 value: role.name,
-                label: role.name_translated
+                label: role.name_translated,
+                permissions: role.permissions
             }));
             setSelectedRoles(mappedRoles);
             // Si el usuario tiene el rol 'rector', muestra el campo
             const hasRector = mappedRoles.some(r => r.value === 'rector');
+            const canBelongsToInstitution = ((mappedRoles || []).some(role => (role.permissions || []).some(permission => permission.name === 's-institucion-pertenecer_una')));
             setShowInstitutionField(hasRector);
+            setShowInstitutionToBelong(canBelongsToInstitution);
             if (user?.institucion) {
                 setInstitucionSelected(user.institucion.id);
+            } else if (user?.instituciones) {
+                setInstitucionSelected(user.instituciones?.[0]?.id);
             }
         }
     }, [user]);
@@ -87,7 +97,8 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                                     value={selectedRoles}
                                     options={roles.map(role => ({
                                         value: role.name,
-                                        label: role.name_translated
+                                        label: role.name_translated,
+                                        permissions: role.permissions
                                     }))}
                                     className="basic-multi-select"
                                     classNamePrefix="select"
@@ -110,7 +121,20 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, st
                                     />
                                 </div>
                             )}
-
+                            {!showInstitutionField && showInstitutionToBelong && (
+                                <div className="mb-3">
+                                    <label htmlFor="institucion_id" className="form-label">Institución a la que pertenece</label>
+                                    <CAutocompleteFromArray
+                                        key={institucionSelected || 'no-institucion'}
+                                        data={institutions}
+                                        fieldName={"institucion_id"}
+                                        initialValue={institucionSelected}
+                                        orderBy={{field: 'indice', direction: 'asc'}}
+                                        searchFields={['nombre', 'nit']}
+                                        labelFields={['nombre', 'nit']}
+                                    />
+                                </div>
+                            )}
 
                             {/* Botones */}
                             <button type="submit" class="btn btn-success">Guardar</button>

@@ -94,7 +94,7 @@
                     <ul class="menu-inner py-1">
                        @if(auth()->user()->can('hr-usuario-ver') || auth()->user()->can('s-role-ver') || auth()->user()->can('s-permission-ver'))
                         <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle text-primary">
                                 <i class="menu-icon tf-icons fa fa-building"></i>
                                 <div data-i18n="Administracion">Administracion</div>
                             </a>

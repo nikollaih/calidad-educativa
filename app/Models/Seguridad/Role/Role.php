@@ -2,6 +2,9 @@
 
 namespace App\Models\Seguridad\Role;
 
+use App\Models\Seguridad\Permission\Permission;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Lang;
 use Spatie\Permission\Models\Role as BaseRole;
 /**
@@ -30,6 +33,17 @@ class Role extends BaseRole {
 
         // Si existe traducción, la retorna; de lo contrario, devuelve el name original
         return Lang::has($key) ? __($key) : $this->name;
+    }
+    /**
+     * Relación muchos a muchos con permisos
+     */
+    public function permissions(): BelongsToMany {
+        return $this->belongsToMany(
+            Permission::class,
+            'role_has_permissions',
+            'role_id',
+            'permission_id'
+        );
     }
 }
 

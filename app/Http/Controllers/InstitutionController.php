@@ -330,7 +330,7 @@ class InstitutionController extends Controller {
 
         // Obtener el hijo (grupo) para validar
         $hijo = GrupoCalificacion::with('calificaciones')->find($hijoId);
-        
+
         if (!$hijo) {
             return redirect()->back()->with('flash_error_message', 'Componente no encontrado.');
         }
@@ -344,7 +344,7 @@ class InstitutionController extends Controller {
             foreach ($notas as $nota) {
                 // Verificar que la nota pertenece a una calificación de este hijo
                 $notaCalificacion = \App\Models\NotaCalificacion::with('calificacion')->find($nota['nota_calificacion_id']);
-                
+
                 if ($notaCalificacion && in_array($notaCalificacion->calificacion->id, $calificacionesDelHijo)) {
                     $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
                 }
@@ -373,10 +373,6 @@ class InstitutionController extends Controller {
         return view('institutional_profile.institution.create', ['municipios' => $municipios, 'availableRectors' => $availableRectors]);
     }
     public function store(Request $request) {
-        // Valida si hay un file de licencia de funcionamiento
-        if (!$request->hasFile('licencia_funcionamiento')) {
-            return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar una licencia de funcionamiento.');
-        }
         if ($request->rector_id == null) {
             return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar un rector.');
         }

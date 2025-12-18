@@ -55,6 +55,14 @@ class User extends Authenticatable {
     public function  institucion () {
         return $this->hasOne(Institucion::class,'rector_id');
     }
+    /**
+     * Relación muchos a muchos con instituciones
+     */
+    public function instituciones(): BelongsToMany {
+        return $this->belongsToMany(Institucion::class, 'institucion_user', 'user_id', 'institucion_id')
+            ->withPivot( 'is_active')
+            ->withTimestamps();
+    }
     public function roles(): BelongsToMany {
         return $this->morphToMany(
             Role::class,            // Modelo relacionado

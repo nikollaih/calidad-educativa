@@ -122,4 +122,12 @@ class Institucion extends Model {
         $institution = static::findOrFail($institucionId);
         $institution->createEmptyPei();
     }
+    /**
+     * Relación muchos a muchos con usuarios
+     */
+    public function users() {
+        return $this->belongsToMany(User::class, 'institucion_user', 'institucion_id', 'user_id')
+            ->withPivot('is_active')
+            ->withTimestamps();
+    }
 }
