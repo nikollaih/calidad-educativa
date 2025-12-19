@@ -40,7 +40,34 @@
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
         <style>
+            .admin-menu {
+                background: #fff;
+                border: 0.5px solid #009fe3 !important;
+                border-radius: 1rem !important; /* ≈ 48px */
+            }
 
+            .menu-sub .menu-item {
+                margin-bottom: .25rem;
+            }
+
+            .menu-sub .menu-item.active {
+                background: #e0e0e0;
+                border-radius: 14px;
+            }
+
+            .sub-link {
+                padding: .5rem .75rem;
+                border-radius: 14px;
+                text-decoration: none;
+            }
+
+            .sub-link:hover {
+                background: #f1f1f1;
+            }
+
+            .menu-icon {
+                color: #0d6efd;
+            }
             .light-style .menu .app-brand.demo {height: 80px !important;}
 
             /* Hacer visible el botón de toggle en todas las pantallas */
@@ -92,77 +119,76 @@
                     <div class="menu-divider mt-0"></div>
                     <div class="menu-inner-shadow"></div>
                     <ul class="menu-inner py-1">
+                       <!-- Seccion para administracion general -->
                        @if(auth()->user()->can('hr-usuario-ver') || auth()->user()->can('s-role-ver') || auth()->user()->can('s-permission-ver'))
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle text-primary">
-                                <i class="menu-icon tf-icons fa fa-building"></i>
-                                <div data-i18n="Administracion">Administracion</div>
-                            </a>
-                            <ul class="menu-sub">
-                                @can('hr-usuario-ver')
-                                <li class="menu-item">
-                                    <a href="{{ url('usuarios')}}" class="menu-link gap-2">
-                                        <i class="menu-icon fa-solid fa-users"></i>
-                                        <div data-i18n="Usuarios"> Usuarios</div>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('s-role-ver')
-                                <li class="menu-item">
-                                    <a href="{{ url('roles')}}" class="menu-link gap-2">
-                                        <i class="menu-icon fa-solid fa-cogs"></i>
-                                        <div data-i18n="Roles"> Roles</div>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('s-permission-ver')
-                                <li class="menu-item">
-                                    <a href="{{ url('permissions')}}" class="menu-link gap-2">
-                                        <i class="menu-icon fa-solid fa-check"></i>
-                                        <div data-i18n="Permisos"> Permisos</div>
-                                    </a>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                    @endif
-                        @if(auth()->user()->can('s-institucion-ver') || auth()->user()->hasRole('rector'))
-                        <li class="menu-item">
-                            @if ($municipios)
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                <i class="menu-icon fa-solid fa-university"></i>
-                                <div data-i18n="Instituciones">Instituciones</div>
-                            </a>
-                            <ul class="menu-sub">
-                                <ul>
+                            <li class="menu-item admin-menu border-primary rounded-4 p-2">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle d-flex align-items-center gap-2 text-primary fw-semibold">
+                                    <i class="menu-icon fa fa-building fs-4"></i>
+                                    <span data-i18n="Administracion">Administración</span>
+                                </a>
+
+                                <ul class="menu-sub list-unstyled mt-2 ps-3">
                                     <li class="menu-item">
-                                        <a href="{{ url('institutional_profile/institution')}}"
-                                            class="menu-link gap-2"
-                                        >
-                                            <i class="menu-icon fas fa-globe-americas"></i>
-                                            <div data-i18n="Todos"> Todos</div>
+                                        <a href="{{ url('usuarios')}}" class="menu-link sub-link d-flex align-items-center gap-2 text-primary">
+                                            <span class="dot"></span>
+                                            <i class="menu-icon fa-solid fa-users"></i>
+                                            <span>Usuarios</span>
                                         </a>
                                     </li>
+
+                                    <li class="menu-item active">
+                                        <a href="{{ url('roles')}}" class="menu-link sub-link d-flex align-items-center gap-2 text-primary">
+                                            <span class="dot"></span>
+                                            <i class="menu-icon fa-solid fa-cogs"></i>
+                                            <span>Roles</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="menu-item">
+                                        <a href="{{ url('permissions')}}" class="menu-link sub-link d-flex align-items-center gap-2 text-primary">
+                                            <span class="dot"></span>
+                                            <i class="menu-icon fa-solid fa-check"></i>
+                                            <span>Permisos</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        @endif
+                       <!-- Seccion apra administracion de instituciones-->
+                       @if(auth()->user()->can('s-institucion-ver') || auth()->user()->hasRole('rector'))
+                            <li class="menu-item admin-menu border-primary rounded-4 p-2">
+                                <a href="javascript:void(0);"
+                                   class="menu-link menu-toggle d-flex align-items-center gap-2 text-primary fw-semibold">
+                                    <i class="menu-icon fa-solid fa-university fs-4"></i>
+                                    <span>Instituciones</span>
+                                </a>
+
+                                <ul class="menu-sub list-unstyled mt-2 ps-3">
+                                    <li class="menu-item">
+                                        <a href="{{ url('institutional_profile/institution') }}"
+                                           class="menu-link sub-link d-flex align-items-center gap-2 text-primary">
+                                            <span class="dot"></span>
+                                            <i class="menu-icon fas fa-globe-americas"></i>
+                                            <span>Todos</span>
+                                        </a>
+                                    </li>
+
                                     @foreach ($municipios as $municipio)
                                         <li class="menu-item">
-                                            <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id)}}"
-                                                class="menu-link gap-2"
-                                            >
+                                            <a href="{{ url('institutional_profile/institution?municipio_id='.$municipio->id) }}"
+                                               class="menu-link sub-link d-flex align-items-center gap-2 text-primary">
+                                                <span class="dot"></span>
                                                 <i class="menu-icon fas fa-map-marker-alt"></i>
-                                                <div data-i18n="{{$municipio->nombre}}"> {{$municipio->nombre}}</div>
+                                                <span>{{ $municipio->nombre }}</span>
                                             </a>
                                         </li>
                                     @endforeach
                                 </ul>
-                            @else
-                                <a href="{{ url('institutional_profile/institution')}}" class="menu-link gap-2">
-                                    <i class="menu-icon fa-solid fa-university"></i>
-                                    <div data-i18n="Instituciones">Instituciones</div>
-                                </a>
-                            @endif
-                            </ul>
-                        </li>
-                    @endif
+                            </li>
+                        @endif
+
+
                     @if(auth()->user()->can('s-parametro-editar'))
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link  menu-toggle">
