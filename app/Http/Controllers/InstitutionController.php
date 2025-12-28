@@ -149,7 +149,7 @@ class InstitutionController extends Controller {
         return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionId])
             ->with('flash_success_message', "Resultados actualizados correctamente");
     }
-    public function autoevaluaciones(int $institution ) {
+    public function autoevaluaciones(InstitucionRequest $request, int $institution ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->paginate(10);
         $institucionNombre = Institucion::find($institution)?->nombre;
         return view('institutional_profile.institution.autoevaluaciones.index', [
@@ -158,7 +158,7 @@ class InstitutionController extends Controller {
             'institucionNombre' => $institucionNombre,
         ]);
     }
-    public function autoevaluacionesCrear(int $institution ) {
+    public function autoevaluacionesCrear(InstitucionRequest $request, int $institution ) {
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
@@ -172,7 +172,7 @@ class InstitutionController extends Controller {
             ]
         );
     }
-    public function autoevaluacionesEditar(int $autoevaluacionId = null) {
+    public function autoevaluacionesEditar(InstitucionRequest $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
         if (empty($autoevaluacionId)) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');

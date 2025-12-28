@@ -126,7 +126,7 @@
                             </ul>
                         </li>
                     @endif
-                        @if(auth()->user()->can('s-institucion-ver') || auth()->user()->hasRole('rector'))
+                        @if(auth()->user()->can('s-institucion-ver') || auth()->user()->hasRole('rector') || auth()->user()->can('s-institucion-pertenecer_una') )
                         <li class="menu-item">
                             @if ($municipios)
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -462,13 +462,26 @@
                 }
             });
         </script>
-        <script>
-            window.auth = {
-                user: {!! Auth::check() ? json_encode(Auth::user()->only(['id', 'name', 'email'])) : 'null' !!},
-                permissions: {!! Auth::check() ? json_encode(Auth::user()->getAllPermissions()->pluck('name')) : '[]' !!},
-                roles: {!! Auth::check() ? json_encode(Auth::user()->roles->pluck('name')) : '[]' !!}
-            };
-        </script>
+    // Reemplaza el script actual en app.blade.php con este:
+
+    <script>
+        /**
+         * Objeto global de autenticación con información del usuario,
+         * permisos y roles de Spatie
+         */
+        window.auth = {
+            user: {!! Auth::check() ? json_encode(Auth::user()->only(['id', 'name', 'email'])) : 'null' !!},
+            permissions: {!! Auth::check() ? json_encode(Auth::user()->getAllPermissions()->pluck('name')) : '[]' !!},
+            roles: {!! Auth::check() ? json_encode(Auth::user()->roles->pluck('name')) : '[]' !!}
+        };
+
+        // Debug en consola (opcional, remover en producción)
+        console.log('Auth loaded:', {
+            user: window.auth.user,
+            permissions: window.auth.permissions,
+            roles: window.auth.roles
+        });
+    </script>
         @yield('javascripts')
     </body>
 </html>

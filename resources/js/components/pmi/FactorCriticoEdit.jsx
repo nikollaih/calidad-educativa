@@ -423,6 +423,7 @@ const FactorCriticoEdit = ({
                                 />
                                 <span className="input-group-text">%</span>
                             </div>
+
                         </div>
                         <div className="col-md-6">
                             <div className="d-flex justify-content-center align-items-center h-100">

@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { addLineBreaks } from '@utils/string.js';
-
+import auth from '@/utilidades/auth';
+import {useMemo} from "preact/hooks";
 
 export default function Editar({ editarUrl = '#',
     gruposCalificaciones = [],
@@ -12,8 +13,30 @@ export default function Editar({ editarUrl = '#',
     const [activeTab, setActiveTab] = useState(0);
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
     const [evidencias, setEvidencias] = useState({});
-
-
+    // Verificar permisos y roles
+    const permissions = useMemo(() => ({
+        editDirectiva: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_directiva'),
+        editAcademica: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_academica'),
+        editFinanciera:  auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_admin_financi'),
+        editComunidad: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_comunidad'),
+    }), []);
+    const getPermissionForGroup = (indice) => {
+        const permissionMap = {
+            '1': permissions.editDirectiva,
+            '2': permissions.editAcademica,
+            '3': permissions.editFinanciera,
+            '4': permissions.editComunidad,
+        };
+        return permissionMap[indice] || false;
+    };
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
@@ -114,7 +137,7 @@ export default function Editar({ editarUrl = '#',
                 <div class="mb-4">
                     <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
-                            <li class="nav-item" key={`tab-${grupo.id}`}>
+                             getPermissionForGroup(grupo?.indice??"0") && <li class="nav-item" key={`tab-${grupo.id}`}>
                                 <button
                                     className={`nav-link ${activeTab === index ? 'active' : ''}`}
                                     onClick={() => setActiveTab(index)}

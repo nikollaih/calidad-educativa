@@ -1,10 +1,28 @@
 import { h } from 'preact';
 import CPagination from '@/components/shared/CPagination.jsx';
+import auth from '@/utilidades/auth';
+import {useMemo} from "preact/hooks";
 
 export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) {
     const handleAgregarClick = () => {
         window.location.href = agregarUrl;
     };
+    // Verificar permisos y roles
+    const permissions = useMemo(() => ({
+        canCreateAutoevaluacion: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector'),
+        canEdit: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_directiva') ||
+            auth.can('s-autoevaluacion-calificar-gestion_academica') ||
+            auth.can('s-autoevaluacion-calificar-gestion_admin_financi') ||
+            auth.can('s-autoevaluacion-calificar-gestion_comunidad')
+        ,
+        canValidate: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector'),
+        canEditResoults: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector'),
+    }), []);
 
     const formatFecha = (fechaIso) => {
         const fecha = new Date(fechaIso);
@@ -26,9 +44,9 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Autoevaluación</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+            { permissions.canCreateAutoevaluacion && <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
                 Agregar Autoevaluación
-            </button>
+            </button>}
 
             <table class="table">
                 <thead>
@@ -46,21 +64,21 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                         <td>{evaluacion.alias_estado}</td>
                         <td>{formatFecha(evaluacion.created_at)}</td>
                         <td>
-                            <a
+                            {permissions.canEdit && <a
                                 href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-ver`}
                                 className="btn btn-primary btn-sm me-2"
                             >
                                 Ver detalles
-                            </a>
-                            <a
+                            </a>}
+                            {permissions.canEditResoults && <a
                                 href={`/institutional_profile/institution/${evaluacion.id}/fort_deb`}
                                 className="btn btn-info btn-sm me-2"
                             >
                                 Resultados
-                            </a>
+                            </a>}
 
                             {/* Mostrar Editar solo si no está en VALIDACION */}
-                            {evaluacion.alias_estado !== "VALIDACION" && (
+                            {permissions.canEdit && evaluacion.alias_estado !== "VALIDACION" && (
                                 <a
                                     href={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
                                     className="btn btn-warning btn-sm me-2"
@@ -69,7 +87,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                 </a>
                             )}
 
-                            {evaluacion.alias_estado === "PROCESO" && (
+                            {permissions.canValidate && evaluacion.alias_estado === "PROCESO" && (
                                 <form
                                     action={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-validar`}
                                     method="POST"
