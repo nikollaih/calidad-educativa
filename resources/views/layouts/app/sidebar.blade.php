@@ -1,85 +1,87 @@
 @php
     use Illuminate\Support\Str;
+    use App\Helpers\SvgHelper;
 
-    $sidebarMenu = [
-        [
-            'icon' => asset('assets/icon/location_city.svg'),
-            'icon_type' => 'svg',
-            'label' => 'Administración',
-            'permission' => 'hr-usuario-ver|s-role-ver|s-permission-ver',
-            'routes' => 'usuarios*|roles*|permissions*',
-            'items' => [
-                ['url' => 'usuarios', 'icon' => 'fa-solid fa-users', 'label' => 'Usuarios'],
-                ['url' => 'roles', 'icon' => 'fa-solid fa-cogs', 'label' => 'Roles'],
-                ['url' => 'permissions', 'icon' => 'fa-solid fa-check', 'label' => 'Permisos'],
-            ]
-        ],
-        [
-            'icon' => asset('assets/icon/account_balance.svg'),
-            'icon_type' => 'svg',
-            'label' => 'Instituciones',
-            'permission' => 's-institucion-ver',
-            'role' => 'rector',
-            'routes' => 'institutional_profile*',
-            'items' => [
-                ['url' => 'institutional_profile/institution', 'icon' => 'fas fa-globe-americas', 'label' => 'Todos', 'exact' => true],
-                ['dynamic' => 'municipios', 'url' => 'institutional_profile/institution?municipio_id=', 'icon' => 'fas fa-map-marker-alt']
-            ]
-        ],
-        [
-            'icon' => asset('assets/icon/build.svg'),
-            'icon_type' => 'svg',
-            'label' => 'Parámetros',
-            'permission' => 's-parametro-editar',
-            'routes' => 'municipios*|ajustes*|modelos*|redes*|unidades*|componentes*|objetivo*|indicadores*',
-            'items' => [
-                ['url' => 'municipios', 'icon' => 'fas fa-map', 'label' => 'Municipios'],
-                ['url' => 'ajustes', 'icon' => 'fa-solid fa-gears', 'label' => 'Ajustes de la página'],
-                ['url' => 'modelos-educacionales', 'icon' => 'fas fa-lightbulb', 'label' => 'Modelos flexibles'],
-                ['url' => 'modelos-pedagogicos', 'icon' => 'fas fa-chalkboard-teacher', 'label' => 'Estrategias pedagógicas'],
-                ['url' => 'redes-aprendizajes', 'icon' => 'fas fa-graduation-cap', 'label' => 'Redes de aprendizaje'],
-                [
-                    'label' => 'PAM',
-                    'icon' => 'fas fa-clipboard-list',
-                    'routes' => 'unidades*|componentes*',
-                    'items' => [
-                        ['url' => 'unidades-meta', 'icon' => 'fas fa-bullseye', 'label' => 'Indicadores'],
-                        ['url' => 'componentes', 'icon' => 'fas fa-bullseye', 'label' => 'Componentes'],
-                    ]
-                ],
-                [
-                    'label' => 'PMI',
-                    'icon' => 'fas fa-shapes',
-                    'routes' => 'objetivo*|indicadores*',
-                    'items' => [
-                        ['url' => 'objetivo-pmi', 'icon' => 'fas fa-bullseye', 'label' => 'Objetivos'],
-                        ['url' => 'indicadores-pmi', 'icon' => 'fas fa-ruler-horizontal', 'label' => 'Indicadores'],
-                    ]
-                ],
-            ]
-        ],
-        [
-            'url' => 'pams/index',
-            'icon' => asset('assets/icon/calendar_month.svg'),
-            'icon_type' => 'svg',
-            'label' => 'PAM', 'permission' => 's-pam-consultar|s-pam-gestionar'
-        ],
-        [
-            'url' => 'red-actividades',
-            'icon' => asset('assets/icon/school.svg'),
-            'icon_type' => 'svg',
-            'label' => 'Redes pedagógicas',
-            'permission' => 's-red-actividad-gestionar',
-            'role' => 'rector'
-        ],
-        [
-            'url' => 'pmi/validacion',
-            'icon' => asset('assets/icon/list_alt_check.svg'),
-            'icon_type' => 'svg',
-            'label' => 'Validación de PMI',
-            'permission' => 's-pmi-validar'
-        ],
-    ];
+$sidebarMenu = [
+    [
+        'icon' => SvgHelper::getCached('assets/icon/location_city.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'Administración',
+        'permission' => 'hr-usuario-ver|s-role-ver|s-permission-ver',
+        'routes' => 'usuarios*|roles*|permissions*',
+        'items' => [
+            ['url' => 'usuarios', 'icon' => 'fa-solid fa-users', 'label' => 'Usuarios'],
+            ['url' => 'roles', 'icon' => 'fa-solid fa-cogs', 'label' => 'Roles'],
+            ['url' => 'permissions', 'icon' => 'fa-solid fa-check', 'label' => 'Permisos'],
+        ]
+    ],
+    [
+        'icon' => SvgHelper::getCached('assets/icon/account_balance.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'Instituciones',
+        'permission' => 's-institucion-ver',
+        'role' => 'rector',
+        'routes' => 'institutional_profile*',
+        'items' => [
+            ['url' => 'institutional_profile/institution', 'icon' => 'fas fa-globe-americas', 'label' => 'Todos', 'exact' => true],
+            ['dynamic' => 'municipios', 'url' => 'institutional_profile/institution?municipio_id=', 'icon' => 'fas fa-map-marker-alt']
+        ]
+    ],
+    [
+        'icon' => SvgHelper::getCached('assets/icon/build.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'Parámetros',
+        'permission' => 's-parametro-editar',
+        'routes' => 'municipios*|ajustes*|modelos*|redes*|unidades*|componentes*|objetivo*|indicadores*',
+        'items' => [
+            ['url' => 'municipios', 'icon' => 'fas fa-map', 'label' => 'Municipios'],
+            ['url' => 'ajustes', 'icon' => 'fa-solid fa-gears', 'label' => 'Ajustes de la página'],
+            ['url' => 'modelos-educacionales', 'icon' => 'fas fa-lightbulb', 'label' => 'Modelos flexibles'],
+            ['url' => 'modelos-pedagogicos', 'icon' => 'fas fa-chalkboard-teacher', 'label' => 'Estrategias pedagógicas'],
+            ['url' => 'redes-aprendizajes', 'icon' => 'fas fa-graduation-cap', 'label' => 'Redes de aprendizaje'],
+            [
+                'label' => 'PAM',
+                'icon' => 'fas fa-clipboard-list',
+                'routes' => 'unidades*|componentes*',
+                'items' => [
+                    ['url' => 'unidades-meta', 'icon' => 'fas fa-bullseye', 'label' => 'Indicadores'],
+                    ['url' => 'componentes', 'icon' => 'fas fa-bullseye', 'label' => 'Componentes'],
+                ]
+            ],
+            [
+                'label' => 'PMI',
+                'icon' => 'fas fa-shapes',
+                'routes' => 'objetivo*|indicadores*',
+                'items' => [
+                    ['url' => 'objetivo-pmi', 'icon' => 'fas fa-bullseye', 'label' => 'Objetivos'],
+                    ['url' => 'indicadores-pmi', 'icon' => 'fas fa-ruler-horizontal', 'label' => 'Indicadores'],
+                ]
+            ],
+        ]
+    ],
+    [
+        'url' => 'pams/index',
+        'icon' => SvgHelper::getCached('assets/icon/calendar_month.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'PAM',
+        'permission' => 's-pam-consultar|s-pam-gestionar'
+    ],
+    [
+        'url' => 'red-actividades',
+        'icon' => SvgHelper::getCached('assets/icon/school.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'Redes pedagógicas',
+        'permission' => 's-red-actividad-gestionar',
+        'role' => 'rector'
+    ],
+    [
+        'url' => 'pmi/validacion',
+        'icon' => SvgHelper::getCached('assets/icon/list_alt_check.svg'),
+        'icon_type' => 'svg_inline',
+        'label' => 'Validación de PMI',
+        'permission' => 's-pmi-validar'
+    ],
+];
 
     $canView = fn($item) => match(true) {
         isset($item['permission']) => collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p)),
@@ -117,8 +119,8 @@
                             'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:border-2 hover:border-custom-blue-light' => !$active
                         ])>
                             <div class="flex items-center gap-2 min-w-0">
-                                @if(data_get($item,'icon_type') == 'svg')
-                                    <img src="{{ $item['icon'] }}" alt="Icono" class="w-7 h-7 flex-shrink-0">
+                                @if(data_get($item,'icon_type') == 'svg_inline')
+                                    {!! $item['icon'] !!}
                                 @else
                                     <i class="{{ $item['icon'] }} text-xl flex-shrink-0"></i>
                                 @endif
@@ -187,8 +189,8 @@
                             'bg-white border-2 border-custom-blue-light text-custom-blue-light font-semibold' => $active,
                             'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:border-2 hover:border-custom-blue-light' => !$active
                         ])>
-                            @if(data_get($item,'icon_type') == 'svg')
-                                <img src="{{ $item['icon'] }}" alt="Icono" class="w-7 h-7 flex-shrink-0">
+                            @if(data_get($item,'icon_type') == 'svg_inline')
+                                {!! $item['icon'] !!}
                             @else
                                 <i class="{{ $item['icon'] }} w-7 h-7 text-center text-lg flex-shrink-0"></i>
                             @endif
