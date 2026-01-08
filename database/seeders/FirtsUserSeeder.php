@@ -25,7 +25,7 @@ class FirtsUserSeeder extends Seeder {
             ->firstOrFail();
 
         // Sincronizar todos los permisos al rol super_admin
-        $superAdmin->syncPermissions(Permission::all());
+        $superAdmin->syncPermissions(Permission::whereNotIn('name',['s-institucion-pertenecer_una'])->get());
         // Asignar rol a un usuario por defecto
         $currentFirstUser->assignRole('super_admin');
         $currentFirstUser->save();

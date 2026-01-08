@@ -1,6 +1,7 @@
 import { h, render } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import CBackButton from '@/components/shared/CBackButton.jsx';
+import auth from '@/utilidades/auth';
 
 const CInstitutionNavigations = ({
                                      backUrl = '',
@@ -10,15 +11,31 @@ const CInstitutionNavigations = ({
                                      pmiUrl = '',
                                      proyectosTransversalesUrl = '',
                                      institutionName = '',
-                                     mountToNavbar = true, // Nueva prop para controlar si se monta en el navbar
+                                     mountToNavbar = true,
                                  }) => {
     const getBtnClass = (url, baseClass) => {
-        // Si la url es "#", usamos btn-baseClass (sólido)
-        // Si no, usamos btn-outline-baseClass
         return url === '#'
             ? `btn btn-${baseClass} btn-sm`
             : `btn btn-outline-${baseClass} btn-sm`;
     };
+
+    // Verificar permisos y roles
+    const permissions = useMemo(() => ({
+        canViewProfile: auth.can('s-institucion-ver') ||
+            auth.hasRole('rector') ||
+            auth.can('s-institucion-pertenecer_una'),
+        canViewPei: auth.can('s-institucion-editar') || auth.hasRole('rector'),
+        canViewAutoevaluacion: auth.can('s-institucion-editar')
+                            || auth.hasRole('rector')
+                            || auth.can('s-autoevaluacion-calificar-gestion_directiva')
+                            || auth.can('s-autoevaluacion-calificar-gestion_academica')
+                            || auth.can('s-autoevaluacion-calificar-gestion_admin_financi')
+                            || auth.can('s-autoevaluacion-calificar-gestion_comunidad'),
+        canViewPmi: auth.can('s-institucion-editar') ||
+            auth.can('s-pmi-gestionar') ||
+            auth.hasRole('rector'),
+        canViewProyectos: auth.can('s-institucion-editar') || auth.hasRole('rector'),
+    }), []);
 
     // Hook para montar el nombre de la institución en el navbar
     useEffect(() => {
@@ -26,7 +43,6 @@ const CInstitutionNavigations = ({
             const targetElement = document.getElementById('navbar-item-1');
 
             if (targetElement) {
-                // Crear el contenido para el navbar
                 const navbarContent = (
                     <div className="d-flex justify-content-center px-2">
                         <span
@@ -44,11 +60,9 @@ const CInstitutionNavigations = ({
                     </div>
                 );
 
-                // Renderizar en el navbar
                 render(navbarContent, targetElement);
             }
 
-            // Cleanup: limpiar el navbar cuando el componente se desmonte
             return () => {
                 const targetElement = document.getElementById('navbar-item-1');
                 if (targetElement) {
@@ -61,7 +75,7 @@ const CInstitutionNavigations = ({
 
     return (
         <div class="d-flex align-items-center justify-content-between container">
-        <CBackButton
+            <CBackButton
                 to={backUrl}
                 label="Volver"
                 isContainer={false}
@@ -89,24 +103,43 @@ const CInstitutionNavigations = ({
                 </div>
             )}
             <div class="d-flex gap-2">
-                <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
-                    Perfil
-                </a>
-                <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
-                    PEI
-                </a>
-                <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
-                    Autoevaluación
-                </a>
-                <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
-                    PMI
-                </a>
-                <a
-                    href={proyectosTransversalesUrl}
-                    class={getBtnClass(proyectosTransversalesUrl, 'warning')}
-                >
-                    PPT
-                </a>
+                {/* Mostrar botón Perfil solo si tiene permiso */}
+                {permissions.canViewProfile && (
+                    <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
+                        Perfil
+                    </a>
+                )}
+
+                {/* Mostrar botón PEI solo si tiene permiso */}
+                {permissions.canViewPei && (
+                    <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
+                        PEI
+                    </a>
+                )}
+
+                {/* Mostrar botón Autoevaluación solo si tiene permiso */}
+                {permissions.canViewAutoevaluacion && (
+                    <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
+                        Autoevaluación
+                    </a>
+                )}
+
+                {/* Mostrar botón PMI solo si tiene permiso */}
+                {permissions.canViewPmi && (
+                    <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
+                        PMI
+                    </a>
+                )}
+
+                {/* Mostrar botón PPT solo si tiene permiso */}
+                {permissions.canViewProyectos && (
+                    <a
+                        href={proyectosTransversalesUrl}
+                        class={getBtnClass(proyectosTransversalesUrl, 'warning')}
+                    >
+                        PPT
+                    </a>
+                )}
             </div>
         </div>
     );

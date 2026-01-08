@@ -1,3 +1,88 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    /* Colores principales del proyecto */
+    --color-custom-primary: #3878BB;
+    --color-custom-blue-dark: #2072B9;
+    --color-custom-blue-light: #1B9DD9;
+    --color-custom-red: #E7324C;
+    --color-custom-gray: #506372;
+    --color-custom-gray-light: #EEEDED;
+}
+
+/* Clases de Background */
+.bg-custom-primary {
+    background-color: var(--color-custom-primary);
+}
+
+.bg-custom-blue-dark {
+    background-color: var(--color-custom-blue-dark);
+}
+
+.bg-custom-blue-light {
+    background-color: var(--color-custom-blue-light);
+}
+
+.bg-custom-red {
+    background-color: var(--color-custom-red);
+}
+
+.bg-custom-gray {
+    background-color: var(--color-custom-gray);
+}
+
+.bg-custom-gray-light {
+    background-color: var(--color-custom-gray-light);
+}
+
+/* Clases de Text */
+.text-custom-primary {
+    color: var(--color-custom-primary);
+}
+
+.text-custom-blue-dark {
+    color: var(--color-custom-blue-dark);
+}
+
+.text-custom-blue-light {
+    color: var(--color-custom-blue-light);
+}
+
+.text-custom-red {
+    color: var(--color-custom-red);
+}
+
+.text-custom-gray {
+    color: var(--color-custom-gray);
+}
+
+.text-custom-gray-light {
+    color: var(--color-custom-gray-light);
+}
+
+/* Clases de Border */
+.border-custom-primary {
+    border-color: var(--color-custom-primary);
+}
+
+.border-custom-blue-dark {
+    border-color: var(--color-custom-blue-dark);
+}
+
+.border-custom-blue-light {
+    border-color: var(--color-custom-blue-light);
+}
+
+.border-custom-red {
+    border-color: var(--color-custom-red);
+}
+
+.border-custom-gray {
+    border-color: var(--color-custom-gray);
+}
+
+.border-custom-gray-light {
+    border-color: var(--color-custom-gray-light);
+}

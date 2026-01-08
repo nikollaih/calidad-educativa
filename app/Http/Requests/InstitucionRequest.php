@@ -24,10 +24,30 @@ class InstitucionRequest extends FormRequest {
                 'permissions' => ['s-institucion-eliminar'],
                 'roles' => ['rector'],
             ],
-            'index' => [
-                'permissions' => ['s-institucion-ver'],
+            'autoevaluacionesVer,autoevaluaciones'=> [
+                'permissions' => [
+                    's-institucion-editar',
+                    's-autoevaluacion-calificar-gestion_directiva',
+                    's-autoevaluacion-calificar-gestion_academica',
+                    's-autoevaluacion-calificar-gestion_admin_financi',
+                    's-autoevaluacion-calificar-gestion_comunidad'
+                 ],
                 'roles' => ['rector'],
             ],
+            'index' => [
+                'permissions' => ['s-institucion-ver','s-institucion-pertenecer_una'],
+                'roles' => ['rector'],
+            ],
+            'autoevaluacionesCrear,autoevaluacionesEditar,autoevaluacionesAlmacenar,autoevaluacionesAlmacenarActualizacion' => [
+                'permissions' => [
+                    's-institucion-editar',
+                    's-autoevaluacion-calificar-gestion_directiva',
+                    's-autoevaluacion-calificar-gestion_academica',
+                    's-autoevaluacion-calificar-gestion_admin_financi',
+                    's-autoevaluacion-calificar-gestion_comunidad',
+                ],
+                'roles' => ['rector'],
+            ]
         ];
     }
 
@@ -45,11 +65,16 @@ class InstitucionRequest extends FormRequest {
             if ($municipioId) {
                 $query->where('municipio_id', $municipioId);
             }
-
+            // Valida jerarquicamente, primero si es un rector, en caso contrario valida si tiene
+            // permiso de pertenecer a una institucion, en ambos casos aplica el filtro
             if ($user->hasRole('rector')) {
                 $query->where('rector_id', $user->id);
+            } else if ($user->hasPermissionTo('s-institucion-pertenecer_una')) {
+                $query->whereHas('users', function ($q) use ($user) {
+                    $q->where('users.id', $user->id)
+                    ->where('institucion_user.is_active', true);
+                });
             }
-
             return $query;
         };
     }
