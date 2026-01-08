@@ -213,8 +213,30 @@
             const backdrop = document.getElementById('content-backdrop');
             const toggleButtons = document.querySelectorAll('.layout-menu-toggle, #sidebar-toggle-btn');
 
+            // LocalStorage key for sidebar state
+            const SIDEBAR_STATE_KEY = 'sidebar-collapsed-state';
+
+            // Function to save sidebar state
+            function saveSidebarState(isCollapsed) {
+                try {
+                    localStorage.setItem(SIDEBAR_STATE_KEY, isCollapsed ? 'collapsed' : 'expanded');
+                } catch (e) {
+                    console.warn('Could not save sidebar state to localStorage:', e);
+                }
+            }
+
+            // Function to load sidebar state
+            function loadSidebarState() {
+                try {
+                    return localStorage.getItem(SIDEBAR_STATE_KEY) === 'collapsed';
+                } catch (e) {
+                    console.warn('Could not load sidebar state from localStorage:', e);
+                    return false; // Default to expanded
+                }
+            }
+
             // Function to expand sidebar
-            function expandSidebar() {
+            function expandSidebar(save = true) {
                 const logoFull = sidebar.querySelector('.logo-full');
                 const logoCollapsed = sidebar.querySelector('.logo-collapsed');
                 const menuTexts = sidebar.querySelectorAll('.menu-text');
@@ -224,10 +246,14 @@
                 logoFull?.classList.remove('hidden');
                 logoCollapsed?.classList.add('hidden');
                 menuTexts.forEach(el => el.classList.remove('hidden'));
+
+                if (save) {
+                    saveSidebarState(false);
+                }
             }
 
             // Function to collapse sidebar
-            function collapseSidebar() {
+            function collapseSidebar(save = true) {
                 const logoFull = sidebar.querySelector('.logo-full');
                 const logoCollapsed = sidebar.querySelector('.logo-collapsed');
                 const menuTexts = sidebar.querySelectorAll('.menu-text');
@@ -240,6 +266,10 @@
 
                 // Close all submenus when collapsing
                 sidebar.querySelectorAll('.submenu').forEach(el => el.classList.add('hidden'));
+
+                if (save) {
+                    saveSidebarState(true);
+                }
             }
 
             // Check if sidebar is collapsed
@@ -316,12 +346,44 @@
                 });
             }
 
-            // Initialize state based on screen size
+            // Initialize state based on screen size and saved state
             if (window.innerWidth < 1024) {
+                // Mobile: always start hidden off-screen
                 sidebar.classList.add('-translate-x-full');
                 sidebar.classList.remove('w-20');
                 sidebar.classList.add('w-64');
+            } else {
+                // Desktop: load saved state
+                const shouldBeCollapsed = loadSidebarState();
+                if (shouldBeCollapsed) {
+                    collapseSidebar(false); // Don't save again during initialization
+                } else {
+                    expandSidebar(false); // Don't save again during initialization
+                }
             }
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth < 1024) {
+                        // Switching to mobile
+                        sidebar.classList.add('-translate-x-full');
+                        sidebar.classList.remove('w-20');
+                        sidebar.classList.add('w-64');
+                    } else {
+                        // Switching to desktop - restore saved state
+                        sidebar.classList.remove('-translate-x-full');
+                        const shouldBeCollapsed = loadSidebarState();
+                        if (shouldBeCollapsed) {
+                            collapseSidebar(false);
+                        } else {
+                            expandSidebar(false);
+                        }
+                    }
+                }, 250);
+            });
         });
     </script>
 </aside>
