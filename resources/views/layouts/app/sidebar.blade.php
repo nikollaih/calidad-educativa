@@ -296,11 +296,15 @@
             // Function to open/close submenu
             function openSubmenu(button) {
                 const submenu = button.nextElementSibling;
-
+                const parentDiv = button.parentElement; // Obtiene el padre directo
                 // Close ALL other submenus first
                 const allButtons = document.querySelectorAll('[onclick="toggleSubmenu(this)"]');
                 allButtons.forEach(otherBtn => {
                     if (otherBtn !== button) {
+                        const otherBtnParent = otherBtn.parentElement;
+                        otherBtnParent.classList.remove('bg-white', 'border-2', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                        otherBtnParent.classList.add('text-gray-700','hover:border-2','hover:bg-white');
+                        otherBtn.classList.remove('text-custom-blue-light','border-custom-blue-light');
                         const otherSubmenu = otherBtn.nextElementSibling;
                         if (otherSubmenu && otherSubmenu.classList.contains('submenu')) {
                             otherSubmenu.classList.add('hidden');
@@ -310,6 +314,22 @@
 
                 if (submenu && submenu.classList.contains('submenu')) {
                     submenu.classList.toggle('hidden');
+                    const isVisible = !submenu.classList.contains('hidden');
+                    console.log('is visible');
+                    console.log(isVisible);
+                    if (isVisible) {
+                        // Agregar clases activas al botón
+                        parentDiv.classList.add('bg-white', 'border-2', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold', 'rounded-2xl');
+                        parentDiv.classList.remove('text-gray-700');
+                        button.classList.remove('hover:border-2','hover:bg-white','text-gray-700')
+                        button.classList.add('text-custom-blue-light')
+                    } else {
+                        parentDiv.classList.remove('bg-white', 'border-2', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                        parentDiv.classList.add('text-gray-700','hover:border-2','hover:bg-white', 'hover:border-custom-blue-light');
+                        button.classList.remove('text-custom-blue-light');
+                    }
+
+
                 }
             }
 
