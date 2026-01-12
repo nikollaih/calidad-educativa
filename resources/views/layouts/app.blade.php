@@ -50,82 +50,8 @@
         @include('layouts.app.sidebar')
         <!-- Main Content Wrapper -->
         <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-            <nav class="h-16 bg-white shadow-sm flex items-center px-4 justify-between z-10" id="layout-navbar">
-                        <div class="container-fluid">
-                            <!-- Botón de toggle visible en todas las pantallas -->
-                            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0">
-                                <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                                    <i class="bx bx-menu bx-sm"></i>
-                                </a>
-                            </div>
-                            <div id="navbar-item-1" class="d-flex w-full"> </div>
-                            <div class="navbar-nav d-flex align-items-center" id="navbar-collapse">
-                                <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                    <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                            <div class="avatar avatar-online">
-                                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle" />
-                                            </div>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item" href="{{asset('profile')}}">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar avatar-online">
-                                                                @if( session('icono') )
-                                                                    <img src="{{asset('storage/iconos/')}}/{{session('icono')}}" alt class="rounded-circle" />
-                                                                @else
-                                                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle" />
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <span class="fw-semibold d-block lh-1">
-                                                                {{ Auth::user() ? Auth::user()->name : 'Sin Perfil' }}
-                                                            </span>
-
-                                                            <ul class="list-unstyled small mb-0 mt-1">
-                                                                @if (Auth::check() && Auth::user()->roles->isNotEmpty())
-                                                                    @foreach (Auth::user()->roles as $role)
-                                                                        <li>{{ $role->name_translated ?? $role->name }}</li>
-                                                                    @endforeach
-                                                                @else
-                                                                    <li>Sin Rol</li>
-                                                                @endif
-                                                            </ul>
-                                                        </div>
-
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="dropdown-divider"></div>
-                                            </li>
-                                            <li>
-                                                <form method="POST" action="{{ route('logout') }}">
-                                                    @csrf
-                                                    <button type="submit" class="nav-link btn btn-link" style="cursor: pointer;">
-                                                       Cerrar sesión
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="navbar-search-wrapper search-input-wrapper d-none">
-                                <input
-                                        type="text"
-                                        class="form-control search-input container-fluid border-0"
-                                        placeholder="Search..."
-                                        aria-label="Search..."
-                                />
-                                <i class="bx bx-x bx-sm search-toggler cursor-pointer"></i>
-                            </div>
-                        </div>
-                    </nav>
-                    <div class="content-wrapper">
+            @include('layouts.app.navbar')
+            <div class="content-wrapper">
                         <div class="container-xxl flex-grow-1 container-p-y">
                             <div class="card-header">
                                 @if (Session::has('flash_error_message'))

@@ -16,7 +16,7 @@ export default {
             },
             colors: {
                 'custom-primary': '#3878BB',
-                'custom-blue-dark': '#2072B9',
+                'custom-blue-dark': '#3d79d5',
                 'custom-blue-light': '#1B9DD9',
                 'custom-red': '#E7324C',
                 'custom-gray': '#506372',

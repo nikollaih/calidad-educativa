@@ -213,7 +213,7 @@ $sidebarMenu = [
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('layout-menu');
             const backdrop = document.getElementById('content-backdrop');
-            const toggleButtons = document.querySelectorAll('.layout-menu-toggle, #sidebar-toggle-btn');
+            const toggleButtons = document.querySelectorAll('#sidebar-toggle-btn');
 
             // LocalStorage key for sidebar state
             const SIDEBAR_STATE_KEY = 'sidebar-collapsed-state';
