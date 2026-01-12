@@ -112,10 +112,10 @@ $sidebarMenu = [
 
                 @isset($item['items'])
                     {{-- Section with submenu --}}
-                    <div @class(['mx-1'])>
+                    <div @class(['mx-1', 'border-2 rounded-2xl border-custom-blue-light bg-white text-custom-blue-light' => $active])>
                         <div onclick="toggleSubmenu(this)" @class([
                             'cursor-pointer w-full flex items-center justify-between p-2 rounded-lg transition-all has-submenu',
-                            'bg-white border-2 border-custom-blue-light text-custom-blue-light' => $active,
+                            '' => $active,
                             'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:border-2 hover:border-custom-blue-light' => !$active
                         ])>
                             <div class="flex items-center gap-2 min-w-0">
@@ -327,8 +327,8 @@ $sidebarMenu = [
                         button.classList.add('text-custom-blue-light')
                     } else {
                         parentDiv.classList.remove('bg-white', 'border-2', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
-                        parentDiv.classList.add('text-gray-700','hover:border-2','hover:bg-white', 'hover:border-custom-blue-light');
-                        button.classList.remove('text-custom-blue-light');
+                        parentDiv.classList.add('text-gray-700','hover:border-2','hover:bg-white', 'hover:border-custom-blue-light','hover:text-custom-blue-light');
+                        button.classList.remove('text-custom-blue-light','border-2','bg-white');
                     }
 
 
