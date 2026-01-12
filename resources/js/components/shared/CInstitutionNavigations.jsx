@@ -44,9 +44,9 @@ const CInstitutionNavigations = ({
 
             if (targetElement) {
                 const navbarContent = (
-                    <div className="d-flex justify-content-center px-2">
+                    <div className="flex justify-center px-2 w-full">
                         <span
-                            className="text-uppercase fw-bold text-primary"
+                            className="text-uppercase fw-bold text-white"
                             style={{
                                 maxWidth: '40vw',
                                 fontSize: '1.5rem',

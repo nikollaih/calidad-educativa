@@ -104,7 +104,7 @@ $sidebarMenu = [
         </a>
     </div>
 
-    <div class="flex-1 overflow-y-auto py-3">
+    <div class="flex-1 overflow-y-auto py-3 overflow-hidden">
         <div class="space-y-1">
             @foreach($sidebarMenu as $item)
                 @continue(!$canView($item))

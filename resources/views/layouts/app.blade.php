@@ -51,36 +51,58 @@
         <!-- Main Content Wrapper -->
         <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
             @include('layouts.app.navbar')
-            <div class="content-wrapper">
-                        <div class="container-xxl flex-grow-1 container-p-y">
-                            <div class="card-header">
+            <div class="flex flex-col min-h-screen">
+                <!-- Content Wrapper con scroll -->
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <!-- Contenedor principal con scroll vertical -->
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="container mx-auto px-4 py-6 max-w-7xl">
+                            <!-- Header con mensajes -->
+                            <div class="mb-6">
                                 @if (Session::has('flash_error_message'))
-                                    <div class="alert alert-danger" role="alert">{{ Session::get('flash_error_message') }}</div>
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                                        <span class="block sm:inline">{{ Session::get('flash_error_message') }}</span>
+                                    </div>
                                 @endif
+
                                 @if (Session::has('flash_success_message'))
-                                    <div class="alert alert-success" role="alert">{{ Session::get('flash_success_message') }}</div>
+                                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                                        <span class="block sm:inline">{{ Session::get('flash_success_message') }}</span>
+                                    </div>
                                 @endif
                             </div>
+
+                            <!-- Errores de validación -->
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                                    <ul class="list-disc list-inside">
                                         @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                            <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
-                            @yield('content')
-                        </div>
-                        <footer class="content-footer footer bg-footer-theme">
-                            <div class="container-fluid d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                               <!-- <div class="mb-2 mb-md-0"> © <script>document.write(new Date().getFullYear());</script> by Developers
-                               </div> -->
+
+                            <!-- Contenido principal -->
+                            <div class="pb-6">
+                                @yield('content')
                             </div>
-                        </footer>
-            <!-- Content backdrop -->
-            <div class="absolute inset-0 bg-black bg-opacity-50 z-0 hidden" id="content-backdrop"></div>
-        </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer fijo en la parte inferior -->
+                    <footer class="bg-gray-50 border-t border-gray-200 flex-shrink-0">
+                        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center max-w-7xl">
+                            <div class="text-sm text-gray-600">
+                                <!-- © <script>document.write(new Date().getFullYear());</script> by Developers -->
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+
+                <!-- Content backdrop -->
+                <div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" id="content-backdrop"></div>
+            </div>
     </div>
         <script src="{{ asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
         <script src="{{ asset('assets/vendor/libs/popper/popper.js')}}"></script>
