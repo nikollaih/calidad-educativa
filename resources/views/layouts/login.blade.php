@@ -67,10 +67,11 @@
                     <footer class="content-footer footer bg-footer-theme" style="background-color: transparent !important;">
                         <div class="container-fluid d-flex flex-wrap justify-content-center py-2">
                             <div class="mb-2 mb-md-0" style="color: #666; font-size: 14px;">
+                                <i class="fa-regular fa-copyright"></i>
+                                Secretaría de Educación Departamental
                                 <script>
                                     document.write(new Date().getFullYear());
                                 </script>
-                                calidad
                             </div>
                         </div>
                     </footer>

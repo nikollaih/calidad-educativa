@@ -83,11 +83,19 @@ $sidebarMenu = [
     ],
 ];
 
-    $canView = fn($item) => match(true) {
-        isset($item['permission']) => collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p)),
-        isset($item['role']) => auth()->user()->hasRole($item['role']),
-        default => true
-    };
+$canView = fn($item) => match(true) {
+    isset($item['permission']) && isset($item['role']) =>
+        collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p))
+        || auth()->user()->hasRole($item['role']),
+
+    isset($item['permission']) =>
+        collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p)),
+
+    isset($item['role']) =>
+        auth()->user()->hasRole($item['role']),
+
+    default => true
+};
 
     $isActive = fn($item) => match(true) {
         isset($item['exact']) => request()->fullUrlIs(url($item['url'])),
@@ -104,7 +112,7 @@ $sidebarMenu = [
         </a>
     </div>
 
-    <div class="flex-1 overflow-y-auto py-3 overflow-hidden">
+    <div class="flex-1 overflow-y-auto py-3 ">
         <div class="space-y-1">
             @foreach($sidebarMenu as $item)
                 @continue(!$canView($item))
