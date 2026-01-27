@@ -15,11 +15,14 @@ use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\PeiHistorial;
+use App\Models\Seguridad\Role\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -45,6 +48,116 @@ class InstitutionController extends Controller {
                 'paginate' =>$paginate
             ]
         );
+    }
+    public function usuariosInstitucionByRector(InstitucionRequest $request) {
+        $institucion = Auth::user()->institucion;
+        if (empty($institucion)) {
+            return redirect()->back()->with('flash_error_message', 'Debes estar asociado a una institucion.');
+        }
+
+        $paginate = User::whereHas('instituciones', function($query) use ($institucion) {
+            $query->where('institucions.id', $institucion->id);
+        })->paginate(10);
+
+        // Agregar is_active directamente a cada usuario
+        $paginate->getCollection()->transform(function($user) use ($institucion) {
+            $pivot = \DB::table('institucion_user')
+                ->where('user_id', $user->id)
+                ->where('institucion_id', $institucion->id)
+                ->first();
+
+            $user->is_active = $pivot ? $pivot->is_active : null;
+            return $user;
+        });
+        return view(
+            'usuarios_institucion.index',
+            [
+                'paginate' =>$paginate
+            ]
+        );
+    }
+    public function createUsuariosInstitucion() {
+        $roles = Role::with('permissions')->whereIn('name',['Docente','Administrativo'])->get();
+        return view(
+            'usuarios_institucion.create',
+            [
+                'roles'=> $roles,
+            ]
+        );
+    }
+    public function editUsuarioInstitucion(Request $request, int $userId) {
+        $user = User::where('id', $userId)->with('roles')->first();
+        if (empty($user)) {
+            return redirect()->back()->with('flash_error_message', 'Usuario no encontrado.');
+        }
+        $roles = Role::with('permissions')->whereIn('name',['Docente','Administrativo'])->get();
+        return view(
+            'usuarios_institucion.edit',
+            [
+                'roles'=> $roles,
+                'user' => $user,
+            ]
+        );
+    }
+    public function storeUsuariosInstitucion(InstitucionRequest $request) {
+        /**
+         * @var Institucion|null $institution
+         */
+        $institution = Auth::user()?->institucion;
+        if (empty($institution)) {
+            return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
+        }
+        $userData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+        ]);
+        $user = User::create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'password' => Hash::make($userData['password']),
+        ]);
+        // Asignar varios roles
+        $user->syncRoles($userData['roles']);
+        $institution->users()->attach($user->id);
+        return redirect()->route('instituciones.usuarios_institucion-index')
+            ->with('flash_success_message', 'Usuario creado correctamente.');
+    }
+    public function updateUsuariosInstitucion(InstitucionRequest $request, User $user) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$user->id}",
+            'password' => 'nullable|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+        ]);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+
+        // Asignar varios roles
+        $user->syncRoles($validated['roles']);
+        return redirect()->route('instituciones.usuarios_institucion-index')
+            ->with('flash_success_message', 'Usuario creado correctamente.');
+    }
+    public function deleteUsuarioInstitucion(Request $request, User $user) {
+        /**
+         * @var Institucion|null $institution
+         */
+        $institution = Auth::user()?->institucion;
+        if (empty($institution)) {
+            return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
+        }
+        if ($institution->users()->where('users.id', $user->id)->exists()) {
+            $user->delete();
+            return redirect()->route('instituciones.usuarios_institucion-index')
+                ->with('flash_success_message', 'Usuario creado correctamente.');
+        }
+        return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
     }
 
     /**

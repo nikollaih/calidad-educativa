@@ -17,10 +17,10 @@ const CBackButton = ({
         <div class={isContainer ? 'container' : ' '}>
             <button
                 type="button"
-                className="btn btn-outline-primary d-flex align-items-center gap-2"
+                className="d-flex align-items-center gap-2 text-custom-blue-light font-medium"
                 onClick={handleClick}
             >
-                <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                <i className="fa-solid fa-angle-left" aria-hidden={true}></i>
                 {label}
             </button>
         </div>

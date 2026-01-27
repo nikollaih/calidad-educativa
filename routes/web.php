@@ -140,6 +140,14 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::prefix('usuarios-institucion')->group(function () {
+        Route::get('/', [InstitutionController::class, 'usuariosInstitucionByRector'])->name('instituciones.usuarios_institucion-index');
+        Route::get('/create', [InstitutionController::class, 'createUsuariosInstitucion'])->name('instituciones.usuarios_institucion-create');
+        Route::post('/', [InstitutionController::class, 'storeUsuariosInstitucion'])->name('instituciones.usuarios_institucion-store');
+        Route::get('/{userId}', [InstitutionController::class, 'editUsuarioInstitucion'])->name('instituciones.usuarios_institucion-edit');
+        Route::patch('/{user}', [InstitutionController::class, 'updateUsuariosInstitucion'])->name('instituciones.usuarios_institucion-update');
+        Route::delete('/{user}', [InstitutionController::class, 'deleteUsuarioInstitucion'])->name('instituciones.usuarios_institucion-delete');
+    });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -156,7 +164,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
     Route::patch('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
     Route::delete('/usuarios/{usuario}', [UserController::class, 'destroy'])->name('usuarios.destroy');
-
     // Roles
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');

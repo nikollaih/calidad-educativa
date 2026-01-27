@@ -115,8 +115,6 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-pmi-validacion-editar'],
             ['name'=>'s-pmi-validacion-eliminar'],
 
-
-
             // Redes Pedagogicas (Actividades)
             ['name'=>'s-red-actividad-ver'],
             ['name'=>'s-red-actividad-crear'],

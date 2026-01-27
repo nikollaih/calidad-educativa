@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use App\Models\Seguridad\Permission\Permission;
+use App\Models\Seguridad\Role\Role;
 
 class RoleSeeder extends Seeder {
     /**
@@ -12,14 +13,47 @@ class RoleSeeder extends Seeder {
     public function run(): void {
         // Roles del sistema
         $roles = [
-            ['name' => 'super_admin'],
-            ['name' => 'administrador'],
-            ['name' => 'rector'],
-            ['name' => 'secretario'],
-            ['name' => 'secretaria_educacion'],
+            [
+                'name' => 'super_admin'
+            ],
+            [
+                'name' => 'administrador'
+            ],
+            [
+                'name' => 'rector'
+            ],
+            [
+                'name' => 'Docente',
+                'permissions' => [
+                    's-institucion-pertenecer_una'
+                ]
+            ],
+            [
+                'name' => 'Administrativo',
+                'permissions' => [
+                    's-institucion-pertenecer_una'
+                ]
+            ],
+            [
+                'name' => 'secretario'
+            ],
+            [
+                'name' => 'secretaria_educacion'
+            ],
         ];
-        foreach ($roles as $role) {
-            Role::updateOrCreate($role,$role);
+
+        foreach ($roles as $roleData) {
+            // Crear o actualizar el rol solo con el nombre
+            $role = Role::updateOrCreate(
+                ['name' => $roleData['name']],
+                ['name' => $roleData['name']]
+            );
+
+            // Sincronizar permisos si existen
+            if (isset($roleData['permissions']) && !empty($roleData['permissions'])) {
+                $permissions = Permission::whereIn('name', $roleData['permissions'])->get();
+                $role->syncPermissions($permissions);
+            }
         }
     }
 }

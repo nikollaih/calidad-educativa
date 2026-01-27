@@ -15,9 +15,12 @@ const CInstitutionNavigations = ({
                                  }) => {
     const getBtnClass = (url, baseClass) => {
         return url === '#'
-            ? `btn btn-${baseClass} btn-sm`
-            : `btn btn-outline-${baseClass} btn-sm`;
+            ? `bg-white py-1 px-3 font-medium text-custom-blue-light hover:text-custom-blue-light`
+            : `bg-custom-gray-light font-normal py-1 px-3  text-gray-500 hover:text-custom-blue-light`;
     };
+    const Separator = () => (
+        <div className="vr"></div>
+    );
 
     // Verificar permisos y roles
     const permissions = useMemo(() => ({
@@ -74,27 +77,30 @@ const CInstitutionNavigations = ({
     }, [mountToNavbar, institutionName]);
 
     return (
-        <div class="d-flex align-items-center justify-content-between container">
+        <div className="d-flex align-items-center justify-content-between container">
             <CBackButton
                 to={backUrl}
                 label="Volver"
                 isContainer={false}
             />
             {!mountToNavbar && institutionName && (
-                <div class="flex-grow-1 d-flex justify-content-center px-2">
+                <div className="flex-grow-1 d-flex justify-content-center px-2 ">
                     <span
-                        class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border shadow-sm"
-                        style={{ background: 'linear-gradient(90deg, #f8f9fa 0%, #eef5ff 100%)', borderColor: 'rgba(13,110,253,.25)' }}
+                        className="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border shadow-sm"
+                        style={{
+                            background: 'linear-gradient(90deg, #f8f9fa 0%, #eef5ff 100%)',
+                            borderColor: 'rgba(13,110,253,.25)'
+                        }}
                     >
                         <span
-                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary"
-                            style={{ width: '28px', height: '28px' }}
+                            className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary"
+                            style={{width: '28px', height: '28px'}}
                         >
                             <i class="fas fa-school text-white"></i>
                         </span>
                         <span
-                            class="fw-semibold text-truncate"
-                            style={{ maxWidth: '50vw', fontSize: '0.95rem', letterSpacing: '0.2px' }}
+                            className="fw-semibold text-truncate"
+                            style={{maxWidth: '50vw', fontSize: '0.95rem', letterSpacing: '0.2px'}}
                             title={institutionName}
                         >
                             {institutionName}
@@ -102,43 +108,56 @@ const CInstitutionNavigations = ({
                     </span>
                 </div>
             )}
-            <div class="d-flex gap-2">
+            <div className="d-flex">
                 {/* Mostrar botón Perfil solo si tiene permiso */}
                 {permissions.canViewProfile && (
-                    <a href={detailUrl} class={getBtnClass(detailUrl, 'primary')}>
-                        Perfil
-                    </a>
+                    <>
+                        <a href={detailUrl} class={`${getBtnClass(detailUrl, 'primary')}`}>
+                            Perfil
+                        </a>
+                    </>
                 )}
-
                 {/* Mostrar botón PEI solo si tiene permiso */}
                 {permissions.canViewPei && (
-                    <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
-                        PEI
-                    </a>
+                    <>
+                        <Separator/>
+                        <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
+                            PEI
+                        </a>
+                    </>
                 )}
 
                 {/* Mostrar botón Autoevaluación solo si tiene permiso */}
                 {permissions.canViewAutoevaluacion && (
-                    <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
-                        Autoevaluación
-                    </a>
+                    <>
+                        <Separator/>
+                        <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
+                            Autoevaluación
+                        </a>
+                    </>
                 )}
 
                 {/* Mostrar botón PMI solo si tiene permiso */}
                 {permissions.canViewPmi && (
-                    <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
-                        PMI
-                    </a>
+                    <>
+                        <Separator/>
+                        <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
+                            PMI
+                        </a>
+                    </>
                 )}
 
                 {/* Mostrar botón PPT solo si tiene permiso */}
                 {permissions.canViewProyectos && (
-                    <a
-                        href={proyectosTransversalesUrl}
-                        class={getBtnClass(proyectosTransversalesUrl, 'warning')}
-                    >
-                        PPT
-                    </a>
+                    <>
+                        <Separator/>
+                        <a
+                            href={proyectosTransversalesUrl}
+                            class={getBtnClass(proyectosTransversalesUrl, 'warning')}
+                        >
+                            PPT
+                        </a>
+                    </>
                 )}
             </div>
         </div>

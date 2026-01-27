@@ -8,11 +8,34 @@ $sidebarMenu = [
         'icon_type' => 'svg_inline',
         'label' => 'Administración',
         'permission' => 'hr-usuario-ver|s-role-ver|s-permission-ver',
+        'role' => 'rector',
         'routes' => 'usuarios*|roles*|permissions*',
         'items' => [
-            ['url' => 'usuarios', 'icon' => 'fa-solid fa-users', 'label' => 'Usuarios'],
-            ['url' => 'roles', 'icon' => 'fa-solid fa-cogs', 'label' => 'Roles'],
-            ['url' => 'permissions', 'icon' => 'fa-solid fa-check', 'label' => 'Permisos'],
+            [
+                'url' => 'usuarios',
+                'icon' => 'fa-solid fa-users',
+                'label' => 'Usuarios',
+                'permission' =>
+                'hr-usuario-ver'
+            ],
+            [
+                'url' => 'usuarios-institucion',
+                'icon' => 'fa-solid fa-users',
+                'label' => 'Usuarios de institucion',
+                'role' =>'rector',
+            ],
+            [
+                'url' => 'roles',
+                'icon' => 'fa-solid fa-cogs',
+                'label' => 'Roles',
+                'permission' => 's-role-ver'
+            ],
+            [
+                'url' => 'permissions',
+                'icon' => 'fa-solid fa-check',
+                'label' => 'Permisos',
+                'permission' => 's-permission-ver'
+            ],
         ]
     ],
     [
@@ -43,6 +66,7 @@ $sidebarMenu = [
                 'label' => 'PAM',
                 'icon' => 'fas fa-clipboard-list',
                 'routes' => 'unidades*|componentes*',
+                'permission' => 's-pam-gestionar',
                 'items' => [
                     ['url' => 'unidades-meta', 'icon' => 'fas fa-bullseye', 'label' => 'Indicadores'],
                     ['url' => 'componentes', 'icon' => 'fas fa-bullseye', 'label' => 'Componentes'],
@@ -52,6 +76,7 @@ $sidebarMenu = [
                 'label' => 'PMI',
                 'icon' => 'fas fa-shapes',
                 'routes' => 'objetivo*|indicadores*',
+                'permission' => 's-pmi-gestionar',
                 'items' => [
                     ['url' => 'objetivo-pmi', 'icon' => 'fas fa-bullseye', 'label' => 'Objetivos'],
                     ['url' => 'indicadores-pmi', 'icon' => 'fas fa-ruler-horizontal', 'label' => 'Indicadores'],
@@ -83,27 +108,68 @@ $sidebarMenu = [
     ],
 ];
 
-$canView = fn($item) => match(true) {
-    isset($item['permission']) && isset($item['role']) =>
-        collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p))
-        || auth()->user()->hasRole($item['role']),
+$canView = function($item) {
+    $hasPermission = isset($item['permission'])
+        ? collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p))
+        : null;
 
-    isset($item['permission']) =>
-        collect(explode('|', $item['permission']))->some(fn($p) => auth()->user()->can($p)),
+    $hasRole = isset($item['role'])
+        ? collect(explode('|', $item['role']))->some(fn($r) => auth()->user()->hasRole($r))
+        : null;
 
-    isset($item['role']) =>
-        auth()->user()->hasRole($item['role']),
+    // Si ambos están definidos, debe tener al menos uno
+    if ($hasPermission !== null && $hasRole !== null) {
+        return $hasPermission || $hasRole;
+    }
 
-    default => true
+    // Si solo permission está definido
+    if ($hasPermission !== null) {
+        return $hasPermission;
+    }
+
+    // Si solo role está definido
+    if ($hasRole !== null) {
+        return $hasRole;
+    }
+
+    // Si ninguno está definido, es visible por defecto
+    return true;
 };
 
-    $isActive = fn($item) => match(true) {
-        isset($item['exact']) => request()->fullUrlIs(url($item['url'])),
-        default => collect(explode('|', $item['routes'] ?? $item['url'].'*'))->some(fn($r) => request()->is($r))
-    };
+
+
+$isActive = fn($item) => match(true) {
+    isset($item['exact']) => request()->fullUrlIs(url($item['url'])),
+    default => collect(explode('|', $item['routes'] ?? $item['url'].'*'))->some(fn($r) => request()->is($r))
+};
+
+// Función para verificar si un item tiene sub-items visibles
+$hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
+    if (!isset($item['items'])) {
+        return false;
+    }
+
+    foreach ($item['items'] as $sub) {
+        if ($canView($sub)) {
+            // Si tiene items anidados, verificar recursivamente
+            if (isset($sub['items'])) {
+                if ($hasVisibleSubItems($sub)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
 @endphp
 
-<aside id="layout-menu" class="w-64 flex-shrink-0 border-r-2 border-custom-primary flex flex-col transition-all duration-300 z-10 overflow-hidden">
+<aside id="layout-menu"
+       class="w-64 flex-shrink-0  border-custom-primary flex flex-col transition-all duration-300 z-10 overflow-hidden"
+       style="border-right-width: 1px"
+>
     <!-- Logo Header -->
     <div class="flex items-center justify-center shrink-0 mx-1">
         <a href="{{ url('dashboard') }}" class="flex items-center justify-center w-full">
@@ -119,12 +185,15 @@ $canView = fn($item) => match(true) {
                 @php $active = $isActive($item); @endphp
 
                 @isset($item['items'])
+                    {{-- Skip if no visible sub-items --}}
+                    @continue(!$hasVisibleSubItems($item))
+
                     {{-- Section with submenu --}}
-                    <div @class(['mx-1', 'border-2 rounded-2xl border-custom-blue-light bg-white text-custom-blue-light' => $active])>
+                    <div @class(['mx-1', '!border rounded-2xl border-custom-blue-light bg-white text-custom-blue-light' => $active])>
                         <div onclick="toggleSubmenu(this)" @class([
                             'cursor-pointer w-full flex items-center justify-between p-2 rounded-lg transition-all has-submenu',
                             '' => $active,
-                            'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:border-2 hover:border-custom-blue-light' => !$active
+                            'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:!border hover:border-custom-blue-light' => !$active
                         ])>
                             <div class="flex items-center gap-2 min-w-0">
                                 @if(data_get($item,'icon_type') == 'svg_inline')
@@ -155,6 +224,9 @@ $canView = fn($item) => match(true) {
                                     @endforeach
                                 @else
                                     @isset($sub['items'])
+                                        {{-- Skip nested menu if no visible items --}}
+                                        @continue(!$hasVisibleSubItems($sub))
+
                                         @php $subActive = $isActive($sub); @endphp
                                         <li>
                                             <button onclick="toggleSubmenu(this)" class="w-full flex items-center justify-between p-2 rounded-lg text-sm has-submenu">
@@ -165,6 +237,7 @@ $canView = fn($item) => match(true) {
                                             </button>
                                             <ul @class(['submenu pl-4 mt-1 space-y-1', 'hidden' => !$subActive])>
                                                 @foreach($sub['items'] as $nested)
+                                                    @continue(!$canView($nested))
                                                     @php $nestedActive = $isActive($nested); @endphp
                                                     <li>
                                                         <a href="{{ url($nested['url']) }}" class="flex items-center gap-2 p-2 rounded-lg text-sm">
@@ -194,15 +267,15 @@ $canView = fn($item) => match(true) {
                     <div class="mx-1">
                         <a href="{{ url($item['url']) }}" @class([
                             'flex items-center gap-2 p-2 rounded-lg transition-all',
-                            'bg-white border-2 border-custom-blue-light text-custom-blue-light font-semibold' => $active,
-                            'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:border-2 hover:border-custom-blue-light' => !$active
+                            'bg-white !border border-custom-blue-light text-custom-blue-light font-semibold' => $active,
+                            'text-gray-700 hover:text-custom-blue-light hover:bg-white hover:!border hover:border-custom-blue-light' => !$active
                         ])>
                             @if(data_get($item,'icon_type') == 'svg_inline')
                                 {!! $item['icon'] !!}
                             @else
                                 <i class="{{ $item['icon'] }} w-7 h-7 text-center text-lg flex-shrink-0"></i>
                             @endif
-                            <div class="menu-text truncate">{{ $item['label'] }}</div>
+                            <div class="menu-text truncate font-medium">{{ $item['label'] }}</div>
                         </a>
                     </div>
                 @endisset
@@ -312,8 +385,8 @@ $canView = fn($item) => match(true) {
                 allButtons.forEach(otherBtn => {
                     if (otherBtn !== button) {
                         const otherBtnParent = otherBtn.parentElement;
-                        otherBtnParent.classList.remove('bg-white', 'border-2', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
-                        otherBtnParent.classList.add('text-gray-700','hover:border-2','hover:bg-white');
+                        otherBtnParent.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                        otherBtnParent.classList.add('text-gray-700','hover:!border','hover:bg-white');
                         otherBtn.classList.remove('text-custom-blue-light','border-custom-blue-light');
                         const otherSubmenu = otherBtn.nextElementSibling;
                         if (otherSubmenu && otherSubmenu.classList.contains('submenu')) {
@@ -321,25 +394,30 @@ $canView = fn($item) => match(true) {
                         }
                     }
                 });
+                // Deselect all direct links (elementos sin submenu)
+                const allDirectLinks = sidebar.querySelectorAll('a[class*="flex items-center gap-2 p-2 rounded-lg"]');
+                allDirectLinks.forEach(link => {
+                    // Solo afectar los direct links principales (no los que están dentro de submenús)
+                    if (!link.closest('.submenu')) {
+                        link.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold');
+                        link.classList.add('text-gray-700', 'hover:text-custom-blue-light', 'hover:bg-white', 'hover:!border', 'hover:border-custom-blue-light');
+                    }
+                });
 
                 if (submenu && submenu.classList.contains('submenu')) {
                     submenu.classList.toggle('hidden');
                     const isVisible = !submenu.classList.contains('hidden');
-                    console.log('is visible');
-                    console.log(isVisible);
                     if (isVisible) {
                         // Agregar clases activas al botón
-                        parentDiv.classList.add('bg-white', 'border-2', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold', 'rounded-2xl');
+                        parentDiv.classList.add('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold', 'rounded-2xl');
                         parentDiv.classList.remove('text-gray-700');
-                        button.classList.remove('hover:border-2','hover:bg-white','text-gray-700')
+                        button.classList.remove('hover:!border','hover:bg-white','text-gray-700')
                         button.classList.add('text-custom-blue-light')
                     } else {
-                        parentDiv.classList.remove('bg-white', 'border-2', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
-                        parentDiv.classList.add('text-gray-700','hover:border-2','hover:bg-white', 'hover:border-custom-blue-light','hover:text-custom-blue-light');
-                        button.classList.remove('text-custom-blue-light','border-2','bg-white');
+                        parentDiv.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                        parentDiv.classList.add('text-gray-700','hover:!border','hover:bg-white', 'hover:border-custom-blue-light','hover:text-custom-blue-light');
+                        button.classList.remove('text-custom-blue-light','!border','bg-white');
                     }
-
-
                 }
             }
 

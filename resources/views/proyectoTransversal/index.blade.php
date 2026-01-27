@@ -8,7 +8,7 @@
         data-pei-url="{{ route('institution.pei', $institucionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
         data-pmi-url="{{ route('pmi.index', $institucionId) }}"
-        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
+        data-proyectos-transversales-url="#"
         data-institution-name="{{ $institucionNombre ?? '' }}"
     >
     </div>

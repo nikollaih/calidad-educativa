@@ -1,6 +1,10 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
+/**
+ * @deprecated Este componente usa estilos de Bootstrap y será reemplazado.
+ * Utiliza la nueva versión del componente con estilos de Tailwind.
+ */
 const CPasswordInput = ({
   name = '',
   value = '',

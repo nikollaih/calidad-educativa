@@ -86,3 +86,28 @@
 .border-custom-gray-light {
     border-color: var(--color-custom-gray-light);
 }
+
+/* Clases de Ring */
+.ring-custom-primary {
+    --tw-ring-color: var(--color-custom-primary);
+}
+
+.ring-custom-blue-dark {
+    --tw-ring-color: var(--color-custom-blue-dark);
+}
+
+.ring-custom-blue-light {
+    --tw-ring-color: var(--color-custom-blue-light);
+}
+
+.ring-custom-red {
+    --tw-ring-color: var(--color-custom-red);
+}
+
+.ring-custom-gray {
+    --tw-ring-color: var(--color-custom-gray);
+}
+
+.ring-custom-gray-light {
+    --tw-ring-color: var(--color-custom-gray-light);
+}

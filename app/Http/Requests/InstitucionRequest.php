@@ -12,6 +12,9 @@ class InstitucionRequest extends FormRequest {
      */
     protected function authorizationMap(): array {
         return [
+            'usuariosInstitucionByRector' => [
+                'roles' => ['rector']
+            ],
             'store' => [
                 'permissions' => ['s-institucion-crear'],
                 'roles' => ['rector'],

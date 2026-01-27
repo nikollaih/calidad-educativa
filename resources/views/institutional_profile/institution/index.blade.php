@@ -1,20 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-12">
+    <div class="!border border-custom-blue-light rounded-md">
         <div class="card">
-            <h1 class="card-header">Instituciones</h1>
+            <h1 class="p-2 px-3 text-custom-primary">Instituciones</h1>
             <div class="card-body">
                 <div class="col-md-12">
                         @php
                             $user = auth()->user();
                         @endphp
-
                         @if($user->hasAnyRole(['super_admin', 'administrador']) ||
                             ($user->hasRole('rector') && $user->institucion === null))
-                            <a href="{{ route('institution.create') }}" class="btn btn-primary mb-3">
-                                Crear institución
-                            </a>
+                            @include('layouts.app.components.buttons.add', ['route' => 'instituciones.usuarios_institucion-create'])
                         @endif
                                             @if(session('success'))
                         <div class="alert alert-success">
@@ -39,7 +36,7 @@
                                 <td>{{$institucion->nit}}</td>
                                 <td>{{$institucion->dane}}</td>
                                 <td>{{$institucion->email}}</td>
-                                <td>{{$institucion->nombre_rector}}</td>
+                                <td>{{$institucion->rector?->name}}</td>
                             </tr>
                         @endforeach
                         </tbody>

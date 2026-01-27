@@ -12,8 +12,8 @@ class DatabaseSeeder extends Seeder {
      */
     public function run(): void {
         // Seeder de los modelos educativos
-        $this->call(RoleSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(RoleSeeder::class);
         $this->call(FirtsUserSeeder::class);
         $this->call(EducationalModelSeeder::class);
         $this->call(EducationalOfferLevelSeeder::class);
