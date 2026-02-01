@@ -72,6 +72,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                     <td>
                                         {permissions.canEdit &&
                                             <CTableActionButton
+                                                title={'Ver detalles'}
                                                 route={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-ver`}
                                                 iconClass={'fa-regular fa-eye'}
                                                 hoverIconColor={'text-custom-primary'}
@@ -79,6 +80,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                         }
                                         {permissions.canEditResoults &&
                                             <CTableActionButton
+                                                title={'Resultados'}
                                                 route={`/institutional_profile/institution/${evaluacion.id}/fort_deb`}
                                                 iconClass={'fa-solid fa-square-poll-horizontal'}
                                                 hoverIconColor={'text-custom-primary'}
@@ -87,6 +89,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                         {/* Mostrar Editar solo si no está en VALIDACION */}
                                         {permissions.canEdit && evaluacion.alias_estado !== "VALIDACION" && (
                                             <CTableActionButton
+                                                title={'Editar'}
                                                 route={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
                                                 iconClass={'fa fa-pencil'}
                                                 hoverIconColor={'text-custom-primary'}
@@ -103,6 +106,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                                     <input type="hidden" name="_token" value={csrfToken}/>
                                                 </form>
                                                 <CTableActionButton
+                                                    title={'Enviar a Validación'}
                                                     iconClass={'fa fa-paper-plane'}
                                                     hoverIconColor={'text-custom-primary'}
                                                     onClick={() => formRef.current?.submit()}

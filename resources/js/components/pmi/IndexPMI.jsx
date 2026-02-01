@@ -129,6 +129,7 @@ export default function IndexPMI({
                                     <td class="d-flex gap-1">
                                         {permissions.canEdit &&
                                             <CTableActionButton
+                                                title={'Ver detalles'}
                                                 route={`/${institucionId}/pmi/${pmi.id}`}
                                                 iconClass={'fa-regular fa-eye'}
                                                 hoverIconColor={'text-custom-primary'}
@@ -136,6 +137,7 @@ export default function IndexPMI({
                                         }
                                         {permissions.canEdit && pmi.estado == 'Aprobado' && (
                                             <CTableActionButton
+                                                title={'Gestionar'}
                                                 route={`/${institucionId}/pmi/${pmi.id}`}
                                                 iconClass={'fa-solid fa-bars-progress'}
                                                 hoverIconColor={'text-custom-primary'}
@@ -145,6 +147,7 @@ export default function IndexPMI({
                                         {permissions.canEdit && pmi.estado === 'Proceso' && (
                                             <>
                                                 <CTableActionButton
+                                                    title={'Editar'}
                                                     route={`/${institucionId}/pmi/${pmi.id}/edit`}
                                                     iconClass={'fa fa-pencil'}
                                                     hoverIconColor={'text-custom-primary'}
@@ -158,6 +161,7 @@ export default function IndexPMI({
                                                     <input type="hidden" name="_token" value={csrfToken}/>
                                                 </form>
                                                 <CTableActionButton
+                                                    title={'Enviar a SED'}
                                                     iconClass={'fa fa-paper-plane'}
                                                     hoverIconColor={'text-custom-primary'}
                                                     onClick={() => formRef.current?.submit()}
@@ -165,6 +169,7 @@ export default function IndexPMI({
                                                 {pmi.comentarios?.filter((c) => c.estado === 'activo')
                                                     ?.length > 0 && (
                                                     <CTableActionButton
+                                                        title={'Ver comentarios'}
                                                         onClick={() =>
                                                             abrirModalComentarios(pmi.comentarios, pmi.id)
                                                         }
