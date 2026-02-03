@@ -13,34 +13,47 @@
     >
     </div>
 
-    <div class="container pt-3">
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
     @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-        <div class="card">
-            <div class="card-header">
-                <h1>Ver institución</h1>
-            </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+        <div class="m-3">
+            <h1 class="p-2 px-3 text-custom-primary">Ver institución</h1>
             <div class="card-body">
                 <form >
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)</label>
-                                <input type="text" name="nombre" class="form-control" value="{{ $institution->nombre }}" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="dane" class="form-label">Código DANE</label>
-                                <input type="text" name="dane" class="form-control" value="{{ $institution->dane }}" disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" name="email" class="form-control" value="{{ $institution->email }}" disabled>
-                            </div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Nombre de la Institución Educativa (IE)"
+                                data-input-name="nombre"
+                                data-input-value="{{ $institution->nombre }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Código DANE"
+                                data-input-name="dane"
+                                data-input-value="{{ $institution->dane }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Correo Electrónico"
+                                data-input-name="email"
+                                data-input-value="{{ $institution->email }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Correo Electrónico"
+                                data-input-name="email"
+                                data-input-value="{{ $institution->email }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento</label>
@@ -65,33 +78,49 @@
 
                         <!-- Columna 2 -->
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="nit" class="form-label">NIT</label>
-                                <input type="text" name="nit" class="form-control" value="{{ $institution->nit }}" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="url" name="web_url" class="form-control" value="{{ $institution->web_url }}" disabled>
-                            </div>
-
-
-
-
-                            <div class="mb-3">
-                                <label for="nombre_rector" class="form-label">Nombre del Rector</label>
-                                <input type="text" name="nombre_rector" class="form-control" value="{{ $institution?->rector?->name ?? "Sin rector"}}" disabled>
-                            </div>
                             <div
-                                data-component="TextMultipleTags"
-                                data-initial-value="{{$institution->nombre_coordinadores}}"
-                                data-is-editable="{{false}}"
-                            >
-                        </div>
+                                data-component="CInputComponent"
+                                data-label="Teléfono de la IE"
+                                data-input-name="telefono"
+                                data-input-value="{{ $institution->telefono }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="NIT"
+                                data-input-name="nit"
+                                data-input-value="{{ $institution->nit }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Página Web"
+                                data-input-name="web_url"
+                                data-input-value="{{ $institution->web_url }}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Nombre del Rector"
+                                data-input-name="nombre_rector"
+                                data-input-value="{{ $institution?->rector?->name ?? "Sin rector"}}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Nombre del Rector"
+                                data-input-name="nombre_rector"
+                                data-input-value="{{ $institution?->rector?->name ?? "Sin rector"}}"
+                                data-is-disabled="{{true}}"
+                            ></div>
+                            <div
+                                data-component="CInputComponent"
+                                data-input-type="text_multiple_tags"
+                                data-label="Coordinadores"
+                                data-input-name="nombre_coordinadores"
+                                data-input-value="{{$institution->nombre_coordinadores}}"
+                                data-is-disabled="{{true}}"
+                            ></div>
                     </div>
                     <!-- Redes Sociales -->
                     <div class="mb-3">
