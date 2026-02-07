@@ -193,63 +193,77 @@
             <div class="py-3 d-flex justify-content-center">
                 <div class="d-flex gap-2">
                     @if(auth()->user()->can('s-institucion-editar') || auth()->user()->hasRole('rector'))
-                        <a href="{{ route('institution.edit', $institution->id) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+                        <div
+                            data-component="CTableActionButton"
+                            data-title="Editar"
+                            data-route="{{ route('institution.edit', $institution->id) }}"
+                            data-icon-class="fa fa-pencil"
+                            data-hover-icon-color="text-custom-primary"
+                        ></div>
                     @endif
                     @if(auth()->user()->can('s-institucion-eliminar') || auth()->user()->hasRole('rector'))
-                        <form action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
+                        <form id="delete-form-{{ $institution->id }}" action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                            <div
+                                data-form-ref="#delete-form-{{ $institution->id }}"
+                                data-component="CTableActionButton"
+                                data-title="Eliminar"
+                                data-icon-class="fa fa-trash"
+                                data-confirm-message="¿Está seguro de eliminar esta institución?"
+                                data-hover-icon-color="text-custom-primary"
+                            ></div>
                         </form>
                     @endif
                 </div>
             </div>
         </div>
-
-
-
     </div>
 
     <!-- seccion de las sedes asociadas a la institucion -->
-    <div class="container pt-3">
-    <div class="col-md-12">
-        <div class="card">
-            <h1 class="card-header">Sedes</h1>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>DANE</th>
-                            <th>DIRECCIÓN</th>
-                            <th>ZONA</th>
-                            <th>TIPO DE SEDE</th>
-                            <th>ACCIONES</th>
-
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Institución 1 -->
-                             @foreach ($institution->sedes as $sede)
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
+        <div class=m-3">
+                <h1 class="p-2 px-3 text-custom-primary">Sedes</h1>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <td>{{ $sede->name }}</td>
-                                <td>{{ $sede->dane }}</td>
-                                <td>{{ $sede->address }}</td>
-                                <td>{{ $sede->zone }}</td>
-                                <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
-                                <td>
-                                    <a href="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                </td>
+                                <th>Nombre</th>
+                                <th>DANE</th>
+                                <th>DIRECCIÓN</th>
+                                <th>ZONA</th>
+                                <th>TIPO DE SEDE</th>
+                                <th>ACCIONES</th>
+
+
                             </tr>
-                        @endforeach
-                         </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <!-- Institución 1 -->
+                                 @foreach ($institution->sedes as $sede)
+                                <tr>
+                                    <td>{{ $sede->name }}</td>
+                                    <td>{{ $sede->dane }}</td>
+                                    <td>{{ $sede->address }}</td>
+                                    <td>{{ $sede->zone }}</td>
+                                    <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
+                                    <td>
+                                        <div
+                                            data-component="CTableActionButton"
+                                            data-title="Ver detalles"
+                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}"
+                                            data-icon-class="fa fa-eye"
+                                            data-hover-icon-color="text-custom-primary"
+                                        ></div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                             </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
         </div>
-    </div>
     </div>
 
 

@@ -11,7 +11,7 @@ const CTextInput = ({ name = '', value='', isRequired = false }) => {
       type="text"
       name={name}
       value={value}
-      class="form-control"
+      class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
       required={isRequired}
       onInput={handleInput}
     />

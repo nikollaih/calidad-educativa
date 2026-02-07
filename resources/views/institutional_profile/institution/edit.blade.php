@@ -11,16 +11,14 @@
             <a href="{{ route('proyectos_transversales.index', $institution->id) }}" class="btn btn-outline-warning btn-sm">PPT</a>
         </div>
     </div>
-    <div class="container pt-3">
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
     @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-        <div class="card">
-            <div class="card-header">
-                <h1>Editar Institución</h1>
-            </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+        <div class="m-3">
+            <h1 class="p-2 px-3 text-custom-primary">Editar Institución</h1>
             <div class="card-body">
                 <form action="{{ route('institution.update',$institution->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -29,18 +27,17 @@
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">
+                            <div
+                                data-component="CInputComponent"
+                                data-label="Nombre de la Institución Educativa (IE)"
+                                data-input-name="nombre"
+                                data-input-type="c_text_input"
+                                data-input-value="{{ $institution->nombre }}"
+                                data-is-disabled="{{false}}"
+                                data-is-required="{{true}}"
+                            ></div>
                             <div class="mb-3">
-                                <label for="nombre_ie" class="form-label">Nombre de la Institución Educativa (IE)<span class="text-danger">*</span></label>
-                                <div
-                                    data-component="CTextInput"
-                                    data-name="nombre"
-                                    data-value="{{ $institution->nombre }}"
-                                    data-is-required="true"
-                                >
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="dane" class="form-label">Código DANE <span class="text-danger">*</span></label>
+                                <label for="dane" class="block text-sm mb-2 ml-4">Código DANE <span class="text-danger">*</span></label>
                                 <div
                                     data-component="CNumberInput"
                                     data-name="dane"
@@ -53,24 +50,24 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico  <span class="text-danger">*</span></label>
-                                <input type="email" name="email" class="form-control" value="{{ $institution->email }}" required>
+                                <label for="email" class="block text-sm mb-2 ml-4">Correo Electrónico  <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $institution->email }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento <span class="text-danger">*</span></label>
+                                    <label for="licencia_funcionamiento" class="block text-sm mb-2 ml-4">Licencia de Funcionamiento <span class="text-danger">*</span></label>
                                     @if(isset($institution->licenciaFuncionamiento))
                                         <a href="{{ $institution->licenciaFuncionamiento->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver Licencia Actual
                                         </a>
                                     @endif
                                 </div>
-                                <input type="file" name="licencia_funcionamiento" class="form-control mt-2" accept="application/pdf" >
+                                <input type="file" name="licencia_funcionamiento" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf" >
                             </div>
                             <div class="mb-3">
-                                <label for="sede_principal_id" class="form-label">Municipio</label>
-                                <select name="municipio_id" id="sede_principal_id" class="form-control">
+                                <label for="sede_principal_id" class="block text-sm mb-2 ml-4">Municipio</label>
+                                <select name="municipio_id" id="sede_principal_id" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill">
                                     <option value="">Seleccione un municipio</option>
                                     @foreach ($municipios as $municipio)
                                         <option value="{{ $municipio->id }}" @selected($institution?->municipio_id== $municipio->id )>{{ $municipio->nombre }}</option>
@@ -82,11 +79,11 @@
                         <!-- Columna 2 -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="telefono_ie" class="form-label">Teléfono de la IE</label>
-                                <input type="text" name="telefono" class="form-control" value={{ $institution->telefono }} >
+                                <label for="telefono_ie" class="block text-sm mb-2 ml-4">Teléfono de la IE</label>
+                                <input type="text" name="telefono" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value={{ $institution->telefono }} >
                             </div>
                             <div class="mb-3">
-                                <label for="nit" class="form-label">NIT <span class="text-danger">*</span></label>
+                                <label for="nit" class="block text-sm mb-2 ml-4">NIT <span class="text-danger">*</span></label>
                                 <div
                                     data-component="CNumberInput"
                                     data-name="nit"
@@ -98,12 +95,12 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="pagina_web" class="form-label">Página Web</label>
-                                <input type="text" name="web_url" class="form-control" value="{{ $institution->web_url }}">
+                                <label for="pagina_web" class="block text-sm mb-2 ml-4">Página Web</label>
+                                <input type="text" name="web_url" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $institution->web_url }}">
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre_rector" class="form-label">Rector<span class="text-danger">*</span></label>
+                                <label for="nombre_rector" class="block text-sm mb-2 ml-4">Rector<span class="text-danger">*</span></label>
                                 <div
                                     data-component="CAutocompleteFromArray"
                                     data-data='@json($availableRectors)'
