@@ -7,7 +7,7 @@
                 <img src="{{ asset('imagenes/educacion_menu-nobg.png') }}" alt="Secretaria de Educación" width="100%">
             </a>
         </div>
-        
+
         <h4 class="mb-3">{{ __('Restablecer Contraseña') }}</h4>
 
         @if (session('status'))
@@ -20,8 +20,8 @@
             @csrf
 
             <div class="mb-3">
-                <label for="email" class="form-label">{{ __('Correo Electrónico') }}</label>
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                <label for="email" class="block text-sm mb-2 ml-4">{{ __('Correo Electrónico') }}</label>
+                <input id="email" type="email" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill @error('email') is-invalid @enderror"
                        name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                 @error('email')
                     <span class="invalid-feedback" role="alert">

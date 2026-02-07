@@ -11,7 +11,7 @@
                         @endphp
                         @if($user->hasAnyRole(['super_admin', 'administrador']) ||
                             ($user->hasRole('rector') && $user->institucion === null))
-                            @include('layouts.app.components.buttons.add', ['route' => 'instituciones.usuarios_institucion-create'])
+                            @include('layouts.app.components.buttons.add', ['route' => 'institution.create'])
                         @endif
                                             @if(session('success'))
                         <div class="alert alert-success">

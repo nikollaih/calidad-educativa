@@ -31,7 +31,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
    */
   const updateItemField = (items, targetId, fieldName, newValue) => {
     console.log(items, targetId, fieldName, newValue);
-    
+
     return items.map(item => {
       // Caso 1: Encontramos el elemento por su ID en el nivel actual.
       // Lo actualizamos y retornamos de inmediato.
@@ -46,11 +46,11 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         // Modifica: Se actualiza el campo de la acción anidada
         return { ...item, accion: { ...item.accion, [fieldName]: newValue } };
       }
-      
+
       // Objeto para almacenar los resultados de las llamadas recursivas
       const updatedSubItems = {};
       let hasChanges = false;
-      
+
       // Caso 3: Búsqueda recursiva en los arrays anidados.
       // Se recorren las propiedades que son arrays y se llama recursivamente.
       // Se usa un array de nombres para hacerlo más dinámico y fácil de leer.
@@ -62,7 +62,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         'metas',
         'indicadores'
       ];
-      
+
       for (const key of nestedArrays) {
         if (item[key] && Array.isArray(item[key])) {
           const result = updateItemField(item[key], targetId, fieldName, newValue);
@@ -72,7 +72,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             hasChanges = true;
             // Optimización: Si se encuentra el elemento en este nivel recursivo,
             // no es necesario seguir buscando en otros arrays de este mismo item.
-            break; 
+            break;
           }
         }
       }
@@ -91,7 +91,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
    */
   const updateDescription = (itemId, value) => {
     console.log(itemId, value);
-    
+
     setFormData(prevFormData => ({
       ...prevFormData,
       componentes: updateItemField(prevFormData.componentes, itemId, 'descripcion', value),
@@ -109,7 +109,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   const updateAccionNestedField = (indicadorId, fieldName, value) => {
   setFormData(prevFormData => {
     const newComponents = prevFormData.componentes.map(comp => ({
-      ...comp, 
+      ...comp,
       procesos: comp.procesos.map(proc => ({
         ...proc,
         subprocesos: proc.subprocesos.map(subproc => ({
@@ -138,11 +138,11 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         }))
       }))
     }));
-    
+
     // CORRECCIÓN: Mantener todas las propiedades del formData anterior
-    return { 
+    return {
       ...prevFormData,  // Esta línea es crucial
-      componentes: newComponents 
+      componentes: newComponents
     };
   });
 };
@@ -252,7 +252,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         if (result.success && result.data) {
           pamGeneralId = new URLSearchParams(window.location.search).get('pam');
           setPamGeneralIdEdit(pamGeneralId);
-          
+
           const data = result.data;
           setIsEditing(true);
           setOriginalData(data); // Guarda los datos originales para referencia
@@ -595,7 +595,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     // Se busca la unidad de meta en el array de unidadesMeta usando el id
     const unidadSeleccionada = unidadesMeta.find(unidad => unidad.id == metaAfectada.unidad_meta_id);
     const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.descripcion : '';
-    
+
     setFormData(prev => ({
       ...prev,
       componentes: prev.componentes.map(comp => ({
@@ -705,7 +705,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   };
 
   // Función para guardar datos (adaptada para manejar la edición y la nueva estructura)
-  const saveAll = async () => {    
+  const saveAll = async () => {
     // Validar que al menos un componente exista antes de intentar guardar
     if (formData.componentes.length === 0) {
       await Swal.fire({
@@ -830,7 +830,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           }))
         }))
       };
-      
+
       const url = isEditing ? `/pam/update-pam/${id}` : `/pam/${pamGeneralId}/pam-row-store`;
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -901,10 +901,10 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-body">
           {/* Eliminadas las clases col-md-6 para asegurar 100% de ancho */}
           <div>
-            <label className="form-label fw-bold">Fecha de Inicio:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Inicio:</label>
             <input
               type="date"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               style={{ width: '100%' }}
               value={accion.fechas.fecha_inicio}
               onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
@@ -914,10 +914,10 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             />
           </div>
           <div className="mt-3"> {/* Añadido margen para espaciado */}
-            <label className="form-label fw-bold">Fecha Final:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha Final:</label>
             <input
               type="date"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               style={{ width: '100%' }}
               value={accion.fechas.fecha_final}
               onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
@@ -947,9 +947,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={accion.recursos.descripcion}
               onChange={(e) => updateAccionNestedField(indicadorId, 'recursos', { ...accion.recursos, descripcion: e.target.value })}
@@ -989,12 +989,12 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Seleccionar Responsable:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Seleccionar Responsable:</label>
             {isUsersLoading ? (
               <p>Cargando usuarios...</p>
             ) : (
               <select
-                className="form-control"
+                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                 style={{ width: '100%' }} // Asegura 100% de ancho
                 value={accion.responsable.id || ''}
                 onChange={(e) => {
@@ -1049,9 +1049,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={indicador.accion.descripcion}
               onChange={(e) => updateDescription(indicador.accion.id, e.target.value)} // Usar updateDescription para la descripción de la acción
@@ -1092,9 +1092,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               disabled
               value={indicador.descripcion}
@@ -1138,19 +1138,19 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={meta.descripcion}
               onChange={(e) => updateDescription(meta.id, e.target.value)}
             />
           </div>
           <div>
-            <label className="form-label fw-bold">Valor de meta:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Valor de meta:</label>
             <input
               type="number"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               value={meta.valor_meta}
               onChange={(e) => updateValorMeta(meta.id, e.target.value)}
             />
@@ -1158,7 +1158,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
 
           {/* Selector de Unidad de Meta */}
           <div className="mt-3">
-            <label className="form-label fw-bold">Unidad de Meta:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad de Meta:</label>
             <select
               className="form-select"
               value={meta.unidad_meta_id || ''}
@@ -1212,9 +1212,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={objetivo.descripcion}
               onChange={(e) => updateDescription(objetivo.id, e.target.value)}
@@ -1255,9 +1255,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={metaPlan.descripcion}
               onChange={(e) => updateDescription(metaPlan.id, e.target.value)}
@@ -1298,9 +1298,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={subproceso.descripcion}
               onChange={(e) => updateDescription(subproceso.id, e.target.value)}
@@ -1341,9 +1341,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               rows="3"
               value={proceso.descripcion}
               onChange={(e) => updateDescription(proceso.id, e.target.value)}
@@ -1384,7 +1384,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <select
               className="form-select"
               value={componente.id || ''}

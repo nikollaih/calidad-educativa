@@ -22,8 +22,8 @@
                         <!-- Modelos educativos -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="modelos" class="form-label">Modelos educativos</label>
-                                <select name="educational_models[]" class="form-control" multiple required>
+                                <label for="modelos" class="block text-sm mb-2 ml-4">Modelos educativos</label>
+                                <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" multiple required>
                                     @foreach($eduactionalModels as $model)
                                         <option value="{{ $model->id }}">{{ $model->name }}</option>
                                     @endforeach
@@ -32,8 +32,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
-                                <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
+                                <label for="tiene_autorizacion" class="block text-sm mb-2 ml-4">¿Tiene autorización para validación de estudios?</label>
+                                <select name="educational_offer[has_study_validation_auth]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" id="tiene_autorizacion" required>
                                     <option value="0">No</option>
                                     <option value="1">Sí</option>
                                 </select>
@@ -44,8 +44,8 @@
                     <div class="row" id="anexo_resolucion_container" style="display: none;">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
-                                <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
+                                <label for="anexo_resolucion" class="block text-sm mb-2 ml-4">Anexo Resolución</label>
+                                <input type="file" name="validation_authorization" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf">
                             </div>
                         </div>
                     </div>
@@ -53,8 +53,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
+                                <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
+                                <select name="educational_offer[serves_juvenile_justice]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                     <option value="0">No</option>
                                     <option value="1">Sí</option>
                                 </select>
@@ -62,8 +62,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                <select name="educational_offer[serves_national_protection_students]" class="form-control" required>
+                                <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema nacional de protección?</label>
+                                <select name="educational_offer[serves_national_protection_students]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                     <option value="0">No</option>
                                     <option value="1">Sí</option>
                                 </select>
@@ -74,8 +74,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">¿Atención a población étnica?</label>
-                                <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
+                                <label class="block text-sm mb-2 ml-4">¿Atención a población étnica?</label>
+                                <select name="educational_offer[serves_ethnic_population]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                     <option value="0">No</option>
                                     <option value="1">Sí</option>
                                 </select>
@@ -83,8 +83,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nombre de la oferta educativa</label>
-                                <input type="text" name="educational_offer[name]" class="form-control" required>
+                                <label class="block text-sm mb-2 ml-4">Nombre de la oferta educativa</label>
+                                <input type="text" name="educational_offer[name]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                             </div>
                         </div>
 

@@ -257,7 +257,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                                                 .map((factor, index) => (
                                                     <div key={factor.id} className="mb-3 p-2 border rounded">
                                                 <textarea
-                                                    className="form-control mb-2"
+                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
                                                     placeholder="Descripción del factor"
                                                     value={factor.descripcion}
                                                     rows={3}

@@ -191,7 +191,7 @@ export default function ListaUnidadMeta({
                                     <div class="mb-3">
                                         <label
                                             for="unidadParcial"
-                                            class="form-label"
+                                            class="block text-sm mb-2 ml-4"
                                         >
                                             Unidad parcial{" "}
                                             <span className="text-danger">
@@ -199,7 +199,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidadParcial"
                                             value={unidadParcial}
                                             onInput={(e) =>
@@ -214,7 +214,7 @@ export default function ListaUnidadMeta({
                                     <div class="mb-3">
                                         <label
                                             for="unidadTotal"
-                                            class="form-label"
+                                            class="block text-sm mb-2 ml-4"
                                         >
                                             Unidad total{" "}
                                             <span className="text-danger">
@@ -222,7 +222,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidadTotal"
                                             value={unidadTotal}
                                             onInput={(e) =>

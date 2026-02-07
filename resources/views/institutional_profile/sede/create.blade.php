@@ -56,7 +56,7 @@
                 <form action="{{ route('sede.store', [ 'institutionId' => $institutionId ] ) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    <input type="hidden" name="sede[institution_id]" class="form-control" value="{{ $institutionId }}" required>
+                    <input type="hidden" name="sede[institution_id]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $institutionId }}" required>
                     <div class="tab-content mt-3" id="sedeTabsContent">
                         <div class="tab-pane fade show active" id="info" role="tabpanel">
                             <div class="row">
@@ -64,15 +64,15 @@
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                             <div class="mb-3">
-                                <label for="tipo_sede" class="form-label">Tipo de Sede<span class="text-danger">*</span></label>
-                                <select name="tipo_sede" id="tipo_sede" class="form-control" required>
+                                <label for="tipo_sede" class="block text-sm mb-2 ml-4">Tipo de Sede<span class="text-danger">*</span></label>
+                                <select name="tipo_sede" id="tipo_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                     <option value="Principal">Principal</option>
                                     <option value="Adscrita a una principal">Adscrita a una principal</option>
                                 </select>
                             </div>
                             <div class="mb-3" id="sede_principal_container" style="display: none;">
-                                <label for="sede_principal_id" class="form-label">Sede Principal<span class="text-danger">*</span></label>
-                                <select name="sede[parent_sede_id]" id="sede_principal_id" class="form-control">
+                                <label for="sede_principal_id" class="block text-sm mb-2 ml-4">Sede Principal<span class="text-danger">*</span></label>
+                                <select name="sede[parent_sede_id]" id="sede_principal_id" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill">
                                     <option value="">Seleccione una sede principal</option>
                                     @foreach ($availableSedes as $sede)
                                         <option value="{{ $sede->id }}">{{ $sede->name }}</option>
@@ -80,8 +80,8 @@
                                 </select>
                             </div>
                             <div class="mb-3" id="is_sede_principal_container" style="display: block;">
-                                <label  class="form-label">Estrategia pedagógica <span class="text-danger">*</span></label>
-                                <select name="sede[modelo_pedagogico_id]" class="form-control">
+                                <label  class="block text-sm mb-2 ml-4">Estrategia pedagógica <span class="text-danger">*</span></label>
+                                <select name="sede[modelo_pedagogico_id]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill">
                                     <option value="">Seleccione una estrategia pedagógica</option>
                                     @foreach ($modelosPedagogicos as $modeloPedagogico)
                                         <option value="{{ $modeloPedagogico->id }}">{{ $modeloPedagogico->nombre }}</option>
@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="sede[name]" class="form-label">Nombre<span class="text-danger">*</span></label>
+                                <label for="sede[name]" class="block text-sm mb-2 ml-4">Nombre<span class="text-danger">*</span></label>
                                 <div
                                     data-component="CTextInput"
                                     data-name="sede[name]"
@@ -100,7 +100,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="sede[dane]" class="form-label">Código DANE<span class="text-danger">*</span></label>
+                                <label for="sede[dane]" class="block text-sm mb-2 ml-4">Código DANE<span class="text-danger">*</span></label>
                                 <div
                                     data-component="CNumberInput"
                                     data-name="sede[dane]"
@@ -112,12 +112,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="sede[address]" class="form-label">Dirección</label>
-                                <input type="text" name="sede[address]" class="form-control" >
+                                <label for="sede[address]" class="block text-sm mb-2 ml-4">Dirección</label>
+                                <input type="text" name="sede[address]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" >
                             </div>
                             <div class="mb-3">
-                                <label for="titularidad_sede" class="form-label">Titularidad de la Sede<span class="text-danger">*</span></label>
-                                <select name="titularity[titularity_type]" id="titularidad_sede" class="form-control w-full" required>
+                                <label for="titularidad_sede" class="block text-sm mb-2 ml-4">Titularidad de la Sede<span class="text-danger">*</span></label>
+                                <select name="titularity[titularity_type]" id="titularidad_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full" required>
                                     <option value="Municipio">Municipio</option>
                                     <option value="Departamento">Departamento</option>
                                     <option value="Comité de Cafeteros">Comité de Cafeteros</option>
@@ -127,15 +127,15 @@
                             </div>
                             <div class="row" id="otro_titularidad_container" style="display: none;">
                                 <div class="mb-3">
-                                    <label for="otro_titularidad" class="form-label">Especifique</label>
-                                    <input type="text" name="titularity[name]" class="form-control">
+                                    <label for="otro_titularidad" class="block text-sm mb-2 ml-4">Especifique</label>
+                                    <input type="text" name="titularity[name]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill">
                                 </div>
                             </div>
 
                             <div class="row" id="anexo_certificado_container" >
                                 <div class="mb-3">
-                                    <label for="anexo_certificado" class="form-label">Anexar Certificado de Libertad y Tradición u otro<span class="text-danger">*</span></label>
-                                    <input type="file" name="titularity_certificate" class="form-control" accept="application/pdf" required>
+                                    <label for="anexo_certificado" class="block text-sm mb-2 ml-4">Anexar Certificado de Libertad y Tradición u otro<span class="text-danger">*</span></label>
+                                    <input type="file" name="titularity_certificate" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf" required>
                                 </div>
                             </div>
                         </div>
@@ -144,15 +144,15 @@
                         <div class="col-md-6">
                             <!-- Campos existentes -->
                         <div class="mb-3">
-                            <label for="sede[zone]" class="form-label">Zona</label>
-                            <select name="sede[zone]"  class="form-control w-full" >
+                            <label for="sede[zone]" class="block text-sm mb-2 ml-4">Zona</label>
+                            <select name="sede[zone]"  class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full" >
                                 <option value="RURAL">Rural</option>
                                 <option value="URBANA">Urbana</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="sede[longitude]" class="form-label">Longitud<span class="text-danger">*</span></label>
+                            <label for="sede[longitude]" class="block text-sm mb-2 ml-4">Longitud<span class="text-danger">*</span></label>
                             <div
                                 data-component="CNumberInput"
                                 data-name="sede[longitude]"
@@ -165,7 +165,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="sede[latitude]" class="form-label">Latitud<span class="text-danger">*</span></label>
+                            <label for="sede[latitude]" class="block text-sm mb-2 ml-4">Latitud<span class="text-danger">*</span></label>
                             <div
                                 data-component="CNumberInput"
                                 data-name="sede[latitude]"
@@ -178,8 +178,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="administrative_act_file" class="form-label">Acto Administrativo</label>
-                            <input type="file" name="administrative_act_file" class="form-control" accept="application/pdf" required>
+                            <label for="administrative_act_file" class="block text-sm mb-2 ml-4">Acto Administrativo</label>
+                            <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf" required>
                         </div>
 
                         <div class="mb-3">
@@ -210,7 +210,7 @@
                                     <div class="row">
                                         <!-- Campo para cantidad de aulas -->
                                         <div class="col-md-6">
-                                            <label class="form-label" for="cantidad_aulas">¿Cuántas?</label>
+                                            <label class="block text-sm mb-2 ml-4" for="cantidad_aulas">¿Cuántas?</label>
                                             <div
                                                 data-component="CNumberInput"
                                                 data-name="steam_classroom[quantity]"
@@ -223,8 +223,8 @@
 
                                         <!-- Campo para fase -->
                                         <div class="col-md-6">
-                                            <label class="form-label" for="fase_aula">Fase</label>
-                                            <select name="steam_classroom[phase]"  class="form-control w-full" required>
+                                            <label class="block text-sm mb-2 ml-4" for="fase_aula">Fase</label>
+                                            <select name="steam_classroom[phase]"  class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full" required>
                                                 <option value="Fase 1">Fase 1</option>
                                                 <option value="Fase 2">Fase 2</option>
                                                 <option value="Fase 3">Fase 3</option>
@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="form-label">Equipos disponibles.</label>
+                                <label class="block text-sm mb-2 ml-4">Equipos disponibles.</label>
                                 <!-- Sección de equipos (oculta inicialmente) -->
                                 <div class="row row-cols-md-1 " >
                                     @php
@@ -286,7 +286,7 @@
                                                         <label class="form-check-label">Fuente de financiación.</label>
                                                     </div>
                                                     <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
-                                                    <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="form-control" style="display: none;">
+                                                    <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: none;">
                                                         <option value="Computadores para educar">Computadores para educar</option>
                                                         <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
                                                         <option value="Aula Steam">Aula Steam</option>
@@ -560,8 +560,8 @@
                                     <!-- Modelos educativos -->
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="modelos" class="form-label">Modelos Educativos Flexibles.</label>
-                                            <select name="educational_models[]" class="form-control" multiple >
+                                            <label for="modelos" class="block text-sm mb-2 ml-4">Modelos Educativos Flexibles.</label>
+                                            <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" multiple >
                                                 @foreach($eduactionalModels as $model)
                                                     <option value="{{ $model->id }}">{{ $model->name }}</option>
                                                 @endforeach
@@ -570,8 +570,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="tiene_autorizacion" class="form-label">¿Tiene autorización para validación de estudios?</label>
-                                            <select name="educational_offer[has_study_validation_auth]" class="form-control" id="tiene_autorizacion" required>
+                                            <label for="tiene_autorizacion" class="block text-sm mb-2 ml-4">¿Tiene autorización para validación de estudios?</label>
+                                            <select name="educational_offer[has_study_validation_auth]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" id="tiene_autorizacion" required>
                                                 <option value="0">No</option>
                                                 <option value="1">Sí</option>
                                             </select>
@@ -582,8 +582,8 @@
                                 <div class="row" id="anexo_resolucion_container" style="display: none;">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="anexo_resolucion" class="form-label">Anexo Resolución</label>
-                                            <input type="file" name="validation_authorization" class="form-control" accept="application/pdf">
+                                            <label for="anexo_resolucion" class="block text-sm mb-2 ml-4">Anexo Resolución</label>
+                                            <input type="file" name="validation_authorization" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf">
                                         </div>
                                     </div>
                                 </div>
@@ -591,8 +591,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                            <select name="educational_offer[serves_juvenile_justice]" class="form-control" required>
+                                            <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
+                                            <select name="educational_offer[serves_juvenile_justice]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                                 <option value="0">No</option>
                                                 <option value="1">Sí</option>
                                             </select>
@@ -600,8 +600,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                            <select name="educational_offer[national_protection_students]" class="form-control" required>
+                                            <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema nacional de protección?</label>
+                                            <select name="educational_offer[national_protection_students]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                                 <option value="0">No</option>
                                                 <option value="1">Sí</option>
                                             </select>
@@ -612,8 +612,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">¿Atención a población étnica?</label>
-                                                <select name="educational_offer[serves_ethnic_population]" class="form-control" required>
+                                                <label class="block text-sm mb-2 ml-4">¿Atención a población étnica?</label>
+                                                <select name="educational_offer[serves_ethnic_population]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                                                     <option value="0">No</option>
                                                     <option value="1">Sí</option>
                                                 </select>

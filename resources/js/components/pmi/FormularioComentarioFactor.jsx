@@ -119,19 +119,19 @@ const FormularioComentarioFactor = ({
                     <div className="modal-body">
                         <form>
                             <div className="mb-3">
-                                <label htmlFor="descripcion" className="form-label">
+                                <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">
                                     Factor crítico:
                                 </label>
-                                <p className="form-control-plaintext border rounded p-2 bg-light">
+                                <p className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-plaintext border rounded p-2 bg-light">
                                     {factorCritico.descripcion}
                                 </p>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="descripcion" className="form-label">
+                                <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">
                                     Observación
                                 </label>
                                 <textarea
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="comentario"
                                     name="comentario"
                                     rows="6"

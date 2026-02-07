@@ -124,7 +124,7 @@
 
                     <!-- Redes Sociales -->
                     <div class="mb-3">
-                        <label class="form-label">Redes Sociales</label>
+                        <label class="block text-sm mb-2 ml-4">Redes Sociales</label>
                         @php
                             $redes = [
                                 ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
@@ -175,9 +175,9 @@
                                                     </div>
                                                     <button type="button" class="btn btn-sm btn-danger" onclick="eliminarRed('{{ $red['nombre'] }}', this)">×</button>
                                                 </div>
-                                                <label class="form-label mt-2">URL</label>
+                                                <label class="block text-sm mb-2 ml-4 mt-2">URL</label>
                                                 <input type="hidden" name="redes_sociales[{{ $index }}][nombre]" value="{{ $red['nombre'] }}">
-                                                <input type="url" name="redes_sociales[{{ $index }}][url]" class="form-control"
+                                                <input type="url" name="redes_sociales[{{ $index }}][url]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                        placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
                                                        value="{{ $social['url'] }}">
                                             </div>
@@ -220,9 +220,9 @@
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="eliminarRed('${nombre}', this)">×</button>
                                             </div>
-                                            <label class="form-label mt-2">URL</label>
+                                            <label class="block text-sm mb-2 ml-4 mt-2">URL</label>
                                             <input type="hidden" name="redes_sociales[${index}][nombre]" value="${nombre}">
-                                            <input type="url" name="redes_sociales[${index}][url]" class="form-control"
+                                            <input type="url" name="redes_sociales[${index}][url]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                    placeholder="Ej: https://${nombre.toLowerCase().replace(/[^a-z]/g, '')}.com">
                                         </div>
                                     </div>

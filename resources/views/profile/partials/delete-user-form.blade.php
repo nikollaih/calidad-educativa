@@ -36,12 +36,12 @@
             </p>
 
             <div class="mb-2">
-                <label for="password" class="form-label small mb-1">Contraseña</label>
+                <label for="password" class="block text-sm mb-2 ml-4 small mb-1">Contraseña</label>
                 <input
                     type="password"
                     id="password"
                     name="password"
-                    class="form-control form-control-sm @error('password', 'userDeletion') is-invalid @enderror"
+                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('password', 'userDeletion') is-invalid @enderror"
                     placeholder="Contraseña"
                 >
                 @error('password', 'userDeletion')

@@ -56,7 +56,7 @@
                             ></div>
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label for="licencia_funcionamiento" class="form-label mb-0">Licencia de Funcionamiento</label>
+                                    <label for="licencia_funcionamiento" class="block text-sm mb-2 ml-4 mb-0">Licencia de Funcionamiento</label>
                                     @if(isset($institution->licenciaFuncionamiento))
                                         <a href="{{ $institution->licenciaFuncionamiento->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver Licencia Actual
@@ -65,8 +65,8 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="sede_principal_id" class="form-label">Municipio</label>
-                                <select name="municipio_id" id="sede_principal_id" class="form-control" disabled>
+                                <label for="sede_principal_id" class="block text-sm mb-2 ml-4">Municipio</label>
+                                <select name="municipio_id" id="sede_principal_id" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
                                     <option value="">Seleccione un municipio</option>
                                     @foreach ($municipios as $municipio)
                                         <option value="{{ $municipio->id }}" @selected($institution?->municipio_id== $municipio->id )>{{ $municipio->nombre }}</option>
@@ -124,7 +124,7 @@
                     </div>
                     <!-- Redes Sociales -->
                     <div class="mb-3">
-                        <label class="form-label">Redes Sociales</label>
+                        <label class="block text-sm mb-2 ml-4">Redes Sociales</label>
                         @if ($institution?->redesSociales->count() > 0 )
                         <div id="redes-sociales-container" class="row">
                             @php
@@ -167,9 +167,9 @@
                                                 @endif
                                             </div>
 
-                                            <label class="form-label mt-2">URL</label>
+                                            <label class="block text-sm mb-2 ml-4 mt-2">URL</label>
                                             <!-- Input para la URL con el valor correcto -->
-                                            <input type="url" name="redes_sociales[{{ $key }}][url]" class="form-control"
+                                            <input type="url" name="redes_sociales[{{ $key }}][url]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                    placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
                                                    value="{{ $social['url'] ?? '' }}" >
                                         </div>

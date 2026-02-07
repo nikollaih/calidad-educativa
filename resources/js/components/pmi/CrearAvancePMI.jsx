@@ -205,12 +205,12 @@ const CrearAvancePMI = ({
                         )}
                         <form>
                             <div className="mb-3">
-                                <label htmlFor="fecha_avance" className="form-label">
+                                <label htmlFor="fecha_avance" className="block text-sm mb-2 ml-4">
                                     Fecha de Avance:
                                 </label>
                                 <input
                                     type="date"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="fecha_avance"
                                     name="fecha_avance"
                                     value={formData.fecha_avance}
@@ -222,7 +222,7 @@ const CrearAvancePMI = ({
 
                             {/* Selector de actividad con React-Select */}
                             <div className="mb-3">
-                                <label className="form-label">Actividad:</label>
+                                <label className="block text-sm mb-2 ml-4">Actividad:</label>
                                 {loadingActividades ? (
                                     <p>Cargando Actividades...</p>
                                 ) : (
@@ -248,12 +248,12 @@ const CrearAvancePMI = ({
                                     <div className="d-flex  gap-2">
                                         {Boolean(selectedActivity?.afecta_indicador) && (
                                             <div className="mb-3 w-100 ml-1">
-                                                <label htmlFor="unidades" className="form-label">
+                                                <label htmlFor="unidades" className="block text-sm mb-2 ml-4">
                                                     Cantidad :
                                                 </label>
                                                 <input
                                                     type="number"
-                                                    className="form-control"
+                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                     id="suma_al_indicador"
                                                     name="suma_al_indicador"
                                                     value={formData.suma_al_indicador}
@@ -277,11 +277,11 @@ const CrearAvancePMI = ({
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor="descripcion" className="form-label">
+                                        <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">
                                             Observación:
                                         </label>
                                         <textarea
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="descripcion"
                                             name="descripcion"
                                             rows="4"
@@ -290,7 +290,7 @@ const CrearAvancePMI = ({
                                         ></textarea>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="block text-sm mb-2 ml-4">
                                             Archivos adjuntos del avance
                                         </label>
                                         <CMultiFileUploader

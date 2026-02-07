@@ -140,11 +140,11 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                             <form onSubmit={handleSubmit}>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="descripcion" class="form-label">
+                                        <label for="descripcion" class="block text-sm mb-2 ml-4">
                                             Descripción del componente <span className="text-danger">*</span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="descripcion"
                                             value={descripcion}
                                             onInput={(e) => setDescripcion(e.target.value)}

@@ -14,8 +14,8 @@
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
             <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Ingresa tu correo" value="{{ old('email') }}" autofocus>
+                <label for="email" class="block text-sm mb-2 ml-4">Correo Electrónico</label>
+                <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill @error('email') is-invalid @enderror" id="email" name="email" placeholder="Ingresa tu correo" value="{{ old('email') }}" autofocus>
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

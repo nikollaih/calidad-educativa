@@ -18,7 +18,7 @@
 
             <!-- Contenedor para niveles educativos -->
             <div class="mb-4">
-                <label class="form-label fw-bold">Niveles educativos <span class="text-danger fw-bold">*</span></label>
+                <label class="block text-sm mb-2 ml-4 fw-bold">Niveles educativos <span class="text-danger fw-bold">*</span></label>
                 <div id="educational-levels-container" class="card p-3">
                     <!-- Sección para Preescolar -->
                     <div class="mb-3">
@@ -40,10 +40,10 @@
                             </div>
                         @endforeach
                         <div id="custom-preescolar-container" class="mt-2" style="display: none;">
-                            <input type="text" class="form-control mb-2" placeholder="Nombre del grado preescolar (ej: Prejardín, Jardín)">
+                            <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2" placeholder="Nombre del grado preescolar (ej: Prejardín, Jardín)">
                             <div class="mb-2">
-                                <label class="form-label">Anexo (opcional)</label>
-                                <input type="file" class="form-control preescolar-anexo" accept="application/pdf">
+                                <label class="block text-sm mb-2 ml-4">Anexo (opcional)</label>
+                                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill preescolar-anexo" accept="application/pdf">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('preescolar')">Agregar</button>
                         </div>
@@ -72,10 +72,10 @@
                             </div>
                         @endforeach
                         <div id="custom-primaria-container" class="mt-2" style="display: none;">
-                            <input type="text" class="form-control mb-2" placeholder="Nombre del grado de primaria">
+                            <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2" placeholder="Nombre del grado de primaria">
                             <div class="mb-2">
-                                <label class="form-label">Anexo (opcional)</label>
-                                <input type="file" class="form-control primaria-anexo" accept="application/pdf">
+                                <label class="block text-sm mb-2 ml-4">Anexo (opcional)</label>
+                                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill primaria-anexo" accept="application/pdf">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('primaria')">Agregar</button>
                         </div>
@@ -104,10 +104,10 @@
                             </div>
                         @endforeach
                         <div id="custom-secundaria-container" class="mt-2" style="display: none;">
-                            <input type="text" class="form-control mb-2" placeholder="Nombre del grado de secundaria">
+                            <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2" placeholder="Nombre del grado de secundaria">
                             <div class="mb-2">
-                                <label class="form-label">Anexo (opcional)</label>
-                                <input type="file" class="form-control secundaria-anexo" accept="application/pdf">
+                                <label class="block text-sm mb-2 ml-4">Anexo (opcional)</label>
+                                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill secundaria-anexo" accept="application/pdf">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('secundaria')">Agregar</button>
                         </div>
@@ -136,10 +136,10 @@
                             </div>
                         @endforeach
                         <div id="custom-emphasis-container" class="mt-2" style="display: none;">
-                            <input type="text" class="form-control mb-2" placeholder="Nuevo énfasis (ej: Música, Danza)">
+                            <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2" placeholder="Nuevo énfasis (ej: Música, Danza)">
                             <div class="mb-2">
-                                <label class="form-label">Anexo (opcional)</label>
-                                <input type="file" class="form-control emphasis-anexo" accept="application/pdf">
+                                <label class="block text-sm mb-2 ml-4">Anexo (opcional)</label>
+                                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill emphasis-anexo" accept="application/pdf">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('emphasis')">Agregar</button>
                         </div>
@@ -168,10 +168,10 @@
                             </div>
                         @endforeach
                         <div id="custom-agreement-container" class="mt-2" style="display: none;">
-                            <input type="text" class="form-control mb-2" placeholder="Nuevo convenio (ej: Universidad X)">
+                            <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2" placeholder="Nuevo convenio (ej: Universidad X)">
                             <div class="mb-2">
-                                <label class="form-label">Anexo (opcional)</label>
-                                <input type="file" class="form-control agreement-anexo" accept="application/pdf">
+                                <label class="block text-sm mb-2 ml-4">Anexo (opcional)</label>
+                                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill agreement-anexo" accept="application/pdf">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomLevel('agreement')">Agregar</button>
                         </div>
@@ -215,7 +215,7 @@
 
             <!-- Selección de horario -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
+                <label class="block text-sm mb-2 ml-4 fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
                 <select class="form-select schedule-select" required>
 
                     @foreach($educationalSchedules as $key => $value)
@@ -228,28 +228,28 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Hora de Inicio</label>
-                        <input type="time" class="form-control schedule-hora_inicio-input" required>
+                        <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                        <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-hora_inicio-input" required>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Hora de Final</label>
-                        <input type="time" class="form-control schedule-hora_fin-input"  required>
+                        <label class="block text-sm mb-2 ml-4">Hora de Final</label>
+                        <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-hora_fin-input"  required>
                     </div>
                 </div>
             </div>
 
             <!-- Área de texto para descripción detallada -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Descripción Detallada (opcional)</label>
-                <textarea class="form-control schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
+                <label class="block text-sm mb-2 ml-4 fw-bold">Descripción Detallada (opcional)</label>
+                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
             </div>
 
             <!-- Adjuntar archivo -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Adjuntar Anexo de horario</label>
-                <input type="file" class="form-control schedule-attachment" name="schedule_attachments[]">
+                <label class="block text-sm mb-2 ml-4 fw-bold">Adjuntar Anexo de horario</label>
+                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-attachment" name="schedule_attachments[]">
             </div>
         </div>
     </div>
@@ -288,16 +288,16 @@
                         </div>
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
-                                <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Nocturno">
+                                <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-inicio" data-schedule="Nocturno">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="Nocturno">
+                                <label class="block text-sm mb-2 ml-4">Hora de Fin</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-fin" data-schedule="Nocturno">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="Nocturno" placeholder="Detalles del horario nocturno..."></textarea>
+                                <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Nocturno" placeholder="Detalles del horario nocturno..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -316,16 +316,16 @@
                         </div>
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
-                                <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Sabatino">
+                                <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-inicio" data-schedule="Sabatino">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="Sabatino">
+                                <label class="block text-sm mb-2 ml-4">Hora de Fin</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-fin" data-schedule="Sabatino">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="Sabatino" placeholder="Detalles del horario sabatino..."></textarea>
+                                <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Sabatino" placeholder="Detalles del horario sabatino..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -344,16 +344,16 @@
                         </div>
                         <div class="card-body adult-schedule-inputs" style="display: none;">
                             <div class="mb-2">
-                                <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control adult-hora-inicio" data-schedule="Dominical">
+                                <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-inicio" data-schedule="Dominical">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Hora de Fin</label>
-                                <input type="time" class="form-control adult-hora-fin" data-schedule="Dominical">
+                                <label class="block text-sm mb-2 ml-4">Hora de Fin</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-hora-fin" data-schedule="Dominical">
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">Descripción (opcional)</label>
-                                <textarea class="form-control adult-notes" rows="2" data-schedule="Dominical" placeholder="Detalles del horario dominical..."></textarea>
+                                <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Dominical" placeholder="Detalles del horario dominical..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -362,8 +362,8 @@
 
             <!-- Adjuntar archivo general -->
             <div class="mt-3">
-                <label class="form-label fw-bold">Adjuntar Anexo de horario</label>
-                <input type="file" class="form-control schedule-attachment" name="schedule_attachments[]">
+                <label class="block text-sm mb-2 ml-4 fw-bold">Adjuntar Anexo de horario</label>
+                <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-attachment" name="schedule_attachments[]">
             </div>
 
             <!-- Campos ocultos para almacenar los datos -->

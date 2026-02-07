@@ -148,12 +148,12 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                             <form onSubmit={handleSubmit}>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="nombre" class="form-label">
+                                        <label for="nombre" class="block text-sm mb-2 ml-4">
                                             Nombre del Municipio
                                         </label>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="nombre"
                                             value={nombre}
                                             onInput={(e) => setNombre(e.target.value)}

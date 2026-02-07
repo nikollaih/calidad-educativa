@@ -15,12 +15,12 @@
                 @method('put')
 
                 <div class="mb-2">
-                    <label for="update_password_current_password" class="form-label small mb-1">Contraseña actual</label>
+                    <label for="update_password_current_password" class="block text-sm mb-2 ml-4 small mb-1">Contraseña actual</label>
                     <input
                         type="password"
                         id="update_password_current_password"
                         name="current_password"
-                        class="form-control form-control-sm @error('current_password', 'updatePassword') is-invalid @enderror"
+                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('current_password', 'updatePassword') is-invalid @enderror"
                         autocomplete="current-password"
                     >
                     @error('current_password', 'updatePassword')
@@ -29,12 +29,12 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="update_password_password" class="form-label small mb-1">Nueva contraseña</label>
+                    <label for="update_password_password" class="block text-sm mb-2 ml-4 small mb-1">Nueva contraseña</label>
                     <input
                         type="password"
                         id="update_password_password"
                         name="password"
-                        class="form-control form-control-sm @error('password', 'updatePassword') is-invalid @enderror"
+                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('password', 'updatePassword') is-invalid @enderror"
                         autocomplete="new-password"
                     >
                     @error('password', 'updatePassword')
@@ -43,12 +43,12 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="update_password_password_confirmation" class="form-label small mb-1">Confirmar contraseña</label>
+                    <label for="update_password_password_confirmation" class="block text-sm mb-2 ml-4 small mb-1">Confirmar contraseña</label>
                     <input
                         type="password"
                         id="update_password_password_confirmation"
                         name="password_confirmation"
-                        class="form-control form-control-sm @error('password_confirmation', 'updatePassword') is-invalid @enderror"
+                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('password_confirmation', 'updatePassword') is-invalid @enderror"
                         autocomplete="new-password"
                     >
                     @error('password_confirmation', 'updatePassword')

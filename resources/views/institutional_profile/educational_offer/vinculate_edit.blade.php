@@ -32,7 +32,7 @@
                 <div class="mb-4">
                     <h4>Anexo del nivel educativo</h4>
                     <div class="mb-3">
-                        <label class="form-label">Documento actual</label>
+                        <label class="block text-sm mb-2 ml-4">Documento actual</label>
                         @if($levelSede->educationalLevel->document_id)
                             <div class="mt-2">
                                 <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">
@@ -44,8 +44,8 @@
                         @endif
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Actualizar documento</label>
-                        <input type="file" class="form-control" name="level_attachment" accept=".pdf,.doc,.docx">
+                        <label class="block text-sm mb-2 ml-4">Actualizar documento</label>
+                        <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" name="level_attachment" accept=".pdf,.doc,.docx">
                         <small class="text-muted">Dejar en blanco para mantener el documento actual</small>
                     </div>
                 </div>
@@ -57,16 +57,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control"
+                                <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                        name="schedule[{{$key}}][hora_inicio]"
                                        value="{{ $schedule->hora_inicio }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Hora de Final</label>
-                                <input type="time" class="form-control"
+                                <label class="block text-sm mb-2 ml-4">Hora de Final</label>
+                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                        name="schedule[{{$key}}][hora_fin]"
                                        value="{{ $schedule->hora_fin }}" required>
                             </div>
@@ -74,14 +74,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Notas detalladas</label>
-                        <textarea class="form-control" rows="3"
+                        <label class="block text-sm mb-2 ml-4">Notas detalladas</label>
+                        <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" rows="3"
                                   name="schedule[{{$key}}][notes]">{{ $schedule->notes }}</textarea>
                     </div>
 
                     <!-- Anexo del horario -->
                     <div class="mb-3">
-                        <label class="form-label">Documento del horario actual</label>
+                        <label class="block text-sm mb-2 ml-4">Documento del horario actual</label>
                         @if($schedule->document_id)
                             <div class="mt-2">
                                 <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">
@@ -92,8 +92,8 @@
                             <p class="text-muted">No hay documento adjunto</p>
                         @endif
                         <div class="mb-3">
-                                <label class="form-label">Actualizar documento del horario</label>
-                               <input type="file" class="form-control" name="schedule_attachment_{{$schedule->id}}" accept=".pdf,.doc,.docx">
+                                <label class="block text-sm mb-2 ml-4">Actualizar documento del horario</label>
+                               <input type="file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" name="schedule_attachment_{{$schedule->id}}" accept=".pdf,.doc,.docx">
                               <small class="text-muted">Dejar en blanco para mantener el documento actual</small>
                         </div>
                     </div>

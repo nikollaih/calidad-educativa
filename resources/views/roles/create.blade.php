@@ -9,12 +9,12 @@
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nombre del Rol</label>
-                        <input type="text" name="name" class="form-control" required>
+                        <label for="name" class="block text-sm mb-2 ml-4">Nombre del Rol</label>
+                        <input type="text" name="name" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="permissions" class="form-label">Permisos</label>
+                        <label for="permissions" class="block text-sm mb-2 ml-4">Permisos</label>
                         <div class="row">
                             @php
                                 // Agrupar permisos por categoría
@@ -30,16 +30,16 @@
                                         $groupedPermissions[$category][] = $permission;
                                     }
                                 }
-                                
+
                                 // Ordenar categorías
                                 ksort($groupedPermissions);
-                                
+
                                 // Dividir en columnas
                                 $categories = array_keys($groupedPermissions);
                                 $totalCategories = count($categories);
                                 $categoriesPerColumn = ceil($totalCategories / 3);
                             @endphp
-                            
+
                             @foreach(array_chunk($categories, $categoriesPerColumn, true) as $columnCategories)
                                 <div class="col-md-4 col-lg-4">
                                     @foreach($columnCategories as $category)

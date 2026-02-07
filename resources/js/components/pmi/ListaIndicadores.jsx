@@ -171,12 +171,12 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                             <form onSubmit={handleSubmit}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label htmlFor="nombre" className="form-label">
+                                        <label htmlFor="nombre" className="block text-sm mb-2 ml-4">
                                             Nombre de la unidad parcial
                                         </label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidad_parcial"
                                             value={unidadParcial}
                                             onInput={(e) => setUnidadParcial(e.target.value)}
@@ -185,12 +185,12 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="unidad_total" className="form-label">
+                                        <label htmlFor="unidad_total" className="block text-sm mb-2 ml-4">
                                             Nombre de la unidad total
                                         </label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidad_total"
                                             value={unidadTotal}
                                             onInput={(e) => setUnidadTotal(e.target.value)}

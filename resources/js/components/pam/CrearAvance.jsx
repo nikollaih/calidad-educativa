@@ -244,13 +244,13 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
                             <div className="mb-3">
                                 <label
                                     htmlFor="fecha_avance"
-                                    className="form-label"
+                                    className="block text-sm mb-2 ml-4"
                                 >
                                     Fecha de Avance:
                                 </label>
                                 <input
                                     type="date"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="fecha_avance"
                                     name="fecha_avance"
                                     value={formData.fecha_avance}
@@ -261,7 +261,7 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
 
                             {/* Selector de Meta con React-Select */}
                             <div className="mb-3">
-                                <label className="form-label">Meta:</label>
+                                <label className="block text-sm mb-2 ml-4">Meta:</label>
                                 {loadingMetas ? (
                                     <p>Cargando metas...</p>
                                 ) : (
@@ -289,13 +289,13 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
                             <div className="mb-3">
                                 <label
                                     htmlFor="cantidad_ejecutada"
-                                    className="form-label"
+                                    className="block text-sm mb-2 ml-4"
                                 >
                                     Cantidad Ejecutada:
                                 </label>
                                 <input
                                     type="number"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="cantidad_ejecutada"
                                     name="cantidad_ejecutada"
                                     value={formData.cantidad_ejecutada}
@@ -308,12 +308,12 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
                             <div className="mb-3">
                                 <label
                                     htmlFor="observacion"
-                                    className="form-label"
+                                    className="block text-sm mb-2 ml-4"
                                 >
                                     Observación:
                                 </label>
                                 <textarea
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="observacion"
                                     name="observacion"
                                     rows="4"
@@ -325,13 +325,13 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
                             <div className="mb-3">
                                 <label
                                     htmlFor="archivos_adjuntos"
-                                    className="form-label"
+                                    className="block text-sm mb-2 ml-4"
                                 >
                                     Adjuntar archivo(s) de evidencia(s):
                                 </label>
                                 <input
                                     type="file"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     id="archivos_adjuntos"
                                     name="archivos_adjuntos"
                                     accept=".jpg,.png,.pdf,.docx"

@@ -36,7 +36,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
 
                 <h5 className="mb-2">Consecutivo del PAM</h5>
                 <input
-                    class="form-control mb-2"
+                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
                     type="text"
                     name="pam[consecutivo]"
                     value={consecutivo}
@@ -44,7 +44,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                 />
                 <h5 className="mb-2">Descripción del PAM</h5>
                 <textarea
-                    class="form-control mb-2"
+                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
                     name="pam[descripcion]"
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
@@ -52,7 +52,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                 <h5 className="mb-2">Seleccionar años de ejecución del PAM<span className="text-danger">*</span></h5>
                 <div className="row mb-4">
                     <div className="col">
-                        <label htmlFor="anioInicio" className="form-label">Año de inicio</label>
+                        <label htmlFor="anioInicio" className="block text-sm mb-2 ml-4">Año de inicio</label>
                         <select
                             id="anioInicio"
                             className="form-select"
@@ -68,7 +68,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                         </select>
                     </div>
                     <div className="col">
-                        <label htmlFor="anioFin" className="form-label">Año de fin</label>
+                        <label htmlFor="anioFin" className="block text-sm mb-2 ml-4">Año de fin</label>
                         <select
                             id="anioFin"
                             className="form-select"

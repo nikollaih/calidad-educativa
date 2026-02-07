@@ -126,10 +126,10 @@ export default function Editar({ editarUrl = '#',
             <div>
 
                 <div className="mb-1 d-flex justify-content-end gap-4">
-                    <label className="form-label" htmlFor="anio-vigencia">
+                    <label className="block text-sm mb-2 ml-4" htmlFor="anio-vigencia">
                         Año de Vigencia: {autoevaluacion?.anio_vigencia}
                     </label>
-                    <label className="form-label" htmlFor="estado">
+                    <label className="block text-sm mb-2 ml-4" htmlFor="estado">
                         Estado: {autoevaluacion?.alias_estado}
                     </label>
                 </div>
@@ -253,10 +253,10 @@ export default function Editar({ editarUrl = '#',
                                                                                     {/* Evidencia */}
                                                                                     <div className="col-12 col-md-3">
                                                                                         <label htmlFor={`evidencia-${cal.id}`}
-                                                                                            className="form-label">Evidencia</label>
+                                                                                            className="block text-sm mb-2 ml-4">Evidencia</label>
                                                                                         <textarea
                                                                                             id={`evidencia-${cal.id}`}
-                                                                                            className="form-control"
+                                                                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                                                             rows="1"
                                                                                             maxLength="400"
                                                                                             value={evidencias[cal.id] || ''}

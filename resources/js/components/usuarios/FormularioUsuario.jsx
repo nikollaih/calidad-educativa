@@ -56,19 +56,19 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
 
                             {/* Nombre */}
                             <div class="mb-3">
-                                <label htmlFor="name" class="form-label">Nombre</label>
-                                <input value={user?.name} type="text" name="name" class="form-control" required />
+                                <label htmlFor="name" class="block text-sm mb-2 ml-4">Nombre</label>
+                                <input value={user?.name} type="text" name="name" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required />
                             </div>
 
                             {/* Email */}
                             <div class="mb-3">
-                                <label htmlFor="email" class="form-label">Email</label>
-                                <input value={user?.email} type="email" name="email" class="form-control" required />
+                                <label htmlFor="email" class="block text-sm mb-2 ml-4">Email</label>
+                                <input value={user?.email} type="email" name="email" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required />
                             </div>
 
                             {/* Contraseña */}
                             <div class="mb-3">
-                                <label htmlFor="password" class="form-label">Contraseña</label>
+                                <label htmlFor="password" class="block text-sm mb-2 ml-4">Contraseña</label>
                                 <CPasswordInput
                                     name="password"
                                     isRequired={!user}
@@ -79,7 +79,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
 
                             {/* Confirmar contraseña */}
                             <div class="mb-3">
-                                <label htmlFor="password_confirmation" class="form-label">Confirmar Contraseña</label>
+                                <label htmlFor="password_confirmation" class="block text-sm mb-2 ml-4">Confirmar Contraseña</label>
                                 <CPasswordInput
                                     name="password_confirmation"
                                     isRequired={!user}
@@ -90,7 +90,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
 
                             {/* Roles (react-select multiple) */}
                             <div class="mb-3">
-                                <label class="form-label">Roles</label>
+                                <label class="block text-sm mb-2 ml-4">Roles</label>
                                 <Select
                                     isMulti
                                     name="roles[]"
@@ -109,7 +109,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
                             {/* Campo visible solo si contiene 'rector' */}
                             {showInstitutionField && (
                                 <div class="mb-3">
-                                    <label htmlFor="institucion_id" class="form-label">Institución del rector</label>
+                                    <label htmlFor="institucion_id" class="block text-sm mb-2 ml-4">Institución del rector</label>
                                     <CAutocompleteFromArray
                                         key={institucionSelected || 'no-institucion'}
                                         data={institutionsWithoutRector}
@@ -123,7 +123,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
                             )}
                             {!showInstitutionField && showInstitutionToBelong && (
                                 <div className="mb-3">
-                                    <label htmlFor="institucion_id" className="form-label">Institución a la que pertenece</label>
+                                    <label htmlFor="institucion_id" className="block text-sm mb-2 ml-4">Institución a la que pertenece</label>
                                     <CAutocompleteFromArray
                                         key={institucionSelected || 'no-institucion'}
                                         data={institutions}

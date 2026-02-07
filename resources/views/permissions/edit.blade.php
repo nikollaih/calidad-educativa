@@ -10,12 +10,12 @@
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nombre del Permiso</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ $permission->name }}" required>
+                        <label for="name" class="block text-sm mb-2 ml-4">Nombre del Permiso</label>
+                        <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" id="name" name="name" value="{{ $permission->name }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="guard_name" class="form-label">Guard Name</label>
-                        <input type="text" class="form-control" id="guard_name" name="guard_name" value="{{ $permission->guard_name }}" required>
+                        <label for="guard_name" class="block text-sm mb-2 ml-4">Guard Name</label>
+                        <input type="text" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" id="guard_name" name="guard_name" value="{{ $permission->guard_name }}" required>
                     </div>
                     <button type="submit" class="btn btn-success">Actualizar</button>
                 </form>

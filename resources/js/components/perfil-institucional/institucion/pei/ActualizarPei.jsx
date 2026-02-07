@@ -69,7 +69,7 @@ const handleNewFile = (fieldName, e) => {
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
+                  <label className="block text-sm mb-2 ml-4">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
                   <select
                     className="form-select"
                     value={formData.tipo_codificacion || ''}
@@ -86,11 +86,11 @@ const handleNewFile = (fieldName, e) => {
               </div>
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label text-capitalize">Fecha  <span style={{color: 'red'}}>*</span></label>
+                  <label className="block text-sm mb-2 ml-4 text-capitalize">Fecha  <span style={{color: 'red'}}>*</span></label>
                   <input
                     type="date"
                     required
-                    className="form-control"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                     value={formData.fecha || ''}
                     min={`${new Date().getFullYear()}-01-01`}
                     onChange={(e) => setFormData({...formData, fecha: e.target.value})}
@@ -107,10 +107,10 @@ const handleNewFile = (fieldName, e) => {
 
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
-                    <label className="form-label text-capitalize">{clave.replace(/_/g, ' ')}</label>
+                    <label className="block text-sm mb-2 ml-4 text-capitalize">{clave.replace(/_/g, ' ')}</label>
                     <textarea
                       type="text"
-                      className="form-control"
+                      className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                       value={valor || ''}
                       onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
                     />
@@ -194,9 +194,9 @@ const handleNewFile = (fieldName, e) => {
             {/* Sección inferior: Observación y campo de documento adicional */}
             <div className="row mt-3">
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Observación</label>
+                <label className="block text-sm mb-2 ml-4 text-capitalize">Observación</label>
                 <textarea
-                  className="form-control"
+                  className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                   value={formData.observacion || ''}
                   onChange={(e) => setFormData({...formData, observacion: e.target.value})}
                   rows="3"
@@ -205,12 +205,12 @@ const handleNewFile = (fieldName, e) => {
 
               {/* Campo adicional para subir documento */}
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
+                <label className="block text-sm mb-2 ml-4 text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
                 <div className="input-group">
                   <input
                     type="file"
                     required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
-                    className="form-control"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                     onChange={(e) => handleNewFile('documento_adicional', e)}
                   />
                   {/* {fileUploads['documento_adicional'] && (

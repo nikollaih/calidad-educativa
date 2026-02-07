@@ -30,7 +30,7 @@ export default function ListaProyectoTransversalActividades({
     { id: 3, name: 'Aliado' }
   ];
 
-  
+
   // Estados de Integrantes (para el segundo tab)
   const [showIntegranteModal, setShowIntegranteModal] = useState(false);
   const [modalIntegranteMode, setModalIntegranteMode] = useState('agregar');
@@ -75,7 +75,7 @@ export default function ListaProyectoTransversalActividades({
     const years = [...new Set(actividades.map(act => new Date(act.fecha).getFullYear()))]
                     .sort((a, b) => b - a);
     setAvailableYears(years);
-    
+
     if (selectedYear) {
       setFilteredActividades(actividades.filter(act => new Date(act.fecha).getFullYear().toString() === selectedYear));
     } else {
@@ -175,7 +175,7 @@ export default function ListaProyectoTransversalActividades({
     setActividadAdjuntos([]);
     setCurrentActividad(null);
   };
-  
+
   // CAMBIO: Ahora se concatena la nueva lista de archivos con la existente
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
@@ -222,12 +222,12 @@ export default function ListaProyectoTransversalActividades({
     setIntegranteRol(''); // NUEVO
     setCurrentIntegrante(null);
   };
-  
+
   // CAMBIO: Función para manejar la eliminación con confirmación
   const handleDeleteConfirm = (id, type) => {
     showConfirm('¿Estás seguro de que quieres eliminar este registro? Esta acción es irreversible.', () => handleDelete(id, type));
   };
-  
+
   // Maneja la acción de eliminar (se mantiene)
   const handleDelete = async (id, type) => {
     setLoading(true);
@@ -238,7 +238,7 @@ export default function ListaProyectoTransversalActividades({
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'X-HTTP-Method-Override': 'DELETE' 
+                'X-HTTP-Method-Override': 'DELETE'
             },
             body: JSON.stringify({ _method: 'DELETE', _token: csrfToken }),
         });
@@ -255,7 +255,7 @@ export default function ListaProyectoTransversalActividades({
             // CAMBIO: Guarda el tab activo en localStorage antes de recargar
             localStorage.setItem('activeTab', 'integrantes');
         }
-        
+
         window.location.reload();
 
     } catch (error) {
@@ -336,7 +336,7 @@ export default function ListaProyectoTransversalActividades({
               // CAMBIO: Guarda el tab activo en localStorage antes de recargar
               localStorage.setItem('activeTab', 'integrantes');
           }
-          
+
           window.location.reload();
       } catch (error) {
           showAlert(`Error al guardar: ${error.message}`);
@@ -382,7 +382,7 @@ useEffect(() => {
     try {
       const { id, type } = currentShareItem;
       const url = type === 'actividad' ? `/actividades/${id}/share` : `/integrantes/${id}/share`;
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -431,9 +431,9 @@ useEffect(() => {
             {detalleProyecto.acto_administrativo.ruta && (
               <div className="col-12 mb-3">
                 <h5>Documento</h5>
-                <a 
-                  href={`/storage/${detalleProyecto.acto_administrativo.ruta}`} 
-                  target="_blank" 
+                <a
+                  href={`/storage/${detalleProyecto.acto_administrativo.ruta}`}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-outline-primary"
                 >
@@ -459,10 +459,10 @@ useEffect(() => {
       {/* Filtro de año */}
       <div className="row mb-3">
         <div className="col-md-6">
-          <label htmlFor="selectYear" className="form-label">Filtrar por año</label>
-          <select 
+          <label htmlFor="selectYear" className="block text-sm mb-2 ml-4">Filtrar por año</label>
+          <select
             id="selectYear"
-            className="form-control"
+            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
           >
@@ -589,7 +589,7 @@ useEffect(() => {
       </table>
     </div>
   );
-  
+
   return (
     <div className="container mt-4">
       {/* CAMBIO: Título por defecto y nombre del proyecto */}
@@ -665,10 +665,10 @@ useEffect(() => {
                   <form onSubmit={handleActividadSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="actividadFecha" className="form-label">Fecha<span className="text-danger">*</span></label>
+                        <label htmlFor="actividadFecha" className="block text-sm mb-2 ml-4">Fecha<span className="text-danger">*</span></label>
                         <input
                           type="date"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="actividadFecha"
                           value={actividadFecha}
                           onInput={(e) => setActividadFecha(e.target.value)}
@@ -676,9 +676,9 @@ useEffect(() => {
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="actividadDescripcion" className="form-label">Descripción<span className="text-danger">*</span></label>
+                        <label htmlFor="actividadDescripcion" className="block text-sm mb-2 ml-4">Descripción<span className="text-danger">*</span></label>
                         <textarea
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="actividadDescripcion"
                           value={actividadDescripcion}
                           onInput={(e) => setActividadDescripcion(e.target.value)}
@@ -687,10 +687,10 @@ useEffect(() => {
                         ></textarea>
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="actividadAdjuntos" className="form-label">Evidencias</label>
+                        <label htmlFor="actividadAdjuntos" className="block text-sm mb-2 ml-4">Evidencias</label>
                         <input
                           type="file"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="actividadAdjuntos"
                           multiple
                           onChange={handleFileChange}
@@ -769,39 +769,39 @@ useEffect(() => {
                   <form onSubmit={handleIntegranteSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="integranteNombre" className="form-label">Nombre <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteNombre" className="block text-sm mb-2 ml-4">Nombre <span className="text-danger">*</span></label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteNombre"
                           value={integranteNombre}
                           onInput={(e) => setIntegranteNombre(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteCorreo" className="block text-sm mb-2 ml-4">Correo Electrónico <span className="text-danger">*</span></label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteCorreo"
                           value={integranteCorreo}
                           onInput={(e) => setIntegranteCorreo(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteContacto" className="form-label">Número de contacto <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteContacto" className="block text-sm mb-2 ml-4">Número de contacto <span className="text-danger">*</span></label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteContacto"
                           value={integranteContacto}
                           onInput={(e) => setIntegranteContacto(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteRol" className="form-label">Rol <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteRol" className="block text-sm mb-2 ml-4">Rol <span className="text-danger">*</span></label>
                         <select
-                            className="form-control"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                             id="integranteRol"
                             value={integranteRol}
                             onChange={(e) => setIntegranteRol(e.target.value)}
@@ -880,10 +880,10 @@ useEffect(() => {
                   <form onSubmit={handleShareSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="selectRole" className="form-label">Selecciona un rol:</label>
+                        <label htmlFor="selectRole" className="block text-sm mb-2 ml-4">Selecciona un rol:</label>
                         <select
                           id="selectRole"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           value={selectedRole}
                           onChange={(e) => setSelectedRole(e.target.value)}
                         >
@@ -895,10 +895,10 @@ useEffect(() => {
                       </div>
                       {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
                       <div className="mb-3">
-                        <label htmlFor="shareDescription" className="form-label">Descripción para el correo</label>
+                        <label htmlFor="shareDescription" className="block text-sm mb-2 ml-4">Descripción para el correo</label>
                         <textarea
                           id="shareDescription"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           rows="3"
                           value={shareDescription}
                           onChange={(e) => setShareDescription(e.target.value)}

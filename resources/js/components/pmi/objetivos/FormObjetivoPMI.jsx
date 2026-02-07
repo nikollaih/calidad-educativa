@@ -121,7 +121,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                     </div>
 
                     <div className="card-body">
-                        <label className="form-label">Gestión*</label>
+                        <label className="block text-sm mb-2 ml-4">Gestión*</label>
                         <CAutocompleteFromArray
                             data={gestiones}
                             fieldName={"gestion_id"}
@@ -139,7 +139,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
 
                     {gestionSeleccionada && (
                         <div className="card-body">
-                            <label className="form-label">Factor crítico*</label>
+                            <label className="block text-sm mb-2 ml-4">Factor crítico*</label>
                             <CAutocompleteFromArray
                                 key={gestionSeleccionada.id}   // 🔑 fuerza reset al cambiar gestión
                                 data={factoresFiltrados}
@@ -156,10 +156,10 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                     )}
                     <div className="card-body">
                         <div className="mb-3">
-                            <label htmlFor="descripcion" className="form-label">Descripción*</label>
+                            <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">Descripción*</label>
                             <textarea
                                 id="descripcion"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 name="descripcion"
                                 value={objetivo.descripcion}
                                 onChange={handleObjetivoChange}
@@ -201,10 +201,10 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor={`meta-desc-${i}`} className="form-label">Descripción*</label>
+                                        <label htmlFor={`meta-desc-${i}`} className="block text-sm mb-2 ml-4">Descripción*</label>
                                         <textarea
                                             id={`meta-desc-${i}`}
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             name="descripcion"
                                             value={meta.descripcion}
                                             onChange={(e) => handleMetaChange(i, e)}
@@ -214,7 +214,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                     </div>
                                     <div className="row">
                                         <div className=" mb-3">
-                                            <label htmlFor="unidad_medida" className="form-label">Unidad de Medida*</label>
+                                            <label htmlFor="unidad_medida" className="block text-sm mb-2 ml-4">Unidad de Medida*</label>
                                             <CAutocompleteFromArray
                                                 isEditable={editable}
                                                 data={unidadesMedida}

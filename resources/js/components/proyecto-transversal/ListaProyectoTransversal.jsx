@@ -286,10 +286,10 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                             )}
                                             <input type="hidden" name="_token" value={csrfToken} />
                                             <div class="mb-3">
-                                                <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                                <label for="nombre" class="block text-sm mb-2 ml-4">Nombre <span class="text-danger">*</span></label>
                                                 <input
                                                     type="text"
-                                                    class="form-control"
+                                                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                     id="nombre"
                                                     name="nombre"
                                                     value={nombre}
@@ -298,9 +298,9 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 />
                                             </div>
                                             <div class="mb-3">
-                                                <label for="descripcion" class="form-label">Descripción</label>
+                                                <label for="descripcion" class="block text-sm mb-2 ml-4">Descripción</label>
                                                 <textarea
-                                                    class="form-control"
+                                                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                     id="descripcion"
                                                     name="descripcion"
                                                     value={descripcion}
@@ -309,7 +309,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 ></textarea>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="actoAdministrativo" class="form-label">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
+                                                <label for="actoAdministrativo" class="block text-sm mb-2 ml-4">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
                                                 {/* MODIFICACION: Mostrar el documento actual y la opción de reemplazarlo */}
                                                 {modalMode === 'editar' && actoAdministrativoUrl && (
                                                     <div class="mb-2">
@@ -319,7 +319,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 )}
                                                 <input
                                                     type="file"
-                                                    class="form-control"
+                                                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                     id="actoAdministrativo"
                                                     name="acto_administrativo"
                                                     onChange={(e) => setActoAdministrativo(e.target.files[0])}
@@ -327,7 +327,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 />
                                             </div>
                                             <div class="mb-3">
-                                                <label for="representante" class="form-label">Lider <span class="text-danger">*</span></label>
+                                                <label for="representante" class="block text-sm mb-2 ml-4">Lider <span class="text-danger">*</span></label>
                                                 {isLoadingUsers ? (
                                                     <div>Cargando usuarios...</div>
                                                 ) : usersError ? (
@@ -351,10 +351,10 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 )}
                                             </div>
                                             <div class="mb-3">
-                                                <label for="numeroContacto" class="form-label">Número de Contacto</label>
+                                                <label for="numeroContacto" class="block text-sm mb-2 ml-4">Número de Contacto</label>
                                                 <input
                                                     type="text"
-                                                    class="form-control"
+                                                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                     id="numeroContacto"
                                                     name="numero_contacto"
                                                     value={numeroContacto}

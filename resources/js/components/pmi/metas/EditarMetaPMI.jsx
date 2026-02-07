@@ -182,10 +182,10 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                     </div>
                     <div className="card-body">
                         <div className="mb-3">
-                            <label htmlFor="descripcion" className="form-label">Descripción*</label>
+                            <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">Descripción*</label>
                             <textarea
                                 id="descripcion"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 name="descripcion"
                                 value={metaData.descripcion}
                                 onChange={handleMetaChange}
@@ -195,11 +195,11 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
 
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <label htmlFor="unidad_medida" className="form-label">Unidad de Medida*</label>
+                                <label htmlFor="unidad_medida" className="block text-sm mb-2 ml-4">Unidad de Medida*</label>
                                 <input
                                     type="text"
                                     id="unidad_medida"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     name="unidad_medida"
                                     value={metaData.unidad_medida}
                                     onChange={handleMetaChange}
@@ -208,11 +208,11 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                             </div>
 
                             <div className="col-md-6 mb-3">
-                                <label htmlFor="valor_requerido" className="form-label">Valor Requerido*</label>
+                                <label htmlFor="valor_requerido" className="block text-sm mb-2 ml-4">Valor Requerido*</label>
                                 <input
                                     type="number"
                                     id="valor_requerido"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     name="valor_requerido"
                                     value={metaData.valor_requerido}
                                     onChange={handleMetaChange}
@@ -251,10 +251,10 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor={`indicador-desc-${i}`} className="form-label">Descripción*</label>
+                                        <label htmlFor={`indicador-desc-${i}`} className="block text-sm mb-2 ml-4">Descripción*</label>
                                         <textarea
                                             id={`indicador-desc-${i}`}
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             name="descripcion"
                                             value={indicador.descripcion}
                                             onChange={(e) => handleIndicadorChange(i, e)}
@@ -278,7 +278,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                                                     <div className="d-flex align-items-center mb-2">
                                                         <label
                                                             htmlFor={`actividad-${i}-${j}`}
-                                                            className="form-label me-2"
+                                                            className="block text-sm mb-2 ml-4 me-2"
                                                         >
                                                             Actividad #{j + 1}
                                                         </label>
@@ -293,7 +293,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                                                     </div>
                                                     <textarea
                                                         id={`actividad-desc-${i}-${j}`}
-                                                        className="form-control mb-2"
+                                                        className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
                                                         name="descripcion"
                                                         value={actividad.descripcion}
                                                         onChange={(e) => handleActividadChange(i, j, e)}
@@ -301,13 +301,13 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '', meta = {} }) => {
                                                     />
                                                     <div className="row">
                                                         <div className="col-md-6">
-                                                            <label htmlFor={`actividad-peso-${i}-${j}`} className="form-label">
+                                                            <label htmlFor={`actividad-peso-${i}-${j}`} className="block text-sm mb-2 ml-4">
                                                                 Peso (%)*
                                                             </label>
                                                             <input
                                                                 type="number"
                                                                 id={`actividad-peso-${i}-${j}`}
-                                                                className="form-control"
+                                                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                                                 name="peso"
                                                                 min="0"
                                                                 max="100"
