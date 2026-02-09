@@ -1,27 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{ route('institution.edit', $institutionId) }}" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
-            <a href="{{ route('institution.pei', $institutionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="{{ route('institution.autoevaluaciones', $institutionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
-            <a href="{{ route('pmi.index', $institutionId) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="{{ route('proyectos_transversales.index', $institutionId) }}" class="btn btn-outline-warning btn-sm">PPT</a>
-        </div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.edit', $institutionId) }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei', $institutionId) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institutionId) }}"
+        data-pmi-url="{{ route('pmi.index', $institutionId) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institutionId) }}"
+    >
     </div>
-    <div class="container">
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-        <div class="card">
-            <div class="card-header">
-                <h1>Crear Sede </h1>
-            </div>
+        <div class="m-3">
+            <h1 class="p-2 px-3 text-custom-primary" >Crear Sede</h1>
             <ul class="nav nav-tabs" id="sedeTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
@@ -561,7 +559,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="modelos" class="block text-sm mb-2 ml-4">Modelos Educativos Flexibles.</label>
-                                            <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" multiple >
+                                            <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" multiple >
                                                 @foreach($eduactionalModels as $model)
                                                     <option value="{{ $model->id }}">{{ $model->name }}</option>
                                                 @endforeach
@@ -626,10 +624,10 @@
                         </div>
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save"></i> Guardar
+                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">
+                            <i class="fas fa-save "></i> Guardar
                         </button>
-                        <a href="{{ route('sede.index', [ 'institutionId' => $institutionId ]) }}" class="btn btn-secondary">
+                        <a href="{{ route('sede.index', [ 'institutionId' => $institutionId ]) }}" class="border bg-blue-500  text-white p-2 rounded-pill">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
                     </div>

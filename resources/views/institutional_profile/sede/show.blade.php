@@ -1,28 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between container">
-        <div data-component="CBackButton" data-to="{{ route('institution.edit', $sede->institution_id) }}" data-is-container="{{false}}"></div>
-        <div class="d-flex gap-2">
-            <a href="#" class="btn btn-primary btn-sm">Perfil</a>
-            <a href="{{ route('institution.pei', $sede->institution_id) }}" class="btn btn-outline-success  btn-sm">PEI</a>
-            <a href="{{ route('institution.autoevaluaciones', $sede->institution_id) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
-            <a href="{{ route('pmi.index', $sede->institution_id) }}" class="btn btn-outline-secondary  btn-sm">PMI</a>
-            <a href="{{ route('proyectos_transversales.index', $sede->institution_id) }}" class="btn btn-outline-warning btn-sm">PPT</a>
-        </div>
+    <div
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.edit', $sede->institution_id) }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei', $sede->institution_id) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $sede->institution_id) }}"
+        data-pmi-url="{{ route('pmi.index', $sede->institution_id) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $sede->institution_id) }}"
+        data-institution-name="{{ $sede->institution->nombre }}"
+    >
     </div>
-
-    <div class="container pt-3">
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-        <div class="card">
-            <div class="card-header">
-                <h1>Ver sede </h1>
-            </div>
+        <div class="m-3">
+            <h1 class="p-2 px-3 text-custom-primary" >Ver sede</h1>
             <ul class="nav nav-tabs" id="sedeTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
@@ -501,7 +499,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="modelos" class="block text-sm mb-2 ml-4">Modelos Educativos Flexibles</label>
-                                    <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" multiple disabled>
+                                    <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" multiple disabled>
                                         @foreach($educationalOffer->educationalModels as $model)
                                             <option value="{{ $model->id }}">
                                                 {{ $model->name }}
