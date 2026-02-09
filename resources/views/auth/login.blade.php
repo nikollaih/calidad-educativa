@@ -22,7 +22,7 @@
             <div class="mb-3">
                 <input id="email"
                        type="email"
-                       class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-lg @error('email') is-invalid @enderror @error('access_denied') is-invalid @enderror"
+                       class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-100 px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-100 px-3 py-2 rounded-pill-lg @error('email') is-invalid @enderror @error('access_denied') is-invalid @enderror"
                        name="email"
                        value="{{ old('email') }}"
                        placeholder="CORREO ELECTRÓNICO"
@@ -46,7 +46,7 @@
             <div class="mb-3">
                 <input id="password"
                        type="password"
-                       class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-lg @error('password') is-invalid @enderror"
+                       class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-100 px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-100 px-3 py-2 rounded-pill-lg @error('password') is-invalid @enderror"
                        name="password"
                        placeholder="CONTRASEÑA"
                        required
