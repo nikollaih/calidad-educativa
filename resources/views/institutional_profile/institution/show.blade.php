@@ -193,26 +193,17 @@
             <div class="py-3 d-flex justify-content-center">
                 <div class="d-flex gap-2">
                     @if(auth()->user()->can('s-institucion-editar') || auth()->user()->hasRole('rector'))
-                        <div
-                            data-component="CTableActionButton"
-                            data-title="Editar"
-                            data-route="{{ route('institution.edit', $institution->id) }}"
-                            data-icon-class="fa fa-pencil"
-                            data-hover-icon-color="text-custom-primary"
-                        ></div>
+                        <a href="{{ route('institution.edit', $institution->id) }}" class="border bg-blue-500 text-white p-2 rounded-pill inline-block">
+                            <i class="fa fa-pencil"></i> Editar
+                        </a>
                     @endif
                     @if(auth()->user()->can('s-institucion-eliminar') || auth()->user()->hasRole('rector'))
                         <form id="delete-form-{{ $institution->id }}" action="{{ route('institution.destroy', $institution->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta institución?')" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <div
-                                data-form-ref="#delete-form-{{ $institution->id }}"
-                                data-component="CTableActionButton"
-                                data-title="Eliminar"
-                                data-icon-class="fa fa-trash"
-                                data-confirm-message="¿Está seguro de eliminar esta institución?"
-                                data-hover-icon-color="text-custom-primary"
-                            ></div>
+                            <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">
+                                <i class="fa fa-trash"></i> Eliminar
+                            </button>
                         </form>
                     @endif
                 </div>
