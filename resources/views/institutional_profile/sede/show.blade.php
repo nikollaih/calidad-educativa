@@ -18,7 +18,6 @@
             {{ session('success') }}
         </div>
     @endif
-
         <div class="m-3">
             <h1 class="p-2 px-3 text-custom-primary" >Ver sede</h1>
             <ul class="nav nav-tabs" id="sedeTabs" role="tablist">
@@ -67,18 +66,18 @@
                                     <!-- Campos existentes -->
                                     <div class="mb-3">
                                         <label for="tipo_sede" class="block text-sm mb-2 ml-4">Tipo de sede</label>
-                                        <select name="tipo_sede" id="tipo_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                        <select name="tipo_sede" id="tipo_sede" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                             <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                             <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="sede[latitude]" class="block text-sm mb-2 ml-4">Latitud</label>
-                                        <input type="text" name="sede[latitude]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
+                                        <input type="text" name="sede[latitude]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" placeholder="Ej: 4.123456" value="{{ $sede->latitude  }}" disabled>
                                     </div>
                                     <div class="mb-3" id="sede_principal_container" style="display: none;">
                                         <label for="sede_principal_id" class="block text-sm mb-2 ml-4">Sede Principal</label>
-                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                        <select name="sede[parent_sede_id]" id="sede_principal_id" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                             <option value="">Seleccione una sede principal</option>
                                             @foreach ($availableSedes as $sedePrincipal)
                                                 <option value="{{ $sedePrincipal->id }}" @selected($sede?->parentSede?->id == $sedePrincipal->id )>{{ $sedePrincipal->name }}</option>
@@ -87,7 +86,7 @@
                                     </div>
                                     <div class="mb-3" id="is_sede_principal_container" style="display: none;">
                                         <label  class="block text-sm mb-2 ml-4">Estrategia pedagógica</label>
-                                        <select name="sede[modelo_pedagogico_id]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                        <select name="sede[modelo_pedagogico_id]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                             <option value="">Seleccione una estrategia pedagógica</option>
                                             @foreach ($modelosPedagogicos as $modeloPedagogico)
                                                 <option value="{{ $modeloPedagogico?->id }}" @selected($sede?->modelo_pedagogico_id == $modeloPedagogico->id )  >{{ $modeloPedagogico->nombre }}</option>
@@ -97,17 +96,17 @@
 
                                     <div class="mb-3">
                                         <label for="sede[name]" class="block text-sm mb-2 ml-4">Nombre</label>
-                                        <input type="text" name="sede[name]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $sede->name }}" disabled>
+                                        <input type="text" name="sede[name]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->name }}" disabled>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="sede[address]" class="block text-sm mb-2 ml-4">Dirección</label>
-                                        <input type="text" name="sede[address]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $sede->address }}" disabled>
+                                        <input type="text" name="sede[address]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->address }}" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="titularidad_sede" class="block text-sm mb-2 ml-4">Titularidad de la sede</label>
 
-                                        <select name="titularity[titularity_type]" id="titularidad_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full"  disabled>
+                                        <select name="titularity[titularity_type]" id="titularidad_sede" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill w-full"  disabled>
                                             <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
                                              <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
                                              <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
@@ -118,7 +117,7 @@
                                     <div class="row" id="otro_titularidad_container" style="display: none;">
                                         <div class="mb-3">
                                             <label for="otro_titularidad" class="block text-sm mb-2 ml-4">Especifique</label>
-                                            <input type="text" name="titularity[name]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill">
+                                            <input type="text" name="titularity[name]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill">
                                         </div>
                                     </div>
                                         <label for="titularidad_sede" class="block text-sm mb-2 ml-4">Anexar Certificado de Libertad y Tradición u otro</label>
@@ -134,7 +133,7 @@
                                     <!-- Campos existentes -->
                                     <div class="mb-3">
                                         <label for="sede[zone]" class="block text-sm mb-2 ml-4">Zona</label>
-                                        <select name="sede[zone]" id="titularidad_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full"  disabled>
+                                        <select name="sede[zone]" id="titularidad_sede" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill w-full"  disabled>
                                            <option value="RURAL" {{ $sede->zone == 'RURAL' ? 'selected' : '' }}>Rural</option>
                                            <option value="URBANA" {{ $sede->zone == 'URBANA' ? 'selected' : '' }}>Urbana</option>
                                         </select>
@@ -144,11 +143,11 @@
 
                                     <div class="mb-3">
                                         <label for="sede[longitude]" class="block text-sm mb-2 ml-4">Longitud</label>
-                                        <input type="text" name="sede[longitude]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
+                                        <input type="text" name="sede[longitude]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" placeholder="Ej: -74.123456" value="{{ $sede->longitude  }}" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="sede[dane]" class="block text-sm mb-2 ml-4">Código DANE</label>
-                                        <input type="text" name="sede[dane]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $sede->dane }}" disabled>
+                                        <input type="text" name="sede[dane]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->dane }}" disabled>
                                     </div>
 
                                     <div class="mb-3">
@@ -190,13 +189,13 @@
                                         <!-- Campo para cantidad de aulas -->
                                         <div class="col-md-6">
                                             <label class="block text-sm mb-2 ml-4" for="cantidad_aulas">¿Cuántas?</label>
-                                            <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" min="1" value="{{$sede?->steamClassroom?->quantity}}" placeholder="Ingrese cantidad" disabled>
+                                            <input type="number" id="cantidad_aulas" name="steam_classroom[quantity]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" min="1" value="{{$sede?->steamClassroom?->quantity}}" placeholder="Ingrese cantidad" disabled>
                                         </div>
 
                                         <!-- Campo para fase -->
                                         <div class="col-md-6">
                                             <label class="block text-sm mb-2 ml-4" for="fase_aula">Fase</label>
-                                            <select name="steam_classroom[phase]"  class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full" disabled>
+                                            <select name="steam_classroom[phase]"  class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill w-full" disabled>
 
                                                 <option value="Fase 1" {{ $sede->steamClassroom?->phase == 'Fase 1' ? 'selected' : '' }}>Fase 1</option>
                                                 <option value="Fase 2" {{ $sede->steamClassroom?->phase == 'Fase 2' ? 'selected' : '' }}>Fase 2</option>
@@ -260,7 +259,7 @@
                                                         <label class="form-check-label">Fuente de financiación</label>
                                                     </div>
                                                     <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}" disabled>
-                                                    <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" disabled>
+                                                    <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" disabled>
                                                         <option value="Computadores para educar"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Computadores para educar')->count() > 0 ? 'selected' : '' }}>Computadores para educar</option>
                                                         <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
                                                         <option value="Aula Steam" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Aula Steam')->count() > 0 ? 'selected' : '' }}>Aula Steam</option>
@@ -274,7 +273,7 @@
                                                     <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
                                                         <label class="form-check-label">Cantidad</label>
                                                     </div>
-                                                    <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}" disabled>
+                                                    <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -392,7 +391,7 @@
                                                         <div id="label_cantidad_{{ Str::slug($equipo['nombre']) }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};">
                                                             <label class="form-check-label">Cantidad.</label>
                                                         </div>
-                                                        <input type="number" name="infraestructura[{{$key}}][cantidad]" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->cantidad  }}" id="cantidad_{{ Str::slug($equipo['nombre']) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
+                                                        <input type="number" name="infraestructura[{{$key}}][cantidad]" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->cantidad  }}" id="cantidad_{{ Str::slug($equipo['nombre']) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
                                                     </div>
                                                 @endif
                                                 <div class="col-md-4">
@@ -401,7 +400,7 @@
                                                     </div>
                                                     <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
                                                     <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" disabled>
+                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -484,7 +483,7 @@
                                                     </div>
                                                     <input type="hidden" name="mobiliario[{{$key}}][nombre]" value="{{ $mobiliario['nombre'] }}"  />
 
-                                                    <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
+                                                    <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -499,7 +498,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="modelos" class="block text-sm mb-2 ml-4">Modelos Educativos Flexibles</label>
-                                    <select name="educational_models[]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" multiple disabled>
+                                    <select name="educational_models[]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-xl" multiple disabled>
                                         @foreach($educationalOffer->educationalModels as $model)
                                             <option value="{{ $model->id }}">
                                                 {{ $model->name }}
@@ -511,7 +510,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="tiene_autorizacion" class="block text-sm mb-2 ml-4">¿Tiene autorización para validación de estudios?</label>
-                                    <select name="educational_offer[has_study_validation_auth]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" id="tiene_autorizacion" disabled>
+                                    <select name="educational_offer[has_study_validation_auth]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" id="tiene_autorizacion" disabled>
                                         <option value="0" {{ $educationalOffer->has_study_validation_auth == '0' ? 'selected' : '' }}>No</option>
                                         <option value="1" {{ $educationalOffer->has_study_validation_auth == '1' ? 'selected' : '' }}>Sí</option>
                                     </select>
@@ -536,7 +535,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema de responsabilidad penal?</label>
-                                    <select name="educational_offer[serves_juvenile_justice]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                    <select name="educational_offer[serves_juvenile_justice]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                         <option value="0" {{ $educationalOffer->serves_juvenile_justice == '0' ? 'selected' : '' }}>No</option>
                                         <option value="1" {{ $educationalOffer->serves_juvenile_justice == '1' ? 'selected' : '' }}>Sí</option>
                                     </select>
@@ -545,7 +544,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="block text-sm mb-2 ml-4">¿Atención a estudiantes del sistema nacional de protección?</label>
-                                    <select name="educational_offer[national_protection_students]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                    <select name="educational_offer[national_protection_students]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                         <option value="0" {{ $educationalOffer->national_protection_students == '0' ? 'selected' : '' }}>No</option>
                                         <option value="1" {{ $educationalOffer->national_protection_students == '1' ? 'selected' : '' }}>Sí</option>
                                     </select>
@@ -557,7 +556,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="block text-sm mb-2 ml-4">¿Atención a población étnica?</label>
-                                    <select name="educational_offer[serves_ethnic_population]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                    <select name="educational_offer[serves_ethnic_population]" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                         <option value="0" {{ $educationalOffer->serves_ethnic_population == '0' ? 'selected' : '' }}>No</option>
                                         <option value="1" {{ $educationalOffer->serves_ethnic_population == '1' ? 'selected' : '' }}>Sí</option>
                                     </select>
@@ -612,7 +611,13 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
+                                                    <div
+                                                        data-component="CTableActionButton"
+                                                        data-title="Ver detalles"
+                                                        data-route="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}"
+                                                        data-icon-class="fa fa-eye"
+                                                        data-hover-icon-color="text-custom-primary"
+                                                    ></div>
                                                 </td>
                                             </tr>
                                         @endforeach

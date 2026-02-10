@@ -10,8 +10,7 @@
         data-pmi-url="{{ route('pmi.index', $sede->institution_id) }}"
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $sede->institution_id) }}"
         data-institution-name="{{ $sede->institution->nombre }}"
-    >
-    </div>
+    ></div>
     <div class="m-6 !border border-custom-blue-light rounded-md bg-white">
     @if(session('success'))
         <div class="alert alert-success">
@@ -698,7 +697,11 @@
                 <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                         <div class="card-body">
                             <div class="col-md-12">
-                                <a href="{{ route('educational-offer.vinculate', ['institutionId' => $sede->institution_id, 'sedeId'=> $sede->id]) }}" class="btn btn-primary mb-3">Vincular una oferta educativa</a>
+                                <CAddButton route={agregarUrl}/>
+                                <div
+                                    data-component="CAddButton"
+                                    data-route="{{ route('educational-offer.vinculate', ['institutionId' => $sede->institution_id, 'sedeId'=> $sede->id]) }}"
+                                ></div>
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -743,12 +746,31 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-primary btn-sm">Ver detalles</a>
-                                                    <a href="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                                                    <form action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta vinculación?')">Eliminar</button>
-                                                    </form>
+                                                    <div class="flex">
+                                                        <div data-component="CTableActionButton"
+                                                             data-route="{{ route('educational-offer.vinculate-show', ['levelSedeId' => $levelSede->id]) }}"
+                                                             data-icon-class="fa-regular fa-eye"
+                                                             data-hover-icon-color="text-custom-primary"
+                                                             data-title="Ver detalles"
+                                                        ></div>
+                                                        <div data-component="CTableActionButton"
+                                                             data-route="{{ route('educational-offer.vinculate-edit', ['levelSedeId' => $levelSede->id]) }}"
+                                                             data-icon-class="fa fa-pencil"
+                                                             data-hover-icon-color="text-custom-primary"
+                                                             data-title="Editar"
+                                                        ></div>
+                                                        <form id="delete-form-{{$levelSede->id}}" action="{{ route('educational-offer.vinculate-destroy', ['levelSedeId' => $levelSede->id]) }}" method="POST" style="display:inline;">
+                                                            @csrf @method('DELETE')
+                                                            <div
+                                                                data-form-ref="#delete-form-{{$levelSede->id}}"
+                                                                data-component="CTableActionButton"
+                                                                data-title="Eliminar"
+                                                                data-icon-class="fa fa-trash"
+                                                                data-confirm-message="¿Está seguro de eliminar esta oferta?"
+                                                                data-hover-icon-color="text-custom-primary"
+                                                            ></div>
+                                                        </form>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
