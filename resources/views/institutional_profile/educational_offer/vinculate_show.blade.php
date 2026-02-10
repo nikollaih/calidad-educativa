@@ -2,9 +2,16 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.edit', $selectedSede->institution->id) }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei', $selectedSede->institution->id) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $selectedSede->institution->id) }}"
+        data-pmi-url="{{ route('pmi.index', $selectedSede->institution->id) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $selectedSede->institution->id) }}"
+        data-institution-name="{{$selectedSede->institution->nombre}}"
     ></div>
-<div class="container">
+<div class="m-6 !border border-custom-blue-light rounded-md bg-white p-3">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -50,7 +57,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
-                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                <input type="time" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill"
                                        name="schedule[hora_inicio]"
                                        value="{{ $schedule->hora_inicio }}" disabled>
                             </div>
@@ -58,7 +65,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="block text-sm mb-2 ml-4">Hora de Final</label>
-                                <input type="time" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                <input type="time" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill"
                                        name="schedule[hora_fin]"
                                        value="{{ $schedule->hora_fin }}" disabled>
                             </div>
@@ -67,7 +74,7 @@
 
                     <div class="mb-3">
                         <label class="block text-sm mb-2 ml-4">Notas detalladas</label>
-                        <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" rows="3"
+                        <textarea class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-xl" rows="3"
                                   name="schedule[notes]" disabled>{{ $schedule->notes }}</textarea>
                     </div>
 

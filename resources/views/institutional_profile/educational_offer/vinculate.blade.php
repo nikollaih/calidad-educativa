@@ -2,10 +2,16 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
-        data-to="{{ route('sede-with-institution.edit', ['institutionId' => $institutionId, 'sede_with_institution' => $sedeId])}}"
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.edit', $institutionId) }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei', $institutionId) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institutionId) }}"
+        data-pmi-url="{{ route('pmi.index', $institutionId) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institutionId) }}"
+        data-institution-name=""
     ></div>
-    <div class="container">
+    <div class="m-6 !border border-custom-blue-light rounded-md bg-white p-3">
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -243,7 +249,7 @@
             <!-- Área de texto para descripción detallada -->
             <div class="mb-3">
                 <label class="block text-sm mb-2 ml-4 fw-bold">Descripción Detallada (opcional)</label>
-                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
+                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl schedule-notes-input" rows="4" placeholder="Detalles adicionales sobre el horario y estructura educativa..."></textarea>
             </div>
 
             <!-- Adjuntar archivo -->

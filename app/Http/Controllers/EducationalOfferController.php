@@ -237,7 +237,7 @@ class EducationalOfferController extends Controller
             'schedules',
             'schedules.anexo',
             'sede:id,name,institution_id',
-            'sede.institution:id'
+            'sede.institution:id,nombre'
         ])
         ->where('id',$levelSedeId)
         ->first();
@@ -273,7 +273,7 @@ class EducationalOfferController extends Controller
             'schedules',
             'schedules.anexo',
             'sede:id,name,institution_id',
-            'sede.institution:id'
+            'sede.institution:id,nombre'
         ])
             ->where('id',$levelSedeId)
             ->first();
