@@ -488,9 +488,6 @@ export default function ActualizarPei({
     return indexA - indexB;
   });
 
-  console.log('gestionArrayOrdenado', gestionArrayOrdenado);
-
-
   const [activeTab, setActiveTab] = useState(0);
   const [currentModal, setCurrentModal] = useState(null);
   const [historicosModal, setHistoricosModal] = useState(null);
@@ -558,7 +555,7 @@ export default function ActualizarPei({
   };
 
   return (
-    <div className="container mt-5 bg-white p-4">
+    <div className="container mt-5 bg-white p-4 !border border-custom-blue-dark">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">Ajustes al PEI - {institucionNombre}</h2>
       </div>
