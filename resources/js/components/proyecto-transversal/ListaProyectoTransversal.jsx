@@ -365,7 +365,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                         <div class="modal-footer">
                                             <button
                                                 type="button"
-                                                class="btn btn-secondary"
+                                                class="border bg-blue-500  text-white p-2 rounded-pill"
                                                 onClick={handleCloseModal}
                                             >
                                                 Cancelar
@@ -419,8 +419,8 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                         <p>{alertMessage}</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                                        <button type="button" class="btn btn-danger" onClick={() => {
+                                        <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                                        <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
                                             if (confirmAction) {
                                                 confirmAction();
                                             }

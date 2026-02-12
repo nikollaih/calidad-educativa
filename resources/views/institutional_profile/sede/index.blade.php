@@ -35,11 +35,11 @@
                                 <td>Norte</td>
                                 <td>PRINCIPAL</td>
                                 <td>
-                                    <a href="{{ route('sede.show', 1) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <a href="{{ route('sede.edit', 2) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{{ route('sede.show', 1) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', 2) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 1) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
+                                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -51,10 +51,10 @@
                                 <td>Centro</td>
                                 <td>ADSCRITA</td>
                                 <td>
-                                    <a href="{{ route('sede.edit', 2) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', 2) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 2) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
+                                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -66,10 +66,10 @@
                                 <td>Sur</td>
                                 <td>PRINCIPAL</td>
                                 <td>
-                                    <a href="{{ route('sede.edit', 3) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', 3) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 3) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
+                                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>

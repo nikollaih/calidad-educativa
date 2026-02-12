@@ -103,7 +103,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                 <td>
                                     <button
                                         onClick={() => handleEditarClick(municipio)}
-                                        className="btn btn-warning btn-sm me-2"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                     >
                                         Editar
                                     </button>
@@ -119,7 +119,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                     >
                                         <input type="hidden" name="_token" value={csrfToken} />
                                         <input type="hidden" name="_method" value="DELETE" />
-                                        <button type="submit" className="btn btn-danger btn-sm">
+                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
                                             Eliminar
                                         </button>
                                     </form>
@@ -165,7 +165,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar

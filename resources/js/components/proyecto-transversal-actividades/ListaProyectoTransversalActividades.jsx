@@ -502,18 +502,18 @@ useEffect(() => {
                   )}
                   <button
                     onClick={() => handleCompartirClick(actividad, 'actividad')}
-                    className="btn btn-secondary btn-sm me-2"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                   >
                     <i className="fa fa-share-alt text-white"></i>
                   </button>
                   <button
                     onClick={() => handleEditarActividadClick(actividad)}
-                    className="btn btn-warning btn-sm me-2"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                   >
                     <i className="fa fa-pen-to-square text-white"></i>
                   </button>
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
                     onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
                   >
                     <i className="fa fa-trash-alt text-white"></i>
@@ -566,13 +566,13 @@ useEffect(() => {
                   {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
                   <button
                     onClick={() => handleEditarIntegranteClick(integrante)}
-                    className="btn btn-warning btn-sm me-2"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                   >
                     <i className="fa fa-pen-to-square text-white"></i>
                   </button>
                   {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
                     onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
                   >
                     <i className="fa fa-trash-alt text-white"></i>
@@ -714,7 +714,7 @@ useEffect(() => {
                                     {/* NUEVO: Botón para eliminar el adjunto del array */}
                                     <button
                                       type="button"
-                                      className="btn btn-danger btn-sm flex gap-2"
+                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm flex gap-2"
                                       onClick={() => handleRemoveAdjunto(index)}
                                     >
                                       <i className="fa fa-trash-alt text-white"></i> Eliminar
@@ -730,7 +730,7 @@ useEffect(() => {
                     <div className="modal-footer">
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={handleCloseActividadModal}
                       >
                         Cancelar
@@ -817,7 +817,7 @@ useEffect(() => {
                     <div className="modal-footer">
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={handleCloseIntegranteModal}
                       >
                         Cancelar
@@ -861,7 +861,7 @@ useEffect(() => {
                     )}
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
                   </div>
                 </div>
               </div>
@@ -907,7 +907,7 @@ useEffect(() => {
                       </div>
                     </div>
                     <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>Cancelar</button>
+                      <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowShareModal(false)}>Cancelar</button>
                       <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">Compartir</button>
                     </div>
                   </form>
@@ -949,8 +949,8 @@ useEffect(() => {
                     <p>{alertMessage}</p>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                    <button type="button" className="btn btn-danger" onClick={() => {
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
                       if (confirmAction) {
                         confirmAction();
                       }

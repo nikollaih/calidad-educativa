@@ -28,7 +28,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>

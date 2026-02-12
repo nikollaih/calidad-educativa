@@ -43,7 +43,7 @@ export default function IndexMetaPMI({ agregarUrl, metasPaginated = {}, csrfToke
 
                             <a
                                 href={`/metas-pmi/${meta.id}/edit`}
-                                className="btn btn-warning btn-sm me-2"
+                                className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                             >
                                 Editar
                             </a>

@@ -103,7 +103,7 @@
                         <button type="submit" class="btn btn-success me-2">
                             <i class="fas fa-save"></i> Guardar
                         </button>
-                        <a href="{{ route('educational-offer.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('educational-offer.index') }}" class="border bg-blue-500  text-white p-2 rounded-pill">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
                     </div>

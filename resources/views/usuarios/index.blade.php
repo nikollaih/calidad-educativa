@@ -26,12 +26,12 @@
                             <td>{{ $usuario->roles->pluck('name_translated')->join(', ') }}</td>
                             <td>
                                 @can('hr-usuario-editar')
-                                <a href="{{ route('usuarios.edit', $usuario) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{{ route('usuarios.edit', $usuario) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                 @endcan
                                 @can('hr-usuario-eliminar')
                                 <form action="{{ route('usuarios.destroy', $usuario) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
+                                    <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Eliminar usuario?')">Eliminar</button>
                                 </form>
                                 @endcan
                             </td>

@@ -142,7 +142,7 @@ const FormularioComentarioFactor = ({
                             <div className="modal-footer">
                                 <button
                                     type="button"
-                                    className="btn btn-secondary"
+                                    className="border bg-blue-500  text-white p-2 rounded-pill"
                                     onClick={closeModal}
                                 >
                                     Cerrar

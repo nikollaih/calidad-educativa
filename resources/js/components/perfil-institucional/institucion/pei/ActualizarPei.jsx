@@ -225,7 +225,7 @@ const handleNewFile = (fieldName, e) => {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="border bg-blue-500  text-white p-2 rounded-pill"
                 onClick={onClose}
               >
                 Cancelar
@@ -440,7 +440,7 @@ const ModalHistoricos = ({
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={onClose}>
               <i className="fas fa-times me-1"></i> Cerrar
             </button>
           </div>
@@ -676,7 +676,7 @@ export default function ActualizarPei({
         {/* <div class="d-flex justify-content-end mt-4">
         <button
           onClick={() => window.history.back()}
-          class="btn btn-secondary"
+          class="border bg-blue-500  text-white p-2 rounded-pill"
         >
           <i class="fas fa-arrow-left me-2"></i> Volver
         </button>

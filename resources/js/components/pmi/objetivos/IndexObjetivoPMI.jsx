@@ -42,7 +42,7 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
 
                                     <a
                                         href={`/objetivo-pmi/${objetivo.id}/edit`}
-                                        className="btn btn-warning btn-sm me-2"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                     >
                                         Editar
                                     </a>

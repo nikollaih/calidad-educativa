@@ -122,7 +122,7 @@ export default function ListaUnidadMeta({
                                         onClick={() =>
                                             handleEditarClick(unidadMeta)
                                         }
-                                        className="btn btn-warning btn-sm me-2"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                     >
                                         Editar
                                     </button>
@@ -152,7 +152,7 @@ export default function ListaUnidadMeta({
                                         />
                                         <button
                                             type="submit"
-                                            className="btn btn-danger btn-sm"
+                                            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
                                         >
                                             Eliminar
                                         </button>
@@ -236,7 +236,7 @@ export default function ListaUnidadMeta({
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar

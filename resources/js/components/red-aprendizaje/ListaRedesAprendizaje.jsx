@@ -270,12 +270,12 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     </button>
                                     <button
                                         onClick={() => handleEditarClick(redAprendizaje)}
-                                        className="btn btn-warning btn-sm me-2"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                     >
                                         Editar
                                     </button>
                                     <button
-                                        className="btn btn-danger btn-sm"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
                                         onClick={() => handleDelete(redAprendizaje.id)}
                                     >
                                         Eliminar
@@ -406,7 +406,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
@@ -531,7 +531,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                             <div class="modal-footer">
                                 <button
                                     type="button"
-                                    class="btn btn-secondary"
+                                    class="border bg-blue-500  text-white p-2 rounded-pill"
                                     onClick={handleCloseViewModal}
                                 >
                                     Cerrar
@@ -576,8 +576,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <p>{alertMessage}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                                <button type="button" class="btn btn-danger" onClick={() => {
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
                                     if (confirmAction) {
                                         confirmAction();
                                     }

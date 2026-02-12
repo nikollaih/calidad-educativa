@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-warning d-grid w-100 mb-3">
+            <button class="border bg-blue-500  text-white p-2 rounded-pill d-grid w-100 mb-3">
                 Restablecer Contraseña
             </button>
 

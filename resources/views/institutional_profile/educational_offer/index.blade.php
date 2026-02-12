@@ -53,11 +53,11 @@
                                         </td>
                                 @endisset
                                 <td>
-                                    <a href="{{ route('educational-offer.edit', $educationalOffer->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{{ route('educational-offer.edit', $educationalOffer->id) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('educational-offer.destroy', $educationalOffer->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
+                                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>

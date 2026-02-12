@@ -394,7 +394,7 @@ const FactoresCriticosTable = ({
                         <div className="d-flex gap-3">
                             {canManage && (
                                 <>
-                                    <button className="btn btn-warning" onClick={devolverPmi}>
+                                    <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={devolverPmi}>
                                         <i className="fa-solid fa-rotate-left me-2"></i>
                                         Devolver PMI
                                     </button>

@@ -63,7 +63,7 @@
                     </div>
 
                     <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">Actualizar</button>
-                    <a href="{{ route('roles.index') }}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{{ route('roles.index') }}" class="border bg-blue-500  text-white p-2 rounded-pill">Cancelar</a>
                 </form>
             </div>
         </div>

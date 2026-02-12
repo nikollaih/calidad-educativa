@@ -161,7 +161,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                 <td>{pam.estado}</td>
                                 {canGestionarPam ? (
                                     <td>
-                                        <a href={`/pams/${pam.id}/edit`} className="btn btn-warning btn-sm me-2" >
+                                        <a href={`/pams/${pam.id}/edit`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
                                             Editar
                                         </a>
 

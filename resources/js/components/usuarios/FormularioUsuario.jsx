@@ -138,7 +138,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
 
                             {/* Botones */}
                             <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href={indexUrl} class="btn btn-secondary ms-2">Cancelar</a>
+                            <a href={indexUrl} class="border bg-blue-500  text-white p-2 rounded-pill ms-2">Cancelar</a>
                         </form>
                     </div>
                 </div>

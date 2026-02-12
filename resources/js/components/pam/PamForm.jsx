@@ -892,7 +892,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Fechas</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'fechas', null)} // Establece fechas a null para eliminar
           >
             Eliminar Fechas
@@ -939,7 +939,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Recursos</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'recursos', null)} // Establece recursos a null para eliminar
           >
             Eliminar Recursos
@@ -981,7 +981,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Responsable</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'responsable', null)} // Establece responsable a null para eliminar
           >
             Eliminar Responsable
@@ -1041,7 +1041,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Acción</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicador.id, 'accion', null)} // Establece acción a null para eliminar
           >
             Eliminar Acción
@@ -1083,7 +1083,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', 'metas', metaId, 'indicadores'], indicador.id)}
           >
             Eliminar Indicador
@@ -1129,7 +1129,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', objetivoId, 'metas'], meta.id)}
           >
             Eliminar Meta
@@ -1203,7 +1203,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', metaPlanId, 'objetivos'], objetivo.id)}
           >
             Eliminar Objetivo
@@ -1246,7 +1246,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', subprocesoId, 'metas_plan_desarrollo'], metaPlan.id)}
           >
             Eliminar Meta del Plan
@@ -1289,7 +1289,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', procesoId, 'subprocesos'], subproceso.id)}
           >
             Eliminar Subproceso
@@ -1332,7 +1332,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', componenteId, 'procesos'], proceso.id)}
           >
             Eliminar Proceso
@@ -1375,7 +1375,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes'], componente.id)}
           >
             Eliminar Componente
@@ -1470,7 +1470,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
 
             <button
               type="button"
-              className="btn btn-secondary"
+              className="border bg-blue-500  text-white p-2 rounded-pill"
               onClick={() => {
                 // Valida si isEditing es verdadero
                 const url = isEditing

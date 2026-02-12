@@ -13,7 +13,7 @@
 
             <button
                 type="button"
-                class="btn btn-danger btn-sm"
+                class="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
                 x-data=""
                 x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
             >
@@ -50,10 +50,10 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-3">
-                <button type="button" class="btn btn-secondary btn-sm" x-on:click="$dispatch('close')">
+                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" x-on:click="$dispatch('close')">
                     Cancelar
                 </button>
-                <button type="submit" class="btn btn-danger btn-sm">
+                <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
                     Eliminar cuenta
                 </button>
             </div>

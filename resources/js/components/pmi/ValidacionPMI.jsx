@@ -69,7 +69,7 @@ export default function IndexPMI({
                                         {pmi.estado === 'Presentado' && canManage && (
                                             <a
                                                 href={`/pmi/validacion/${pmi.id}`}
-                                                className="btn btn-warning btn-sm me-2"
+                                                className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                             >
                                                 Revisar
                                             </a>

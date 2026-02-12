@@ -342,7 +342,7 @@ export default function IndexPMI({
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button class="btn btn-secondary" onClick={cerrarModalComentarios}>
+                                            <button class="border bg-blue-500  text-white p-2 rounded-pill" onClick={cerrarModalComentarios}>
                                                 Cerrar
                                             </button>
                                         </div>

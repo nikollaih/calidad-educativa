@@ -22,7 +22,7 @@
                     </span>
                 @enderror
             </div>
-            <button class="btn btn-warning d-grid w-100">Enviar enlace de recuperación</button>
+            <button class="border bg-blue-500  text-white p-2 rounded-pill d-grid w-100">Enviar enlace de recuperación</button>
         </form>
         <div class="text-center mt-3">
             <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center">

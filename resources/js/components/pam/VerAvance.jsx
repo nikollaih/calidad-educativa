@@ -32,7 +32,7 @@ const VerAvance = ({ accionId, onClose, meta, valorMeta }) => {
                 }
                 const data = await response.json();
                 setAvances(data);
-                
+
                 const total = data.reduce((sum, avance) => sum + (avance.cantidad_ejecutada || 0), 0);
                 setTotalCantidad(total);
             } catch (err) {
@@ -84,7 +84,7 @@ const VerAvance = ({ accionId, onClose, meta, valorMeta }) => {
                                 <strong>Meta:</strong> {meta}
                             </div>
                         )}
-                        
+
                         {loading && <p>Cargando avances...</p>}
                         {error && <div className="alert alert-danger">{error}</div>}
                         {!loading && !error && (
@@ -144,7 +144,7 @@ const VerAvance = ({ accionId, onClose, meta, valorMeta }) => {
                         )}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
+                        <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={closeModal}>Cerrar</button>
                     </div>
                 </div>
             </div>

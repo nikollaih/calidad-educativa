@@ -24,12 +24,12 @@
                             <td>{{ $role->permissions->pluck('name_translated')->join(', ') }}</td>
                             <td>
                                 @can('s-role-editar')
-                                <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{{ route('roles.edit', $role) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                 @endcan
                                 @can('s-role-eliminar')
                                 <form action="{{ route('roles.destroy', $role) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar rol?')">Eliminar</button>
+                                    <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Eliminar rol?')">Eliminar</button>
                                 </form>
                                 @endcan
                             </td>
