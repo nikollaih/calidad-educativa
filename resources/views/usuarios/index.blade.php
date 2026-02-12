@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="col-md-12">
                 @can('hr-usuario-crear')
-                <a href="{{ route('usuarios.create') }}" class="btn btn-primary">Crear Usuario</a>
+                <a href="{{ route('usuarios.create') }}" class="border bg-blue-500  text-white p-2 rounded-pill">Crear Usuario</a>
                 @endcan
                 <table class="table mt-3">
                     <thead>

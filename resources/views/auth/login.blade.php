@@ -61,7 +61,7 @@
 
             <!-- Submit Button -->
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100" style="border-radius: 25px; padding: 12px 20px; font-weight: 500; background-color: #4a90e2; border: none; text-transform: uppercase;">
+                <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill w-100" style="border-radius: 25px; padding: 12px 20px; font-weight: 500; background-color: #4a90e2; border: none; text-transform: uppercase;">
                     Iniciar sesión
                 </button>
             </div>

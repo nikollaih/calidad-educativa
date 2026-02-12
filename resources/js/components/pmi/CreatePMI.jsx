@@ -68,7 +68,7 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
 
                 <h5 className="mb-2">Ingresa una descripción del PMI</h5>
                 <textarea
-                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-3"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl mb-3"
                     type="text"
                     name="pmi[descripcion]"
                 ></textarea>

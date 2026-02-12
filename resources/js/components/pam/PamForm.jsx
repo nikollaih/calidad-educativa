@@ -949,7 +949,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={accion.recursos.descripcion}
               onChange={(e) => updateAccionNestedField(indicadorId, 'recursos', { ...accion.recursos, descripcion: e.target.value })}
@@ -959,7 +959,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicadorId, 'fechas', { fecha_inicio: '', fecha_final: '' })}
               >
                 Agregar Fechas
@@ -1020,7 +1020,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicadorId, 'recursos', { descripcion: '' })}
               >
                 Agregar Recursos
@@ -1051,7 +1051,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={indicador.accion.descripcion}
               onChange={(e) => updateDescription(indicador.accion.id, e.target.value)} // Usar updateDescription para la descripción de la acción
@@ -1061,7 +1061,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicador.id, 'responsable', { id: '', descripcion: '' })}
               >
                 Agregar Responsable
@@ -1094,7 +1094,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               disabled
               value={indicador.descripcion}
@@ -1140,7 +1140,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={meta.descripcion}
               onChange={(e) => updateDescription(meta.id, e.target.value)}
@@ -1181,7 +1181,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
             {!isEditing && (
           )}
-            className="btn btn-primary mt-2"
+            className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
             onClick={() => addIndicador(meta.id)}
           >
             Agregar Indicador
@@ -1214,7 +1214,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={objetivo.descripcion}
               onChange={(e) => updateDescription(objetivo.id, e.target.value)}
@@ -1224,7 +1224,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addMeta(objetivo.id)}
               >
                 Agregar Meta
@@ -1257,7 +1257,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={metaPlan.descripcion}
               onChange={(e) => updateDescription(metaPlan.id, e.target.value)}
@@ -1267,7 +1267,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addObjetivo(metaPlan.id)}
               >
                 Agregar Objetivo Estratégico
@@ -1300,7 +1300,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={subproceso.descripcion}
               onChange={(e) => updateDescription(subproceso.id, e.target.value)}
@@ -1310,7 +1310,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addMetaPlan(subproceso.id)}
               >
                 Agregar Meta del Plan
@@ -1343,7 +1343,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={proceso.descripcion}
               onChange={(e) => updateDescription(proceso.id, e.target.value)}
@@ -1353,7 +1353,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addSubproceso(proceso.id)}
               >
                 Agregar Subproceso
@@ -1406,7 +1406,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addProceso(componente.id)}
               >
                 Agregar Proceso
@@ -1461,7 +1461,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div className="mt-4 pt-3 border-top">
             <button
               type="button"
-              className="btn btn-primary me-2"
+              className="border bg-blue-500  text-white p-2 rounded-pill me-2"
               onClick={saveAll}
               disabled={formData.componentes.length === 0} // Deshabilita si no hay componentes
             >

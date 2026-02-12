@@ -83,7 +83,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
         <div class="container mt-4">
             <h2 class="mb-4">Municipios</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar Municipio
                 </button>
             )}
@@ -172,7 +172,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!nombre.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}

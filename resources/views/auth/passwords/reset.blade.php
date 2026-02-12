@@ -44,7 +44,7 @@
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">
                     {{ __('Restablecer Contraseña') }}
                 </button>
             </div>

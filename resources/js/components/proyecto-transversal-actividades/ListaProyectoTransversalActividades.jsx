@@ -452,7 +452,7 @@ useEffect(() => {
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Lista de Actividades</h4>
-        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
+        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarActividadClick}>
           <i className="fa fa-plus me-2"></i>Agregar Actividad
         </button>
       </div>
@@ -536,7 +536,7 @@ useEffect(() => {
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Lista de Integrantes</h4>
-        <button className="btn btn-primary" onClick={handleAgregarIntegranteClick}>
+        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarIntegranteClick}>
           {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
           <i className="fa fa-plus me-2"></i>Agregar Integrante
         </button>
@@ -678,7 +678,7 @@ useEffect(() => {
                       <div className="mb-3">
                         <label htmlFor="actividadDescripcion" className="block text-sm mb-2 ml-4">Descripción<span className="text-danger">*</span></label>
                         <textarea
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                           id="actividadDescripcion"
                           value={actividadDescripcion}
                           onInput={(e) => setActividadDescripcion(e.target.value)}
@@ -737,7 +737,7 @@ useEffect(() => {
                       </button>
                       <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                       >
                         Guardar
                       </button>
@@ -824,7 +824,7 @@ useEffect(() => {
                       </button>
                       <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                       >
                         Guardar
                       </button>
@@ -898,7 +898,7 @@ useEffect(() => {
                         <label htmlFor="shareDescription" className="block text-sm mb-2 ml-4">Descripción para el correo</label>
                         <textarea
                           id="shareDescription"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                           rows="3"
                           value={shareDescription}
                           onChange={(e) => setShareDescription(e.target.value)}
@@ -908,7 +908,7 @@ useEffect(() => {
                     </div>
                     <div className="modal-footer">
                       <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>Cancelar</button>
-                      <button type="submit" className="btn btn-primary">Compartir</button>
+                      <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">Compartir</button>
                     </div>
                   </form>
                 </div>
@@ -929,7 +929,7 @@ useEffect(() => {
                     <p>{alertMessage}</p>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowAlertModal(false)}>Aceptar</button>
                   </div>
                 </div>
               </div>

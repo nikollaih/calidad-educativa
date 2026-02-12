@@ -17,7 +17,7 @@ const CreatePAM = ({createUrl='', csrfToken='' }) => {
                 <input type="hidden" name="_token" value={csrfToken} />
                 <h5 className="mb-2">Ingresa una descripción del PAM</h5>
                 <textarea
-                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
+                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl mb-2"
                     type="text"
                     name="pam[descripcion]"
                 ></textarea>

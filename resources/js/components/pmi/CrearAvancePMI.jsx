@@ -281,7 +281,7 @@ const CrearAvancePMI = ({
                                             Observación:
                                         </label>
                                         <textarea
-                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="descripcion"
                                             name="descripcion"
                                             rows="4"
@@ -374,7 +374,7 @@ const CrearAvancePMI = ({
                                             />
                                         ))}
 
-                                        <button type="submit" className="btn btn-primary">
+                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">
                                             Guardar Avance
                                         </button>
                                     </form>

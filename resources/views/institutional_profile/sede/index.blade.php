@@ -6,7 +6,7 @@
             <h1 class="card-header">Sedes</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('sede.create') }}" class="btn btn-primary mb-3">Crear Sede</a>
+                    <a href="{{ route('sede.create') }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
 
                     @if(session('success'))
                         <div class="alert alert-success">

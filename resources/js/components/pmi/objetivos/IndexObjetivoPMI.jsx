@@ -15,7 +15,7 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
         <div class="container mt-4">
             <h2 class="mb-4">Objetivos del PMI</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar un objetivo de PMI
                 </button>
             )}
@@ -35,7 +35,7 @@ export default function IndexObjetivoPMI({ agregarUrl, objetivosPaginated = {}, 
                                 <td>
                                     <a
                                         href={`/objetivo-pmi/${objetivo.id}`}
-                                        className="btn btn-primary btn-sm me-2"
+                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                     >
                                         Ver detalles
                                     </a>

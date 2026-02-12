@@ -378,7 +378,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                                                        className="block text-sm mb-2 ml-4">Evidencia</label>
                                                                                 <textarea
                                                                                     id={`evidencia-${cal.id}`}
-                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}

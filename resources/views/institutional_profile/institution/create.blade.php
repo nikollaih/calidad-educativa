@@ -124,7 +124,7 @@
 
                             <div class="row align-items-center mb-3">
                                 <div class="col-auto">
-                                    <button type="button" class="btn btn-primary" onclick="mostrarSelectorRed()">Agregar red social</button>
+                                    <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onclick="mostrarSelectorRed()">Agregar red social</button>
                                 </div>
                                 <div class="col-md-4 d-none" id="selector-red">
                                     <select id="red-select" class="form-select" onchange="agregarRedSocial()">

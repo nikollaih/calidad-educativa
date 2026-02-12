@@ -84,7 +84,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
         <div class="container mt-4">
             <h2 class="mb-4">Modelos flexibles</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar modelo flexible
                 </button>
             )}
@@ -174,7 +174,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!name.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}

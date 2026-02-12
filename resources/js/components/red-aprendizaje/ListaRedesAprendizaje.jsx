@@ -228,7 +228,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         <div class="container mt-4">
             <h2 class="mb-4">Redes de Aprendizaje</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar red de aprendizaje
                 </button>
             )}
@@ -328,7 +328,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     <div class="mb-3">
                                         <label for="descripcion" class="block text-sm mb-2 ml-4">Descripción</label>
                                         <textarea
-                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="descripcion"
                                             name="descripcion"
                                             value={descripcion}
@@ -413,7 +413,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         // MODIFICACION: Se agregó el campo de correo electrónico a la validación
                                         disabled={loading || !nombre.trim() || !representanteId || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
                                     >
@@ -556,7 +556,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <p>{alertMessage}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowAlertModal(false)}>Aceptar</button>
                             </div>
                         </div>
                     </div>

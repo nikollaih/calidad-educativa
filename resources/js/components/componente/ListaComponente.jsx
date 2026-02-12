@@ -75,7 +75,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
         <div class="container mt-4">
             <h2 class="mb-4">Componentes</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar componente
                 </button>
             )}
@@ -144,7 +144,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                                             Descripción del componente <span className="text-danger">*</span>
                                         </label>
                                         <textarea
-                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="descripcion"
                                             value={descripcion}
                                             onInput={(e) => setDescripcion(e.target.value)}
@@ -163,7 +163,7 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!descripcion.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}

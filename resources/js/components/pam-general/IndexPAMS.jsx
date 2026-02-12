@@ -138,7 +138,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
             <h1 class="mb-4">PLAN DE APOYO AL MEJORAMIENTO</h1>
             <h2 class="mb-4">HISTÓRICO</h2>
             {canGestionarPam && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar nuevo registro
                 </button>
             )}
@@ -165,7 +165,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                             Editar
                                         </a>
 
-                                        <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
+                                        <a href={`/pam/${pam.id}/index`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
                                             Gestionar
                                         </a>
 
@@ -189,7 +189,7 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                     </td>
                                 ) : (
                                     <td>
-                                        <a href={`/pam/${pam.id}/index`} className="btn btn-primary btn-sm me-2" >
+                                        <a href={`/pam/${pam.id}/index`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
                                             Gestionar
                                         </a>
                                     </td>

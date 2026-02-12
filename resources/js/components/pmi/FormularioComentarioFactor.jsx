@@ -131,7 +131,7 @@ const FormularioComentarioFactor = ({
                                     Observación
                                 </label>
                                 <textarea
-                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                     id="comentario"
                                     name="comentario"
                                     rows="6"
@@ -167,7 +167,7 @@ const FormularioComentarioFactor = ({
                                             name="comentario"
                                             value={formData.comentario}
                                         />
-                                        <button type="submit" className="btn btn-primary">
+                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">
                                             {Boolean(comentario?.id) ? 'Editar' : 'Guardar'}{' '}
                                             comentario
                                         </button>

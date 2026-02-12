@@ -148,7 +148,7 @@
 
                         <div class="row align-items-center mb-3">
                             <div class="col-auto">
-                                <button type="button" class="btn btn-primary" onclick="mostrarSelectorRed()">Agregar red social</button>
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onclick="mostrarSelectorRed()">Agregar red social</button>
                             </div>
                             <div class="col-md-4 d-none" id="selector-red">
                                 <select id="red-select" class="form-select" onchange="agregarRedSocial()">
@@ -269,7 +269,7 @@
                 <h1 class="card-header">Sedes</h1>
                 <div class="card-body">
                     <div class="col-md-12">
-                        <a href="{{ route('sede-with-institution.create',$institution->id) }}" class="btn btn-primary mb-3">Crear Sede</a>
+                        <a href="{{ route('sede-with-institution.create',$institution->id) }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
                         <table class="table">
                             <thead>
                             <tr>

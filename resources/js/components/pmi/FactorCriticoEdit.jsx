@@ -373,7 +373,7 @@ const FactorCriticoEdit = ({
                     <div className="mb-3">
                         <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
                         <textarea
-                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
                             value={actividad.descripcion}
                             onChange={(e) =>
@@ -611,7 +611,7 @@ const FactorCriticoEdit = ({
                     <div className="mb-3">
                         <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
                         <textarea
-                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
                             value={meta.descripcion}
                             onChange={(e) =>
@@ -795,7 +795,7 @@ const FactorCriticoEdit = ({
                         <div className="mt-3">
                             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción del objetivo:</label>
                             <textarea
-                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 rows="3"
                                 value={objetivo.descripcion}
                                 onChange={(e) =>
@@ -1261,7 +1261,7 @@ const FactorCriticoEdit = ({
 
                         <button
                             type="submit"
-                            className="btn btn-primary me-2"
+                            className="border bg-blue-500  text-white p-2 rounded-pill me-2"
                             disabled={formData.objetivos.length === 0}
                         >
                             <i className="fas fa-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}

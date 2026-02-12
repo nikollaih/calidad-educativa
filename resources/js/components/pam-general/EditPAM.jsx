@@ -44,7 +44,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                 />
                 <h5 className="mb-2">Descripción del PAM</h5>
                 <textarea
-                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
+                    class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl mb-2"
                     name="pam[descripcion]"
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
@@ -84,7 +84,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                         </select>
                     </div>
                 </div>
-                <button className="btn btn-primary">
+                <button className="border bg-blue-500  text-white p-2 rounded-pill">
                     Actualizar PAM
                 </button>
             </form>

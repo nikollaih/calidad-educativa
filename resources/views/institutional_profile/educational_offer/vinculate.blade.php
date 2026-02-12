@@ -195,7 +195,7 @@
             </div>
 
             <!-- Botón para guardar -->
-            <button type="submit" class="btn btn-primary w-100">Guardar vinculación</button>
+            <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill w-100">Guardar vinculación</button>
         </form>
     </div>
 
@@ -303,7 +303,7 @@
                             </div>
                             <div class="mb-2">
                                 <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
-                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Nocturno" placeholder="Detalles del horario nocturno..."></textarea>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl adult-notes" rows="2" data-schedule="Nocturno" placeholder="Detalles del horario nocturno..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -331,7 +331,7 @@
                             </div>
                             <div class="mb-2">
                                 <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
-                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Sabatino" placeholder="Detalles del horario sabatino..."></textarea>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl adult-notes" rows="2" data-schedule="Sabatino" placeholder="Detalles del horario sabatino..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -359,7 +359,7 @@
                             </div>
                             <div class="mb-2">
                                 <label class="block text-sm mb-2 ml-4">Descripción (opcional)</label>
-                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill adult-notes" rows="2" data-schedule="Dominical" placeholder="Detalles del horario dominical..."></textarea>
+                                <textarea class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl adult-notes" rows="2" data-schedule="Dominical" placeholder="Detalles del horario dominical..."></textarea>
                             </div>
                         </div>
                     </div>

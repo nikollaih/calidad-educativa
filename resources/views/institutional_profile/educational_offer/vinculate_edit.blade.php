@@ -112,7 +112,7 @@
                     <a href="{{ route('institution.edit', ['institution' => $selectedSede->institution->id]) }}" class="btn btn-secondary me-2">
                         <i class="fas fa-times"></i> Cancelar
                     </a>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">
                         <i class="fas fa-save"></i> Guardar Cambios
                     </button>
                 </div>

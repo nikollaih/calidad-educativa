@@ -236,7 +236,7 @@ export default function Crear({  agregarUrl = '#',
                                                                                        className="block text-sm mb-2 ml-4">Evidencia</label>
                                                                                 <textarea
                                                                                     id={`evidencia-${cal.id}`}
-                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}
@@ -285,7 +285,7 @@ export default function Crear({  agregarUrl = '#',
                 ))}
 
 
-                <button type="submit" className="btn btn-primary mt-4">
+                <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill mt-4">
                     Guardar Autoevaluación
                 </button>
             </form>

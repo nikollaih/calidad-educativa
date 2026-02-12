@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="col-md-12">
                 @can('s-role-crear')
-                <a href="{{ route('roles.create') }}" class="btn btn-primary">Crear rol</a>
+                <a href="{{ route('roles.create') }}" class="border bg-blue-500  text-white p-2 rounded-pill">Crear rol</a>
                 @endcan
                 <table class="table mt-3">
                     <thead>

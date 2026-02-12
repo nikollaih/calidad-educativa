@@ -190,7 +190,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                             <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">Descripción*</label>
                             <textarea
                                 id="descripcion"
-                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 name="descripcion"
                                 value={meta.descripcion}
                                 onChange={handleMetaChange}
@@ -259,7 +259,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                         <label htmlFor={`indicador-desc-${i}`} className="block text-sm mb-2 ml-4">Descripción*</label>
                                         <textarea
                                             id={`indicador-desc-${i}`}
-                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             name="descripcion"
                                             value={indicador.descripcion}
                                             onChange={(e) => handleIndicadorChange(i, e)}
@@ -299,7 +299,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                                     </div>
                                                     <textarea
                                                         id={`actividad-desc-${i}-${j}`}
-                                                        className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill mb-2"
+                                                        className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl mb-2"
                                                         name="descripcion"
                                                         value={actividad.descripcion}
                                                         onChange={(e) => handleActividadChange(i, j, e)}

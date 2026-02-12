@@ -96,7 +96,7 @@ export default function ListaUnidadMeta({
         <div class="container mt-4">
             <h2 class="mb-4">Indicadores</h2>
             {canEditParametros && (
-                <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                     Agregar indicador
                 </button>
             )}
@@ -199,7 +199,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="unidadParcial"
                                             value={unidadParcial}
                                             onInput={(e) =>
@@ -222,7 +222,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="unidadTotal"
                                             value={unidadTotal}
                                             onInput={(e) =>
@@ -243,7 +243,7 @@ export default function ListaUnidadMeta({
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         // Modificado: Deshabilitar si ambos campos están vacíos
                                         disabled={
                                             !unidadParcial.trim() ||

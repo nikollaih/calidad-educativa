@@ -14,7 +14,7 @@ export default function IndexMetaPMI({ agregarUrl, metasPaginated = {}, csrfToke
     return (
         <div class="container mt-4">
             <h2 class="mb-4">Metas del PMI</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+            <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                 Agregar una meta de PMI
             </button>
 
@@ -36,7 +36,7 @@ export default function IndexMetaPMI({ agregarUrl, metasPaginated = {}, csrfToke
                         <td>
                             <a
                                 href={`/metas-pmi/${meta.id}/edit`}
-                                className="btn btn-primary btn-sm me-2"
+                                className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                             >
                                 Ver detalles
                             </a>

@@ -159,7 +159,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                             <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">Descripción*</label>
                             <textarea
                                 id="descripcion"
-                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 name="descripcion"
                                 value={objetivo.descripcion}
                                 onChange={handleObjetivoChange}
@@ -204,7 +204,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                         <label htmlFor={`meta-desc-${i}`} className="block text-sm mb-2 ml-4">Descripción*</label>
                                         <textarea
                                             id={`meta-desc-${i}`}
-                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             name="descripcion"
                                             value={meta.descripcion}
                                             onChange={(e) => handleMetaChange(i, e)}

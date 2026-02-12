@@ -110,7 +110,7 @@ const handleNewFile = (fieldName, e) => {
                     <label className="block text-sm mb-2 ml-4 text-capitalize">{clave.replace(/_/g, ' ')}</label>
                     <textarea
                       type="text"
-                      className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                      className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                       value={valor || ''}
                       onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
                     />
@@ -196,7 +196,7 @@ const handleNewFile = (fieldName, e) => {
               <div className="col-md-12 mb-3">
                 <label className="block text-sm mb-2 ml-4 text-capitalize">Observación</label>
                 <textarea
-                  className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                  className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                   value={formData.observacion || ''}
                   onChange={(e) => setFormData({...formData, observacion: e.target.value})}
                   rows="3"
@@ -230,7 +230,7 @@ const handleNewFile = (fieldName, e) => {
               >
                 Cancelar
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">
                 Guardar Cambios
               </button>
             </div>

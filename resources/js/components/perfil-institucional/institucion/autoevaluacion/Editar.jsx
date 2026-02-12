@@ -256,7 +256,7 @@ export default function Editar({ editarUrl = '#',
                                                                                             className="block text-sm mb-2 ml-4">Evidencia</label>
                                                                                         <textarea
                                                                                             id={`evidencia-${cal.id}`}
-                                                                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                                                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                                                                             rows="1"
                                                                                             maxLength="400"
                                                                                             value={evidencias[cal.id] || ''}
@@ -293,7 +293,7 @@ export default function Editar({ editarUrl = '#',
                                                                             {calcularPromedio(hijo)}
                                                                         </span>
                                                                     </div>
-                                                                    <button type="submit" className="btn btn-primary btn-sm">
+                                                                    <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
                                                                         Guardar {hijo.nombre}
                                                                     </button>
                                                                 </div>

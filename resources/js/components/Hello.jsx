@@ -12,7 +12,7 @@ export default function Hello() {
         <div class="container mt-4">
             <h2 class="mb-4">Autoevaluación</h2>
 
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
+            <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
                 Agregar Autoevaluación
             </button>
 
