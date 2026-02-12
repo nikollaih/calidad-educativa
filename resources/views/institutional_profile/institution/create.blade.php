@@ -163,9 +163,9 @@
                                     const html = `
                                         <div class="col-md-6 mb-3" data-red="${nombre}">
                                             <div class="card">
-                                                <div class="card-body">
+                                                <div class="card-body !border border-custom-primary rounded-xl">
                                                     <div class="d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-center text-custom-primary">
                                                             <i class="fab ${icono} fa-2x me-3"></i>
                                                             <strong>${nombre}</strong>
                                                         </div>

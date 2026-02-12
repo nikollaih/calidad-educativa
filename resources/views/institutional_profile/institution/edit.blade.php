@@ -168,9 +168,9 @@
                                 @if ($social)
                                     <div class="col-md-6 mb-3" data-red="{{ $red['nombre'] }}">
                                         <div class="card">
-                                            <div class="card-body">
+                                            <div class="card-body !border border-custom-primary rounded-xl">
                                                 <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center text-custom-primary">
                                                         <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
                                                         <strong>{{ $red['nombre'] }}</strong>
                                                     </div>
@@ -213,10 +213,10 @@
                                 const html = `
                                 <div class="col-md-6 mb-3" data-red="${nombre}">
                                     <div class="card">
-                                        <div class="card-body">
+                                        <div class="card-body !border border-custom-primary rounded-xl">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fab ${icono} fa-2x me-3"></i>
+                                                <div class="d-flex align-items-center text-custom-primary">
+                                                    <i class="fab ${icono} fa-2x me-3 "></i>
                                                     <strong>${nombre}</strong>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="eliminarRed('${nombre}', this)">×</button>

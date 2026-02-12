@@ -155,8 +155,8 @@
                                 @if ( $social)
                                 <div class="col-md-6 mb-3">
                                     <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center">
+                                        <div class="card-body !border border-custom-primary rounded-xl">
+                                            <div class="d-flex align-items-center text-custom-primary">
                                                 <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
                                                 @if(!empty($social['url']))
                                                     <a href="{{ $social['url'] }}" target="_blank" class="text-decoration-none">
