@@ -138,7 +138,7 @@
                                                         </a>
                                                         <a
                                                             href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}"
-                                                            class=" bg-custom-blue-dark rounded-circle text-white p-2 text-xs font-semibold"
+                                                            class=" bg-custom-blue-dark rounded-circle text-white py-1 px-2 text-xs font-semibold"
                                                         >
                                                             <i class="fa-solid fa-clock-rotate-left"></i>
                                                         </a>
