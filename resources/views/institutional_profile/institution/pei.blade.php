@@ -53,12 +53,12 @@
                         <div class="w-[95%] mx-auto mb-3 !border border-custom-blue-dark rounded-xl">
                             <!-- Tabs Navigation -->
                             <div class="text-center">
-                                <div class="py-6 mx-2 gap-2 items-center justify-center">
+                                <div class="py-6 mx-4 gap-2 items-center justify-center">
                                     <div class="flex flex-wrap w-full border-gray-200" role="tablist" id="pei-tabs">
                                         <div class="flex-1">
                                             <button
                                                 type="button"
-                                                class="whitespace-nowrap p-1 tab-button w-full text-xs font-semibold bg-custom-blue-dark text-white rounded-xl transition-colors duration-200 border-b-2 border-transparent active"
+                                                class="whitespace-nowrap p-1 tab-button w-full text-xs font-semibold bg-custom-blue-dark text-white rounded-md transition-colors duration-200 border-b-2 border-transparent active"
                                                 role="tab"
                                                 data-tab="resena-historica"
                                                 aria-selected="true"
@@ -106,14 +106,6 @@
                                                 GESTIÓN DE LA COMUNIDAD
                                             </button>
                                         </div>
-                                        <div class="flex-1">
-                                            <a
-                                                href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}"
-                                                class="whitespace-nowrap p-1  block w-full text-xs font-semibold text-black bg-transparent  transition-colors duration-200"
-                                            >
-                                                ACTUALIZAR
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -123,20 +115,34 @@
                                     <!-- Resena historica -->
                                     <div class="tab-content active" id="tab-resena-historica" role="tabpanel">
                                         <div class="bg-white rounded-lg mb-4">
-                                            <div class="p-6">
+                                            <div class="flex">
 
                                                 @php
                                                     $resenaHistorica = $resena_historica->resenahistorica ?? null;
                                                 @endphp
 
                                                     <!-- Resena historica -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 w-full !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     @php
                                                         $camposGrupos = [
                                                             'Reseña historica' => 'resena_historica',
                                                         ];
                                                     @endphp
-
+                                                    <div class="flex w-full justify-end gap-2">
+                                                        <a
+                                                            href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}"
+                                                            class=" !border border-custom-blue-light rounded-full text-custom-blue-light p-1 text-xs font-semibold  bg-transparent hover:!text-custom-blue-dark"
+                                                        >
+                                                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                                                            Actualizar
+                                                        </a>
+                                                        <a
+                                                            href="{{ route('institution.pei.update-pei', ['institutionId' => request()->route('institutionId')]) }}"
+                                                            class=" bg-custom-blue-dark rounded-circle text-white p-2 text-xs font-semibold"
+                                                        >
+                                                            <i class="fa-solid fa-clock-rotate-left"></i>
+                                                        </a>
+                                                    </div>
                                                     @foreach($camposGrupos as $titulo => $campo)
                                                         <div class="mb-3 text-left">
                                                             <div class="font-semibold text-gray-800 mb-2">{{ $titulo }}:</div>
@@ -153,13 +159,9 @@
                                     <!-- Gestión Directiva -->
                                     <div class="tab-content hidden" id="tab-gestion-directiva" role="tabpanel">
                                         <div class="bg-white rounded-lg mb-4">
-                                            <div class="p-6">
-
-                                                <!-- Título principal -->
-                                                <h4 class="text-xl font-bold text-gray-900 pb-2 mb-4 border-b-2 border-gray-200">GESTIÓN DIRECTIVA</h4>
-
+                                            <div class="flex-col">
                                                 <!-- Direccionamiento Estratégico -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">DIRECCIONAMIENTO ESTRATÉGICO</h5>
 
                                                     <div class="mb-3 text-left">
@@ -212,7 +214,7 @@
                                                 </div>
 
                                                 <!-- Gestión Estratégica -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">GESTIÓN ESTRATÉGICA</h5>
 
                                                     @php
@@ -235,7 +237,7 @@
                                                 </div>
 
                                                 <!-- Gobierno Escolar -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">GOBIERNO ESCOLAR</h5>
 
                                                     @php
@@ -264,7 +266,7 @@
                                                 </div>
 
                                                 <!-- Cultura Institucional -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">CULTURA INSTITUCIONAL</h5>
 
                                                     @php
@@ -314,7 +316,7 @@
                                                 </div>
 
                                                 <!-- Clima Escolar -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">CLIMA ESCOLAR</h5>
 
                                                     @php
@@ -365,7 +367,7 @@
                                                 </div>
 
                                                 <!-- Relaciones con el Entorno -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">RELACIONES CON EL ENTORNO</h5>
 
                                                     @php
@@ -422,11 +424,7 @@
                                     <!-- Gestión Académica -->
                                     <div class="tab-content hidden" id="tab-gestion-academica" role="tabpanel">
                                         <div class="bg-white rounded-lg mb-4">
-                                            <div class="p-6">
-
-                                                <!-- Título principal -->
-                                                <h4 class="text-xl font-bold text-gray-900 pb-2 mb-4 border-b-2 border-gray-200">GESTIÓN ACADÉMICA</h4>
-
+                                            <div class="flex-col">
                                                 @php
                                                     $disenos = $gestion_academica->disenosPedagogicos ?? null;
                                                     $practicas = $gestion_academica->practicasPedagogicas ?? null;
@@ -436,7 +434,7 @@
 
 
                                                     <!-- Diseño Pedagógico -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">DISEÑO PEDAGÓGICO</h5>
 
                                                     @php
@@ -513,7 +511,7 @@
                                                 </div>
 
                                                 <!-- Prácticas Pedagógicas -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">PRÁCTICAS PEDAGÓGICAS</h5>
 
                                                     <div class="mb-3 text-left">
@@ -525,7 +523,7 @@
                                                 </div>
 
                                                 <!-- Gestión de Aula -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">GESTIÓN DE AULA</h5>
 
                                                     @php
@@ -575,7 +573,7 @@
                                                 </div>
 
                                                 <!-- Seguimiento Académico -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">SEGUIMIENTO ACADÉMICO</h5>
 
                                                     @php
@@ -643,10 +641,7 @@
                                     <!-- Gestión Administrativa y Financiera -->
                                     <div class="tab-content hidden" id="tab-gestion-administrativa" role="tabpanel">
                                         <div class="bg-white rounded-lg mb-4">
-                                            <div class="p-6">
-
-                                                <!-- Título principal -->
-                                                <h4 class="text-xl font-bold text-gray-900 pb-2 mb-4 border-b-2 border-gray-200">GESTIÓN ADMINISTRATIVA Y FINANCIERA</h4>
+                                            <div class="flex-col">
 
                                                 @php
                                                     $plantaFisica = $gestion_administrativa->administracionPlantaFisica ?? null;
@@ -657,7 +652,7 @@
                                                 @endphp
 
                                                     <!-- Apoyo a la gestión académica -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">APOYO A LA GESTIÓN ACADÉMICA</h5>
 
                                                     @php
@@ -692,7 +687,7 @@
                                                 </div>
 
                                                 <!-- Administración de la planta física -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">ADMINISTRACIÓN DE PLANTA FÍSICA</h5>
 
                                                     @php
@@ -741,7 +736,7 @@
                                                 </div>
 
                                                 <!-- Servicios complementarios -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">SERVICIOS COMPLEMENTARIOS</h5>
 
                                                     <div class="mb-3 text-left">
@@ -753,7 +748,7 @@
                                                 </div>
 
                                                 <!-- Talento humano -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">TALENTO HUMANO</h5>
 
                                                     @php
@@ -804,7 +799,7 @@
                                                 </div>
 
                                                 <!-- Apoyo financiero -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">APOYO FINANCIERO</h5>
 
                                                     @php
@@ -860,11 +855,7 @@
                                     <!-- Gestión de la Comunidad -->
                                     <div class="tab-content hidden" id="tab-gestion-comunidad" role="tabpanel">
                                         <div class="bg-white rounded-lg mb-4">
-                                            <div class="p-6">
-
-                                                <!-- Título principal -->
-                                                <h4 class="text-xl font-bold text-gray-900 pb-2 mb-4 border-b-2 border-gray-200">GESTIÓN DE LA COMUNIDAD</h4>
-
+                                            <div class="flex-col">
                                                 @php
                                                     $gruposPoblacionales = $gestion_comunidad->atencionGrupoPoblacionales ?? null;
                                                     $servicioSocial = $gestion_comunidad->programasServicioSocial ?? null;
@@ -872,7 +863,7 @@
                                                 @endphp
 
                                                     <!-- Atención educativa a grupos poblacionales -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">ATENCIÓN EDUCATIVA A GRUPOS POBLACIONALES</h5>
 
                                                     @php
@@ -910,7 +901,7 @@
                                                 </div>
 
                                                 <!-- Programa de servicio social -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">PROGRAMA DE SERVICIO SOCIAL</h5>
 
                                                     <div class="mb-3 text-left">
@@ -935,7 +926,7 @@
                                                 </div>
 
                                                 <!-- Prevención de riesgos -->
-                                                <div class="mb-4 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                                <div class="mb-4 !border border-custom-blue-dark rounded-lg p-4 shadow-sm">
                                                     <h5 class="text-lg font-bold text-gray-800 mb-3">PREVENCIÓN DE RIESGOS</h5>
 
                                                     @php
@@ -1000,7 +991,7 @@
 
                     // Add active class to clicked button
                     this.classList.remove('bg-transparent', 'text-black');
-                    this.classList.add('active', 'bg-custom-blue-dark', 'rounded-xl', 'text-white');
+                    this.classList.add('active', 'bg-custom-blue-dark', 'rounded-md', 'text-white');
 
                     // Hide all tab contents
                     tabContents.forEach(content => {
