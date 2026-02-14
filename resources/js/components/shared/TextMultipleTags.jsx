@@ -15,7 +15,7 @@ const TextMultipleTags = ({
                               isEditable = true,
                               label='Nombre del Coordinador/es',
                               spanClass = 'border p-2 rounded  d-flex align-items-center',
-                              containerClass = '!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill d-flex flex-wrap gap-2 p-2',
+                              containerClass = 'px-3 py-2 rounded-pill d-flex flex-wrap gap-2 p-2',
                               onTagsChange
                           }) => {
     const [tags, setTags] = useState(
@@ -48,11 +48,15 @@ const TextMultipleTags = ({
             addTag();
         }
     };
+    const disabledClasses = !isEditable
+        ? 'border-gray-100 bg-gray-100 cursor-not-allowed'
+        : '!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent';
 
     return (
         <div class="mb-3">
             {label && (<label htmlFor={name} className="block text-sm mb-2 ml-4">{label}</label>)}
-            <div class={containerClass} style="min-height: 58px;">
+            <div className={`${containerClass} ${disabledClasses}`}
+                 style="min-height: 58px;">
                 {tags.map((tag, index) => (
                     <span class={spanClass}>
                         {tag}

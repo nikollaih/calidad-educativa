@@ -555,122 +555,142 @@ export default function ActualizarPei({
   };
 
   return (
-    <div className="container mt-5 bg-white p-4 !border border-custom-blue-dark">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="mb-0">Ajustes al PEI - {institucionNombre}</h2>
-      </div>
-
-      <div className="mb-4">
-        <ul className="nav nav-tabs border" id="gruposTabs" role="tablist">
-          {gestionArray.map((grupo, index) => (
-            <li className="nav-item" key={`tab-${grupo.id}`}>
-              <button
-               style={activeTab === index ? {backgroundColor: '#cfe2ff',color: '#084298'} : {backgroundColor: '#d6d6d6', color: '#000'}}
-                className={`nav-link ${activeTab === index ? 'active' : ''}`}
-                onClick={() => setActiveTab(index)}
-                type="button"
-                role="tab"
-              >
-                <span>{getGestion(grupo.id)}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <div className="border border-top-0 rounded-bottom p-3">
-          {gestionArray.map((grupo, index) => (
-            <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
-              {grupo.hijos?.length > 0 && (
-                <div>
-                  {grupo.hijos.map((hijo, hijoIndex) => {
-                    const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
-
-
-                    return (
-                      <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
-                        {/* Encabezado con botones */}
-                        <div className="d-flex justify-content-between  mb-3">
-                          {nombre_gestion === 'RESEÑA HISTORICA' ? (
-                            <h5 className="fw-bold mb-0"></h5>
-                          ) : (
-                            <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
-                          )}
-                          <div>
-                            <button
-                              className="btn btn-sm btn-outline-primary me-2"
-                              onClick={() => setCurrentModal({ gestionIndex: index, hijoIndex, formData: {...otrosCampos}, documentos, nombre_gestion })}
-                            >
-                              <i className="fas fa-edit me-1"></i> Actualizar
-                            </button>
-                            <button
-                              className="btn btn-sm btn-outline-secondary"
-                              onClick={() => setHistoricosModal({index, hijoIndex, nombre_gestion, traces})}
-                            >
-                              <i className="fas fa-history me-1"></i> Históricos
-                          </button>
-                          </div>
-                        </div>
-
-                        {/* Contenido normal (vista) */}
-                        <div>
-                          {Object.entries(otrosCampos)
-                          .filter(([clave]) => clave !== 'relation_name')
-                          .map(([clave, valor]) => (
-                            <div className="mb-3" key={clave}>
-                              <div className="col-md-6 fw-semibold text-capitalize">
-                                {clave.replace(/_/g, ' ')}:
-                              </div>
-                              <div className="text-break">
-                                {valor || <span className="text-muted fst-italic">No registrado</span>}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Documentos */}
-                        {documentos && Object.keys(documentos).length > 0 && (
-                          <div className="mt-4">
-                            <h6 className="fw-bold mb-3">Documentos</h6>
-                            <div>
-                              {Object.entries(documentos).map(([docNombre, docValor]) => (
-                                (
-                                  <div className="d-inline-block mx-3 mb-2" key={docNombre}>
-                                    <div className="fw-semibold text-capitalize">
-                                      {docNombre
-                                        .replace(/([A-Z])/g, ' $1')
-                                        .replace(/^./, str => str.toUpperCase())
-                                        .replace(/_/g, ' ')
-                                        .trim()}
-                                    </div>
-                                    {docValor?.ruta ? (
-                                      <a
-                                        href={`/storage/${docValor.ruta}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="badge bg-primary rounded-pill text-decoration-none"
-                                      >
-                                        Ver documento
-                                      </a>
-                                    ) : (
-                                      <span className="text-muted fst-italic">Sin información</span>
-                                    )}
-                                  </div>
-                                )
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="bg-white mb-4 !border border-custom-blue-light rounded-xl shadow-sm">
+        <div className="flex flex-col justify-center items-center">
+            <div className="py-3 text-center text-2xl text-custom-blue-light font-semibold">
+                Proyecto Educativo Institucional
             </div>
-          ))}
-        </div>
+            <div className="w-[95%] mx-auto mb-3 !border border-custom-blue-dark rounded-xl">
+                {/* Tabs Navigation */}
+                <div className="text-center">
+                    <div className="py-6 mx-4 gap-2 items-center justify-center">
+                        <div className="flex flex-wrap w-full" id="gruposTabs" role="tablist">
+                            {gestionArray.map((grupo, index) => (
+                                <div className="flex-1" key={`tab-${grupo.id}`}>
+                                    <button
+                                        className={`whitespace-nowrap p-1 tab-button w-full text-xs font-semibold  rounded-md transition-colors duration-200 border-b-2  ${activeTab === index ? 'text-white bg-custom-blue-dark' : 'border-transparent '}`}
+                                        onClick={() => setActiveTab(index)}
+                                        type="button"
+                                        role="tab"
+                                    >
+                                        <span>{getGestion(grupo.id)}</span>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
 
-        {/* Boton de volver */}
-        {/* <div class="d-flex justify-content-end mt-4">
+                    <div className="border border-top-0 rounded-bottom p-3">
+                        {gestionArray.map((grupo, index) => (
+                            <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
+                                {grupo.hijos?.length > 0 && (
+                                    <div>
+                                        {grupo.hijos.map((hijo, hijoIndex) => {
+                                            const {documentos, nombre_gestion, traces, ...otrosCampos} = hijo;
+
+
+                                            return (
+                                                <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
+                                                    {/* Encabezado con botones */}
+                                                    <div className="d-flex justify-content-between  mb-3">
+                                                        {nombre_gestion === 'RESEÑA HISTORICA' ? (
+                                                            <h5 className="fw-bold mb-0"></h5>
+                                                        ) : (
+                                                            <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
+                                                        )}
+                                                        <div>
+                                                            <button
+                                                                className="btn btn-sm btn-outline-primary me-2"
+                                                                onClick={() => setCurrentModal({
+                                                                    gestionIndex: index,
+                                                                    hijoIndex,
+                                                                    formData: {...otrosCampos},
+                                                                    documentos,
+                                                                    nombre_gestion
+                                                                })}
+                                                            >
+                                                                <i className="fas fa-edit me-1"></i> Actualizar
+                                                            </button>
+                                                            <button
+                                                                className="btn btn-sm btn-outline-secondary"
+                                                                onClick={() => setHistoricosModal({
+                                                                    index,
+                                                                    hijoIndex,
+                                                                    nombre_gestion,
+                                                                    traces
+                                                                })}
+                                                            >
+                                                                <i className="fas fa-history me-1"></i> Históricos
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Contenido normal (vista) */}
+                                                    <div>
+                                                        {Object.entries(otrosCampos)
+                                                            .filter(([clave]) => clave !== 'relation_name')
+                                                            .map(([clave, valor]) => (
+                                                                <div className="mb-3" key={clave}>
+                                                                    <div
+                                                                        className="col-md-6 fw-semibold text-capitalize">
+                                                                        {clave.replace(/_/g, ' ')}:
+                                                                    </div>
+                                                                    <div className="text-break">
+                                                                        {valor ||
+                                                                            <span className="text-muted fst-italic">No registrado</span>}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                    </div>
+
+                                                    {/* Documentos */}
+                                                    {documentos && Object.keys(documentos).length > 0 && (
+                                                        <div className="mt-4">
+                                                            <h6 className="fw-bold mb-3">Documentos</h6>
+                                                            <div>
+                                                                {Object.entries(documentos).map(([docNombre, docValor]) => (
+                                                                    (
+                                                                        <div className="d-inline-block mx-3 mb-2"
+                                                                             key={docNombre}>
+                                                                            <div
+                                                                                className="fw-semibold text-capitalize">
+                                                                                {docNombre
+                                                                                    .replace(/([A-Z])/g, ' $1')
+                                                                                    .replace(/^./, str => str.toUpperCase())
+                                                                                    .replace(/_/g, ' ')
+                                                                                    .trim()}
+                                                                            </div>
+                                                                            {docValor?.ruta ? (
+                                                                                <a
+                                                                                    href={`/storage/${docValor.ruta}`}
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    className="badge bg-primary rounded-pill text-decoration-none"
+                                                                                >
+                                                                                    Ver documento
+                                                                                </a>
+                                                                            ) : (
+                                                                                <span className="text-muted fst-italic">Sin información</span>
+                                                                            )}
+                                                                        </div>
+                                                                    )
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Boton de volver */}
+                    {/* <div class="d-flex justify-content-end mt-4">
         <button
           onClick={() => window.history.back()}
           class="border bg-blue-500  text-white p-2 rounded-pill"
@@ -679,15 +699,16 @@ export default function ActualizarPei({
         </button>
       </div> */}
 
-      </div>
-
-      {/* Modal de Ajustes */}
-      {currentModal && (
-        <ModalAjustes
-          nombre_gestion={currentModal.nombre_gestion}
-          institucionId={institucionId}
-          csrfToken={csrfToken}
-          formData={currentModal.formData}
+                </div>
+            </div>
+        </div>
+        {/* Modal de Ajustes */}
+        {currentModal && (
+            <ModalAjustes
+                nombre_gestion={currentModal.nombre_gestion}
+                institucionId={institucionId}
+                csrfToken={csrfToken}
+                formData={currentModal.formData}
           setFormData={(newData) => setCurrentModal({...currentModal, formData: newData})}
           documentos={currentModal.documentos}
           onClose={() => setCurrentModal(null)}

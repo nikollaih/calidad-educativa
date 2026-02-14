@@ -5,7 +5,7 @@
         data-component="CInstitutionNavigations"
         data-back-url="{{ route('institution.show', $institucionId) }}"
         data-detail-url="{{ route('institution.show', $institucionId) }}"
-        data-pei-url="{{ route('institution.pei', $institucionId) }}"
+        data-pei-url="{{ route('institution.pei.update-pei', $institucionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
         data-pmi-url="{{ route('pmi.index', $institucionId) }}"
         data-proyectos-transversales-url="#"

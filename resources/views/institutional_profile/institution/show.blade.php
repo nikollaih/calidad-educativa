@@ -5,7 +5,7 @@
         data-component="CInstitutionNavigations"
         data-back-url="{{ route('institution.index') }}"
         data-detail-url="#"
-        data-pei-url="{{ route('institution.pei', $institution->id) }}"
+        data-pei-url="{{ route('institution.pei.update-pei', $institution->id) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institution->id) }}"
         data-pmi-url="{{ route('pmi.index', $institution->id) }}"
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institution->id) }}"
@@ -66,7 +66,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="sede_principal_id" class="block text-sm mb-2 ml-4">Municipio</label>
-                                <select name="municipio_id" id="sede_principal_id" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" disabled>
+                                <select name="municipio_id" id="sede_principal_id" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
                                     <option value="">Seleccione un municipio</option>
                                     @foreach ($municipios as $municipio)
                                         <option value="{{ $municipio->id }}" @selected($institution?->municipio_id== $municipio->id )>{{ $municipio->nombre }}</option>
@@ -155,7 +155,7 @@
                                 @if ( $social)
                                 <div class="col-md-6 mb-3">
                                     <div class="card">
-                                        <div class="card-body !border border-custom-primary rounded-xl">
+                                        <div class="card-body border-gray-100 bg-gray-100 cursor-not-allowed rounded-xl">
                                             <div class="d-flex align-items-center text-custom-primary">
                                                 <i class="fab {{ $red['icono'] }} fa-2x me-3"></i>
                                                 @if(!empty($social['url']))
@@ -169,7 +169,7 @@
 
                                             <label class="block text-sm mb-2 ml-4 mt-2">URL</label>
                                             <!-- Input para la URL con el valor correcto -->
-                                            <input type="url" name="redes_sociales[{{ $key }}][url]" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                            <input type="url" name="redes_sociales[{{ $key }}][url]" class="!border-gray-100 bg-gray-100 w-full px-3 py-2 rounded-pill"
                                                    placeholder="Ej: https://{{ strtolower($red['nombre']) }}.com"
                                                    value="{{ $social['url'] ?? '' }}" >
                                         </div>
