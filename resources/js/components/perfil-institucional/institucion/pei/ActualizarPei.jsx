@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CTooltip from "@/components/shared/CTooltip.jsx";
 
 // Modal de editar
 const ModalAjustes = ({
@@ -581,8 +582,6 @@ export default function ActualizarPei({
                         </div>
                     </div>
                 </div>
-
-                    <div className="border border-top-0 rounded-bottom p-3">
                         {gestionArray.map((grupo, index) => (
                             <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
                                 {grupo.hijos?.length > 0 && (
@@ -590,9 +589,8 @@ export default function ActualizarPei({
                                         {grupo.hijos.map((hijo, hijoIndex) => {
                                             const {documentos, nombre_gestion, traces, ...otrosCampos} = hijo;
 
-
                                             return (
-                                                <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
+                                                <div className=" !border border-custom-blue-dark rounded-lg mb-4 mx-3 p-3 " key={nombre_gestion}>
                                                     {/* Encabezado con botones */}
                                                     <div className="d-flex justify-content-between  mb-3">
                                                         {nombre_gestion === 'RESEÑA HISTORICA' ? (
@@ -600,9 +598,9 @@ export default function ActualizarPei({
                                                         ) : (
                                                             <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
                                                         )}
-                                                        <div>
+                                                        <div class={'flex gap-1'}>
                                                             <button
-                                                                className="btn btn-sm btn-outline-primary me-2"
+                                                                className="!border border-custom-blue-light rounded-pill py-0.5 px-1 text-custom-blue-light"
                                                                 onClick={() => setCurrentModal({
                                                                     gestionIndex: index,
                                                                     hijoIndex,
@@ -611,19 +609,21 @@ export default function ActualizarPei({
                                                                     nombre_gestion
                                                                 })}
                                                             >
-                                                                <i className="fas fa-edit me-1"></i> Actualizar
+                                                                <i className="fa-solid fa-arrow-rotate-right"></i>Actualizar
                                                             </button>
-                                                            <button
-                                                                className="btn btn-sm btn-outline-secondary"
-                                                                onClick={() => setHistoricosModal({
-                                                                    index,
-                                                                    hijoIndex,
-                                                                    nombre_gestion,
-                                                                    traces
-                                                                })}
-                                                            >
-                                                                <i className="fas fa-history me-1"></i> Históricos
-                                                            </button>
+                                                            <CTooltip label={'Históricos'}>
+                                                                <button
+                                                                    className="bg-custom-blue-dark text-white rounded-pill py-1 px-2"
+                                                                    onClick={() => setHistoricosModal({
+                                                                        index,
+                                                                        hijoIndex,
+                                                                        nombre_gestion,
+                                                                        traces
+                                                                    })}
+                                                                >
+                                                                    <i className="fas fa-history"></i>
+                                                                </button>
+                                                            </CTooltip>
                                                         </div>
                                                     </div>
 
@@ -699,7 +699,7 @@ export default function ActualizarPei({
         </button>
       </div> */}
 
-                </div>
+
             </div>
         </div>
         {/* Modal de Ajustes */}
