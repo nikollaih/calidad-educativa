@@ -334,7 +334,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                     <div class="text-danger">Error: {usersError}</div>
                                                 ) : (
                                                     <select
-                                                        class="form-select"
+                                                        class="w-full !border border-custom-blue-dark rounded-xl"
                                                         id="representante"
                                                         name="representante_id"
                                                         value={representanteId}

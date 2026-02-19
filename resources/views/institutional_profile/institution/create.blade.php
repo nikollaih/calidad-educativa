@@ -127,7 +127,7 @@
                                     <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onclick="mostrarSelectorRed()">Agregar red social</button>
                                 </div>
                                 <div class="col-md-4 d-none" id="selector-red">
-                                    <select id="red-select" class="form-select" onchange="agregarRedSocial()">
+                                    <select id="red-select" class="w-full !border border-custom-blue-dark rounded-xl" onchange="agregarRedSocial()">
                                         <option value="">Selecciona una red social</option>
                                         @foreach ($redes as $red)
                                             <option value="{{ $red['nombre'] }}" data-icono="{{ $red['icono'] }}">{{ $red['nombre'] }}</option>

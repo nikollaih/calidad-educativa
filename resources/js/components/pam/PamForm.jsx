@@ -1160,7 +1160,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div className="mt-3">
             <label className="block text-sm mb-2 ml-4 fw-bold">Unidad de Meta:</label>
             <select
-              className="form-select"
+              className="w-full !border border-custom-blue-dark rounded-xl"
               value={meta.unidad_meta_id || ''}
               onChange={(e) => updateUnidadMetaId(meta.id, e.target.value)}
               required
@@ -1386,7 +1386,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div>
             <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <select
-              className="form-select"
+              className="w-full !border border-custom-blue-dark rounded-xl"
               value={componente.id || ''}
               onChange={(e) => updateComponenteId(componente.id, e.target.value)}
               required

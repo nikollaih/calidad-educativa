@@ -55,7 +55,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                         <label htmlFor="anioInicio" className="block text-sm mb-2 ml-4">Año de inicio</label>
                         <select
                             id="anioInicio"
-                            className="form-select"
+                            className="w-full !border border-custom-blue-dark rounded-xl"
                             name="pam[anio_inicio]"
                             value={anioInicio}
                             onChange={(e) => setAnioInicio(e.target.value)}
@@ -71,7 +71,7 @@ const EditPAM = ({ csrfToken = '', pamData = {} }) => {
                         <label htmlFor="anioFin" className="block text-sm mb-2 ml-4">Año de fin</label>
                         <select
                             id="anioFin"
-                            className="form-select"
+                            className="w-full !border border-custom-blue-dark rounded-xl"
                             name="pam[anio_fin]"
                             value={anioFin}
                             onChange={(e) => setAnioFin(e.target.value)}

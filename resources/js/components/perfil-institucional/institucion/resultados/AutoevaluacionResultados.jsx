@@ -272,7 +272,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                                                 />
 
                                                         <select
-                                                            className="form-select mb-2"
+                                                            className="w-full !border border-custom-blue-dark rounded-xl mb-2"
                                                             disabled={!puedeEditar}
                                                             value={factor.valor}
                                                             style={{
@@ -317,7 +317,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                                         {/* Selector de factores críticos existentes */}
                                         {puedeEditar && (
                                             <select
-                                                className="form-select mb-2"
+                                                className="w-full !border border-custom-blue-dark rounded-xl mb-2"
                                                 defaultValue=""
                                                 onChange={(e) => {
                                                     const selectedId = parseInt(e.target.value);

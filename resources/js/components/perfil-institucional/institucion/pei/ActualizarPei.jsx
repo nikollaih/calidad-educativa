@@ -72,7 +72,7 @@ const handleNewFile = (fieldName, e) => {
                 <div className="mb-3">
                   <label className="block text-sm mb-2 ml-4">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
                   <select
-                    className="form-select"
+                    className="w-full !border border-custom-blue-dark rounded-xl"
                     value={formData.tipo_codificacion || ''}
                     onChange={(e) => setFormData({...formData, tipo_codificacion: e.target.value})}
                     required

@@ -362,7 +362,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                             <div class="text-danger">Error: {usersError}</div>
                                         ) : (
                                             <select
-                                                class="form-select"
+                                                class="w-full !border border-custom-blue-dark rounded-xl"
                                                 id="representante"
                                                 name="representante_id"
                                                 value={representanteId}

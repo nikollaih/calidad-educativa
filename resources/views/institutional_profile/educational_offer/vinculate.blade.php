@@ -222,7 +222,7 @@
             <!-- Selección de horario -->
             <div class="mb-3">
                 <label class="block text-sm mb-2 ml-4 fw-bold">Horario <span class="text-danger fw-bold">*</span></label>
-                <select class="form-select schedule-select" required>
+                <select class="w-full !border border-custom-blue-dark rounded-xl schedule-select" required>
 
                     @foreach($educationalSchedules as $key => $value)
                         <option value="{{ $value }}">{{ $value }}</option>

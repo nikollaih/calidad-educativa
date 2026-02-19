@@ -114,7 +114,7 @@ export default function Crear({  agregarUrl = '#',
                     <label className="block text-sm mb-2 ml-4" htmlFor="anio-vigencia">Año de Vigencia</label>
                     <select
                         id="anio-vigencia"
-                        class="form-select"
+                        class="w-full !border border-custom-blue-dark rounded-xl"
                         name="autoevaluacion[anio_vigencia]"
                         value={anioVigencia}
                         onChange={(e) => setAnioVigencia(e.target.value)}
