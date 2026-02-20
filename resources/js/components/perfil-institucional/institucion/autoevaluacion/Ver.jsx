@@ -240,34 +240,43 @@ export default function Ver({  gruposCalificaciones = [],
 
     return (
         <div class="container mt-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Ver autoevaluación</h2>
-            </div>
             <form>
 
-                <div className="mb-1 d-flex justify-content-end gap-4">
-                    <label className="block text-sm mb-2 ml-4" htmlFor="anio-vigencia">
-                        Año de Vigencia: {autoevaluacion?.anio_vigencia}
-                    </label>
-                    <label className="block text-sm mb-2 ml-4" htmlFor="estado">
-                        Estado: {autoevaluacion?.alias_estado}
-                    </label>
+                <div className="mb-1 flex justify-between gap-4">
+                    <div class={'flex row'}>
+                        <h2 className="mb-0">Autoevaluación - Áreas de Gestión</h2>
+                        <div class={'flex'}>
+                            <label className="block text-xs mb-2 ml-4" htmlFor="anio-vigencia">
+                                Año de Vigencia: {autoevaluacion?.anio_vigencia}
+                            </label>
+                            <label className="block text-xs mb-2 ml-4" htmlFor="estado">
+                                Estado: {autoevaluacion?.alias_estado}
+                            </label>
+                        </div>
+                    </div>
+                    <button
+                        className={`text-custom-blue-light ${activeTab === 'estadisticas' ? 'font-semibold' : 'font-medium'}`}
+                        onClick={() => setActiveTab('estadisticas')}
+                        type="button"
+                    >
+                        <i class="fa-solid fa-chart-simple mr-1"></i>ANÁLISIS
+                    </button>
                 </div>
 
-                <div className="mb-4">
-                    <ul className="nav nav-tabs border" id="gruposTabs" role="tablist">
+                <div className="mb-4 !border border-custom-blue-light rounded-xl ">
+                <ul className="nav justify-between" id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
                             <li className="nav-item" key={`tab-${grupo.id}`}>
                                 <button
-                                    className={`nav-link ${activeTab === index ? 'active' : ''}`}
+                                    className={`m-2 p-2 ${activeTab === index ? '!border border-custom-blue-light rounded-xl' : ''}`}
                                     onClick={() => setActiveTab(index)}
                                     type="button"
                                     role="tab"
                                 >
                                     <div>
-                                        <div>{grupo.nombre}</div>
+                                        <div class={'font-medium '}>{grupo.nombre.replace(/gestión/i, '').trim()}</div>
                                         {grupo.hijos?.length > 0 && (
-                                            <div className="badge bg-dark mt-1">
+                                            <div className="font-medium border-b border-t border-custom-blue-light mt-1 text-custom-blue-light">
                                                 Promedio: {calcularPromedioGrupo(grupo)}
                                             </div>
                                         )}
@@ -275,18 +284,8 @@ export default function Ver({  gruposCalificaciones = [],
                                 </button>
                             </li>
                         ))}
-                        <li className="nav-item">
-                            <button
-                                className={`nav-link ${activeTab === 'estadisticas' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('estadisticas')}
-                                type="button"
-                            >
-                                ANÁLISIS
-                            </button>
-                        </li>
                     </ul>
-
-                    <div className="border border-top-0 rounded-bottom p-3">
+                    <div className="p-3">
                         {gruposCalificaciones.map((grupo, index) => (
                             <div
                                 key={`content-${grupo.id}`}
@@ -314,11 +313,11 @@ export default function Ver({  gruposCalificaciones = [],
                                 {grupo.hijos?.length > 0 && (
                                     <div>
                                         {grupo.hijos.map((hijo) => (
-                                            <div className="mb-4 p-3 border rounded" key={hijo.id}>
+                                            <div className="mb-4 p-3 !border border-custom-blue-dark rounded-xl" key={hijo.id}>
                                                 <div className="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
                                                 {hijo.calificaciones?.length > 0 ? (
                                                     <>
-                                                        <ul className="list-group">
+                                                        <ul className="list-group !border border-custom-blue-dark">
                                                             {hijo.calificaciones.map((cal) => {
                                                                 const notaSeleccionada = notasSeleccionadas[cal.id];
                                                                 return (
@@ -375,7 +374,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                                             {/* Evidencia */}
                                                                             <div className="col-12 col-md-3">
                                                                                 <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="block text-sm mb-2 ml-4">Evidencia</label>
+                                                                                       className="block text-sm  ml-4">Evidencia</label>
                                                                                 <textarea
                                                                                     id={`evidencia-${cal.id}`}
                                                                                     className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
@@ -392,9 +391,9 @@ export default function Ver({  gruposCalificaciones = [],
                                                         </ul>
 
                                                         {/* Total proceso siempre visible */}
-                                                        <div className="mt-3 p-3 bg-light rounded border">
-                                                            <strong>Total proceso:</strong>{' '}
-                                                            <span className="badge bg-dark">
+                                                        <div className="mt-3 p-3 bg-gray-200 rounded-xl !border border-custom-blue-light">
+                                                            <strong>TOTAL PROCESO:</strong>{' '}
+                                                            <span className="!border rounded-pill p-1 border-custom-blue-light text-custom-blue-light font-medium">
                                                                 {calcularPromedio(hijo)}
                                                             </span>
                                                         </div>
@@ -560,7 +559,6 @@ export default function Ver({  gruposCalificaciones = [],
                             </div>
                         )}
                     </div>
-
                 </div>
                 {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
                     <div key={`nota-hidden-${calId}`}>
