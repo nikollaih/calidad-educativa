@@ -241,7 +241,6 @@ export default function Ver({  gruposCalificaciones = [],
     return (
         <div class="container mt-5">
             <form>
-
                 <div className="flex justify-between gap-4">
                     <div class={'flex row'}>
                         <h2 className="mb-0">Autoevaluación - Áreas de Gestión</h2>

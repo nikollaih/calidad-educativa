@@ -120,34 +120,34 @@ export default function Editar({ editarUrl = '#',
 
     return (
         <div class="container mt-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Editar autoevaluación</h2>
+            <div className="flex justify-between gap-4">
+                <div className={'flex row'}>
+                    <h2 className="mb-0">Autoevaluación - Áreas de Gestión</h2>
+                    <div className={'flex'}>
+                        <label className="block text-xs mb-2 ml-4" htmlFor="anio-vigencia">
+                            Año de Vigencia: {autoevaluacion?.anio_vigencia}
+                        </label>
+                        <label className="block text-xs mb-2 ml-4" htmlFor="estado">
+                            Estado: {autoevaluacion?.alias_estado}
+                        </label>
+                    </div>
+                </div>
             </div>
             <div>
-
-                <div className="mb-1 d-flex justify-content-end gap-4">
-                    <label className="block text-sm mb-2 ml-4" htmlFor="anio-vigencia">
-                        Año de Vigencia: {autoevaluacion?.anio_vigencia}
-                    </label>
-                    <label className="block text-sm mb-2 ml-4" htmlFor="estado">
-                        Estado: {autoevaluacion?.alias_estado}
-                    </label>
-                </div>
-
-                <div class="mb-4">
-                    <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
+                <div class="mb-4 bg-white !border border-custom-blue-light rounded-xl ">
+                    <ul class="nav justify-between " id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
-                             getPermissionForGroup(grupo?.indice??"0") && <li class="nav-item" key={`tab-${grupo.id}`}>
+                            getPermissionForGroup(grupo?.indice??"0") && <li class="nav-item" key={`tab-${grupo.id}`}>
                                 <button
-                                    className={`nav-link ${activeTab === index ? 'active' : ''}`}
+                                    className={`m-2 p-2 ${activeTab === index ? '!border border-custom-blue-light rounded-xl bg-custom-gray-light' : ''}`}
                                     onClick={() => setActiveTab(index)}
                                     type="button"
                                     role="tab"
                                 >
                                     <div>
-                                        <div>{grupo.nombre}</div>
+                                        <div class={'font-medium '}>{grupo.nombre.replace(/gestión/i, '').trim()}</div>
                                         {grupo.hijos?.length > 0 && (
-                                            <div className="badge bg-dark mt-1">
+                                            <div className="font-medium border-b border-t border-custom-blue-light mt-1 text-custom-blue-light">
                                                 Promedio: {calcularPromedioGrupo(grupo)}
                                             </div>
                                         )}
@@ -157,7 +157,7 @@ export default function Editar({ editarUrl = '#',
                         ))}
                     </ul>
 
-                    <div class="border border-top-0 rounded-bottom p-3">
+                    <div class="p-3">
                         {gruposCalificaciones.map((grupo, index) => (
                             <div
                                 key={`content-${grupo.id}`}
@@ -197,11 +197,11 @@ export default function Editar({ editarUrl = '#',
                                                 <form method="POST" action={saveUrl} key={hijo.id}>
                                                     <input type="hidden" name="_token" value={csrfToken} />
 
-                                                    <div class="mb-4 p-3 border rounded">
+                                                    <div class="mb-4 p-3 !border border-custom-blue-dark rounded-xl">
                                                         <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
                                                         {hijo.calificaciones?.length > 0 ? (
                                                             <>
-                                                                <ul class="list-group">
+                                                                <ul class="list-group !border border-custom-blue-dark">
                                                                     {hijo.calificaciones.map((cal) => {
                                                                         const notaSeleccionada = notasSeleccionadas[cal.id];
                                                                         return (
@@ -286,10 +286,10 @@ export default function Editar({ editarUrl = '#',
                                                                 ))}
 
                                                                 {/* Total proceso with save button */}
-                                                                <div class="mt-3 p-3 bg-light rounded border d-flex justify-content-between align-items-center">
+                                                                <div class="flex justify-between items-center mt-3 p-3 bg-custom-gray-light rounded-xl !border border-custom-blue-light">
                                                                     <div>
-                                                                        <strong>Total proceso:</strong>{' '}
-                                                                        <span class="badge bg-dark">
+                                                                        <strong>TOTAL PROCESO:</strong>{' '}
+                                                                        <span class="!border rounded-pill p-1 border-custom-blue-light text-custom-blue-light font-medium">
                                                                             {calcularPromedio(hijo)}
                                                                         </span>
                                                                     </div>
