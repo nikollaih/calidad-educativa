@@ -44,10 +44,10 @@ export default function Ver({  gruposCalificaciones = [],
 
         // Colores basados en el valor (0-4)
         const backgroundColors = data.map(val => {
-            if (val >= 4) return 'rgba(40, 167, 69, 0.7)'; // Verde para 4
-            if (val >= 3) return 'rgba(23, 162, 184, 0.7)'; // Azul para 3-3.99
-            if (val >= 2) return 'rgba(255, 193, 7, 0.7)'; // Amarillo para 2-2.99
-            return 'rgba(220, 53, 69, 0.7)'; // Rojo para 0-1.99
+            if (val >= 4) return 'rgba(47, 172, 102, 1)'; // Verde para 4
+            if (val >= 3) return 'rgba(63, 125, 220, 1)'; // Azul para 3-3.99
+            if (val >= 2) return 'rgba(47, 172, 102, 1)'; // Amarillo para 2-2.99
+            return 'rgba(63, 125, 220, 1)'; // Rojo para 0-1.99
         });
 
         // Destruir el gráfico anterior si existe
@@ -242,7 +242,7 @@ export default function Ver({  gruposCalificaciones = [],
         <div class="container mt-5">
             <form>
 
-                <div className="mb-1 flex justify-between gap-4">
+                <div className="flex justify-between gap-4">
                     <div class={'flex row'}>
                         <h2 className="mb-0">Autoevaluación - Áreas de Gestión</h2>
                         <div class={'flex'}>
@@ -255,7 +255,7 @@ export default function Ver({  gruposCalificaciones = [],
                         </div>
                     </div>
                     <button
-                        className={`text-custom-blue-light ${activeTab === 'estadisticas' ? 'font-semibold' : 'font-medium'}`}
+                        className={`text-custom-blue-light ${activeTab === 'estadisticas' ? 'bg-white !border border-custom-blue-light rounded-xl p-1' : ''}`}
                         onClick={() => setActiveTab('estadisticas')}
                         type="button"
                     >
@@ -263,12 +263,12 @@ export default function Ver({  gruposCalificaciones = [],
                     </button>
                 </div>
 
-                <div className="mb-4 !border border-custom-blue-light rounded-xl ">
+                <div className="mb-4 bg-white !border border-custom-blue-light rounded-xl ">
                 <ul className="nav justify-between" id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
                             <li className="nav-item" key={`tab-${grupo.id}`}>
                                 <button
-                                    className={`m-2 p-2 ${activeTab === index ? '!border border-custom-blue-light rounded-xl' : ''}`}
+                                    className={`m-2 p-2 ${activeTab === index ? '!border border-custom-blue-light rounded-xl bg-custom-gray-light' : ''}`}
                                     onClick={() => setActiveTab(index)}
                                     type="button"
                                     role="tab"
@@ -391,7 +391,7 @@ export default function Ver({  gruposCalificaciones = [],
                                                         </ul>
 
                                                         {/* Total proceso siempre visible */}
-                                                        <div className="mt-3 p-3 bg-gray-200 rounded-xl !border border-custom-blue-light">
+                                                        <div className="mt-3 p-3 bg-custom-gray-light rounded-xl !border border-custom-blue-light">
                                                             <strong>TOTAL PROCESO:</strong>{' '}
                                                             <span className="!border rounded-pill p-1 border-custom-blue-light text-custom-blue-light font-medium">
                                                                 {calcularPromedio(hijo)}
@@ -411,11 +411,11 @@ export default function Ver({  gruposCalificaciones = [],
                         {activeTab === 'estadisticas' && (
                             <div className="row">
                                 <div className="col-md-3">
-                                    <div className="list-group">
+                                    <div className="">
                                         {statistics.map((stat, idx) => (
                                             <button
                                                 key={idx}
-                                                className={`list-group-item list-group-item-action ${activeStatisticTab === idx ? 'active' : ''}`}
+                                                className={`list-group-item list-group-item-action px-1 ${activeStatisticTab === idx ? 'active text-white' : ''}`}
                                                 onClick={() => setActiveStatisticTab(idx)}
                                                 type="button"
                                             >
@@ -423,7 +423,7 @@ export default function Ver({  gruposCalificaciones = [],
                                             </button>
                                         ))}
                                         <button
-                                            className={`list-group-item list-group-item-action ${activeStatisticTab === -1 ? 'active' : ''}`}
+                                            className={`list-group-item list-group-item-action px-1 ${activeStatisticTab === -1 ? 'active text-white' : ''}`}
                                             onClick={() => setActiveStatisticTab(-1)}
                                             type="button"
                                         >
