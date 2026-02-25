@@ -25,7 +25,7 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
     }, [anioInicio]);
 
     return (
-        <div className="container py-4">
+        <div className="container my-4 py-3 !border border-custom-blue-light rounded-xl bg-white">
             <form method="POST" action={createUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
                 <input type="hidden" name="pmi[autoevaluacion_id]" value={selectedId} />
@@ -73,7 +73,7 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                     name="pmi[descripcion]"
                 ></textarea>
 
-                <button className="btn btn-success">
+                <button className="border bg-blue-500  text-white p-2 rounded-pill">
                     Crear PMI
                 </button>
             </form>

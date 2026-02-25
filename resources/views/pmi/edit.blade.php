@@ -11,7 +11,6 @@
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institucionId) }}"
         data-institution-name="{{ $institucionNombre ?? '' }}"
     >
-
     </div>
     <div
         data-component="PmiEdit"

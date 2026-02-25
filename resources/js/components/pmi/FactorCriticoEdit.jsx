@@ -392,7 +392,7 @@ const FactorCriticoEdit = ({
                     <div className="row">
                         <div className="col-md-6">
                             <label className="block text-sm mb-2 ml-4 fw-bold">
-                                Peso:
+                                Peso (%) :
                                 {restante < 0 ? (
                                     <span className="text-danger fw-bold">
                                         Excedido por {Math.abs(restante)}%
@@ -403,7 +403,7 @@ const FactorCriticoEdit = ({
                                     </span>
                                 )}
                             </label>
-                            <div className="input-group">
+                            <div className="flex">
                                 <input
                                     type="number"
                                     className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -421,9 +421,7 @@ const FactorCriticoEdit = ({
                                     max="100"
                                     step="0.01"
                                 />
-                                <span className="input-group-text">%</span>
                             </div>
-
                         </div>
                         <div className="col-md-6">
                             <div className="d-flex justify-content-center align-items-center h-100">
@@ -523,7 +521,7 @@ const FactorCriticoEdit = ({
                                     value: frecuencia,
                                     label: frecuencia,
                                 }))}
-                                className="basic-multi-select"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 classNamePrefix="select"
                                 placeholder="Selecciona la frecuencia de recolección..."
                                 onChange={(frecuencia) => {
@@ -624,7 +622,7 @@ const FactorCriticoEdit = ({
                     {meta?.indicadores?.length == 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addIndicador(meta.id)}
                         >
                             Agregar indicador
@@ -637,7 +635,7 @@ const FactorCriticoEdit = ({
                     {meta?.indicadores?.length > 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addIndicador(meta.id)}
                         >
                             Agregar indicador
@@ -735,7 +733,7 @@ const FactorCriticoEdit = ({
                         {indicador?.actividades?.length == 0 && (
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-primary mt-4"
+                                className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                                 onClick={() => addActividad(indicador.id)}
                             >
                                 Agregar Actividad
@@ -756,7 +754,7 @@ const FactorCriticoEdit = ({
                     {indicador?.actividades?.length > 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addActividad(indicador.id)}
                         >
                             Agregar Actividad
@@ -884,7 +882,7 @@ const FactorCriticoEdit = ({
                     {objetivo.metas && objetivo.metas.map((meta) => renderMeta(meta, objetivo.id))}
                     <button
                         type="button"
-                        className="btn btn-outline-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={() => {
                             const newMeta = {
                                 id: `meta-virtual-${uniqueId()}`,
@@ -1079,7 +1077,7 @@ const FactorCriticoEdit = ({
                 <div className="card-body">
                     <button
                         type="button"
-                        className="btn btn-success mb-4"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={agregarObjetivo}
                     >
                         <i className="fas fa-plus-circle"></i> Agregar Objetivo

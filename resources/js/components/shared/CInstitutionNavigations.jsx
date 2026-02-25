@@ -115,6 +115,7 @@ const CInstitutionNavigations = ({
                         <a href={detailUrl} class={`${getBtnClass(detailUrl, 'primary')}`}>
                             Perfil
                         </a>
+                        <Separator/>
                     </>
                 )}
                 {/* Mostrar botón PEI solo si tiene permiso */}
@@ -124,6 +125,7 @@ const CInstitutionNavigations = ({
                         <a href={peiUrl} class={getBtnClass(peiUrl, 'success')}>
                             PEI
                         </a>
+                        <Separator/>
                     </>
                 )}
 
@@ -134,6 +136,7 @@ const CInstitutionNavigations = ({
                         <a href={autevaluacionUrl} class={getBtnClass(autevaluacionUrl, 'info')}>
                             Autoevaluación
                         </a>
+                        <Separator/>
                     </>
                 )}
 
@@ -144,6 +147,7 @@ const CInstitutionNavigations = ({
                         <a href={pmiUrl} class={getBtnClass(pmiUrl, 'secondary')}>
                             PMI
                         </a>
+                        <Separator/>
                     </>
                 )}
 
@@ -157,6 +161,7 @@ const CInstitutionNavigations = ({
                         >
                             PPT
                         </a>
+                        <Separator/>
                     </>
                 )}
             </div>

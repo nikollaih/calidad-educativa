@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CNavigationButton from '@/components/shared/CNavigationButton.jsx';
+import CActionsDropdown from '@/components/shared/CActionsDropdown.jsx';
 import CrearAvancePMI from '@/components/pmi/CrearAvancePMI.jsx';
 import VerAvancesPMI from '@/components/pmi/VerAvancesPMI.jsx';
 
@@ -118,8 +119,8 @@ const FactoresCriticosTable = ({
 
     return (
         <div className="container-fluid mt-4">
-            <div className="card shadow-sm">
-                <div className="card-header text-black">
+            <div className="bg-white !border border-custom-blue-light rounded-xl">
+                <div className="p-3 text-black">
                     <div className="d-flex justify-content-between">
                         <div>
                             <h5 className="mb-0">Plan de Mejoramiento Institucional</h5>
@@ -127,7 +128,7 @@ const FactoresCriticosTable = ({
                                 Período: {pmi?.anio_inicio} - {pmi?.anio_fin}
                             </small>
                         </div>
-                        <div class="d-flex gap-3">
+                        <CActionsDropdown text={'REPORTES'} icon={'fa-solid fa-file-pen'}>
                             <CNavigationButton
                                 label="Síntesis seguimiento"
                                 to={sintesisUrl}
@@ -152,40 +153,40 @@ const FactoresCriticosTable = ({
                                 icon="fas fa-file-excel"
                                 target="_blank"
                             />
-                        </div>
+                        </CActionsDropdown>
                     </div>
                 </div>
-                <div className="card-body p-0">
+                <div className="flex p-0">
                     <div
                         className="table-responsive"
                         style={{ maxHeight: '600px', overflowY: 'auto' }}
                     >
-                        <table className="table table-bordered mb-0">
+                        <table className="table table-bordered border-custom-blue-light mb-0"  style={{ '--bs-table-border-color': '#28ace5' }}>
                             <thead
-                                className="table-dark"
+                                className="bg-custom-blue-dark  items-center"
                                 style={{ position: 'sticky', top: 0, zIndex: 10 }}
                             >
                                 <tr>
-                                    <th className="text-center">Gestión</th>
-                                    <th className="text-center">Componente</th>
-                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                    <th className="text-white">Gestión</th>
+                                    <th className="text-white">Componente</th>
+                                    <th className="text-white" style={{ minWidth: '20rem' }}>
                                         Factor Crítico
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                    <th className="text-white" style={{ minWidth: '20rem' }}>
                                         Objetivo
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white" style={{ minWidth: '10rem' }}>
                                         Meta
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '12rem' }}>
+                                    <th className="text-white" style={{ minWidth: '12rem' }}>
                                         Indicador
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white" style={{ minWidth: '10rem' }}>
                                         Actividad
                                     </th>
-                                    <th className="text-center">Recurso ($)</th>
-                                    <th className="text-center">Responsables</th>
-                                    <th className="text-center">Instrumentos de recolección</th>
+                                    <th className="text-white">Recurso ($)</th>
+                                    <th className="text-white">Responsables</th>
+                                    <th className="text-white">Instrumentos de recolección</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -196,7 +197,7 @@ const FactoresCriticosTable = ({
                                             tableRows[index - 1].gestion !== row.gestion) && (
                                             <td
                                                 rowSpan={getRowSpan(index, 'gestion')}
-                                                className="align-middle fw-bold"
+                                                className="align-middle font-semibold"
                                                 style={{ verticalAlign: 'middle' }}
                                             >
                                                 {row.gestion}
@@ -232,7 +233,7 @@ const FactoresCriticosTable = ({
                                                                     ?.indice
                                                             }
                                                         </small>
-                                                        <div className="fw-semibold text-primary">
+                                                        <div className="">
                                                             {row.factorCritico.descripcion || (
                                                                 <span className="text-muted fst-italic">
                                                                     Sin descripción
@@ -480,7 +481,6 @@ const FactoresCriticosTable = ({
                         </table>
                     </div>
                 </div>
-
                 <div className="card-footer text-muted small">
                     Total de factores críticos: {pmi?.factores_criticos?.length || 0}
                 </div>
