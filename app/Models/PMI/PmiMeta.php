@@ -11,7 +11,6 @@ class PmiMeta extends Model
     protected $fillable = [
         'descripcion',
         'objetivo_id',
-        'indicador_id'
     ];
 
     public function actividades(){
