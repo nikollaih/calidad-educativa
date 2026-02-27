@@ -411,9 +411,9 @@ useEffect(() => {
 
   // NUEVO: Función para renderizar la información del proyecto
   const renderInformacionProyecto = () => (
-    <div className="mt-4">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
       <div className="card">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header text-white">
           <h4 className="mb-0">Información del Proyecto Transversal</h4>
         </div>
         <div className="card-body">
@@ -449,8 +449,8 @@ useEffect(() => {
 
   // FUNCIÓN MODIFICADA: Ahora recibe las actividades a mostrar y el título.
   const renderActividadesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+      <div className="d-flex justify-content-between align-items-center m-3">
         <h4>Lista de Actividades</h4>
         <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarActividadClick}>
           <i className="fa fa-plus me-2"></i>Agregar Actividad
@@ -458,7 +458,7 @@ useEffect(() => {
       </div>
       {/* Filtro de año */}
       <div className="row mb-3">
-        <div className="col-md-6">
+        <div className="mx-1 col-md-6">
           <label htmlFor="selectYear" className="block text-sm mb-2 ml-4">Filtrar por año</label>
           <select
             id="selectYear"
@@ -473,130 +473,132 @@ useEffect(() => {
           </select>
         </div>
       </div>
-
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
-          <tr>
-            <th>Fecha</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* CAMBIO: Usar getFilteredActividades() directamente */}
-          {getFilteredActividades().length > 0 ? (
-            getFilteredActividades().map((actividad) => (
-              <tr key={actividad.id}>
-                <td>{actividad.fecha}</td>
-                <td style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
-                  {actividad.descripcion ?? 'Sin información'}
-                </td>
-                <td>
-                  {actividad.adjuntos && actividad.adjuntos.length > 0 && (
-                    <button
-                      onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
-                      className="btn btn-info btn-sm me-2"
-                    >
-                      <i className="fa fa-eye text-white"></i>
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleCompartirClick(actividad, 'actividad')}
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                  >
-                    <i className="fa fa-share-alt text-white"></i>
-                  </button>
-                  <button
-                    onClick={() => handleEditarActividadClick(actividad)}
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                  >
-                    <i className="fa fa-pen-to-square text-white"></i>
-                  </button>
-                  <button
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
-                    onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
-                  >
-                    <i className="fa fa-trash-alt text-white"></i>
-                  </button>
-                </td>
+      <div class={'flex m-1'}>
+          <table className="table table-striped table-hover">
+              <thead style={{ backgroundColor: '#E5E7EB' }}>
+              <tr>
+                  <th>Fecha</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3" className="text-center">No hay actividades para mostrar.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              </thead>
+              <tbody>
+              {/* CAMBIO: Usar getFilteredActividades() directamente */}
+              {getFilteredActividades().length > 0 ? (
+                  getFilteredActividades().map((actividad) => (
+                      <tr key={actividad.id}>
+                          <td>{actividad.fecha}</td>
+                          <td style={{ maxWidth: '150px', wordBreak: 'break-word' }}>
+                              {actividad.descripcion ?? 'Sin información'}
+                          </td>
+                          <td>
+                              {actividad.adjuntos && actividad.adjuntos.length > 0 && (
+                                  <button
+                                      onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
+                                      className="btn btn-info btn-sm me-2"
+                                  >
+                                      <i className="fa fa-eye text-white"></i>
+                                  </button>
+                              )}
+                              <button
+                                  onClick={() => handleCompartirClick(actividad, 'actividad')}
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                              >
+                                  <i className="fa fa-share-alt text-white"></i>
+                              </button>
+                              <button
+                                  onClick={() => handleEditarActividadClick(actividad)}
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                              >
+                                  <i className="fa fa-pen-to-square text-white"></i>
+                              </button>
+                              <button
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                                  onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
+                              >
+                                  <i className="fa fa-trash-alt text-white"></i>
+                              </button>
+                          </td>
+                      </tr>
+                  ))
+              ) : (
+                  <tr>
+                      <td colSpan="3" className="text-center">No hay actividades para mostrar.</td>
+                  </tr>
+              )}
+              </tbody>
+          </table>
+      </div>
     </div>
   );
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+      <div className="d-flex justify-content-between align-items-center m-3">
         <h4>Lista de Integrantes</h4>
         <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarIntegranteClick}>
           {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
           <i className="fa fa-plus me-2"></i>Agregar Integrante
         </button>
       </div>
-
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
-          <tr>
-            <th>Nombre</th>
-            <th>Contacto</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {integrantes.length > 0 ? (
-            integrantes.map((integrante) => (
-              <tr key={integrante.id}>
-                <td>{integrante.nombre ?? 'N/A'}</td>
-                <td>{integrante.telefono ?? 'N/A'}</td>
-                <td>{integrante.correo ?? 'N/A'}</td>
-                <td>
-                  {integrantesRoles.find(r => r.id === integrante.rol)?.name ?? 'N/A'}
-                </td>
-                <td>
-                  {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
-                  <button
-                    onClick={() => handleEditarIntegranteClick(integrante)}
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                  >
-                    <i className="fa fa-pen-to-square text-white"></i>
-                  </button>
-                  {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
-                  <button
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
-                    onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
-                  >
-                    <i className="fa fa-trash-alt text-white"></i>
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center">No hay integrantes para mostrar.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+        <div className={'flex m-1'}>
+            <table className="table table-striped table-hover">
+                <thead style={{ backgroundColor: '#E5E7EB' }}>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {integrantes.length > 0 ? (
+                    integrantes.map((integrante) => (
+                        <tr key={integrante.id}>
+                            <td>{integrante.nombre ?? 'N/A'}</td>
+                            <td>{integrante.telefono ?? 'N/A'}</td>
+                            <td>{integrante.correo ?? 'N/A'}</td>
+                            <td>
+                                {integrantesRoles.find(r => r.id === integrante.rol)?.name ?? 'N/A'}
+                            </td>
+                            <td>
+                                {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
+                                <button
+                                    onClick={() => handleEditarIntegranteClick(integrante)}
+                                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                                >
+                                    <i className="fa fa-pen-to-square text-white"></i>
+                                </button>
+                                {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
+                                <button
+                                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                                    onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
+                                >
+                                    <i className="fa fa-trash-alt text-white"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="5" className="text-center">No hay integrantes para mostrar.</td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
+        </div>
     </div>
   );
 
-  return (
-    <div className="container mt-4">
+    return (
+        <div className="container mt-4 !border border-custom-blue-light rounded-xl bg-white">
       {/* CAMBIO: Título por defecto y nombre del proyecto */}
-      <div className="text-center mb-4">
-        <h2 className="mb-2">Gestión de Proyectos predagógicos transversales</h2>
+      <div className="text-center p-3  font-semibold">
+        <div className="text-xl text-custom-blue-dark">Gestión de Proyectos predagógicos transversales</div>
         {detalleProyecto.nombre && (
-          <h4 className="text-muted">{detalleProyecto.nombre}</h4>
+          <div className="!text-gray-600 text-lg">{detalleProyecto.nombre}</div>
         )}
       </div>
       {!isRelatedToProyecto ? (
@@ -604,39 +606,39 @@ useEffect(() => {
           En estos momentos no se encuentra relacionado a este PPT como responsable
         </div>
       ) : (
-        <>
+        <div class={'flex flex-column !border border-custom-blue-dark rounded-lg mb-3'}>
           {/* CAMBIO: Se eliminó la pestaña de 'Historico' y se fusionó la lógica en 'Actividades' */}
-          <ul className="nav nav-tabs nav-justified">
-            <li className="nav-item">
+          <div className="px-3 mt-3 flex justify-between">
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'informacion' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('informacion')}
                 style={{ cursor: 'pointer' }}
               >
-                Información del Proyecto
+               INFORMACIÓN DEL PROYECTO
               </a>
-            </li>
-            <li className="nav-item">
+            </div>
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'integrantes' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('integrantes')}
                 style={{ cursor: 'pointer' }}
               >
-                Integrantes
+                INTEGRANTES
               </a>
-            </li>
-            <li className="nav-item">
+            </div>
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'actividades' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('actividades')}
                 style={{ cursor: 'pointer' }}
               >
-                Actividades
+                ACTIVIDADES
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
 
-          <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
+          <div className="px-3 rounded-bottom">
             {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
             {/* CAMBIO: Se llama a la función con el filtro aplicado */}
             {activeTab === 'actividades' && renderActividadesTable()}
@@ -961,7 +963,7 @@ useEffect(() => {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

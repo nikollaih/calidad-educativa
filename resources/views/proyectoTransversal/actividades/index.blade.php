@@ -2,8 +2,13 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
-        data-to="{{ route('proyectos-transversales.index', $institucionId) }}"
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('proyectos-transversales.index', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-pei-url="{{ route('institution.pei.update-pei', $institucionId) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
+        data-pmi-url="{{ route('pmi.index', $institucionId) }}"
+        data-proyectos-transversales-url="#"
     >
     </div>
     <div
