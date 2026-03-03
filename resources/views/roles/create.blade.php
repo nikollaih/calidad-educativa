@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card">
-        <h1 class="card-header">Crear Rol</h1>
+<div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light">
+    <div class="p-3">
+        <h1 class="text-custom-blue-dark">Crear Rol</h1>
         <div class="card-body">
             <div class="col-md-12">
                 <form action="{{ route('roles.store') }}" method="POST">
@@ -60,7 +60,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">Guardar</button>
                     <a href="{{ route('roles.index') }}" class="border bg-blue-500  text-white p-2 rounded-pill">Cancelar</a>
                 </form>
             </div>

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card">
-        <h1 class="card-header">Edición del rol</h1>
+<div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light">
+    <div class="p-3">
+        <h1 class="text-custom-blue-dark">Edición del rol</h1>
         <div class="card-body">
             <div class="col-md-12">
                 <form action="{{ route('roles.update', $role->id) }}" method="POST">
