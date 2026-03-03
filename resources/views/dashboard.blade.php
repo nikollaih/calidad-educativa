@@ -2,114 +2,104 @@
 
 @section('content')
 
-<div class="row g-4">
-    <div class="col-12">
-        <h4 class="mb-3">Información general</h4>
-    </div>
+    @php
+        $kpiCards = [
+            [
+                'label'  => 'Instituciones',
+                'value'  => $stats['instituciones'] ?? 0,
+                'sub'    => null,
+            ],
+            [
+                'label'  => 'Sedes',
+                'value'  => $stats['sedes'] ?? 0,
+                'sub'    => null,
+            ],
+            [
+                'label'  => 'Prom. sedes / Institución',
+                'value'  => $stats['promedio_sedes_por_institucion'] ?? 0,
+                'sub'    => null,
+            ],
+            [
+                'label'  => 'PMIs Totales',
+                'value'  => $stats['pmi_total'] ?? 0,
+                'sub'    => null,
+            ],
+            [
+                'label'  => 'PMIs Aprobados',
+                'value'  => $stats['pmi_aprobados'] ?? 0,
+                'sub'    => ($stats['porc_aprobados'] ?? 0) . '%',
+            ],
+            [
+                'label'  => 'PMIs Presentados',
+                'value'  => $stats['pmi_presentados'] ?? 0,
+                'sub'    => ($stats['porc_presentados'] ?? 0) . '%',
+            ],
+            [
+                'label'  => 'Autoev. en Proceso',
+                'value'  => $stats['autoevaluaciones_proceso'] ?? 0,
+                'sub'    => null,
+            ],
+            [
+                'label'  => 'Autoev. en Validación',
+                'value'  => $stats['autoevaluaciones_validacion'] ?? 0,
+                'sub'    => null,
+            ],
+        ];
 
-    <!-- Fila 1: KPIs numéricos -->
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">Instituciones</span>
-                <h3 class="card-title mb-2">{{ $stats['instituciones'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">Sedes</span>
-                <h3 class="card-title mb-2">{{ $stats['sedes'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">Prom. sedes/Institución</span>
-                <h3 class="card-title mb-2">{{ $stats['promedio_sedes_por_institucion'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">PMIs Totales</span>
-                <h3 class="card-title mb-2">{{ $stats['pmi_total'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-    <!-- Fila 2: KPIs numéricos -->
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">PMIs Aprobados</span>
-                <h3 class="card-title mb-2">{{ $stats['pmi_aprobados'] ?? 0 }}</h3>
-                <small class="text-muted">{{ $stats['porc_aprobados'] ?? 0 }}%</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">PMIs Presentados</span>
-                <h3 class="card-title mb-2">{{ $stats['pmi_presentados'] ?? 0 }}</h3>
-                <small class="text-muted">{{ $stats['porc_presentados'] ?? 0 }}%</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">Autoev. en Proceso</span>
-                <h3 class="card-title mb-2">{{ $stats['autoevaluaciones_proceso'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 col-xl-3 d-flex">
-        <div class="card kpi-card h-100 w-100">
-            <div class="card-body">
-                <span class="d-block mb-1">Autoev. en Validación</span>
-                <h3 class="card-title mb-2">{{ $stats['autoevaluaciones_validacion'] ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
+        $chartCards = [
+            [
+                'title'     => 'Distribución de PMI por estado',
+                'id'        => 'chart-pmi-estado',
+                'col_class' => 'col-12 col-xl-6',
+            ],
+            [
+                'title'     => 'Autoevaluaciones por estado',
+                'id'        => 'chart-autoevaluaciones-estado',
+                'col_class' => 'col-12 col-xl-6',
+            ],
+            [
+                'title'     => 'Top municipios por instituciones',
+                'id'        => 'chart-instituciones-municipio',
+                'col_class' => 'col-12',
+            ],
+        ];
+    @endphp
 
-    <!-- Fila 1 de gráficos -->
-    <div class="col-12 col-xl-6 d-flex">
-        <div class="card chart-card h-100 w-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Distribución de PMI por estado</h5>
-            </div>
-            <div class="card-body">
-                <div id="chart-pmi-estado"></div>
-            </div>
+    <div class="row g-3">
+        {{-- ── Título sección ── --}}
+        <div class="col-12">
+            <h5 class="mb-1 text-custom-blue-dark">INFORMACIÓN GENERAL</h5>
         </div>
-    </div>
+        {{-- ── KPI Cards ── --}}
+        @foreach ($kpiCards as $kpi)
+            <div class="col-6 col-sm-4 col-xl-3 d-flex">
+                <div class="!border border-custom-blue-light rounded-xl bg-white h-100 w-100">
+                    <div class="card-body py-3 px-3">
+                        <p class="!text-custom-blue-dark  kpi-label mb-1 ">{{ $kpi['label'] }}</p>
+                        <h4 class="kpi-value mb-0">{{ $kpi['value'] }}</h4>
+                        @if ($kpi['sub'])
+                            <small class="text-muted">{{ $kpi['sub'] }}</small>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
 
-    <!-- Fila 2 de gráficos -->
-    <div class="col-12 col-xl-6 d-flex">
-        <div class="card chart-card h-100 w-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Autoevaluaciones por estado</h5>
+        {{-- ── Chart Cards ── --}}
+        @foreach ($chartCards as $chart)
+            <div class="{{ $chart['col_class'] }} d-flex">
+                <div class="!border border-custom-blue-light bg-white rounded-xl chart-card h-100 w-100">
+                    <div class="card-header py-3 px-4">
+                        <h6 class="mb-0 text-custom-blue-dark">{{ $chart['title'] }}</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <div id="{{ $chart['id'] }}"></div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div id="chart-autoevaluaciones-estado"></div>
-            </div>
-        </div>
+        @endforeach
+
     </div>
-    <div class="col-12 col-xl-12 d-flex">
-        <div class="card chart-card h-100 w-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Top municipios por instituciones</h5>
-            </div>
-            <div class="card-body">
-                <div id="chart-instituciones-municipio"></div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
 
@@ -118,72 +108,50 @@
 @endsection
 
 @section('custom_css')
-<style>
-  .kpi-card { min-height: 140px; }
-  .kpi-card .card-body { display: flex; flex-direction: column; justify-content: center; }
-  .chart-card { min-height: 420px; }
-  #chart-pmi-estado, #chart-instituciones-municipio, #chart-autoevaluaciones-estado, #chart-sedes-municipio { min-height: 320px; }
-</style>
+    <style>
+        .kpi-card          { min-height: 100px; }
+        .kpi-card .card-body { display: flex; flex-direction: column; justify-content: center; }
+        .kpi-label         { font-size: .78rem; color: #6c757d; font-weight: 500; }
+        .kpi-value         { font-size: 1.6rem; font-weight: 700; }
+        .chart-card        { min-height: 380px; }
+        #chart-pmi-estado,
+        #chart-autoevaluaciones-estado,
+        #chart-instituciones-municipio { min-height: 300px; }
+    </style>
 @endsection
-
-@section('vendors_js')
-    <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
-@endsection
-
 @section('javascripts')
-<script>
-    (function() {
-        const chartDataPmi = @json($charts['pmi_por_estado'] ?? ['labels'=>[],'series'=>[]]);
-        const chartDataMun = @json($charts['instituciones_por_municipio'] ?? ['labels'=>[],'series'=>[]]);
-        const chartDataAuto = @json($charts['autoevaluaciones_por_estado'] ?? ['labels'=>[],'series'=>[]]);
-        const chartDataSedes = @json($charts['sedes_por_municipio'] ?? ['labels'=>[],'series'=>[]]);
+    <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+    <script>
+        (function () {
+            const chartDataPmi   = @json($charts['pmi_por_estado']               ?? ['labels' => [], 'series' => []]);
+            const chartDataMun   = @json($charts['instituciones_por_municipio']   ?? ['labels' => [], 'series' => []]);
+            const chartDataAuto  = @json($charts['autoevaluaciones_por_estado']   ?? ['labels' => [], 'series' => []]);
 
-        // Donut PMI por estado
-        const pmiEstadoOptions = {
-            series: chartDataPmi.series || [],
-            labels: chartDataPmi.labels || [],
-            chart: { type: 'donut', height: 320 },
-            legend: { position: 'bottom' },
-            dataLabels: { enabled: true },
-        };
-        const pmiEstadoChart = new ApexCharts(document.querySelector('#chart-pmi-estado'), pmiEstadoOptions);
-        pmiEstadoChart.render();
+            // ── Helpers ───────────────────────────────────────────────────────────────
+            function donut(selector, data) {
+                new ApexCharts(document.querySelector(selector), {
+                    series      : data.series || [],
+                    labels      : data.labels  || [],
+                    chart       : { type: 'donut', height: 300 },
+                    legend      : { position: 'bottom' },
+                    dataLabels  : { enabled: true },
+                }).render();
+            }
 
-        // Barras instituciones por municipio
-        const instMunOptions = {
-            series: [{
-                name: 'Instituciones',
-                data: chartDataMun.series || []
-            }],
-            chart: { type: 'bar', height: 320, toolbar: { show: false } },
-            xaxis: { categories: chartDataMun.labels || [] },
-            plotOptions: { bar: { borderRadius: 6, columnWidth: '45%' } },
-            dataLabels: { enabled: false },
-        };
-        const instMunChart = new ApexCharts(document.querySelector('#chart-instituciones-municipio'), instMunOptions);
-        instMunChart.render();
+            function bar(selector, data, seriesName) {
+                new ApexCharts(document.querySelector(selector), {
+                    series      : [{ name: seriesName, data: data.series || [] }],
+                    chart       : { type: 'bar', height: 300, toolbar: { show: false } },
+                    xaxis       : { categories: data.labels || [] },
+                    plotOptions : { bar: { borderRadius: 6, columnWidth: '45%' } },
+                    dataLabels  : { enabled: false },
+                }).render();
+            }
 
-        // Autoevaluaciones por estado (donut)
-        const autoEstadoOptions = {
-            series: chartDataAuto.series || [],
-            labels: chartDataAuto.labels || [],
-            chart: { type: 'donut', height: 320 },
-            legend: { position: 'bottom' },
-            dataLabels: { enabled: true },
-        };
-        const autoEstadoChart = new ApexCharts(document.querySelector('#chart-autoevaluaciones-estado'), autoEstadoOptions);
-        autoEstadoChart.render();
-
-        // Sedes por municipio (barras)
-        const sedesMunOptions = {
-            series: [{ name: 'Sedes', data: chartDataSedes.series || [] }],
-            chart: { type: 'bar', height: 320, toolbar: { show: false } },
-            xaxis: { categories: chartDataSedes.labels || [] },
-            plotOptions: { bar: { borderRadius: 6, columnWidth: '45%' } },
-            dataLabels: { enabled: false },
-        };
-        const sedesMunChart = new ApexCharts(document.querySelector('#chart-sedes-municipio'), sedesMunOptions);
-        sedesMunChart.render();
-    })();
-</script>
+            // ── Render ────────────────────────────────────────────────────────────────
+            donut('#chart-pmi-estado',               chartDataPmi);
+            donut('#chart-autoevaluaciones-estado',  chartDataAuto);
+            bar  ('#chart-instituciones-municipio',  chartDataMun, 'Instituciones');
+        })();
+    </script>
 @endsection
