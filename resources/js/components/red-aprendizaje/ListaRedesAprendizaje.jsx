@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '', canEditParametros = false }) {
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
@@ -225,12 +227,13 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Redes de Aprendizaje</h2>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div className={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Redes de Aprendizaje</h2>
             {canEditParametros && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar red de aprendizaje
-                </button>
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
             )}
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
 
@@ -262,24 +265,24 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                             </td>
                             {canEditParametros && (
                                 <td>
-                                    <button
+                                    <CTableActionButton
+                                        title={'Ver'}
                                         onClick={() => handleVerClick(redAprendizaje)}
-                                        className="btn btn-info btn-sm me-2"
-                                    >
-                                        Ver
-                                    </button>
-                                    <button
+                                        iconClass={'fas fa-eye'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <CTableActionButton
+                                        title={'Editar'}
                                         onClick={() => handleEditarClick(redAprendizaje)}
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <button
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <CTableActionButton
+                                        title={'Eliminar'}
                                         onClick={() => handleDelete(redAprendizaje.id)}
-                                    >
-                                        Eliminar
-                                    </button>
+                                        iconClass={'fas fa-trash'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
                                 </td>
                             )}
                         </tr>
@@ -588,6 +591,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

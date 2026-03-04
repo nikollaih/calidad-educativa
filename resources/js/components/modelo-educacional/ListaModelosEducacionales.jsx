@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
@@ -81,12 +83,13 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Modelos flexibles</h2>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Modelos flexibles</h2>
             {canEditParametros && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar modelo flexible
-                </button>
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
             )}
 
             <table class="table">
@@ -102,27 +105,31 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                             <td>{modeloEducacional.name}</td>
                             {canEditParametros && (
                                 <td>
-                                    <button
+                                    <CTableActionButton
+                                        title={'Editar'}
                                         onClick={() => handleEditarClick(modeloEducacional)}
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <form
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <form id="delete-form-modelo"
                                         action={`/modelos-educacionales/${modeloEducacional.id}`}
                                         method="POST"
                                         style={{ display: 'inline' }}
                                         onSubmit={(e) => {
-                                            if (!confirm('¿Estás seguro de que quieres eliminar este modeloEducacional?')) {
+                                            if (!confirm('¿Estás seguro de que quieres eliminar este modelo educacional?')) {
                                                 e.preventDefault();
                                             }
                                         }}
                                     >
                                         <input type="hidden" name="_token" value={csrfToken} />
                                         <input type="hidden" name="_method" value="DELETE" />
-                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
-                                            Eliminar
-                                        </button>
+                                        <CTableActionButton
+                                            formRef={'#delete-form-municipio'}
+                                            title={'Eliminar'}
+                                            iconClass={'fa fa-trash'}
+                                            confirmMessage={'¿Estás seguro de que quieres eliminar este modelo educacional?'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
                                     </form>
                                 </td>
                             )}
@@ -185,6 +192,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

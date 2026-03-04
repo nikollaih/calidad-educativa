@@ -21,7 +21,6 @@ const CTableActionButton = ({
         }
 
         if (route !== undefined) {
-            console.log('ejecutando route', route);
             window.location.href = route;
             return;
         }

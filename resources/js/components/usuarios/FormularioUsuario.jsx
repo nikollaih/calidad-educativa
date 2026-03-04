@@ -112,7 +112,7 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, in
                                         label: role.name_translated,
                                         permissions: role.permissions
                                     }))}
-                                    className="basic-multi-select"
+                                    className="!border border-custom-blue-dark rounded-pill p-1"
                                     classNamePrefix="select"
                                     placeholder="Selecciona uno o varios roles..."
                                     onChange={handleRolesChange}
