@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
@@ -100,58 +102,64 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Indicadores</h2>
-            {canEditParametros && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar indicador
-                </button>
-            )}
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+                <h2 class="mb-4 text-custom-blue-dark">Indicadores</h2>
+                {canEditParametros && (
+                    <CAddButton
+                        onClick={handleAgregarClick}
+                    />
+                )}
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Unidad parcial</th>
-                        <th>Unidad total</th>
-                        {canEditParametros && <th>Acciones</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {indicadores.data.map((indicador) => (
-                        <tr key={indicador.id}>
-                            <td>{indicador.unidad_parcial}</td>
-                            <td>{indicador.unidad_total}</td>
-                            {canEditParametros && (
-                                <td>
-                                    <button
-                                        onClick={() => handleEditarClick(indicador)}
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <form
-                                        action={`/indicadores-pmi/${indicador.id}`}
-                                        method="POST"
-                                        style={{ display: 'inline' }}
-                                        onSubmit={(e) => {
-                                            if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
-                                                e.preventDefault();
-                                            }
-                                        }}
-                                    >
-                                        <input type="hidden" name="_token" value={csrfToken} />
-                                        <input type="hidden" name="_method" value="DELETE" />
-                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
-                                            Eliminar
-                                        </button>
-                                    </form>
-                                </td>
-                            )}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Unidad parcial</th>
+                            <th>Unidad total</th>
+                            {canEditParametros && <th>Acciones</th>}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <CPagination pagination={indicadores} />
+                    </thead>
+                    <tbody>
+                        {indicadores.data.map((indicador) => (
+                            <tr key={indicador.id}>
+                                <td>{indicador.unidad_parcial}</td>
+                                <td>{indicador.unidad_total}</td>
+                                {canEditParametros && (
+                                    <td>
+                                        <CTableActionButton
+                                            title={'Editar'}
+                                            onClick={() => handleEditarClick(indicador)}
+                                            iconClass={'fas fa-pencil'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <form id="delete-form-indicador-pmi"
+                                            action={`/indicadores-pmi/${indicador.id}`}
+                                            method="POST"
+                                            style={{ display: 'inline' }}
+                                            onSubmit={(e) => {
+                                                if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        >
+                                            <input type="hidden" name="_token" value={csrfToken} />
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            <CTableActionButton
+                                                formRef={'#delete-form-indicador-pmi'}
+                                                title={'Eliminar'}
+                                                iconClass={'fa fa-trash'}
+                                                confirmMessage={'¿Estás seguro de que quieres eliminar este indicador?'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
+                                        </form>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <CPagination pagination={indicadores} />
+            </div>
 
             {/* Modal */}
             {showModal && canEditParametros && (

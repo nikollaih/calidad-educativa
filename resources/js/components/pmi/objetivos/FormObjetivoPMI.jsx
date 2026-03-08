@@ -111,8 +111,9 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
     };
 
     return (
-        <div className="container py-4">
-                <h3 className="mb-4">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
+        <div className="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div className={'p-3'}>
+                <h3 className="mb-4 text-custom-blue-dark">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
 
                 {/* Sección del objetivo */}
                 <div className="card mb-4">
@@ -212,27 +213,6 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                             required
                                         />
                                     </div>
-                                    <div className="row">
-                                        <div className=" mb-3">
-                                            <label htmlFor="unidad_medida" className="block text-sm mb-2 ml-4">Unidad de Medida*</label>
-                                            <CAutocompleteFromArray
-                                                isEditable={editable}
-                                                data={unidadesMedida}
-                                                initialValue={meta.indicador_id}
-                                                fieldName={"indicador_id"}
-                                                searchFields={['unidad_total', 'unidad_parcial']}
-                                                labelFields={['unidad_parcial', 'unidad_total']}
-                                                onSelect={(unidadMedida) => {
-                                                    const newMeta = [...metas];
-                                                    newMeta[i] = {
-                                                        ...newMeta[i],
-                                                        ['indicador_id']: unidadMedida.id
-                                                    };
-                                                    setMetas(newMeta);
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
                                 </div>
                             );
                         })}
@@ -240,7 +220,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 </div>
 
 
-            <form method="POST" action={agregarUrl}>
+                <form method="POST" action={agregarUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
                 <input type="hidden" name="id" value={objetivo.id} />
                 <input type="hidden" name="descripcion" value={objetivo.descripcion} />
@@ -270,6 +250,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 ) }
 
             </form>
+            </div>
         </div>
     );
 };

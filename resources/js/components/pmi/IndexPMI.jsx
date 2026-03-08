@@ -153,7 +153,7 @@ export default function IndexPMI({
                                                     hoverIconColor={'text-custom-primary'}
                                                 />
                                                 <form
-                                                    ref={formRef}
+                                                    id={`form-presentar-${pmi.id}`}
                                                     action={`/${institucionId}/pmi/${pmi.id}/presentar`}
                                                     method="POST"
                                                     style={{display: 'none'}}
@@ -164,7 +164,7 @@ export default function IndexPMI({
                                                     title={'Enviar a SED'}
                                                     iconClass={'fa fa-paper-plane'}
                                                     hoverIconColor={'text-custom-primary'}
-                                                    onClick={() => formRef.current?.submit()}
+                                                    onClick={() => document.getElementById(`form-presentar-${pmi.id}`)?.submit()}
                                                 />
                                                 {pmi.comentarios?.filter((c) => c.estado === 'activo')
                                                     ?.length > 0 && (
