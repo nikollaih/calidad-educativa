@@ -76,7 +76,7 @@ $sidebarMenu = [
                 'label' => 'PMI',
                 'icon' => 'fas fa-shapes',
                 'routes' => 'objetivo*|indicadores*',
-                'permission' => 's-pmi-gestionar',
+                'permission' => 's-institucion-editar',
                 'items' => [
                     ['url' => 'objetivo-pmi', 'icon' => 'fas fa-bullseye', 'label' => 'Objetivos'],
                     ['url' => 'indicadores-pmi', 'icon' => 'fas fa-ruler-horizontal', 'label' => 'Indicadores'],
@@ -227,22 +227,37 @@ $hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
                                         {{-- Skip nested menu if no visible items --}}
                                         @continue(!$hasVisibleSubItems($sub))
 
-                                        @php $subActive = $isActive($sub); @endphp
+                                        {{-- FIX: subActive es true si la ruta actual coincide con el sub o con alguno de sus nested items --}}
+                                        @php
+                                            $subActive = $isActive($sub) || collect($sub['items'])->some(fn($n) => $isActive($n));
+                                        @endphp
                                         <li>
-                                            <button onclick="toggleSubmenu(this)" class="w-full flex items-center justify-between p-2 rounded-lg text-sm has-submenu">
+                                            <button onclick="toggleSubmenu(this)" @class([
+                                                'w-full flex items-center justify-between p-2 rounded-lg text-sm has-submenu',
+                                                'text-custom-blue-light font-semibold' => $subActive,
+                                                'text-custom-blue-light hover:font-semibold' => !$subActive,
+                                            ])>
                                                 <div class="flex items-center gap-2 min-w-0">
                                                     <i class="{{ $sub['icon'] }} w-5 text-center text-custom-primary flex-shrink-0"></i>
-                                                    <div class="text-custom-blue-light menu-text truncate">{{ $sub['label'] }}</div>
+                                                    <div class="menu-text truncate">{{ $sub['label'] }}</div>
                                                 </div>
+                                                <i @class([
+                                                    'fas fa-chevron-down text-xs transition-transform duration-200 flex-shrink-0 mr-1',
+                                                    'rotate-180' => $subActive,
+                                                ])></i>
                                             </button>
                                             <ul @class(['submenu pl-4 mt-1 space-y-1', 'hidden' => !$subActive])>
                                                 @foreach($sub['items'] as $nested)
                                                     @continue(!$canView($nested))
                                                     @php $nestedActive = $isActive($nested); @endphp
                                                     <li>
-                                                        <a href="{{ url($nested['url']) }}" class="flex items-center gap-2 p-2 rounded-lg text-sm">
+                                                        <a href="{{ url($nested['url']) }}" @class([
+                                                            'flex items-center gap-2 p-2 rounded-lg text-sm',
+                                                            'text-custom-blue-light font-bold' => $nestedActive,
+                                                            'text-custom-blue-light hover:font-semibold' => !$nestedActive,
+                                                        ])>
                                                             <i class="{{ $nested['icon'] }} w-4 text-center text-custom-primary flex-shrink-0"></i>
-                                                            <div class="text-custom-blue-light menu-text truncate">{{ $nested['label'] }}</div>
+                                                            <div class="menu-text truncate">{{ $nested['label'] }}</div>
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -251,10 +266,14 @@ $hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
                                     @else
                                         @php $subActive = $isActive($sub); @endphp
                                         <li>
-                                            <a href="{{ url($sub['url']) }}" class="flex items-center gap-2 p-2 rounded-lg text-sm">
+                                            <a href="{{ url($sub['url']) }}" @class([
+                                                'flex items-center gap-2 p-2 rounded-lg text-sm',
+                                                'text-custom-blue-light font-bold' => $subActive,
+                                                'text-custom-blue-light hover:font-semibold' => !$subActive,
+                                            ])>
                                                 <span class="w-1.5 h-1.5 rounded-full bg-custom-primary flex-shrink-0"></span>
                                                 <i class="{{ $sub['icon'] }} text-custom-primary flex-shrink-0"></i>
-                                                <span class="text-custom-blue-light font-medium menu-text truncate">{{ $sub['label'] }}</span>
+                                                <span class="font-medium menu-text truncate">{{ $sub['label'] }}</span>
                                             </a>
                                         </li>
                                     @endisset
@@ -379,44 +398,58 @@ $hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
             // Function to open/close submenu
             function openSubmenu(button) {
                 const submenu = button.nextElementSibling;
-                const parentDiv = button.parentElement; // Obtiene el padre directo
-                // Close ALL other submenus first
-                const allButtons = document.querySelectorAll('[onclick="toggleSubmenu(this)"]');
-                allButtons.forEach(otherBtn => {
-                    if (otherBtn !== button) {
-                        const otherBtnParent = otherBtn.parentElement;
-                        otherBtnParent.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
-                        otherBtnParent.classList.add('text-gray-700','hover:!border','hover:bg-white');
-                        otherBtn.classList.remove('text-custom-blue-light','border-custom-blue-light');
-                        const otherSubmenu = otherBtn.nextElementSibling;
-                        if (otherSubmenu && otherSubmenu.classList.contains('submenu')) {
-                            otherSubmenu.classList.add('hidden');
+                const parentDiv = button.parentElement;
+
+                // Detectar si es un botón de segundo nivel (dentro de un submenu ya existente)
+                const isNestedButton = button.closest('.submenu') !== null;
+
+                if (!isNestedButton) {
+                    // Solo cerrar otros submenus de primer nivel si NO es un botón anidado
+                    const allTopLevelButtons = document.querySelectorAll('#layout-menu > div.flex-1 > div > div > [onclick="toggleSubmenu(this)"]');
+                    allTopLevelButtons.forEach(otherBtn => {
+                        if (otherBtn !== button) {
+                            const otherBtnParent = otherBtn.parentElement;
+                            otherBtnParent.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                            otherBtnParent.classList.add('text-gray-700','hover:!border','hover:bg-white');
+                            otherBtn.classList.remove('text-custom-blue-light','border-custom-blue-light');
+                            const otherSubmenu = otherBtn.nextElementSibling;
+                            if (otherSubmenu && otherSubmenu.classList.contains('submenu')) {
+                                otherSubmenu.classList.add('hidden');
+                            }
                         }
-                    }
-                });
-                // Deselect all direct links (elementos sin submenu)
-                const allDirectLinks = sidebar.querySelectorAll('a[class*="flex items-center gap-2 p-2 rounded-lg"]');
-                allDirectLinks.forEach(link => {
-                    // Solo afectar los direct links principales (no los que están dentro de submenús)
-                    if (!link.closest('.submenu')) {
-                        link.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold');
-                        link.classList.add('text-gray-700', 'hover:text-custom-blue-light', 'hover:bg-white', 'hover:!border', 'hover:border-custom-blue-light');
-                    }
-                });
+                    });
+
+                    // Deselect all direct links principales
+                    const allDirectLinks = sidebar.querySelectorAll('a[class*="flex items-center gap-2 p-2 rounded-lg"]');
+                    allDirectLinks.forEach(link => {
+                        if (!link.closest('.submenu')) {
+                            link.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold');
+                            link.classList.add('text-gray-700', 'hover:text-custom-blue-light', 'hover:bg-white', 'hover:!border', 'hover:border-custom-blue-light');
+                        }
+                    });
+                }
 
                 if (submenu && submenu.classList.contains('submenu')) {
                     submenu.classList.toggle('hidden');
                     const isVisible = !submenu.classList.contains('hidden');
-                    if (isVisible) {
-                        // Agregar clases activas al botón
-                        parentDiv.classList.add('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold', 'rounded-2xl');
-                        parentDiv.classList.remove('text-gray-700');
-                        button.classList.remove('hover:!border','hover:bg-white','text-gray-700')
-                        button.classList.add('text-custom-blue-light')
-                    } else {
-                        parentDiv.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
-                        parentDiv.classList.add('text-gray-700','hover:!border','hover:bg-white', 'hover:border-custom-blue-light','hover:text-custom-blue-light');
-                        button.classList.remove('text-custom-blue-light','!border','bg-white');
+
+                    // Rotar el chevron si existe
+                    const chevron = button.querySelector('.fa-chevron-down');
+                    if (chevron) {
+                        chevron.classList.toggle('rotate-180', isVisible);
+                    }
+
+                    if (!isNestedButton) {
+                        if (isVisible) {
+                            parentDiv.classList.add('bg-white', '!border', 'border-custom-blue-light', 'text-custom-blue-light', 'font-semibold', 'rounded-2xl');
+                            parentDiv.classList.remove('text-gray-700');
+                            button.classList.remove('hover:!border','hover:bg-white','text-gray-700');
+                            button.classList.add('text-custom-blue-light');
+                        } else {
+                            parentDiv.classList.remove('bg-white', '!border', 'border-custom-blue-light', 'font-semibold','text-custom-blue-light');
+                            parentDiv.classList.add('text-gray-700','hover:!border','hover:bg-white', 'hover:border-custom-blue-light','hover:text-custom-blue-light');
+                            button.classList.remove('text-custom-blue-light','!border','bg-white');
+                        }
                     }
                 }
             }
