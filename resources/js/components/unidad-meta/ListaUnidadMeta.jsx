@@ -1,6 +1,8 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaUnidadMeta({
     agregarUrl,
@@ -93,12 +95,13 @@ export default function ListaUnidadMeta({
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Indicadores</h2>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Indicadores</h2>
             {canEditParametros && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar indicador
-                </button>
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
             )}
 
             <table class="table">
@@ -118,15 +121,13 @@ export default function ListaUnidadMeta({
                             <td>{unidadMeta.unidad_total}</td>
                             {canEditParametros && (
                                 <td>
-                                    <button
-                                        onClick={() =>
-                                            handleEditarClick(unidadMeta)
-                                        }
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <form
+                                    <CTableActionButton
+                                        title={'Editar'}
+                                        onClick={() => handleEditarClick(unidadMeta)}
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <form id="delete-form-unidad-meta"
                                         action={`/unidades-meta/${unidadMeta.id}`}
                                         method="POST"
                                         style={{ display: "inline" }}
@@ -150,12 +151,13 @@ export default function ListaUnidadMeta({
                                             name="_method"
                                             value="DELETE"
                                         />
-                                        <button
-                                            type="submit"
-                                            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
-                                        >
-                                            Eliminar
-                                        </button>
+                                        <CTableActionButton
+                                            formRef={'#delete-form-unidad-meta'}
+                                            title={'Eliminar'}
+                                            iconClass={'fa fa-trash'}
+                                            confirmMessage={'¿Estás seguro de que quieres eliminar esta unidad de meta?'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
                                     </form>
                                 </td>
                             )}
@@ -165,6 +167,7 @@ export default function ListaUnidadMeta({
             </table>
 
             <CPagination pagination={unidadesMeta} />
+            </div>
             {/* Modal */}
             {showModal && canEditParametros && (
                 <div
