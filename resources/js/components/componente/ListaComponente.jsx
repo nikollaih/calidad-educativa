@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaComponente({ agregarUrl, componentes, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
@@ -72,56 +74,62 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Componentes</h2>
-            {canEditParametros && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar componente
-                </button>
-            )}
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+                <h2 class="mb-4 text-custom-blue-dark">Componentes</h2>
+                {canEditParametros && (
+                    <CAddButton
+                        onClick={handleAgregarClick}
+                    />
+                )}
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        {canEditParametros && <th>Acciones</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {componentes.data.map((componente) => (
-                        <tr key={componente.id}>
-                            <td>{componente.descripcion}</td>
-                            {canEditParametros && (
-                                <td>
-                                    <button
-                                        onClick={() => handleEditarClick(componente)}
-                                        className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <form
-                                        action={`/componentes/${componente.id}`}
-                                        method="POST"
-                                        style={{ display: 'inline' }}
-                                        onSubmit={(e) => {
-                                            if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
-                                                e.preventDefault();
-                                            }
-                                        }}
-                                    >
-                                        <input type="hidden" name="_token" value={csrfToken} />
-                                        <input type="hidden" name="_method" value="DELETE" />
-                                        <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
-                                            Eliminar
-                                        </button>
-                                    </form>
-                                </td>
-                            )}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            {canEditParametros && <th>Acciones</th>}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <CPagination pagination={componentes} />
+                    </thead>
+                    <tbody>
+                        {componentes.data.map((componente) => (
+                            <tr key={componente.id}>
+                                <td>{componente.descripcion}</td>
+                                {canEditParametros && (
+                                    <td>
+                                        <CTableActionButton
+                                            title={'Editar'}
+                                            onClick={() => handleEditarClick(componente)}
+                                            iconClass={'fas fa-pencil'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <form id="delete-form-lista-componente"
+                                            action={`/componentes/${componente.id}`}
+                                            method="POST"
+                                            style={{ display: 'inline' }}
+                                            onSubmit={(e) => {
+                                                if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        >
+                                            <input type="hidden" name="_token" value={csrfToken} />
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            <CTableActionButton
+                                                formRef={'#delete-form-lista-componente'}
+                                                title={'Eliminar'}
+                                                iconClass={'fa fa-trash'}
+                                                confirmMessage={'¿Está seguro de eliminar este municipio?'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
+                                        </form>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <CPagination pagination={componentes} />
+            </div>
             {/* Modal */}
             {showModal && canEditParametros && (
                 <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
