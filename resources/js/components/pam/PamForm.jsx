@@ -1448,7 +1448,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-body">
           <button
             type="button"
-            className="btn btn-success mb-4"
+            className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
             onClick={addComponente}
           >
             <i className="bi bi-plus-circle"></i> Agregar Componente

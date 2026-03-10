@@ -272,12 +272,9 @@ const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false, canConsu
   }
 
   return (
-    <div className="container-fluid mt-4">
-      <div className="d-flex justify-content-start gap-2 mb-4">
+    <div className="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3 mt-4">
+      <div className="d-flex justify-content-start gap-2 mb-4 mx-3">
         {/* Back button visible for all users with any PAM permission */}
-        {(canGestionarPam || canConsultarPam) && (
-          <CNavigationButton label="Volver" to="/pams/index" icon="fas fa-arrow-left" />
-        )}
         {canGestionarPam && isInProceso && (
           <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
         )}
@@ -302,21 +299,21 @@ const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false, canConsu
       </div><div className="card shadow-sm">
         <div className="card-body p-0">
           <div className="table-responsive" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-            <table className="table table-hover table-bordered mb-0">
-              <thead className="sticky-top" style={{ backgroundColor: '#f8f9fa' }}>
+              <table className="table table-bordered border-custom-blue-light mb-0"  style={{ '--bs-table-border-color': '#28ace5' }}>
+              <thead className="bg-custom-blue-dark  items-center ">
                 <tr>
-                  <th className="align-middle">OBJETIVO ESTRATÉGICO</th>
-                  <th className="align-middle" style={{ minWidth: "150px" }}>META</th>
-                  <th className="align-middle">VALOR DE META</th>
-                  <th className="align-middle" style={{ minWidth: "150px" }}>INDICADOR</th>
-                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIONES</th>
-                  <th className="align-middle">RESPONSABLE</th>
-                  <th className="align-middle">RECURSOS</th>
-                  <th className="align-middle">FECHA INICIO</th>
-                  <th className="align-middle">FECHA FIN</th>
-                  <th className="align-middle">DIAS RESTANTES</th>
-                  <th className="align-middle">PORCENTAJE DE AVANCE</th>
-                  {canGestionarPam && <th className="align-middle text-center">ACCIONES</th>}
+                  <th className="align-middle text-white">OBJETIVO ESTRATÉGICO</th>
+                  <th className="align-middle text-white" style={{ minWidth: "150px" }}>META</th>
+                  <th className="align-middle text-white">VALOR DE META</th>
+                  <th className="align-middle text-white" style={{ minWidth: "150px" }}>INDICADOR</th>
+                  <th className="align-middle text-white" style={{ minWidth: "250px" }}>ACCIONES</th>
+                  <th className="align-middle text-white">RESPONSABLE</th>
+                  <th className="align-middle text-white">RECURSOS</th>
+                  <th className="align-middle text-white">FECHA INICIO</th>
+                  <th className="align-middle text-white">FECHA FIN</th>
+                  <th className="align-middle text-white">DIAS RESTANTES</th>
+                  <th className="align-middle text-white">PORCENTAJE DE AVANCE</th>
+                  {canGestionarPam && <th className="align-middle text-center text-white">ACCIONES</th>}
                 </tr>
               </thead>
               <tbody>
