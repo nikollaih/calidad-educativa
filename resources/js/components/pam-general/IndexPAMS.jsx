@@ -3,6 +3,8 @@ import { h } from 'preact';
 import Swal from 'sweetalert2';
 import { useEffect, useState } from "preact/hooks";
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = '', canGestionarPam = false }) {
     const [pams, setPams] = useState([]);
@@ -134,25 +136,25 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
 
     // Renderiza el JSX del componente.
     return (
-        <div class="container mt-4">
-            <h1 class="mb-4">PLAN DE APOYO AL MEJORAMIENTO</h1>
-            <h2 class="mb-4">HISTÓRICO</h2>
-            {canGestionarPam && (
-                <button class="border bg-blue-500  text-white p-2 rounded-pill mb-3" onClick={handleAgregarClick}>
-                    Agregar nuevo registro
-                </button>
-            )}
-
-            <table class="table">
-                <thead>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+                <h2 className="mb-4 text-custom-blue-dark">PLAN DE APOYO AL MEJORAMIENTO</h2>
+                <h2 className="mb-4 text-custom-blue-dark">HISTÓRICO</h2>
+                {canGestionarPam && (
+                    <CAddButton
+                        onClick={handleAgregarClick}
+                    />
+                )}
+                <table className="table">
+                    <thead>
                     <tr>
                         <th>VIGENCIA</th>
                         <th>FECHA DE CREACIÓN</th>
                         <th>ESTADO</th>
                         {canGestionarPam && <th>ACCIONES</th>}
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {pams.length > 0 ? (
                         pams.map((pam) => (
                             <tr key={pam.id}>
@@ -161,35 +163,37 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                                 <td>{pam.estado}</td>
                                 {canGestionarPam ? (
                                     <td>
-                                        <a href={`/pams/${pam.id}/edit`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
-                                            Editar
-                                        </a>
-
-                                        <a href={`/pam/${pam.id}/index`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
-                                            Gestionar
-                                        </a>
-
-                                        <button
-                                            className="btn btn-sm btn-danger me-2"
+                                        <CTableActionButton
+                                            title={'Editar'}
+                                            route={`/pams/${pam.id}/edit`}
+                                            iconClass={'fas fa-pencil'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <CTableActionButton
+                                            title={'Gestionar'}
+                                            route={`/pam/${pam.id}/index`}
+                                            iconClass={'fa-solid fa-bars-progress'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <CTableActionButton
+                                            title={'Eliminar'}
                                             onClick={() => deleteRow(pam.id)}
-                                            title="Eliminar PAM"
-                                        >
-                                            Eliminar
-                                        </button>
+                                            iconClass={'fas fa-trash'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
                                         {Boolean(pam.estado == "Proceso") && (
-                                            <button
-                                                type="button"
-                                                className="btn btn-success btn-sm"
+                                            <CTableActionButton
+                                                title={'Presentar PAM'}
                                                 onClick={() => handlePresentarClick(pam.id)}
-                                                alt="Presentar PAM"
-                                            >
-                                                Presentar PAM
-                                            </button>
+                                                iconClass={'fa-regular fa-paper-plane'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
                                         )}
                                     </td>
                                 ) : (
                                     <td>
-                                        <a href={`/pam/${pam.id}/index`} className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2" >
+                                        <a href={`/pam/${pam.id}/index`}
+                                           className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2">
                                             Gestionar
                                         </a>
                                     </td>
@@ -201,9 +205,10 @@ export default function IndexPAMS({ agregarUrl, pamsPaginated = {}, csrfToken = 
                             <td colSpan="4" className="text-center">No hay PAMs para mostrar.</td>
                         </tr>
                     )}
-                </tbody>
-            </table>
-            <CPagination pagination={pamsPaginated} />
+                    </tbody>
+                </table>
+                <CPagination pagination={pamsPaginated}/>
+            </div>
         </div>
     );
 }
