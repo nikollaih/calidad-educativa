@@ -222,7 +222,13 @@ const FactoresCriticosTable = ({
                         } me-2`}
                         onClick={() => handleComentarioClick(row.factorCritico)}
                     >
-                        <i className="fas fa-plus me-1"></i>
+
+                        {pmi?.comentarios?.some(
+                            ({ factor_id, estado }) =>
+                                factor_id === row?.factorCritico?.id && estado === 'activo'
+                        ) && canManage
+                            ?  <i className="fas fa-edit me-1"></i>
+                            :  <i className="fas fa-plus me-1"></i>}
                         {pmi?.comentarios?.some(
                             ({ factor_id, estado }) =>
                                 factor_id === row?.factorCritico?.id && estado === 'activo'
@@ -381,9 +387,9 @@ const FactoresCriticosTable = ({
     );
 
     return (
-        <div className="container-fluid mt-4">
-            <div className="card shadow-sm">
-                <div className="card-header text-black">
+        <div className="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3 mt-4">
+            <div className="">
+                <div className="px-3 py-2 text-black">
                     <div className="d-flex justify-content-between">
                         <div>
                             <h5 className="mb-0">Plan de Mejoramiento Institucional</h5>
@@ -398,7 +404,7 @@ const FactoresCriticosTable = ({
                                         <i className="fa-solid fa-rotate-left me-2"></i>
                                         Devolver PMI
                                     </button>
-                                    <button className="btn btn-success" onClick={aprobarPmi}>
+                                    <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={aprobarPmi}>
                                         <i className="fa-solid fa-check me-2"></i>
                                         Aprobar PMI
                                     </button>
@@ -407,37 +413,37 @@ const FactoresCriticosTable = ({
                         </div>
                     </div>
                 </div>
-                <div className="card-body p-0">
+                <div className="flex p-0">
                     <div
                         className="table-responsive"
                         style={{ maxHeight: '600px', overflowY: 'auto' }}
                     >
-                        <table className="table table-bordered mb-0">
+                        <table className="table table-bordered border-custom-blue-light mb-0"  style={{ '--bs-table-border-color': '#28ace5' }}>
                             <thead
-                                className="table-dark"
+                                className="bg-custom-blue-dark  items-center"
                                 style={{ position: 'sticky', top: 0, zIndex: 10 }}
                             >
-                                <tr>
-                                    <th className="text-center">Gestión</th>
-                                    <th className="text-center">Componente</th>
-                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                <tr >
+                                    <th className="text-white">Gestión</th>
+                                    <th className="text-white">Componente</th>
+                                    <th className="text-white" style={{ minWidth: '20rem' }}>
                                         Factor Crítico
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '20rem' }}>
+                                    <th className="text-white" style={{ minWidth: '20rem' }}>
                                         Objetivo
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white" style={{ minWidth: '10rem' }}>
                                         Meta
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '12rem' }}>
+                                    <th className="text-white" style={{ minWidth: '12rem' }}>
                                         Indicador
                                     </th>
-                                    <th className="text-center" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white" style={{ minWidth: '10rem' }}>
                                         Actividad
                                     </th>
-                                    <th className="text-center">Recurso ($)</th>
-                                    <th className="text-center">Responsables</th>
-                                    <th className="text-center">Instrumentos de recolección</th>
+                                    <th className="text-white">Recurso ($)</th>
+                                    <th className="text-white">Responsables</th>
+                                    <th className="text-white">Instrumentos de recolección</th>
                                 </tr>
                             </thead>
                             <tbody>
