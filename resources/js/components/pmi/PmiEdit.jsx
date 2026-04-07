@@ -167,26 +167,26 @@ const FactoresCriticosTable = ({
                                 style={{ position: 'sticky', top: 0, zIndex: 10 }}
                             >
                                 <tr>
-                                    <th className="text-white">Gestión</th>
-                                    <th className="text-white">Componente</th>
-                                    <th className="text-white" style={{ minWidth: '20rem' }}>
+                                    <th className="text-white text-center align-middle">Gestión</th>
+                                    <th className="text-white text-center align-middle">Componente</th>
+                                    <th className="text-white text-center align-middle" style={{ minWidth: '20rem' }}>
                                         Factor Crítico
                                     </th>
-                                    <th className="text-white" style={{ minWidth: '20rem' }}>
+                                    <th className="text-white text-center align-middle" style={{ minWidth: '20rem' }}>
                                         Objetivo
                                     </th>
-                                    <th className="text-white" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white text-center align-middle" style={{ minWidth: '10rem' }}>
                                         Meta
                                     </th>
-                                    <th className="text-white" style={{ minWidth: '12rem' }}>
+                                    <th className="text-white text-center align-middle" style={{ minWidth: '12rem' }}>
                                         Indicador
                                     </th>
-                                    <th className="text-white" style={{ minWidth: '10rem' }}>
+                                    <th className="text-white text-center align-middle" style={{ minWidth: '10rem' }}>
                                         Actividad
                                     </th>
-                                    <th className="text-white">Recurso ($)</th>
-                                    <th className="text-white">Responsables</th>
-                                    <th className="text-white">Instrumentos de recolección</th>
+                                    <th className="text-white text-center align-middle">Recurso ($)</th>
+                                    <th className="text-white text-center align-middle">Responsables</th>
+                                    <th className="text-white text-center align-middle">Instrumentos de recolección</th>
                                 </tr>
                             </thead>
                             <tbody>
