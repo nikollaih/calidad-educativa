@@ -47,7 +47,7 @@ const CInstitutionNavigations = ({
 
             if (targetElement) {
                 const navbarContent = (
-                    <div className="flex justify-center px-2 w-full">
+                    <div className="flex justify-center p-2 w-full">
                         <span
                             className="text-uppercase fw-bold text-white"
                             style={{
@@ -58,7 +58,7 @@ const CInstitutionNavigations = ({
                             }}
                             title={institutionName}
                         >
-                           Institución Educativa {institutionName}
+                           IE {institutionName}
                         </span>
                     </div>
                 );

@@ -382,8 +382,9 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         )}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="numeroContacto" class="block text-sm mb-2 ml-4">Número de Contacto</label>
-                                        <input
+                                        <label for="numeroContacto" class="block text-sm mb-2 ml-4">Número de
+                                            Contacto <span className="text-danger">*</span></label>
+                                        <input required
                                             type="text"
                                             class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="numeroContacto"
