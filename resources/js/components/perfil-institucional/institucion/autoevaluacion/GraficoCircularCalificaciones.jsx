@@ -5,10 +5,10 @@ export default function GraficoCircularCalificaciones({ statistics = [] }) {
     const chartRefs = useRef([]);
 
     const categoryColors = {
-        'Existencia': 'rgba(47, 172, 102, 0.9)',
-        'Pertinencia': 'rgba(63, 125, 220, 0.9)',
-        'Apropiación': 'rgba(47, 172, 102, 0.9)',
-        'Mejoramiento': 'rgba(63, 125, 220, 0.9)'
+        'Existencia': 'rgba(220, 53, 69, 0.7)',
+        'Pertinencia': 'rgba(255, 193, 7, 0.7)',
+        'Apropiación': 'rgba(23, 162, 184, 0.7)',
+        'Mejoramiento': 'rgba(40, 167, 69, 0.7)'
     };
 
     const calcularTotalArea = (area) => {
