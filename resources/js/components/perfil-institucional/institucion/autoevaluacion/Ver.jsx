@@ -44,10 +44,10 @@ export default function Ver({  gruposCalificaciones = [],
 
         // Colores basados en el valor (0-4)
         const backgroundColors = data.map(val => {
-            if (val >= 4) return 'rgba(47, 172, 102, 1)'; // Verde para 4
-            if (val >= 3) return 'rgba(63, 125, 220, 1)'; // Azul para 3-3.99
-            if (val >= 2) return 'rgba(47, 172, 102, 1)'; // Amarillo para 2-2.99
-            return 'rgba(63, 125, 220, 1)'; // Rojo para 0-1.99
+            if (val >= 4) return 'rgba(40, 167, 69, 0.7)'; // Verde para 4
+            if (val >= 3) return 'rgba(23, 162, 184, 0.7)'; // Azul para 3-3.99
+            if (val >= 2) return 'rgba(255, 193, 7, 0.7)'; // Amarillo para 2-2.99
+            return 'rgba(220, 53, 69, 0.7)'; // Rojo para 0-1.99
         });
 
         // Destruir el gráfico anterior si existe
