@@ -14,8 +14,8 @@
                 <table class="table mt-3">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
+                            <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => (($sort ?? 'id') == 'name' && ($direction ?? 'desc') == 'asc' ? 'desc' : 'asc')]) }}">Nombre @if(($sort ?? 'id') == 'name'){{ $direction == 'asc' ? '↑' : '↓' }}@endif</a></th>
+                            <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => (($sort ?? 'id') == 'email' && ($direction ?? 'desc') == 'asc' ? 'desc' : 'asc')]) }}">Email @if(($sort ?? 'id') == 'email'){{ $direction == 'asc' ? '↑' : '↓' }}@endif</a></th>
                             <th>Rol</th>
                             <th>Acciones</th>
                         </tr>

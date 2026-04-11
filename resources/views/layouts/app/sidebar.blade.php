@@ -30,12 +30,6 @@ $sidebarMenu = [
                 'label' => 'Roles',
                 'permission' => 's-role-ver'
             ],
-            [
-                'url' => 'permissions',
-                'icon' => 'fa-solid fa-check',
-                'label' => 'Permisos',
-                'permission' => 's-permission-ver'
-            ],
         ]
     ],
     [

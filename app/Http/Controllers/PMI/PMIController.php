@@ -51,7 +51,9 @@ class PMIController extends Controller {
         $pmis = Pmi::with('comentarios','comentarios.autor','comentarios.factor')
             ->whereHas('autoevaluacion', function ($query) use ($institucionId) {
                 $query->where('institucion_id', $institucionId);
-            })->paginate(20);
+            })
+            ->orderBy('anio_inicio', 'asc')
+            ->paginate(20);
 
         return view('pmi.index', [
             'institucionId' => $institucionId,

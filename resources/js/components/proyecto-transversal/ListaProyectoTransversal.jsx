@@ -206,7 +206,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Nombrea</th>
+                                <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Lider</th>
                                 <th>Acto Administrativo</th>

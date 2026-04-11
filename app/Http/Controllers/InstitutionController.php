@@ -41,6 +41,7 @@ class InstitutionController extends Controller {
                 $query->where('municipio_id', $municipioId);
             })
             ->filters($request->filters())
+            ->orderBy('nombre', 'asc')
             ->paginate('10');
         return view(
             'institutional_profile.institution.index',
@@ -263,7 +264,9 @@ class InstitutionController extends Controller {
             ->with('flash_success_message', "Resultados actualizados correctamente");
     }
     public function autoevaluaciones(InstitucionRequest $request, int $institution ) {
-        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->paginate(10);
+        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)
+            ->orderBy('anio_vigencia', 'asc')
+            ->paginate(10);
         $institucionNombre = Institucion::find($institution)?->nombre;
         return view('institutional_profile.institution.autoevaluaciones.index', [
             'institutionId' => $institution,
