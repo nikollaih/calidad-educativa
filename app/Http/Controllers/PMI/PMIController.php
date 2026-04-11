@@ -52,7 +52,7 @@ class PMIController extends Controller {
             ->whereHas('autoevaluacion', function ($query) use ($institucionId) {
                 $query->where('institucion_id', $institucionId);
             })
-            ->orderBy('anio_inicio', 'asc')
+            ->orderBy('anio_inicio', 'desc')
             ->paginate(20);
 
         return view('pmi.index', [

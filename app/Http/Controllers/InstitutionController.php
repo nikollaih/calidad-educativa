@@ -265,7 +265,7 @@ class InstitutionController extends Controller {
     }
     public function autoevaluaciones(InstitucionRequest $request, int $institution ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)
-            ->orderBy('anio_vigencia', 'asc')
+            ->orderBy('anio_vigencia', 'desc')
             ->paginate(10);
         $institucionNombre = Institucion::find($institution)?->nombre;
         return view('institutional_profile.institution.autoevaluaciones.index', [
