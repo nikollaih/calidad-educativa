@@ -14,8 +14,8 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $sort = $request->get('sort', 'id');
-        $direction = $request->get('direction', 'desc');
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
 
         $allowedSorts = ['name', 'email', 'id'];
         if (! in_array($sort, $allowedSorts)) {
