@@ -45,8 +45,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
-    $municipios = Municipio::get();
+    $canSeeAll = Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('administrador');
 
+    if (!$canSeeAll) {
+       return redirect()->route('institution.index');
+    }
     $institucionesCount = Institucion::count();
     $sedesCount = Sede::count();
     $avgSedesPorInstitucion = $institucionesCount > 0 ? round($sedesCount / $institucionesCount, 2) : 0;
