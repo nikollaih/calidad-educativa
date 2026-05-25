@@ -42,7 +42,8 @@ class InstitutionController extends Controller {
             })
             ->filters($request->filters())
             ->orderBy('nombre', 'asc')
-            ->paginate('10');
+            ->paginate('10')
+            ->appends(request()->query());
         return view(
             'institutional_profile.institution.index',
             [

@@ -45,19 +45,90 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
-    $canSeeAll = Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('administrador');
+    $user = Auth::user();
+    $isRector = $user->hasRole('rector');
+    $canSeeAll = $user->hasRole('super_admin') || $user->hasRole('administrador');
 
-    if (!$canSeeAll) {
+    if (!$canSeeAll && !$isRector) {
        return redirect()->route('institution.index');
     }
-    $institucionesCount = Institucion::count();
-    $sedesCount = Sede::count();
-    $avgSedesPorInstitucion = $institucionesCount > 0 ? round($sedesCount / $institucionesCount, 2) : 0;
 
-    $pmiTotal = Pmi::count();
-    $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
-        ->groupBy('estado')
-        ->pluck('total', 'estado');
+    if ($isRector) {
+        $institucion = $user->institucion;
+
+        if (!$institucion) {
+            return redirect()->route('institution.index')
+                ->with('flash_error_message', 'No tienes una institución asociada.');
+        }
+
+        $institucionId = $institucion->id;
+
+        $institucionesCount = 1;
+        $sedesCount = Sede::where('institution_id', $institucionId)->count();
+        $avgSedesPorInstitucion = $sedesCount;
+
+        $pmiTotal = Pmi::whereHas('autoevaluacion', fn($q) => $q->where('institucion_id', $institucionId))->count();
+        $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
+            ->whereHas('autoevaluacion', fn($q) => $q->where('institucion_id', $institucionId))
+            ->groupBy('estado')
+            ->pluck('total', 'estado');
+
+        $topMunicipiosInstituciones = collect([
+            ['nombre' => $institucion->municipio?->nombre ?? 'Sin municipio', 'total' => 1],
+        ]);
+
+        $autoevaluacionesTotal = Autoevaluacion::where('institucion_id', $institucionId)->count();
+        $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
+            ->where('institucion_id', $institucionId)
+            ->groupBy('alias_estado')
+            ->pluck('total', 'alias_estado');
+
+        $topMunicipiosSedes = DB::table('sedes')
+            ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
+            ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
+            ->where('sedes.institution_id', $institucionId)
+            ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
+            ->groupBy('municipios.nombre')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+    } else {
+        $institucionesCount = Institucion::count();
+        $sedesCount = Sede::count();
+        $avgSedesPorInstitucion = $institucionesCount > 0 ? round($sedesCount / $institucionesCount, 2) : 0;
+
+        $pmiTotal = Pmi::count();
+        $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
+            ->groupBy('estado')
+            ->pluck('total', 'estado');
+
+        $topMunicipiosInstituciones = Institucion::select('municipio_id', DB::raw('count(*) as total'))
+            ->with('municipio')
+            ->groupBy('municipio_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'nombre' => $row->municipio?->nombre ?? 'Sin municipio',
+                    'total' => (int) $row->total,
+                ];
+            });
+
+        $autoevaluacionesTotal = Autoevaluacion::count();
+        $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
+            ->groupBy('alias_estado')
+            ->pluck('total', 'alias_estado');
+
+        $topMunicipiosSedes = DB::table('sedes')
+            ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
+            ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
+            ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
+            ->groupBy('municipios.nombre')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+    }
 
     $pmiAprobados = $pmiPorEstado['Aprobado'] ?? 0;
     $pmiPresentados = $pmiPorEstado['Presentado'] ?? 0;
@@ -67,36 +138,10 @@ Route::get('/dashboard', function () {
     $porcPresentados = $pmiTotal > 0 ? round(($pmiPresentados / $pmiTotal) * 100, 1) : 0;
     $porcProceso = $pmiTotal > 0 ? round(($pmiProceso / $pmiTotal) * 100, 1) : 0;
 
-    $topMunicipiosInstituciones = Institucion::select('municipio_id', DB::raw('count(*) as total'))
-        ->with('municipio')
-        ->groupBy('municipio_id')
-        ->orderByDesc('total')
-        ->limit(5)
-        ->get()
-        ->map(function ($row) {
-            return [
-                'nombre' => $row->municipio?->nombre ?? 'Sin municipio',
-                'total' => (int) $row->total,
-            ];
-        });
-
-    // Autoevaluaciones por estado
-    $autoevaluacionesTotal = Autoevaluacion::count();
-    $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
-        ->groupBy('alias_estado')
-        ->pluck('total', 'alias_estado');
     $autoProceso = $autoevaluacionesPorEstado['PROCESO'] ?? 0;
     $autoValidacion = $autoevaluacionesPorEstado['VALIDACION'] ?? 0;
 
-    // Sedes por municipio (Top 5)
-    $topMunicipiosSedes = DB::table('sedes')
-        ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
-        ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
-        ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
-        ->groupBy('municipios.nombre')
-        ->orderByDesc('total')
-        ->limit(5)
-        ->get();
+    $municipios = Municipio::get();
 
     return view('dashboard', [
         'municipios' => $municipios,
@@ -111,7 +156,6 @@ Route::get('/dashboard', function () {
             'porc_aprobados' => $porcAprobados,
             'porc_presentados' => $porcPresentados,
             'porc_proceso' => $porcProceso,
-            // Autoevaluaciones
             'autoevaluaciones_total' => $autoevaluacionesTotal,
             'autoevaluaciones_proceso' => $autoProceso,
             'autoevaluaciones_validacion' => $autoValidacion,
