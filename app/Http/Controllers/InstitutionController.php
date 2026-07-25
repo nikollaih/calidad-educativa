@@ -57,9 +57,16 @@ class InstitutionController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Debes estar asociado a una institucion.');
         }
 
+        $search = $request->input('search');
+
         $paginate = User::whereHas('instituciones', function($query) use ($institucion) {
             $query->where('institucions.id', $institucion->id);
-        })->paginate(10);
+        })
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })
+        ->paginate(10)
+        ->appends(request()->query());
 
         // Agregar is_active directamente a cada usuario
         $paginate->getCollection()->transform(function($user) use ($institucion) {
@@ -74,7 +81,8 @@ class InstitutionController extends Controller {
         return view(
             'usuarios_institucion.index',
             [
-                'paginate' =>$paginate
+                'paginate' => $paginate,
+                'search' => $search,
             ]
         );
     }

@@ -11,7 +11,20 @@
                          data-route="{{ route('usuarios.create') }}"
                     ></div>
                 @endcan
-                <table class="table mt-3">
+                <form method="GET" action="{{ route('usuarios.index') }}" class="mt-3 mb-3">
+                    <div class="input-group" style="max-width: 400px;">
+                        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="{{ $search ?? '' }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                        @if(!empty($search))
+                            <a href="{{ route('usuarios.index', ['sort' => $sort, 'direction' => $direction]) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Limpiar
+                            </a>
+                        @endif
+                    </div>
+                </form>
+                <table class="table">
                     <thead>
                         <tr>
                             <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => (($sort ?? 'id') == 'name' && ($direction ?? 'desc') == 'asc' ? 'desc' : 'asc')]) }}">Nombre @if(($sort ?? 'id') == 'name'){{ $direction == 'asc' ? '↑' : '↓' }}@endif</a></th>

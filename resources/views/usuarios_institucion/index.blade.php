@@ -22,6 +22,19 @@
                         </span>
                     </a>
                     @endrole
+                    <form method="GET" action="{{ route('instituciones.usuarios_institucion-index') }}" class="mt-3 mb-3">
+                        <div class="input-group" style="max-width: 400px;">
+                            <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="{{ $search ?? '' }}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                            @if(!empty($search))
+                                <a href="{{ route('instituciones.usuarios_institucion-index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Limpiar
+                                </a>
+                            @endif
+                        </div>
+                    </form>
                     <table class="table mt-3">
                         <thead>
                         <tr>

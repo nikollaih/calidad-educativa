@@ -25,9 +25,17 @@ class UserController extends Controller
             $direction = 'desc';
         }
 
-        $usuarios = User::with('roles')->orderBy($sort, $direction)->paginate(10);
+        $search = $request->input('search');
 
-        return view('usuarios.index', compact('usuarios', 'sort', 'direction'));
+        $usuarios = User::with('roles')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->orderBy($sort, $direction)
+            ->paginate(10)
+            ->appends(request()->query());
+
+        return view('usuarios.index', compact('usuarios', 'sort', 'direction', 'search'));
     }
 
     public function all()
