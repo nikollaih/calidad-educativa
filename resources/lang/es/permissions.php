@@ -83,6 +83,9 @@ return [
     's-objetivo-pmi-editar'   => 'Editar objetivos PMI',
     's-objetivo-pmi-eliminar' => 'Eliminar objetivos PMI',
 
+    // Gestion del PPT
+    's-PPT-gestionar' => 'Gestionar PPT',
+
     // Indicadores PMI
     's-indicador-pmi-ver'      => 'Ver indicadores PMI',
     's-indicador-pmi-crear'    => 'Crear indicadores PMI',

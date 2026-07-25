@@ -37,6 +37,8 @@ class PermissionSeeder extends Seeder {
             // Parámetros del sistema
             ['name'=>'s-parametro-editar'],
 
+            // PPT
+            ['name'=>'s-PPT-gestionar'],
             // PAM
             ['name'=>'s-pam-gestionar'],
             ['name'=>'s-pam-consultar'],
