@@ -495,7 +495,7 @@ useEffect(() => {
                               {actividad.adjuntos && actividad.adjuntos.length > 0 && (
                                   <button
                                       onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
-                                      className="btn btn-info btn-sm me-2"
+                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                                   >
                                       <i className="fa fa-eye text-white"></i>
                                   </button>
@@ -709,7 +709,9 @@ useEffect(() => {
                                   <div>
                                     {/* NUEVO: Botón para ver el adjunto */}
                                     {file.url && (
-                                      <a href={file.url} target="_blank" className="btn btn-info btn-sm me-2">
+                                      <a href={file.url} target="_blank"
+                                         className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                                      >
                                         <i className="fa fa-eye text-white"></i> Ver
                                       </a>
                                     )}
@@ -852,7 +854,9 @@ useEffect(() => {
                         {currentDocumentos.map((adjunto, index) => (
                           <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                             <span>{adjunto.adjunto.nombre}</span>
-                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank" className="btn btn-info btn-sm">
+                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank"
+                               className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                            >
                               <i className="fa fa-eye text-white"></i> Ver
                             </a>
                           </li>
