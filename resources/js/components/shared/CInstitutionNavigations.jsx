@@ -37,7 +37,7 @@ const CInstitutionNavigations = ({
         canViewPmi: auth.can('s-institucion-editar') ||
             auth.can('s-pmi-gestionar') ||
             auth.hasRole('rector'),
-        canViewProyectos: auth.can('s-institucion-editar') || auth.hasRole('rector'),
+        canViewProyectos: auth.can('s-institucion-editar') || auth.hasRole('rector') || auth.can('s-PPT-gestionar'),
     }), []);
 
     // Hook para montar el nombre de la institución en el navbar

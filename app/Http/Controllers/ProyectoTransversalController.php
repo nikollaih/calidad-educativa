@@ -10,6 +10,7 @@ use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\ProyectosTransversal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProyectoTransversalController extends Controller {
@@ -113,8 +114,23 @@ class ProyectoTransversalController extends Controller {
         ]);
 
         // CAMBIO: Se busca el proyecto transversal por el ID en la URL.
-        $proyectoTransversalModel = ProyectosTransversal::findOrFail($proyectoTransversal);
-
+        $proyectoTransversalModel = ProyectosTransversal::with('institucion')->findOrFail($proyectoTransversal);
+        // Se carga el usuario en sesion para hacer validaciones
+        $authUser = Auth::user();
+        // En caso de que sea rector, se valida que sea el rector de la institucion
+        $isRector = $authUser->hasRole('Rector') && $authUser->id == $proyectoTransversalModel->institucion->institucions;
+        // En caso de que tenga permiso de gestionar PPT se valida que sea el lider
+        $isLeader = $authUser->can('s-PPT-gestionar') && $authUser->id == $proyectoTransversalModel->representante_id;
+        // Bandera para definir si el usuario en sesion puede hacer ediciones
+        $canEdit = $authUser->hasRole('super_admin') ||
+            $authUser->can('s-institucion-editar') ||
+            $isRector ||
+            $isLeader;
+        if ( !$canEdit) {
+            return redirect()
+                ->back()
+                ->with('flash_error_message', 'No tienes permisos para editar este proyecto transversal, debes ser el rector de la institución o ser el lider del proyecto o tener permisos para editar instituciones.');
+        }
         // Se inicializa el ID del adjunto actual.
         $acto_administrativo_id = $proyectoTransversalModel->acto_administrativo_id;
 
