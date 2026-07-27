@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
+use App\Http\Services\MailService;
 use App\Models\RedesAprendizaje;
 use App\Models\ProyectoIntegrante;
 use App\Models\ProyectosActividad;
@@ -14,13 +15,14 @@ class ProyectoTransversalActividadesController extends Controller {
 
     public function __construct(
         private AdjuntoService $adjuntoService,
+        private MailService $mailService
     ){}
 
     public function index(Request $request, int $proyectoTransversalId) {
         $user = auth()->user();
 
         $isRelatedToProyecto = false;
-        
+
         // Se verifica si hay un usuario autenticado para realizar el filtro.
         if ($user) {
             $proyectoActividades = ProyectosActividad::with(['proyectoTransversal.actoAdministrativo', 'adjuntos.adjunto'])
@@ -46,7 +48,7 @@ class ProyectoTransversalActividadesController extends Controller {
 
         return view('proyectoTransversal.actividades.index', [
             'actividades' => $proyectoActividades,
-            //obtenerlo directamente del modelo 
+            //obtenerlo directamente del modelo
             'detalleProyecto' => $isRelatedToProyecto ? $proyectoTransversal : null,
             'integrantes' => $proyectoIntegrantes,
             'institucionId' => $proyectoTransversal?->institucion_id,
@@ -108,6 +110,58 @@ class ProyectoTransversalActividadesController extends Controller {
         return redirect()->route('proyecto-transversal-actividades.index', $proyectoTransversalId)->with('flash_success_message', 'Actividad creada con éxito.');
     }
 
+    public function shareWithIntegrants(Request $request) {
+        $input = $request->all();
+        /**
+         * @var ProyectosActividad proyectoActividad Actividad asociada con sus relaciones
+         */
+        $proyectoActividad = ProyectosActividad::with(['proyectoTransversal.representante', 'proyectoTransversal.integrantes'])
+            ->find(data_get($input, 'activity.id'));
+
+        if (!$proyectoActividad) {
+            return response()->json([
+                'message' => 'Actividad no encontrada.',
+            ], 500);
+        }
+        /**
+         * @var array $activityData Son los datos de la actividad que se mostrara'n en el correo
+         */
+        $activityData = [
+            'fecha' => $proyectoActividad?->fecha,
+            'descripcion' => $proyectoActividad?->descripcion,
+        ];
+        /**
+         * @var array $proyectoTransversalData Es la informacion del proyecto transversal que se va a mandar
+         */
+        $proyectoTransversalData = [
+            'nombre'      => $proyectoActividad?->proyectoTransversal?->nombre,
+            'descripcion' => $proyectoActividad?->proyectoTransversal?->nombre
+        ];
+        /**
+         * @var ?string $mensaje Es el mensaje custom del compartir
+         */
+        $mensaje = data_get($input, 'description');
+        $proyectoActividad->proyectoTransversal
+            ->integrantes
+            ->where('rol', '=', $input["role"])
+            ->each(function ($integrante) use ($input, $activityData, $proyectoTransversalData, $mensaje) {
+                // Enviar correo (retorna false si falla)
+                $this->mailService->sendMail(
+                    email: $integrante->correo,
+                    subject: 'Notifiación proyecto transversal',
+                    template: 'email.proyecto_transversal.actividad.share',
+                    data:[
+                        'nombre'              => $integrante->nombre,
+                        'actividad'           => $activityData,
+                        'proyectoTransversal' => $proyectoTransversalData,
+                        'mensaje'         => $mensaje,
+                    ]
+                );
+            });
+        return response()->json([
+            'message' => 'Correos enviados exitosamente.',
+        ], 200);
+    }
     public function edit(RedesAprendizaje $redAprendizaje) {
         // Se corrige la variable a 'redAprendizaje' para que coincida con el modelo.
         return view('redesAprendizajes.edit', compact('redAprendizaje'));
@@ -163,7 +217,7 @@ class ProyectoTransversalActividadesController extends Controller {
 
     public function destroy(int $proyectoTransversalId, int $actividadId) {
         $proyectoActividad = ProyectosActividad::findOrFail($actividadId);
-        
+
         $proyectoActividad->delete();
         return redirect()->route('proyecto-transversal-actividades.index', $proyectoTransversalId)->with('flash_success_message', 'Actividad eliminada correctamente.');
     }

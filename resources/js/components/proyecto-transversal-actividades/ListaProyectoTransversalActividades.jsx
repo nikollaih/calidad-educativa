@@ -377,11 +377,15 @@ useEffect(() => {
       showAlert('Por favor, selecciona un rol para compartir.');
       return;
     }
+    if (!shareDescription) {
+       showAlert('Por favor, ingresa un cuerpo para el correo.');
+       return;
+    }
 
     setLoading(true);
     try {
       const { id, type } = currentShareItem;
-      const url = type === 'actividad' ? `/actividades/${id}/share` : `/integrantes/${id}/share`;
+      const url = type === 'actividad' ? `/proyecto-transversal-actividades/share` : `/integrantes/${id}/share`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -390,7 +394,7 @@ useEffect(() => {
           'X-CSRF-TOKEN': csrfToken,
         },
         // CAMBIO: Se incluye la descripción en el cuerpo de la petición
-        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken }),
+        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken, activity:currentShareItem }),
       });
 
       if (!response.ok) {
@@ -398,7 +402,7 @@ useEffect(() => {
         throw new Error(errorData.message || 'Error al compartir');
       }
 
-      showAlert('Elemento compartido con éxito.');
+      showAlert('Correos enviados exitosamente.');
       setShowShareModal(false);
       setSelectedRole('');
       setShareDescription(''); // CAMBIO: Se limpia el estado de la descripción al cerrar el modal
@@ -894,7 +898,7 @@ useEffect(() => {
                           onChange={(e) => setSelectedRole(e.target.value)}
                         >
                           <option value="">-- Selecciona --</option>
-                          {rolesList.map(rol => (
+                          {integrantesRoles.map( rol => (
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
                           ))}
                         </select>
@@ -908,6 +912,7 @@ useEffect(() => {
                           rows="3"
                           value={shareDescription}
                           onChange={(e) => setShareDescription(e.target.value)}
+                          required={true}
                         ></textarea>
                         <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
                       </div>

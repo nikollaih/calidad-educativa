@@ -320,6 +320,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
     // Rutas relacionadas a las actividades de redes
     Route::resource('red-actividades', RedesActividadesController::class);
+    Route::post('/proyecto-transversal-actividades/share', [ProyectoTransversalActividadesController::class, 'shareWithIntegrants'] );
     // Rutas relacionadas a las actividades de redes
     Route::resource('{proyectoTransversalId}/proyecto-transversal-actividades', ProyectoTransversalActividadesController::class);
     // Rutas relacionadas a los integrantes de redes
