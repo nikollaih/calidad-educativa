@@ -318,6 +318,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a redes de aprendizaje
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
+    // Ruta para compartir una red de aprendizaje
+    Route::post('/red-actividades/actividades/share', [RedesActividadesController::class, 'shareWithIntegrants'] );
     // Rutas relacionadas a las actividades de redes
     Route::resource('red-actividades', RedesActividadesController::class);
     Route::post('/proyecto-transversal-actividades/share', [ProyectoTransversalActividadesController::class, 'shareWithIntegrants'] );

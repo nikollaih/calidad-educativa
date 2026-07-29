@@ -389,7 +389,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const { id, type } = currentShareItem;
-      const url = type === 'actividad' ? `/actividades/${id}/share` : `/integrantes/${id}/share`;
+      const url = type === 'actividad' ? `/red-actividades/actividades/share` : `/integrantes/${id}/share`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -398,7 +398,7 @@ useEffect(() => {
           'X-CSRF-TOKEN': csrfToken,
         },
         // CAMBIO: Se incluye la descripción en el cuerpo de la petición
-        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken }),
+        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken,actividad_id: id }),
       });
 
       if (!response.ok) {
@@ -406,7 +406,7 @@ useEffect(() => {
         throw new Error(errorData.message || 'Error al compartir');
       }
 
-      showAlert('Elemento compartido con éxito.');
+      showAlert('Red de aprendizaje compartida con éxito.');
       setShowShareModal(false);
       setSelectedRole('');
       setShareDescription(''); // CAMBIO: Se limpia el estado de la descripción al cerrar el modal

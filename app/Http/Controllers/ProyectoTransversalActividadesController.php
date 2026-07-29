@@ -135,7 +135,7 @@ class ProyectoTransversalActividadesController extends Controller {
          */
         $proyectoTransversalData = [
             'nombre'      => $proyectoActividad?->proyectoTransversal?->nombre,
-            'descripcion' => $proyectoActividad?->proyectoTransversal?->nombre
+            'descripcion' => $proyectoActividad?->proyectoTransversal?->descripcion
         ];
         /**
          * @var ?string $mensaje Es el mensaje custom del compartir
