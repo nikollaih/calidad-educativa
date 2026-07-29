@@ -419,11 +419,11 @@ useEffect(() => {
 
   // NUEVO: Función para renderizar la información de la red
   const renderInformacionRed = () => (
-    <div className="mt-4">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
       <div className="card">
-        <div className="card-header bg-primary text-white">
-          <h4 className="mb-0">Información de la Red</h4>
-        </div>
+          <div className="card-header text-white">
+              <h4 className="mb-0">Información de la Red</h4>
+          </div>
         <div className="card-body">
           <div className="row">
             <div className="col-12 mb-3">
@@ -457,32 +457,33 @@ useEffect(() => {
 
   // MODIFICACION: Función para renderizar la tabla de actividades unificada con filtro por año
   const renderActividadesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Lista de Actividades</h4>
-        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarActividadClick}>
-          <i className="fa fa-plus me-2"></i>Agregar Actividad
-        </button>
-      </div>
-      {/* MODIFICACION: Se agregó un filtro de selección de año */}
-      <div className="row mb-3">
-        <div className="col-md-6">
-          <label htmlFor="selectYear" className="block text-sm mb-2 ml-4">Filtrar por año</label>
-          <select
-            id="selectYear"
-            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-          >
-            <option value="">Todos los años</option>
-            {availableYears.map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+        <div className="d-flex justify-content-between align-items-center m-3">
+            <h4>Lista de Actividades</h4>
+            <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarActividadClick}>
+                <i className="fa fa-plus me-2"></i>Agregar Actividad
+            </button>
         </div>
-      </div>
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
+      {/* MODIFICACION: Se agregó un filtro de selección de año */}
+        <div className="row mb-3">
+            <div className="mx-1 col-md-6">
+                <label htmlFor="selectYear" className="block text-sm mb-2 ml-4">Filtrar por año</label>
+                <select
+                    id="selectYear"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                    <option value="">Todos los años</option>
+                    {availableYears.map(year => (
+                        <option key={year} value={year}>{year}</option>
+                    ))}
+                </select>
+            </div>
+        </div>
+        <div class={'flex m-1'}>
+            <table className="table table-striped table-hover">
+                <thead style={{ backgroundColor: '#E5E7EB' }}>
           <tr>
             <th>Fecha</th>
             <th>Descripción</th>
@@ -502,7 +503,7 @@ useEffect(() => {
                   {actividad.adjuntos && actividad.adjuntos.length > 0 && (
                     <button
                       onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
-                      className="btn btn-info btn-sm me-2"
+                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                     >
                       <i className="fa fa-eye text-white"></i>
                     </button>
@@ -520,7 +521,7 @@ useEffect(() => {
                     <i className="fa fa-pen-to-square text-white"></i>
                   </button>
                   <button
-                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
                     onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
                   >
                     <i className="fa fa-trash-alt text-white"></i>
@@ -535,6 +536,7 @@ useEffect(() => {
           )}
         </tbody>
       </table>
+        </div>
     </div>
 );
 
@@ -543,17 +545,17 @@ useEffect(() => {
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Lista de Integrantes</h4>
-        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarIntegranteClick}>
-          {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
-          <i className="fa fa-plus me-2"></i>Agregar Integrante
-        </button>
-      </div>
-
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+        <div className="d-flex justify-content-between align-items-center m-3">
+            <h4>Lista de Integrantes</h4>
+            <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarIntegranteClick}>
+                {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
+                <i className="fa fa-plus me-2"></i>Agregar Integrante
+            </button>
+        </div>
+        <div className={'flex m-1'}>
+            <table className="table table-striped table-hover">
+                <thead style={{ backgroundColor: '#E5E7EB' }}>
           <tr>
             <th>Nombre</th>
             <th>Contacto</th>
@@ -601,412 +603,451 @@ useEffect(() => {
           )}
         </tbody>
       </table>
+        </div>
     </div>
   );
 
   return (
-    <div className="container mt-4">
-      <div className="text-center mb-4">
-        <h2 className="mb-2">Gestión de Redes de Aprendizaje</h2>
-        {detalleRed.nombre && (
-          <h4 className="text-muted">{detalleRed.nombre}</h4>
-        )}
-      </div>
+      <div className="container mt-4 !border border-custom-blue-light rounded-xl bg-white">
+          <div className="text-center p-3  font-semibold">
+              <div className="text-xl text-custom-blue-dark">Gestión de Redes de Aprendizaje</div>
+              {detalleRed.nombre && (
+                  <div className="!text-gray-600 text-lg">{detalleRed.nombre}</div>
+              )}
+          </div>
+
       {!isRelatedToRed ? (
         <div className="alert alert-danger text-center" role="alert">
           En estos momentos no se encuentra relacionado a esta red de aprendizaje como responsable
         </div>
       ) : (
-        <>
-          {/* MODIFICACION: Se unieron las pestañas de actividades e histórico */}
-          <ul className="nav nav-tabs nav-justified">
-            {/* Informacion de red */}
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
-                onClick={() => setActiveTab('informacion')}
-                style={{ cursor: 'pointer' }}
-              >
-                Información de la Red
-              </a>
-            </li>
-            {/* Integrantes */}
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
-                onClick={() => setActiveTab('integrantes')}
-                style={{ cursor: 'pointer' }}
-              >
-                Integrantes
-              </a>
-            </li>
-            {/* Actividades */}
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
-                onClick={() => setActiveTab('actividades')}
-                style={{ cursor: 'pointer' }}
-              >
-                Actividades
-              </a>
-            </li>
-          </ul>
-
-          <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
-            {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
-            {activeTab === 'informacion' && renderInformacionRed()}
-            {activeTab === 'integrantes' && renderIntegrantesTable()}
-            {activeTab === 'actividades' && renderActividadesTable()}
-          </div>
-
-          {/* Modal de formulario de actividades */}
-          {showActividadModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                  <div className="modal-header d-flex justify-content-between align-items-center">
-                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
-                    <div className="d-flex align-items-center me-3">
-                      <h5 className="modal-title me-4">
-                        {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
-                      </h5>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      onClick={handleCloseActividadModal}
-                    ></button>
+          <div className={'flex flex-column !border border-custom-blue-dark rounded-lg mb-3'}>
+              {/* MODIFICACION: Se unieron las pestañas de actividades e histórico */}
+              <div className="px-3 mt-3 flex justify-between">
+              {/* Informacion de red */}
+                  <div className="flex w-full">
+                      <a
+                          className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'informacion' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
+                          onClick={() => setActiveTab('informacion')}
+                          style={{ cursor: 'pointer' }}
+                      >
+                          Información de la Red
+                      </a>
                   </div>
-                  <form onSubmit={handleActividadSubmit}>
-                    <div className="modal-body">
-                      <div className="mb-3">
-                        <label htmlFor="actividadFecha" className="block text-sm mb-2 ml-4">Fecha<span className="text-danger">*</span></label>
-                        <input
-                          type="date"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          id="actividadFecha"
-                          value={actividadFecha}
-                          onInput={(e) => setActividadFecha(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="actividadDescripcion" className="block text-sm mb-2 ml-4">Descripción<span className="text-danger">*</span></label>
-                        <textarea
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
-                          id="actividadDescripcion"
-                          value={actividadDescripcion}
-                          onInput={(e) => setActividadDescripcion(e.target.value)}
-                          rows="3"
-                          required
-                        ></textarea>
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="actividadAdjuntos" className="block text-sm mb-2 ml-4">Evidencias</label>
-                        <input
-                          type="file"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          id="actividadAdjuntos"
-                          multiple
-                          onChange={handleFileChange}
-                          ref={fileInputRef}
-                        />
-                        {/* CAMBIO: Se añadió una sección para ver y gestionar los archivos ya adjuntos */}
-                        {actividadAdjuntos.length > 0 && (
-                          <div className="mt-2">
-                            <h6>Archivos seleccionados:</h6>
-                            <ul className="list-group">
-                              {actividadAdjuntos.map((file, index) => (
-                                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                                  <span>{file.name || `Documento ${index + 1}`}</span>
-                                  <div>
-                                    {/* NUEVO: Botón para ver el adjunto */}
-                                    {file.url && (
-                                      <a href={file.url} target="_blank" className="btn btn-info btn-sm me-2">
-                                        <i className="fa fa-eye text-white"></i> Ver
-                                      </a>
-                                    )}
-                                    {/* NUEVO: Botón para eliminar el adjunto del array */}
-                                    <button
-                                      type="button"
-                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm flex gap-2"
-                                      onClick={() => handleRemoveAdjunto(index)}
-                                    >
-                                      <i className="fa fa-trash-alt text-white"></i> Eliminar
-                                    </button>
+                  {/* Integrantes */}
+                  <div className="flex w-full">
+                      <a
+                          className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'integrantes' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
+                          onClick={() => setActiveTab('integrantes')}
+                          style={{ cursor: 'pointer' }}
+                      >
+                          Integrantes
+                      </a>
+                  </div>
+                  {/* Actividades */}
+                  <div className="flex w-full">
+                      <a
+                          className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'actividades' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
+                          onClick={() => setActiveTab('actividades')}
+                          style={{ cursor: 'pointer' }}
+                      >
+                          Actividades
+                      </a>
+                  </div>
+              </div>
+
+              <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
+                  {loading && <div className="text-center my-5">
+                      <div className="spinner-border text-primary" role="status"><span
+                          className="visually-hidden">Cargando...</span></div>
+                  </div>}
+                  {activeTab === 'informacion' && renderInformacionRed()}
+                  {activeTab === 'integrantes' && renderIntegrantesTable()}
+                  {activeTab === 'actividades' && renderActividadesTable()}
+              </div>
+
+              {/* Modal de formulario de actividades */}
+              {showActividadModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog modal-lg">
+                          <div className="modal-content">
+                              <div className="modal-header d-flex justify-content-between align-items-center">
+                                  {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                                  <div className="d-flex align-items-center me-3">
+                                      <h5 className="modal-title me-4">
+                                          {modalActividadMode === 'agregar' ? 'Agregar Actividad' : 'Editar Actividad'}
+                                      </h5>
                                   </div>
-                                </li>
-                              ))}
-                            </ul>
+                                  <button
+                                      type="button"
+                                      className="btn-close"
+                                      onClick={handleCloseActividadModal}
+                                  ></button>
+                              </div>
+                              <form onSubmit={handleActividadSubmit}>
+                                  <div className="modal-body">
+                                      <div className="mb-3">
+                                          <label htmlFor="actividadFecha" className="block text-sm mb-2 ml-4">Fecha<span
+                                              className="text-danger">*</span></label>
+                                          <input
+                                              type="date"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="actividadFecha"
+                                              value={actividadFecha}
+                                              onInput={(e) => setActividadFecha(e.target.value)}
+                                              required
+                                          />
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="actividadDescripcion" className="block text-sm mb-2 ml-4">Descripción<span
+                                              className="text-danger">*</span></label>
+                                          <textarea
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
+                                              id="actividadDescripcion"
+                                              value={actividadDescripcion}
+                                              onInput={(e) => setActividadDescripcion(e.target.value)}
+                                              rows="3"
+                                              required
+                                          ></textarea>
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="actividadAdjuntos"
+                                                 className="block text-sm mb-2 ml-4">Evidencias</label>
+                                          <input
+                                              type="file"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="actividadAdjuntos"
+                                              multiple
+                                              onChange={handleFileChange}
+                                              ref={fileInputRef}
+                                          />
+                                          {/* CAMBIO: Se añadió una sección para ver y gestionar los archivos ya adjuntos */}
+                                          {actividadAdjuntos.length > 0 && (
+                                              <div className="mt-2">
+                                                  <h6>Archivos seleccionados:</h6>
+                                                  <ul className="list-group">
+                                                      {actividadAdjuntos.map((file, index) => (
+                                                          <li key={index}
+                                                              className="list-group-item d-flex justify-content-between align-items-center">
+                                                              <span>{file.name || `Documento ${index + 1}`}</span>
+                                                              <div>
+                                                                  {/* NUEVO: Botón para ver el adjunto */}
+                                                                  {file.url && (
+                                                                      <a href={file.url} target="_blank"
+                                                                         className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2">
+                                                                          <i className="fa fa-eye text-white"></i> Ver
+                                                                      </a>
+                                                                  )}
+                                                                  {/* NUEVO: Botón para eliminar el adjunto del array */}
+                                                                  <button
+                                                                      type="button"
+                                                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm flex gap-2"
+                                                                      onClick={() => handleRemoveAdjunto(index)}
+                                                                  >
+                                                                      <i className="fa fa-trash-alt text-white"></i> Eliminar
+                                                                  </button>
+                                                              </div>
+                                                          </li>
+                                                      ))}
+                                                  </ul>
+                                              </div>
+                                          )}
+                                      </div>
+                                  </div>
+                                  <div className="modal-footer">
+                                      <button
+                                          type="button"
+                                          className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={handleCloseActividadModal}
+                                      >
+                                          Cancelar
+                                      </button>
+                                      <button
+                                          type="submit"
+                                          className="border bg-blue-500  text-white p-2 rounded-pill"
+                                      >
+                                          Guardar
+                                      </button>
+                                  </div>
+                              </form>
                           </div>
-                        )}
                       </div>
-                    </div>
-                    <div className="modal-footer">
-                      <button
-                        type="button"
-                        className="border bg-blue-500  text-white p-2 rounded-pill"
-                        onClick={handleCloseActividadModal}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="border bg-blue-500  text-white p-2 rounded-pill"
-                      >
-                        Guardar
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Modal de formulario de integrantes */}
-          {showIntegranteModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                  <div className="modal-header d-flex justify-content-between align-items-center">
-                    {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
-                    <div className="d-flex align-items-center me-3">
-                      <h5 className="modal-title me-4">
-                        {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
-                      </h5>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      onClick={handleCloseIntegranteModal}
-                    ></button>
                   </div>
-                  <form onSubmit={handleIntegranteSubmit}>
-                    <div className="modal-body">
-                      <div className="mb-3">
-                        <label htmlFor="integranteNombre" className="block text-sm mb-2 ml-4">Nombre <span className="text-danger">*</span></label>
-                        <input
-                          type="text"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          id="integranteNombre"
-                          value={integranteNombre}
-                          onInput={(e) => setIntegranteNombre(e.target.value)}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="integranteCorreo" className="block text-sm mb-2 ml-4">Correo Electrónico <span className="text-danger">*</span></label>
-                        <input
-                          type="email"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          id="integranteCorreo"
-                          value={integranteCorreo}
-                          onInput={(e) => setIntegranteCorreo(e.target.value)}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="integranteContacto" className="block text-sm mb-2 ml-4">Número de contacto <span className="text-danger">*</span></label>
-                        <input
-                          type="text"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          id="integranteContacto"
-                          value={integranteContacto}
-                          onInput={(e) => setIntegranteContacto(e.target.value)}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="integranteRol" className="block text-sm mb-2 ml-4">Rol <span className="text-danger">*</span></label>
-                        <select
-                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                            id="integranteRol"
-                            value={integranteRol}
-                            onChange={(e) => setIntegranteRol(e.target.value)}
-                        >
-                            <option value="">Selecciona un rol</option>
-                            {/* MODIFICACIÓN: Se usa map() para generar las opciones */}
-                            {integrantesRoles.map(rol => (
-                                <option key={rol.id} value={rol.id}>{rol.name}</option>
-                            ))}
-                        </select>
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="integranteInstitucion" className="block text-sm mb-2 ml-4">Institución <span className="text-danger">*</span></label>
-                        {isLoadingInstitutions ? (
-                          <div className="text-center">
-                            <div className="spinner-border spinner-border-sm text-primary" role="status">
-                              <span className="visually-hidden">Cargando instituciones...</span>
-                            </div>
+              )}
+
+              {/* Modal de formulario de integrantes */}
+              {showIntegranteModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog modal-lg">
+                          <div className="modal-content">
+                              <div className="modal-header d-flex justify-content-between align-items-center">
+                                  {/* COMENTARIO: Se agregó una clase al div principal para separar el título del botón. */}
+                                  <div className="d-flex align-items-center me-3">
+                                      <h5 className="modal-title me-4">
+                                          {modalIntegranteMode === 'agregar' ? 'Agregar Integrante' : 'Editar Integrante'}
+                                      </h5>
+                                  </div>
+                                  <button
+                                      type="button"
+                                      className="btn-close"
+                                      onClick={handleCloseIntegranteModal}
+                                  ></button>
+                              </div>
+                              <form onSubmit={handleIntegranteSubmit}>
+                                  <div className="modal-body">
+                                      <div className="mb-3">
+                                          <label htmlFor="integranteNombre"
+                                                 className="block text-sm mb-2 ml-4">Nombre <span
+                                              className="text-danger">*</span></label>
+                                          <input
+                                              type="text"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="integranteNombre"
+                                              value={integranteNombre}
+                                              onInput={(e) => setIntegranteNombre(e.target.value)}
+                                          />
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="integranteCorreo" className="block text-sm mb-2 ml-4">Correo
+                                              Electrónico <span className="text-danger">*</span></label>
+                                          <input
+                                              type="email"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="integranteCorreo"
+                                              value={integranteCorreo}
+                                              onInput={(e) => setIntegranteCorreo(e.target.value)}
+                                          />
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="integranteContacto" className="block text-sm mb-2 ml-4">Número
+                                              de contacto <span className="text-danger">*</span></label>
+                                          <input
+                                              type="text"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="integranteContacto"
+                                              value={integranteContacto}
+                                              onInput={(e) => setIntegranteContacto(e.target.value)}
+                                          />
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="integranteRol" className="block text-sm mb-2 ml-4">Rol <span
+                                              className="text-danger">*</span></label>
+                                          <select
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              id="integranteRol"
+                                              value={integranteRol}
+                                              onChange={(e) => setIntegranteRol(e.target.value)}
+                                          >
+                                              <option value="">Selecciona un rol</option>
+                                              {/* MODIFICACIÓN: Se usa map() para generar las opciones */}
+                                              {integrantesRoles.map(rol => (
+                                                  <option key={rol.id} value={rol.id}>{rol.name}</option>
+                                              ))}
+                                          </select>
+                                      </div>
+                                      <div className="mb-3">
+                                          <label htmlFor="integranteInstitucion"
+                                                 className="block text-sm mb-2 ml-4">Institución <span
+                                              className="text-danger">*</span></label>
+                                          {isLoadingInstitutions ? (
+                                              <div className="text-center">
+                                                  <div className="spinner-border spinner-border-sm text-primary"
+                                                       role="status">
+                                                      <span className="visually-hidden">Cargando instituciones...</span>
+                                                  </div>
+                                              </div>
+                                          ) : institutionsError ? (
+                                              <div className="alert alert-danger" role="alert">
+                                                  Error al cargar instituciones: {institutionsError}
+                                              </div>
+                                          ) : (
+                                              <select
+                                                  className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                                  id="integranteInstitucion"
+                                                  value={integranteInstitucion}
+                                                  onChange={(e) => setIntegranteInstitucion(e.target.value)}
+                                                  required
+                                              >
+                                                  <option value="">Selecciona una institución</option>
+                                                  {instituciones.map(institucion => (
+                                                      <option key={institucion.id} value={institucion.id}>
+                                                          {institucion.nombre || institucion.name}
+                                                      </option>
+                                                  ))}
+                                              </select>
+                                          )}
+                                      </div>
+                                  </div>
+                                  <div className="modal-footer">
+                                      <button
+                                          type="button"
+                                          className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={handleCloseIntegranteModal}
+                                      >
+                                          Cancelar
+                                      </button>
+                                      <button
+                                          type="submit"
+                                          className="border bg-blue-500  text-white p-2 rounded-pill"
+                                      >
+                                          Guardar
+                                      </button>
+                                  </div>
+                              </form>
                           </div>
-                        ) : institutionsError ? (
-                          <div className="alert alert-danger" role="alert">
-                            Error al cargar instituciones: {institutionsError}
+                      </div>
+                  </div>
+              )}
+
+              {/* NUEVO: Modal para ver documentos de la actividad */}
+              {showDocumentosModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <h5 className="modal-title">Evidencias de la Actividad</h5>
+                                  <button type="button" className="btn-close"
+                                          onClick={() => setShowDocumentosModal(false)}></button>
+                              </div>
+                              <div className="modal-body">
+                                  {currentDocumentos.length > 0 ? (
+                                      <ul className="list-group">
+                                          {currentDocumentos.map((adjunto, index) => (
+                                              <li key={index}
+                                                  className="list-group-item d-flex justify-content-between align-items-center">
+                                                  <span>{adjunto.adjunto.nombre}</span>
+                                                  <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank"
+                                                     className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2">
+                                                      <i className="fa fa-eye text-white"></i> Ver
+                                                  </a>
+                                              </li>
+                                          ))}
+                                      </ul>
+                                  ) : (
+                                      <p>No hay documentos para esta actividad.</p>
+                                  )}
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={() => setShowDocumentosModal(false)}>Cerrar
+                                  </button>
+                              </div>
                           </div>
-                        ) : (
-                          <select
-                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                            id="integranteInstitucion"
-                            value={integranteInstitucion}
-                            onChange={(e) => setIntegranteInstitucion(e.target.value)}
-                            required
-                          >
-                            <option value="">Selecciona una institución</option>
-                            {instituciones.map(institucion => (
-                              <option key={institucion.id} value={institucion.id}>
-                                {institucion.nombre || institucion.name}
-                              </option>
-                            ))}
-                          </select>
-                        )}
                       </div>
-                    </div>
-                    <div className="modal-footer">
-                      <button
-                        type="button"
-                        className="border bg-blue-500  text-white p-2 rounded-pill"
-                        onClick={handleCloseIntegranteModal}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="border bg-blue-500  text-white p-2 rounded-pill"
-                      >
-                        Guardar
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          )}
+                  </div>
+              )}
 
-          {/* NUEVO: Modal para ver documentos de la actividad */}
-          {showDocumentosModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Evidencias de la Actividad</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowDocumentosModal(false)}></button>
-                  </div>
-                  <div className="modal-body">
-                    {currentDocumentos.length > 0 ? (
-                      <ul className="list-group">
-                        {currentDocumentos.map((adjunto, index) => (
-                          <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                            <span>{adjunto.adjunto.nombre}</span>
-                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank" className="btn btn-info btn-sm">
-                              <i className="fa fa-eye text-white"></i> Ver
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>No hay documentos para esta actividad.</p>
-                    )}
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* NUEVO: Modal para compartir */}
-          {showShareModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Compartir con Rol</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowShareModal(false)}></button>
-                  </div>
-                  <form onSubmit={handleShareSubmit}>
-                    <div className="modal-body">
-                      <div className="mb-3">
-                        <label htmlFor="selectRole" className="block text-sm mb-2 ml-4">Selecciona un rol:</label>
-                        <select
-                          id="selectRole"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                          value={selectedRole}
-                          onChange={(e) => setSelectedRole(e.target.value)}
-                        >
-                          <option value="">-- Selecciona --</option>
-                          {integrantesRoles.map(rol => (
-                            <option key={rol.id} value={rol.id}>{rol.name}</option>
-                          ))}
-                        </select>
+              {/* NUEVO: Modal para compartir */}
+              {showShareModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <h5 className="modal-title">Compartir con Rol</h5>
+                                  <button type="button" className="btn-close"
+                                          onClick={() => setShowShareModal(false)}></button>
+                              </div>
+                              <form onSubmit={handleShareSubmit}>
+                                  <div className="modal-body">
+                                      <div className="mb-3">
+                                          <label htmlFor="selectRole" className="block text-sm mb-2 ml-4">Selecciona un
+                                              rol:</label>
+                                          <select
+                                              id="selectRole"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                              value={selectedRole}
+                                              onChange={(e) => setSelectedRole(e.target.value)}
+                                          >
+                                              <option value="">-- Selecciona --</option>
+                                              {integrantesRoles.map(rol => (
+                                                  <option key={rol.id} value={rol.id}>{rol.name}</option>
+                                              ))}
+                                          </select>
+                                      </div>
+                                      {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
+                                      <div className="mb-3">
+                                          <label htmlFor="shareDescription" className="block text-sm mb-2 ml-4">Descripción
+                                              para el correo</label>
+                                          <textarea
+                                              id="shareDescription"
+                                              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
+                                              rows="3"
+                                              value={shareDescription}
+                                              onChange={(e) => setShareDescription(e.target.value)}
+                                          ></textarea>
+                                          <small className="form-text text-muted">Esta descripción se incluirá en el
+                                              cuerpo del correo.</small>
+                                      </div>
+                                  </div>
+                                  <div className="modal-footer">
+                                      <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill"
+                                              onClick={() => setShowShareModal(false)}>Cancelar
+                                      </button>
+                                      <button type="submit"
+                                              className="border bg-blue-500  text-white p-2 rounded-pill">Compartir
+                                      </button>
+                                  </div>
+                              </form>
+                          </div>
                       </div>
-                      {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
-                      <div className="mb-3">
-                        <label htmlFor="shareDescription" className="block text-sm mb-2 ml-4">Descripción para el correo</label>
-                        <textarea
-                          id="shareDescription"
-                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
-                          rows="3"
-                          value={shareDescription}
-                          onChange={(e) => setShareDescription(e.target.value)}
-                        ></textarea>
-                        <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
+                  </div>
+              )}
+
+              {/* Modal de alerta personalizado */}
+              {showAlertModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <h5 className="modal-title">Alerta</h5>
+                                  <button type="button" className="btn-close"
+                                          onClick={() => setShowAlertModal(false)}></button>
+                              </div>
+                              <div className="modal-body">
+                                  <p>{alertMessage}</p>
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={() => setShowAlertModal(false)}>Aceptar
+                                  </button>
+                              </div>
+                          </div>
                       </div>
-                    </div>
-                    <div className="modal-footer">
-                      <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowShareModal(false)}>Cancelar</button>
-                      <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">Compartir</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          )}
+                  </div>
+              )}
 
-          {/* Modal de alerta personalizado */}
-          {showAlertModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Alerta</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowAlertModal(false)}></button>
+              {/* Modal de confirmación personalizado */}
+              {showConfirmModal && (
+                  <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                      <div className="modal-dialog">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <h5 className="modal-title">Confirmación</h5>
+                                  <button type="button" className="btn-close"
+                                          onClick={() => setShowConfirmModal(false)}></button>
+                              </div>
+                              <div className="modal-body">
+                                  <p>{alertMessage}</p>
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={() => setShowConfirmModal(false)}>Cancelar
+                                  </button>
+                                  <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill"
+                                          onClick={() => {
+                                              if (confirmAction) {
+                                                  confirmAction();
+                                              }
+                                              setShowConfirmModal(false);
+                                          }}>Confirmar
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
                   </div>
-                  <div className="modal-body">
-                    <p>{alertMessage}</p>
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowAlertModal(false)}>Aceptar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Modal de confirmación personalizado */}
-          {showConfirmModal && (
-            <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Confirmación</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
-                  </div>
-                  <div className="modal-body">
-                    <p>{alertMessage}</p>
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
-                      if (confirmAction) {
-                        confirmAction();
-                      }
-                      setShowConfirmModal(false);
-                    }}>Confirmar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
+              )}
+          </div>
       )}
-    </div>
+      </div>
   );
 }
