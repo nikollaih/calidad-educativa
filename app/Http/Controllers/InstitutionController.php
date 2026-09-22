@@ -87,7 +87,7 @@ class InstitutionController extends Controller {
         );
     }
     public function createUsuariosInstitucion() {
-        $roles = Role::with('permissions')->whereIn('name',['Docente','Administrativo'])->get();
+        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
         return view(
             'usuarios_institucion.create',
             [
@@ -100,7 +100,7 @@ class InstitutionController extends Controller {
         if (empty($user)) {
             return redirect()->back()->with('flash_error_message', 'Usuario no encontrado.');
         }
-        $roles = Role::with('permissions')->whereIn('name',['Docente','Administrativo'])->get();
+        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
         return view(
             'usuarios_institucion.edit',
             [
@@ -465,6 +465,7 @@ class InstitutionController extends Controller {
 
         if ($notas) {
             $syncData = [];
+	    $idsAAdjuntar = [];
 
             foreach ($notas as $nota) {
                 // Verificar que la nota pertenece a una calificación de este hijo
@@ -472,12 +473,28 @@ class InstitutionController extends Controller {
 
                 if ($notaCalificacion && in_array($notaCalificacion->calificacion->id, $calificacionesDelHijo)) {
                     $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
+		    $idsAAdjuntar[] = (int) $nota['nota_calificacion_id'];
                 }
             }
 
             // Sincronizar solo las notas de este hijo (sin desconectar las demás)
             if (!empty($syncData)) {
-                $autoevaluacion->notas()->syncWithoutDetaching($syncData);
+		    // 1. Obtener TODOS los ids posibles (los 4 niveles) de las calificaciones que se están enviando
+            $indicesEnviados = \App\Models\NotaCalificacion::whereIn('id', $idsAAdjuntar)
+                ->pluck('indice_calificacion');
+
+            $todosLosNivelesPosibles = \App\Models\NotaCalificacion::whereIn('indice_calificacion', $indicesEnviados)
+                ->pluck('id')
+                ->toArray();
+
+            // 2. Detach solo los niveles "hermanos" que NO son los que se están adjuntando ahora
+            $idsADetach = array_diff($todosLosNivelesPosibles, $idsAAdjuntar);
+            if (!empty($idsADetach)) {
+                $autoevaluacion->notas()->detach($idsADetach);
+            }
+
+            // 3. Ahora sí, adjuntar/actualizar los niveles correctos
+            $autoevaluacion->notas()->syncWithoutDetaching($syncData);
             }
         }
 

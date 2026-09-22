@@ -9,8 +9,20 @@ export default function Editar({ editarUrl = '#',
     csrfToken = '',
     autoevaluacion = {}
 }) {
+	const getDefaultTab = () => {
+    const permissionMap = {
+        0: permissions.editDirectiva,
+        1: permissions.editAcademica,
+        2: permissions.editFinanciera,
+        3: permissions.editComunidad,
+    };
+    for (let i = 0; i < 4; i++) {
+        if (permissionMap[i]) return i;
+    }
+    return 0;
+};
 
-    const [activeTab, setActiveTab] = useState(0);
+
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
     const [evidencias, setEvidencias] = useState({});
     // Verificar permisos y roles
@@ -37,6 +49,8 @@ export default function Editar({ editarUrl = '#',
         };
         return permissionMap[indice] || false;
     };
+
+    const [activeTab, setActiveTab] = useState(getDefaultTab());
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
