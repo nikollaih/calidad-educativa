@@ -1,8 +1,10 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
-export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '' }) {
+export default function ListaModelosEducacionales({ agregarUrl, modelosEducacionales, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
     const [currentMunicipio, setCurrentMunicipio] = useState(null);
@@ -81,56 +83,65 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Modelos flexibles</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar modelo flexible
-            </button>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Modelos flexibles</h2>
+            {canEditParametros && (
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
+            )}
 
             <table class="table">
                 <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Acciones</th>
-                </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        {canEditParametros && <th>Acciones</th>}
+                    </tr>
                 </thead>
                 <tbody>
-                {modelosEducacionales.data.map((modeloEducacional) => (
-                    <tr key={modeloEducacional.id}>
-                        <td>{modeloEducacional.name}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEditarClick(modeloEducacional)}
-                                className="btn btn-warning btn-sm me-2"
-                            >
-                                Editar
-                            </button>
-                            <form
-                                action={`/modelos-educacionales/${modeloEducacional.id}`}
-                                method="POST"
-                                style={{display: 'inline'}}
-                                onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este modeloEducacional?')) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                <input type="hidden" name="_token" value={csrfToken}/>
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" className="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                ))}
+                    {modelosEducacionales.data.map((modeloEducacional) => (
+                        <tr key={modeloEducacional.id}>
+                            <td>{modeloEducacional.name}</td>
+                            {canEditParametros && (
+                                <td>
+                                    <CTableActionButton
+                                        title={'Editar'}
+                                        onClick={() => handleEditarClick(modeloEducacional)}
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <form id="delete-form-modelo"
+                                        action={`/modelos-educacionales/${modeloEducacional.id}`}
+                                        method="POST"
+                                        style={{ display: 'inline' }}
+                                        onSubmit={(e) => {
+                                            if (!confirm('¿Estás seguro de que quieres eliminar este modelo educacional?')) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <input type="hidden" name="_token" value={csrfToken} />
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <CTableActionButton
+                                            formRef={'#delete-form-municipio'}
+                                            title={'Eliminar'}
+                                            iconClass={'fa fa-trash'}
+                                            confirmMessage={'¿Estás seguro de que quieres eliminar este modelo educacional?'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                    </form>
+                                </td>
+                            )}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
-            <CPagination  pagination={modelosEducacionales} />
+            <CPagination pagination={modelosEducacionales} />
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -144,14 +155,14 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                 ></button>
                             </div>
                             <form onSubmit={handleSubmit}>
-                            <div class="modal-body">
+                                <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">
+                                        <label for="name" class="block text-sm mb-2 ml-4">
                                             Nombre del modelo educacional
                                         </label>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="name"
                                             value={name}
                                             onInput={(e) => setNombre(e.target.value)}
@@ -163,14 +174,14 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!name.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
@@ -181,6 +192,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

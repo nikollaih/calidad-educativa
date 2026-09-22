@@ -1,8 +1,10 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
-export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '' }) {
+export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar');
     // 'agregar' o 'editar'
@@ -100,58 +102,68 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Indicadores</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar indicador
-            </button>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+                <h2 class="mb-4 text-custom-blue-dark">Indicadores</h2>
+                {canEditParametros && (
+                    <CAddButton
+                        onClick={handleAgregarClick}
+                    />
+                )}
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Unidad parcial</th>
-                    <th>Unidad total</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                {indicadores.data.map((indicador) => (
-                    <tr key={indicador.id}>
-                        <td>{indicador.unidad_parcial}</td>
-                        <td>{indicador.unidad_total}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEditarClick(indicador)}
-                                className="btn btn-warning btn-sm me-2"
-                            >
-                                Editar
-                            </button>
-                            <form
-                                action={`/indicadores-pmi/${indicador.id}`}
-                                method="POST"
-                                style={{display: 'inline'}}
-                                onSubmit={(e) => {
-                                    if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                <input type="hidden" name="_token" value={csrfToken}/>
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" className="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <CPagination  pagination={indicadores} />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Unidad parcial</th>
+                            <th>Unidad total</th>
+                            {canEditParametros && <th>Acciones</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {indicadores.data.map((indicador) => (
+                            <tr key={indicador.id}>
+                                <td>{indicador.unidad_parcial}</td>
+                                <td>{indicador.unidad_total}</td>
+                                {canEditParametros && (
+                                    <td>
+                                        <CTableActionButton
+                                            title={'Editar'}
+                                            onClick={() => handleEditarClick(indicador)}
+                                            iconClass={'fas fa-pencil'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <form id="delete-form-indicador-pmi"
+                                            action={`/indicadores-pmi/${indicador.id}`}
+                                            method="POST"
+                                            style={{ display: 'inline' }}
+                                            onSubmit={(e) => {
+                                                if (!confirm('¿Estás seguro de que quieres eliminar este indicador?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        >
+                                            <input type="hidden" name="_token" value={csrfToken} />
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            <CTableActionButton
+                                                formRef={'#delete-form-indicador-pmi'}
+                                                title={'Eliminar'}
+                                                iconClass={'fa fa-trash'}
+                                                confirmMessage={'¿Estás seguro de que quieres eliminar este indicador?'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
+                                        </form>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <CPagination pagination={indicadores} />
+            </div>
 
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -167,12 +179,12 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                             <form onSubmit={handleSubmit}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label htmlFor="nombre" className="form-label">
+                                        <label htmlFor="nombre" className="block text-sm mb-2 ml-4">
                                             Nombre de la unidad parcial
                                         </label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidad_parcial"
                                             value={unidadParcial}
                                             onInput={(e) => setUnidadParcial(e.target.value)}
@@ -181,12 +193,12 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="unidad_total" className="form-label">
+                                        <label htmlFor="unidad_total" className="block text-sm mb-2 ml-4">
                                             Nombre de la unidad total
                                         </label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="unidad_total"
                                             value={unidadTotal}
                                             onInput={(e) => setUnidadTotal(e.target.value)}
@@ -199,14 +211,14 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!unidadTotal.trim() && !unidadTotal.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}

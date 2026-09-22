@@ -31,7 +31,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
    */
   const updateItemField = (items, targetId, fieldName, newValue) => {
     console.log(items, targetId, fieldName, newValue);
-    
+
     return items.map(item => {
       // Caso 1: Encontramos el elemento por su ID en el nivel actual.
       // Lo actualizamos y retornamos de inmediato.
@@ -46,11 +46,11 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         // Modifica: Se actualiza el campo de la acción anidada
         return { ...item, accion: { ...item.accion, [fieldName]: newValue } };
       }
-      
+
       // Objeto para almacenar los resultados de las llamadas recursivas
       const updatedSubItems = {};
       let hasChanges = false;
-      
+
       // Caso 3: Búsqueda recursiva en los arrays anidados.
       // Se recorren las propiedades que son arrays y se llama recursivamente.
       // Se usa un array de nombres para hacerlo más dinámico y fácil de leer.
@@ -62,7 +62,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         'metas',
         'indicadores'
       ];
-      
+
       for (const key of nestedArrays) {
         if (item[key] && Array.isArray(item[key])) {
           const result = updateItemField(item[key], targetId, fieldName, newValue);
@@ -72,7 +72,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             hasChanges = true;
             // Optimización: Si se encuentra el elemento en este nivel recursivo,
             // no es necesario seguir buscando en otros arrays de este mismo item.
-            break; 
+            break;
           }
         }
       }
@@ -91,7 +91,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
    */
   const updateDescription = (itemId, value) => {
     console.log(itemId, value);
-    
+
     setFormData(prevFormData => ({
       ...prevFormData,
       componentes: updateItemField(prevFormData.componentes, itemId, 'descripcion', value),
@@ -109,7 +109,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   const updateAccionNestedField = (indicadorId, fieldName, value) => {
   setFormData(prevFormData => {
     const newComponents = prevFormData.componentes.map(comp => ({
-      ...comp, 
+      ...comp,
       procesos: comp.procesos.map(proc => ({
         ...proc,
         subprocesos: proc.subprocesos.map(subproc => ({
@@ -138,11 +138,11 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         }))
       }))
     }));
-    
+
     // CORRECCIÓN: Mantener todas las propiedades del formData anterior
-    return { 
+    return {
       ...prevFormData,  // Esta línea es crucial
-      componentes: newComponents 
+      componentes: newComponents
     };
   });
 };
@@ -252,7 +252,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         if (result.success && result.data) {
           pamGeneralId = new URLSearchParams(window.location.search).get('pam');
           setPamGeneralIdEdit(pamGeneralId);
-          
+
           const data = result.data;
           setIsEditing(true);
           setOriginalData(data); // Guarda los datos originales para referencia
@@ -595,7 +595,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     // Se busca la unidad de meta en el array de unidadesMeta usando el id
     const unidadSeleccionada = unidadesMeta.find(unidad => unidad.id == metaAfectada.unidad_meta_id);
     const unidadDescripcion = unidadSeleccionada ? unidadSeleccionada.descripcion : '';
-    
+
     setFormData(prev => ({
       ...prev,
       componentes: prev.componentes.map(comp => ({
@@ -705,7 +705,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   };
 
   // Función para guardar datos (adaptada para manejar la edición y la nueva estructura)
-  const saveAll = async () => {    
+  const saveAll = async () => {
     // Validar que al menos un componente exista antes de intentar guardar
     if (formData.componentes.length === 0) {
       await Swal.fire({
@@ -830,7 +830,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           }))
         }))
       };
-      
+
       const url = isEditing ? `/pam/update-pam/${id}` : `/pam/${pamGeneralId}/pam-row-store`;
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -892,7 +892,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Fechas</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'fechas', null)} // Establece fechas a null para eliminar
           >
             Eliminar Fechas
@@ -901,10 +901,10 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-body">
           {/* Eliminadas las clases col-md-6 para asegurar 100% de ancho */}
           <div>
-            <label className="form-label fw-bold">Fecha de Inicio:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Inicio:</label>
             <input
               type="date"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               style={{ width: '100%' }}
               value={accion.fechas.fecha_inicio}
               onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
@@ -914,10 +914,10 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             />
           </div>
           <div className="mt-3"> {/* Añadido margen para espaciado */}
-            <label className="form-label fw-bold">Fecha Final:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha Final:</label>
             <input
               type="date"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               style={{ width: '100%' }}
               value={accion.fechas.fecha_final}
               onChange={(e) => updateAccionNestedField(indicadorId, 'fechas', {
@@ -939,7 +939,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Recursos</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'recursos', null)} // Establece recursos a null para eliminar
           >
             Eliminar Recursos
@@ -947,9 +947,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={accion.recursos.descripcion}
               onChange={(e) => updateAccionNestedField(indicadorId, 'recursos', { ...accion.recursos, descripcion: e.target.value })}
@@ -959,7 +959,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicadorId, 'fechas', { fecha_inicio: '', fecha_final: '' })}
               >
                 Agregar Fechas
@@ -981,7 +981,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Responsable</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicadorId, 'responsable', null)} // Establece responsable a null para eliminar
           >
             Eliminar Responsable
@@ -989,12 +989,12 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Seleccionar Responsable:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Seleccionar Responsable:</label>
             {isUsersLoading ? (
               <p>Cargando usuarios...</p>
             ) : (
               <select
-                className="form-control"
+                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                 style={{ width: '100%' }} // Asegura 100% de ancho
                 value={accion.responsable.id || ''}
                 onChange={(e) => {
@@ -1020,7 +1020,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicadorId, 'recursos', { descripcion: '' })}
               >
                 Agregar Recursos
@@ -1041,7 +1041,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-header bg-light bg-opacity-10 d-flex justify-content-between align-items-center">
           <h6 className="mb-0">Acción</h6>
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => updateAccionNestedField(indicador.id, 'accion', null)} // Establece acción a null para eliminar
           >
             Eliminar Acción
@@ -1049,9 +1049,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={indicador.accion.descripcion}
               onChange={(e) => updateDescription(indicador.accion.id, e.target.value)} // Usar updateDescription para la descripción de la acción
@@ -1061,7 +1061,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => updateAccionNestedField(indicador.id, 'responsable', { id: '', descripcion: '' })}
               >
                 Agregar Responsable
@@ -1083,7 +1083,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', 'metas', metaId, 'indicadores'], indicador.id)}
           >
             Eliminar Indicador
@@ -1092,9 +1092,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               disabled
               value={indicador.descripcion}
@@ -1129,7 +1129,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', 'objetivos', objetivoId, 'metas'], meta.id)}
           >
             Eliminar Meta
@@ -1138,19 +1138,19 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={meta.descripcion}
               onChange={(e) => updateDescription(meta.id, e.target.value)}
             />
           </div>
           <div>
-            <label className="form-label fw-bold">Valor de meta:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Valor de meta:</label>
             <input
               type="number"
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
               value={meta.valor_meta}
               onChange={(e) => updateValorMeta(meta.id, e.target.value)}
             />
@@ -1158,9 +1158,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
 
           {/* Selector de Unidad de Meta */}
           <div className="mt-3">
-            <label className="form-label fw-bold">Unidad de Meta:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad de Meta:</label>
             <select
-              className="form-select"
+              className="w-full !border border-custom-blue-dark rounded-xl"
               value={meta.unidad_meta_id || ''}
               onChange={(e) => updateUnidadMetaId(meta.id, e.target.value)}
               required
@@ -1181,7 +1181,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
             {!isEditing && (
           )}
-            className="btn btn-primary mt-2"
+            className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
             onClick={() => addIndicador(meta.id)}
           >
             Agregar Indicador
@@ -1203,7 +1203,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', 'metas_plan_desarrollo', metaPlanId, 'objetivos'], objetivo.id)}
           >
             Eliminar Objetivo
@@ -1212,9 +1212,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={objetivo.descripcion}
               onChange={(e) => updateDescription(objetivo.id, e.target.value)}
@@ -1224,7 +1224,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addMeta(objetivo.id)}
               >
                 Agregar Meta
@@ -1246,7 +1246,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', 'subprocesos', subprocesoId, 'metas_plan_desarrollo'], metaPlan.id)}
           >
             Eliminar Meta del Plan
@@ -1255,9 +1255,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={metaPlan.descripcion}
               onChange={(e) => updateDescription(metaPlan.id, e.target.value)}
@@ -1267,7 +1267,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addObjetivo(metaPlan.id)}
               >
                 Agregar Objetivo Estratégico
@@ -1289,7 +1289,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', 'procesos', procesoId, 'subprocesos'], subproceso.id)}
           >
             Eliminar Subproceso
@@ -1298,9 +1298,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={subproceso.descripcion}
               onChange={(e) => updateDescription(subproceso.id, e.target.value)}
@@ -1310,7 +1310,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addMetaPlan(subproceso.id)}
               >
                 Agregar Meta del Plan
@@ -1332,7 +1332,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes', componenteId, 'procesos'], proceso.id)}
           >
             Eliminar Proceso
@@ -1341,9 +1341,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <textarea
-              className="form-control"
+              className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
               rows="3"
               value={proceso.descripcion}
               onChange={(e) => updateDescription(proceso.id, e.target.value)}
@@ -1353,7 +1353,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addSubproceso(proceso.id)}
               >
                 Agregar Subproceso
@@ -1375,7 +1375,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           {!isEditing && (
 
           <button
-            className="btn btn-danger btn-sm"
+            className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
             onClick={() => removeElement(['componentes'], componente.id)}
           >
             Eliminar Componente
@@ -1384,9 +1384,9 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         </div>
         <div className="card-body">
           <div>
-            <label className="form-label fw-bold">Descripción:</label>
+            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
             <select
-              className="form-select"
+              className="w-full !border border-custom-blue-dark rounded-xl"
               value={componente.id || ''}
               onChange={(e) => updateComponenteId(componente.id, e.target.value)}
               required
@@ -1406,7 +1406,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
             <div className="mt-3">
               {!isEditing && (
               <button
-                className="btn btn-primary mt-2"
+                className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
                 onClick={() => addProceso(componente.id)}
               >
                 Agregar Proceso
@@ -1448,7 +1448,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
         <div className="card-body">
           <button
             type="button"
-            className="btn btn-success mb-4"
+            className="border bg-blue-500  text-white p-2 rounded-pill mt-2"
             onClick={addComponente}
           >
             <i className="bi bi-plus-circle"></i> Agregar Componente
@@ -1461,7 +1461,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
           <div className="mt-4 pt-3 border-top">
             <button
               type="button"
-              className="btn btn-primary me-2"
+              className="border bg-blue-500  text-white p-2 rounded-pill me-2"
               onClick={saveAll}
               disabled={formData.componentes.length === 0} // Deshabilita si no hay componentes
             >
@@ -1470,7 +1470,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
 
             <button
               type="button"
-              className="btn btn-secondary"
+              className="border bg-blue-500  text-white p-2 rounded-pill"
               onClick={() => {
                 // Valida si isEditing es verdadero
                 const url = isEditing

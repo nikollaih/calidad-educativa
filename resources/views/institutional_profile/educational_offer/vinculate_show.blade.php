@@ -2,9 +2,16 @@
 
 @section('content')
     <div
-        data-component="CBackButton"
+        data-component="CInstitutionNavigations"
+        data-back-url="{{ route('institution.edit', $selectedSede->institution->id) }}"
+        data-detail-url="#"
+        data-pei-url="{{ route('institution.pei.update-pei', $selectedSede->institution->id) }}"
+        data-autevaluacion-url="{{ route('institution.autoevaluaciones', $selectedSede->institution->id) }}"
+        data-pmi-url="{{ route('pmi.index', $selectedSede->institution->id) }}"
+        data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $selectedSede->institution->id) }}"
+        data-institution-name="{{$selectedSede->institution->nombre}}"
     ></div>
-<div class="container">
+<div class="m-6 !border border-custom-blue-light rounded-md bg-white p-3">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -29,7 +36,7 @@
                 <div class="mb-4">
                     <h4>Anexo del nivel educativo</h4>
                     <div class="mb-3">
-                        <label class="form-label">Documento actual</label>
+                        <label class="block text-sm mb-2 ml-4">Documento actual</label>
                         @if($levelSede->educationalLevel->document_id)
                             <div class="mt-2">
                                 <a href="{{ $levelSede->educationalLevel->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">
@@ -49,16 +56,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Hora de Inicio</label>
-                                <input type="time" class="form-control"
+                                <label class="block text-sm mb-2 ml-4">Hora de Inicio</label>
+                                <input type="time" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill"
                                        name="schedule[hora_inicio]"
                                        value="{{ $schedule->hora_inicio }}" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Hora de Final</label>
-                                <input type="time" class="form-control"
+                                <label class="block text-sm mb-2 ml-4">Hora de Final</label>
+                                <input type="time" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill"
                                        name="schedule[hora_fin]"
                                        value="{{ $schedule->hora_fin }}" disabled>
                             </div>
@@ -66,14 +73,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Notas detalladas</label>
-                        <textarea class="form-control" rows="3"
+                        <label class="block text-sm mb-2 ml-4">Notas detalladas</label>
+                        <textarea class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-xl" rows="3"
                                   name="schedule[notes]" disabled>{{ $schedule->notes }}</textarea>
                     </div>
 
                     <!-- Anexo del horario -->
                     <div class="mb-3">
-                        <label class="form-label">Documento del horario actual</label>
+                        <label class="block text-sm mb-2 ml-4">Documento del horario actual</label>
                         @if($schedule->document_id)
                             <div class="mt-2">
                                 <a href="{{ $schedule->anexo->url }}" target="_blank" class="btn btn-outline-info btn-sm">

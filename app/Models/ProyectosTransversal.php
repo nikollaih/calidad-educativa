@@ -54,4 +54,12 @@ class ProyectosTransversal extends Model
     {
         return $this->hasMany(ProyectosActividad::class, 'proyecto_transversal_id');
     }
+
+    /**
+     * Relacion con los integrantes
+     */
+    public function integrantes(): HasMany
+    {
+        return $this->hasMany(ProyectoIntegrante::class, 'proyecto_transversal_id');
+    }
 }

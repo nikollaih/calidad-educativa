@@ -30,7 +30,7 @@ export default function ListaProyectoTransversalActividades({
     { id: 3, name: 'Aliado' }
   ];
 
-  
+
   // Estados de Integrantes (para el segundo tab)
   const [showIntegranteModal, setShowIntegranteModal] = useState(false);
   const [modalIntegranteMode, setModalIntegranteMode] = useState('agregar');
@@ -75,7 +75,7 @@ export default function ListaProyectoTransversalActividades({
     const years = [...new Set(actividades.map(act => new Date(act.fecha).getFullYear()))]
                     .sort((a, b) => b - a);
     setAvailableYears(years);
-    
+
     if (selectedYear) {
       setFilteredActividades(actividades.filter(act => new Date(act.fecha).getFullYear().toString() === selectedYear));
     } else {
@@ -175,7 +175,7 @@ export default function ListaProyectoTransversalActividades({
     setActividadAdjuntos([]);
     setCurrentActividad(null);
   };
-  
+
   // CAMBIO: Ahora se concatena la nueva lista de archivos con la existente
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
@@ -222,12 +222,12 @@ export default function ListaProyectoTransversalActividades({
     setIntegranteRol(''); // NUEVO
     setCurrentIntegrante(null);
   };
-  
+
   // CAMBIO: Función para manejar la eliminación con confirmación
   const handleDeleteConfirm = (id, type) => {
     showConfirm('¿Estás seguro de que quieres eliminar este registro? Esta acción es irreversible.', () => handleDelete(id, type));
   };
-  
+
   // Maneja la acción de eliminar (se mantiene)
   const handleDelete = async (id, type) => {
     setLoading(true);
@@ -238,7 +238,7 @@ export default function ListaProyectoTransversalActividades({
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'X-HTTP-Method-Override': 'DELETE' 
+                'X-HTTP-Method-Override': 'DELETE'
             },
             body: JSON.stringify({ _method: 'DELETE', _token: csrfToken }),
         });
@@ -255,7 +255,7 @@ export default function ListaProyectoTransversalActividades({
             // CAMBIO: Guarda el tab activo en localStorage antes de recargar
             localStorage.setItem('activeTab', 'integrantes');
         }
-        
+
         window.location.reload();
 
     } catch (error) {
@@ -336,7 +336,7 @@ export default function ListaProyectoTransversalActividades({
               // CAMBIO: Guarda el tab activo en localStorage antes de recargar
               localStorage.setItem('activeTab', 'integrantes');
           }
-          
+
           window.location.reload();
       } catch (error) {
           showAlert(`Error al guardar: ${error.message}`);
@@ -377,12 +377,16 @@ useEffect(() => {
       showAlert('Por favor, selecciona un rol para compartir.');
       return;
     }
+    if (!shareDescription) {
+       showAlert('Por favor, ingresa un cuerpo para el correo.');
+       return;
+    }
 
     setLoading(true);
     try {
       const { id, type } = currentShareItem;
-      const url = type === 'actividad' ? `/actividades/${id}/share` : `/integrantes/${id}/share`;
-      
+      const url = type === 'actividad' ? `/proyecto-transversal-actividades/share` : `/integrantes/${id}/share`;
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -390,7 +394,7 @@ useEffect(() => {
           'X-CSRF-TOKEN': csrfToken,
         },
         // CAMBIO: Se incluye la descripción en el cuerpo de la petición
-        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken }),
+        body: JSON.stringify({ role: selectedRole, description: shareDescription, _token: csrfToken, activity:currentShareItem }),
       });
 
       if (!response.ok) {
@@ -398,7 +402,7 @@ useEffect(() => {
         throw new Error(errorData.message || 'Error al compartir');
       }
 
-      showAlert('Elemento compartido con éxito.');
+      showAlert('Correos enviados exitosamente.');
       setShowShareModal(false);
       setSelectedRole('');
       setShareDescription(''); // CAMBIO: Se limpia el estado de la descripción al cerrar el modal
@@ -411,9 +415,9 @@ useEffect(() => {
 
   // NUEVO: Función para renderizar la información del proyecto
   const renderInformacionProyecto = () => (
-    <div className="mt-4">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
       <div className="card">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header text-white">
           <h4 className="mb-0">Información del Proyecto Transversal</h4>
         </div>
         <div className="card-body">
@@ -431,9 +435,9 @@ useEffect(() => {
             {detalleProyecto.acto_administrativo.ruta && (
               <div className="col-12 mb-3">
                 <h5>Documento</h5>
-                <a 
-                  href={`/storage/${detalleProyecto.acto_administrativo.ruta}`} 
-                  target="_blank" 
+                <a
+                  href={`/storage/${detalleProyecto.acto_administrativo.ruta}`}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-outline-primary"
                 >
@@ -449,20 +453,20 @@ useEffect(() => {
 
   // FUNCIÓN MODIFICADA: Ahora recibe las actividades a mostrar y el título.
   const renderActividadesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+      <div className="d-flex justify-content-between align-items-center m-3">
         <h4>Lista de Actividades</h4>
-        <button className="btn btn-primary" onClick={handleAgregarActividadClick}>
+        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarActividadClick}>
           <i className="fa fa-plus me-2"></i>Agregar Actividad
         </button>
       </div>
       {/* Filtro de año */}
       <div className="row mb-3">
-        <div className="col-md-6">
-          <label htmlFor="selectYear" className="form-label">Filtrar por año</label>
-          <select 
+        <div className="mx-1 col-md-6">
+          <label htmlFor="selectYear" className="block text-sm mb-2 ml-4">Filtrar por año</label>
+          <select
             id="selectYear"
-            className="form-control"
+            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
           >
@@ -473,130 +477,132 @@ useEffect(() => {
           </select>
         </div>
       </div>
-
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
-          <tr>
-            <th>Fecha</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* CAMBIO: Usar getFilteredActividades() directamente */}
-          {getFilteredActividades().length > 0 ? (
-            getFilteredActividades().map((actividad) => (
-              <tr key={actividad.id}>
-                <td>{actividad.fecha}</td>
-                <td style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
-                  {actividad.descripcion ?? 'Sin información'}
-                </td>
-                <td>
-                  {actividad.adjuntos && actividad.adjuntos.length > 0 && (
-                    <button
-                      onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
-                      className="btn btn-info btn-sm me-2"
-                    >
-                      <i className="fa fa-eye text-white"></i>
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleCompartirClick(actividad, 'actividad')}
-                    className="btn btn-secondary btn-sm me-2"
-                  >
-                    <i className="fa fa-share-alt text-white"></i>
-                  </button>
-                  <button
-                    onClick={() => handleEditarActividadClick(actividad)}
-                    className="btn btn-warning btn-sm me-2"
-                  >
-                    <i className="fa fa-pen-to-square text-white"></i>
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
-                  >
-                    <i className="fa fa-trash-alt text-white"></i>
-                  </button>
-                </td>
+      <div class={'flex m-1'}>
+          <table className="table table-striped table-hover">
+              <thead style={{ backgroundColor: '#E5E7EB' }}>
+              <tr>
+                  <th>Fecha</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3" className="text-center">No hay actividades para mostrar.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              </thead>
+              <tbody>
+              {/* CAMBIO: Usar getFilteredActividades() directamente */}
+              {getFilteredActividades().length > 0 ? (
+                  getFilteredActividades().map((actividad) => (
+                      <tr key={actividad.id}>
+                          <td>{actividad.fecha}</td>
+                          <td style={{ maxWidth: '150px', wordBreak: 'break-word' }}>
+                              {actividad.descripcion ?? 'Sin información'}
+                          </td>
+                          <td>
+                              {actividad.adjuntos && actividad.adjuntos.length > 0 && (
+                                  <button
+                                      onClick={() => handleVerDocumentosClick(actividad.adjuntos)}
+                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                                  >
+                                      <i className="fa fa-eye text-white"></i>
+                                  </button>
+                              )}
+                              <button
+                                  onClick={() => handleCompartirClick(actividad, 'actividad')}
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                              >
+                                  <i className="fa fa-share-alt text-white"></i>
+                              </button>
+                              <button
+                                  onClick={() => handleEditarActividadClick(actividad)}
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                              >
+                                  <i className="fa fa-pen-to-square text-white"></i>
+                              </button>
+                              <button
+                                  className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                                  onClick={() => handleDeleteConfirm(actividad.id, 'actividad')}
+                              >
+                                  <i className="fa fa-trash-alt text-white"></i>
+                              </button>
+                          </td>
+                      </tr>
+                  ))
+              ) : (
+                  <tr>
+                      <td colSpan="3" className="text-center">No hay actividades para mostrar.</td>
+                  </tr>
+              )}
+              </tbody>
+          </table>
+      </div>
     </div>
   );
 
   // Función para renderizar la tabla de integrantes
   const renderIntegrantesTable = () => (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="mb-1 !border border-custom-blue-dark rounded-md">
+      <div className="d-flex justify-content-between align-items-center m-3">
         <h4>Lista de Integrantes</h4>
-        <button className="btn btn-primary" onClick={handleAgregarIntegranteClick}>
+        <button className="border bg-blue-500  text-white p-2 rounded-pill" onClick={handleAgregarIntegranteClick}>
           {/* Se reemplazó el componente LuPlus por la clase de Font Awesome */}
           <i className="fa fa-plus me-2"></i>Agregar Integrante
         </button>
       </div>
-
-      <table className="table table-striped table-hover">
-        <thead className="bg-primary text-white">
-          <tr>
-            <th>Nombre</th>
-            <th>Contacto</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {integrantes.length > 0 ? (
-            integrantes.map((integrante) => (
-              <tr key={integrante.id}>
-                <td>{integrante.nombre ?? 'N/A'}</td>
-                <td>{integrante.telefono ?? 'N/A'}</td>
-                <td>{integrante.correo ?? 'N/A'}</td>
-                <td>
-                  {integrantesRoles.find(r => r.id === integrante.rol)?.name ?? 'N/A'}
-                </td>
-                <td>
-                  {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
-                  <button
-                    onClick={() => handleEditarIntegranteClick(integrante)}
-                    className="btn btn-warning btn-sm me-2"
-                  >
-                    <i className="fa fa-pen-to-square text-white"></i>
-                  </button>
-                  {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
-                  >
-                    <i className="fa fa-trash-alt text-white"></i>
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center">No hay integrantes para mostrar.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+        <div className={'flex m-1'}>
+            <table className="table table-striped table-hover">
+                <thead style={{ backgroundColor: '#E5E7EB' }}>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {integrantes.length > 0 ? (
+                    integrantes.map((integrante) => (
+                        <tr key={integrante.id}>
+                            <td>{integrante.nombre ?? 'N/A'}</td>
+                            <td>{integrante.telefono ?? 'N/A'}</td>
+                            <td>{integrante.correo ?? 'N/A'}</td>
+                            <td>
+                                {integrantesRoles.find(r => r.id === integrante.rol)?.name ?? 'N/A'}
+                            </td>
+                            <td>
+                                {/* Se reemplazó el componente LuFileEdit por la clase de Font Awesome */}
+                                <button
+                                    onClick={() => handleEditarIntegranteClick(integrante)}
+                                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                                >
+                                    <i className="fa fa-pen-to-square text-white"></i>
+                                </button>
+                                {/* Se reemplazó el componente LuTrash2 por la clase de Font Awesome */}
+                                <button
+                                    className="border bg-blue-500  text-white p-2 rounded-pill btn-sm"
+                                    onClick={() => handleDeleteConfirm(integrante.id, 'integrante')}
+                                >
+                                    <i className="fa fa-trash-alt text-white"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="5" className="text-center">No hay integrantes para mostrar.</td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
+        </div>
     </div>
   );
-  
-  return (
-    <div className="container mt-4">
+
+    return (
+        <div className="container mt-4 !border border-custom-blue-light rounded-xl bg-white">
       {/* CAMBIO: Título por defecto y nombre del proyecto */}
-      <div className="text-center mb-4">
-        <h2 className="mb-2">Gestión de Proyectos predagógicos transversales</h2>
+      <div className="text-center p-3  font-semibold">
+        <div className="text-xl text-custom-blue-dark">Gestión de Proyectos predagógicos transversales</div>
         {detalleProyecto.nombre && (
-          <h4 className="text-muted">{detalleProyecto.nombre}</h4>
+          <div className="!text-gray-600 text-lg">{detalleProyecto.nombre}</div>
         )}
       </div>
       {!isRelatedToProyecto ? (
@@ -604,39 +610,39 @@ useEffect(() => {
           En estos momentos no se encuentra relacionado a este PPT como responsable
         </div>
       ) : (
-        <>
+        <div class={'flex flex-column !border border-custom-blue-dark rounded-lg mb-3'}>
           {/* CAMBIO: Se eliminó la pestaña de 'Historico' y se fusionó la lógica en 'Actividades' */}
-          <ul className="nav nav-tabs nav-justified">
-            <li className="nav-item">
+          <div className="px-3 mt-3 flex justify-between">
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'informacion' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'informacion' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('informacion')}
                 style={{ cursor: 'pointer' }}
               >
-                Información del Proyecto
+               INFORMACIÓN DEL PROYECTO
               </a>
-            </li>
-            <li className="nav-item">
+            </div>
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'integrantes' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'integrantes' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('integrantes')}
                 style={{ cursor: 'pointer' }}
               >
-                Integrantes
+                INTEGRANTES
               </a>
-            </li>
-            <li className="nav-item">
+            </div>
+            <div className="flex w-full">
               <a
-                className={`nav-link ${activeTab === 'actividades' ? 'active' : ''}`}
+                className={`flex w-full justify-center py-1 font-medium text-center ${activeTab === 'actividades' ? 'text-white bg-custom-blue-dark rounded-md' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('actividades')}
                 style={{ cursor: 'pointer' }}
               >
-                Actividades
+                ACTIVIDADES
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
 
-          <div className="tab-content mt-3 p-3 border border-top-0 rounded-bottom">
+          <div className="px-3 rounded-bottom">
             {loading && <div className="text-center my-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Cargando...</span></div></div>}
             {/* CAMBIO: Se llama a la función con el filtro aplicado */}
             {activeTab === 'actividades' && renderActividadesTable()}
@@ -665,10 +671,10 @@ useEffect(() => {
                   <form onSubmit={handleActividadSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="actividadFecha" className="form-label">Fecha<span className="text-danger">*</span></label>
+                        <label htmlFor="actividadFecha" className="block text-sm mb-2 ml-4">Fecha<span className="text-danger">*</span></label>
                         <input
                           type="date"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="actividadFecha"
                           value={actividadFecha}
                           onInput={(e) => setActividadFecha(e.target.value)}
@@ -676,9 +682,9 @@ useEffect(() => {
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="actividadDescripcion" className="form-label">Descripción<span className="text-danger">*</span></label>
+                        <label htmlFor="actividadDescripcion" className="block text-sm mb-2 ml-4">Descripción<span className="text-danger">*</span></label>
                         <textarea
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                           id="actividadDescripcion"
                           value={actividadDescripcion}
                           onInput={(e) => setActividadDescripcion(e.target.value)}
@@ -687,10 +693,10 @@ useEffect(() => {
                         ></textarea>
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="actividadAdjuntos" className="form-label">Evidencias</label>
+                        <label htmlFor="actividadAdjuntos" className="block text-sm mb-2 ml-4">Evidencias</label>
                         <input
                           type="file"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="actividadAdjuntos"
                           multiple
                           onChange={handleFileChange}
@@ -707,14 +713,16 @@ useEffect(() => {
                                   <div>
                                     {/* NUEVO: Botón para ver el adjunto */}
                                     {file.url && (
-                                      <a href={file.url} target="_blank" className="btn btn-info btn-sm me-2">
+                                      <a href={file.url} target="_blank"
+                                         className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                                      >
                                         <i className="fa fa-eye text-white"></i> Ver
                                       </a>
                                     )}
                                     {/* NUEVO: Botón para eliminar el adjunto del array */}
                                     <button
                                       type="button"
-                                      className="btn btn-danger btn-sm flex gap-2"
+                                      className="border bg-blue-500  text-white p-2 rounded-pill btn-sm flex gap-2"
                                       onClick={() => handleRemoveAdjunto(index)}
                                     >
                                       <i className="fa fa-trash-alt text-white"></i> Eliminar
@@ -730,14 +738,14 @@ useEffect(() => {
                     <div className="modal-footer">
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={handleCloseActividadModal}
                       >
                         Cancelar
                       </button>
                       <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                       >
                         Guardar
                       </button>
@@ -769,39 +777,39 @@ useEffect(() => {
                   <form onSubmit={handleIntegranteSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="integranteNombre" className="form-label">Nombre <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteNombre" className="block text-sm mb-2 ml-4">Nombre <span className="text-danger">*</span></label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteNombre"
                           value={integranteNombre}
                           onInput={(e) => setIntegranteNombre(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteCorreo" className="form-label">Correo Electrónico <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteCorreo" className="block text-sm mb-2 ml-4">Correo Electrónico <span className="text-danger">*</span></label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteCorreo"
                           value={integranteCorreo}
                           onInput={(e) => setIntegranteCorreo(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteContacto" className="form-label">Número de contacto <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteContacto" className="block text-sm mb-2 ml-4">Número de contacto <span className="text-danger">*</span></label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           id="integranteContacto"
                           value={integranteContacto}
                           onInput={(e) => setIntegranteContacto(e.target.value)}
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="integranteRol" className="form-label">Rol <span className="text-danger">*</span></label>
+                        <label htmlFor="integranteRol" className="block text-sm mb-2 ml-4">Rol <span className="text-danger">*</span></label>
                         <select
-                            className="form-control"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                             id="integranteRol"
                             value={integranteRol}
                             onChange={(e) => setIntegranteRol(e.target.value)}
@@ -817,14 +825,14 @@ useEffect(() => {
                     <div className="modal-footer">
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={handleCloseIntegranteModal}
                       >
                         Cancelar
                       </button>
                       <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                       >
                         Guardar
                       </button>
@@ -850,7 +858,9 @@ useEffect(() => {
                         {currentDocumentos.map((adjunto, index) => (
                           <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                             <span>{adjunto.adjunto.nombre}</span>
-                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank" className="btn btn-info btn-sm">
+                            <a href={`/storage/${adjunto.adjunto.ruta}`} target="_blank"
+                               className="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2"
+                            >
                               <i className="fa fa-eye text-white"></i> Ver
                             </a>
                           </li>
@@ -861,7 +871,7 @@ useEffect(() => {
                     )}
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowDocumentosModal(false)}>Cerrar</button>
                   </div>
                 </div>
               </div>
@@ -880,35 +890,36 @@ useEffect(() => {
                   <form onSubmit={handleShareSubmit}>
                     <div className="modal-body">
                       <div className="mb-3">
-                        <label htmlFor="selectRole" className="form-label">Selecciona un rol:</label>
+                        <label htmlFor="selectRole" className="block text-sm mb-2 ml-4">Selecciona un rol:</label>
                         <select
                           id="selectRole"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                           value={selectedRole}
                           onChange={(e) => setSelectedRole(e.target.value)}
                         >
                           <option value="">-- Selecciona --</option>
-                          {rolesList.map(rol => (
+                          {integrantesRoles.map( rol => (
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
                           ))}
                         </select>
                       </div>
                       {/* CAMBIO: Se agregó el textarea para la descripción del correo */}
                       <div className="mb-3">
-                        <label htmlFor="shareDescription" className="form-label">Descripción para el correo</label>
+                        <label htmlFor="shareDescription" className="block text-sm mb-2 ml-4">Descripción para el correo</label>
                         <textarea
                           id="shareDescription"
-                          className="form-control"
+                          className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                           rows="3"
                           value={shareDescription}
                           onChange={(e) => setShareDescription(e.target.value)}
+                          required={true}
                         ></textarea>
                         <small className="form-text text-muted">Esta descripción se incluirá en el cuerpo del correo.</small>
                       </div>
                     </div>
                     <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>Cancelar</button>
-                      <button type="submit" className="btn btn-primary">Compartir</button>
+                      <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowShareModal(false)}>Cancelar</button>
+                      <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">Compartir</button>
                     </div>
                   </form>
                 </div>
@@ -929,7 +940,7 @@ useEffect(() => {
                     <p>{alertMessage}</p>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowAlertModal(false)}>Aceptar</button>
                   </div>
                 </div>
               </div>
@@ -949,8 +960,8 @@ useEffect(() => {
                     <p>{alertMessage}</p>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                    <button type="button" className="btn btn-danger" onClick={() => {
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                    <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
                       if (confirmAction) {
                         confirmAction();
                       }
@@ -961,7 +972,7 @@ useEffect(() => {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

@@ -71,7 +71,7 @@ $(function () {
   var getMessage = function () {
     var msgs = [
       "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart.",
-      '<div class="mb-3"><input class="input-small form-control mb-1" value="Textbox"/>&nbsp;<a href="http://johnpapa.net" target="_blank">This is a hyperlink</a></div><div class="d-flex"><button type="button" id="okBtn" class="btn btn-danger btn-sm me-2">Close me</button><button type="button" id="surpriseBtn" class="btn btn-sm btn-success">Surprise me</button></div>',
+      '<div class="mb-3"><input class="input-small form-control mb-1" value="Textbox"/>&nbsp;<a href="http://johnpapa.net" target="_blank">This is a hyperlink</a></div><div class="d-flex"><button type="button" id="okBtn" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm me-2">Close me</button><button type="button" id="surpriseBtn" class="btn btn-sm btn-success">Surprise me</button></div>',
       'Live the Life of Your Dreams',
       'Believe in Your Self!',
       'Be mindful. Be grateful. Be positive.',

@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
     private int $pmiId;
+    private Pmi $pmi;
     private string $municipio;
     private string $institucion;
     private Collection $rows;
@@ -38,6 +39,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
         $this->municipio = $pmi?->institucion?->municipio?->nombre;
         $this->institucion = $pmi?->institucion?->nombre;
+        $this->pmi = $pmi;
 
         $metas = PmiMetaVinculada::whereHas('objetivo.factor', function ($query) {
             $query->where('pmi_id', $this->pmiId);
@@ -92,6 +94,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
                         foreach ($indicador->actividades as $actividad) {
                             $responsables = $actividad->responsables ?? '';
+                            $frecuencia = $actividad->frecuencia_recoleccion ?? '';
                             $instrumentos = $actividad->instrumentos_recoleccion ?? '';
 
                             $this->dataRows[] = [
@@ -102,7 +105,7 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                                 'indicador_range' => null,
                                 'instrumentos' => $instrumentos,
                                 'responsables' => $responsables,
-                                'frecuencia' => $responsables,
+                                'frecuencia' => $frecuencia,
                             ];
                             $currentRow++;
                         }
@@ -154,13 +157,13 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
 
                 // ========== ESCRIBIR ENCABEZADOS ==========
                 $sheet->setCellValue('C2', "SECRETARÍA DE EDUCACIÓN DEPARTAMENTAL DEL QUINDÍO\nDIRECCION  CALIDAD EDUCATIVA");
-                $sheet->setCellValue('C3', "REVISIÓN  DEL CUMPLIMIENTO DE OBJETIVOS Y METAS\nDEL PLAN DE MEJORAMIENTO INSTITUCIONAL");
+                $sheet->setCellValue('C3', "SÍNTESIS DE SEGUIMIENTO AL PLAN DE MEJORAMIENTO INSTITUCIONAL");
                 $sheet->setCellValue('B6', 'MUNICIPIO: ');
                 $sheet->setCellValue('C6', $this->municipio);
                 $sheet->setCellValue('B7', 'INSTITUCIÓN EDUCATIVA: ');
                 $sheet->setCellValue('C7', $this->institucion);
                 $sheet->setCellValue('B8', 'AÑO:');
-                $sheet->setCellValue('C8', date("Y"));
+                $sheet->setCellValue('C8', $this->pmi?->anio_inicio . ' - ' . $this->pmi?->anio_fin);
 
                 // Encabezados de tabla
                 $sheet->setCellValue('B10', 'META');
@@ -241,7 +244,6 @@ class PmiSintesisExport implements WithTitle, WithColumnWidths, WithEvents {
                     'font' => ['name' => 'Calibri', 'size' => 14, 'bold' => true],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]
                 ]);
-
                 $sheet->getStyle('C6:C8')->applyFromArray([
                     'font' => ['name' => 'Calibri', 'size' => 11, 'bold' => false],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_GENERAL, 'vertical' => Alignment::VERTICAL_BOTTOM]

@@ -19,7 +19,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
         $user = auth()->user();
 
         $isRelatedToProyecto = false;
-        
+
         // Se verifica si hay un usuario autenticado para realizar el filtro.
         if ($user) {
             $proyectoActividades = ProyectosActividad::with(['proyectoTransversal', 'adjuntos.adjunto'])
@@ -44,6 +44,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
 
         return view('proyectoTransversal.actividades.index', [
             'actividades' => $proyectoActividades,
+            'detalleProyecto' => $isRelatedToProyecto ? $proyectoTransversal : null,
             'integrantes' => $proyectoIntegrantes,
             'institucionId' => $proyectoTransversal?->institucion_id,
             'proyectoTransversal' => $proyectoTransversalId,
@@ -92,7 +93,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
         return redirect()->route('proyecto-transversal-integrantes.index', $proyectoTransversalId)->with('flash_success_message', 'Integrante creado con éxito.');
     }
 
-    
+
     public function update(Request $request, int $proyectoTransversalId, int $integranteId) {
         // Se valida la petición con las reglas para el modelo de integrantes.
         $request->validate([
@@ -117,7 +118,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
         try {
             // Se busca el integrante por su ID.
             $integrante = ProyectoIntegrante::findOrFail($integranteId);
-            
+
             // Se actualizan los campos del integrante con los datos de la petición.
             $integrante->update([
                 'nombre' => $request->input('nombre'),
@@ -143,7 +144,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
 
     public function destroy(int $proyectoTransversalId, int $proyectoIntegranteId) {
         $proyectoIntegrante = ProyectoIntegrante::findOrFail($proyectoIntegranteId);
-        
+
         $proyectoIntegrante->delete();
         return redirect()->route('proyecto-transversal-integrantes.index', $proyectoTransversalId)->with('flash_success_message', 'Integrante eliminado correctamente.');
     }

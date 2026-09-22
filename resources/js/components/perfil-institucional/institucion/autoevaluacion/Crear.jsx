@@ -111,10 +111,10 @@ export default function Crear({  agregarUrl = '#',
                 <input type="hidden" name="autoevaluacion[institucion_id]" value={institutionId} />
 
                 <div class="mb-4">
-                    <label className="form-label" htmlFor="anio-vigencia">Año de Vigencia</label>
+                    <label className="block text-sm mb-2 ml-4" htmlFor="anio-vigencia">Año de Vigencia</label>
                     <select
                         id="anio-vigencia"
-                        class="form-select"
+                        class="w-full !border border-custom-blue-dark rounded-xl"
                         name="autoevaluacion[anio_vigencia]"
                         value={anioVigencia}
                         onChange={(e) => setAnioVigencia(e.target.value)}
@@ -233,10 +233,10 @@ export default function Crear({  agregarUrl = '#',
                                                                             {/* Evidencia */}
                                                                             <div className="col-12 col-md-3">
                                                                                 <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="form-label">Evidencia</label>
+                                                                                       className="block text-sm mb-2 ml-4">Evidencia</label>
                                                                                 <textarea
                                                                                     id={`evidencia-${cal.id}`}
-                                                                                    className="form-control"
+                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                                                                     rows="1"
                                                                                     maxLength="400"
                                                                                     value={evidencias[cal.id] || ''}
@@ -285,7 +285,7 @@ export default function Crear({  agregarUrl = '#',
                 ))}
 
 
-                <button type="submit" className="btn btn-primary mt-4">
+                <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill mt-4">
                     Guardar Autoevaluación
                 </button>
             </form>

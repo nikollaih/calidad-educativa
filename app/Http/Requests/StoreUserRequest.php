@@ -11,7 +11,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('hr-usuario-crear');
     }
 
     /**
@@ -22,7 +22,12 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+            'institucion_id' => 'nullable|exists:institucions,id',
         ];
     }
 }

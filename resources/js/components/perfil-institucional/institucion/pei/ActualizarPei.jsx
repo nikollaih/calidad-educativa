@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CTooltip from "@/components/shared/CTooltip.jsx";
 
 // Modal de editar
 const ModalAjustes = ({
@@ -69,9 +70,9 @@ const handleNewFile = (fieldName, e) => {
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
+                  <label className="block text-sm mb-2 ml-4">Tipo de ajuste  <span style={{color: 'red'}}>*</span></label>
                   <select
-                    className="form-select"
+                    className="w-full !border border-custom-blue-dark rounded-xl"
                     value={formData.tipo_codificacion || ''}
                     onChange={(e) => setFormData({...formData, tipo_codificacion: e.target.value})}
                     required
@@ -86,11 +87,11 @@ const handleNewFile = (fieldName, e) => {
               </div>
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label className="form-label text-capitalize">Fecha  <span style={{color: 'red'}}>*</span></label>
+                  <label className="block text-sm mb-2 ml-4 text-capitalize">Fecha  <span style={{color: 'red'}}>*</span></label>
                   <input
                     type="date"
                     required
-                    className="form-control"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                     value={formData.fecha || ''}
                     min={`${new Date().getFullYear()}-01-01`}
                     onChange={(e) => setFormData({...formData, fecha: e.target.value})}
@@ -107,10 +108,10 @@ const handleNewFile = (fieldName, e) => {
 
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
-                    <label className="form-label text-capitalize">{clave.replace(/_/g, ' ')}</label>
+                    <label className="block text-sm mb-2 ml-4 text-capitalize">{clave.replace(/_/g, ' ')}</label>
                     <textarea
                       type="text"
-                      className="form-control"
+                      className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                       value={valor || ''}
                       onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
                     />
@@ -194,9 +195,9 @@ const handleNewFile = (fieldName, e) => {
             {/* Sección inferior: Observación y campo de documento adicional */}
             <div className="row mt-3">
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Observación</label>
+                <label className="block text-sm mb-2 ml-4 text-capitalize">Observación</label>
                 <textarea
-                  className="form-control"
+                  className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                   value={formData.observacion || ''}
                   onChange={(e) => setFormData({...formData, observacion: e.target.value})}
                   rows="3"
@@ -205,12 +206,12 @@ const handleNewFile = (fieldName, e) => {
 
               {/* Campo adicional para subir documento */}
               <div className="col-md-12 mb-3">
-                <label className="form-label text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
+                <label className="block text-sm mb-2 ml-4 text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
                 <div className="input-group">
                   <input
                     type="file"
                     required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
-                    className="form-control"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                     onChange={(e) => handleNewFile('documento_adicional', e)}
                   />
                   {/* {fileUploads['documento_adicional'] && (
@@ -225,12 +226,12 @@ const handleNewFile = (fieldName, e) => {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="border bg-blue-500  text-white p-2 rounded-pill"
                 onClick={onClose}
               >
                 Cancelar
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill">
                 Guardar Cambios
               </button>
             </div>
@@ -440,7 +441,7 @@ const ModalHistoricos = ({
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button type="button" className="border bg-blue-500  text-white p-2 rounded-pill" onClick={onClose}>
               <i className="fas fa-times me-1"></i> Cerrar
             </button>
           </div>
@@ -487,9 +488,6 @@ export default function ActualizarPei({
 
     return indexA - indexB;
   });
-
-  console.log('gestionArrayOrdenado', gestionArrayOrdenado);
-
 
   const [activeTab, setActiveTab] = useState(0);
   const [currentModal, setCurrentModal] = useState(null);
@@ -558,139 +556,159 @@ export default function ActualizarPei({
   };
 
   return (
-    <div className="container mt-5 bg-white p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="mb-0">Ajustes al PEI - {institucionNombre}</h2>
-      </div>
-
-      <div className="mb-4">
-        <ul className="nav nav-tabs border" id="gruposTabs" role="tablist">
-          {gestionArray.map((grupo, index) => (
-            <li className="nav-item" key={`tab-${grupo.id}`}>
-              <button
-               style={activeTab === index ? {backgroundColor: '#cfe2ff',color: '#084298'} : {backgroundColor: '#d6d6d6', color: '#000'}}
-                className={`nav-link ${activeTab === index ? 'active' : ''}`}
-                onClick={() => setActiveTab(index)}
-                type="button"
-                role="tab"
-              >
-                <span>{getGestion(grupo.id)}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <div className="border border-top-0 rounded-bottom p-3">
-          {gestionArray.map((grupo, index) => (
-            <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
-              {grupo.hijos?.length > 0 && (
-                <div>
-                  {grupo.hijos.map((hijo, hijoIndex) => {
-                    const { documentos, nombre_gestion, traces, ...otrosCampos } = hijo;
-
-
-                    return (
-                      <div className="mb-4 p-3 border rounded" key={nombre_gestion}>
-                        {/* Encabezado con botones */}
-                        <div className="d-flex justify-content-between  mb-3">
-                          {nombre_gestion === 'RESEÑA HISTORICA' ? (
-                            <h5 className="fw-bold mb-0"></h5>
-                          ) : (
-                            <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
-                          )}
-                          <div>
-                            <button
-                              className="btn btn-sm btn-outline-primary me-2"
-                              onClick={() => setCurrentModal({ gestionIndex: index, hijoIndex, formData: {...otrosCampos}, documentos, nombre_gestion })}
-                            >
-                              <i className="fas fa-edit me-1"></i> Actualizar
-                            </button>
-                            <button
-                              className="btn btn-sm btn-outline-secondary"
-                              onClick={() => setHistoricosModal({index, hijoIndex, nombre_gestion, traces})}
-                            >
-                              <i className="fas fa-history me-1"></i> Históricos
-                          </button>
-                          </div>
-                        </div>
-
-                        {/* Contenido normal (vista) */}
-                        <div>
-                          {Object.entries(otrosCampos)
-                          .filter(([clave]) => clave !== 'relation_name')
-                          .map(([clave, valor]) => (
-                            <div className="mb-3" key={clave}>
-                              <div className="col-md-6 fw-semibold text-capitalize">
-                                {clave.replace(/_/g, ' ')}:
-                              </div>
-                              <div className="text-break">
-                                {valor || <span className="text-muted fst-italic">No registrado</span>}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Documentos */}
-                        {documentos && Object.keys(documentos).length > 0 && (
-                          <div className="mt-4">
-                            <h6 className="fw-bold mb-3">Documentos</h6>
-                            <div>
-                              {Object.entries(documentos).map(([docNombre, docValor]) => (
-                                (
-                                  <div className="d-inline-block mx-3 mb-2" key={docNombre}>
-                                    <div className="fw-semibold text-capitalize">
-                                      {docNombre
-                                        .replace(/([A-Z])/g, ' $1')
-                                        .replace(/^./, str => str.toUpperCase())
-                                        .replace(/_/g, ' ')
-                                        .trim()}
-                                    </div>
-                                    {docValor?.ruta ? (
-                                      <a
-                                        href={`/storage/${docValor.ruta}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="badge bg-primary rounded-pill text-decoration-none"
-                                      >
-                                        Ver documento
-                                      </a>
-                                    ) : (
-                                      <span className="text-muted fst-italic">Sin información</span>
-                                    )}
-                                  </div>
-                                )
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="bg-white mb-4 !border border-custom-blue-light rounded-xl shadow-sm">
+        <div className="flex flex-col justify-center items-center">
+            <div className="py-3 text-center text-2xl text-custom-blue-light font-semibold">
+                Proyecto Educativo Institucional
             </div>
-          ))}
-        </div>
+            <div className="w-[95%] mx-auto mb-3 !border border-custom-blue-dark rounded-xl">
+                {/* Tabs Navigation */}
+                <div className="text-center">
+                    <div className="py-6 mx-4 gap-2 items-center justify-center">
+                        <div className="flex flex-wrap w-full" id="gruposTabs" role="tablist">
+                            {gestionArray.map((grupo, index) => (
+                                <div className="flex-1" key={`tab-${grupo.id}`}>
+                                    <button
+                                        className={`whitespace-nowrap p-1 tab-button w-full text-xs font-semibold  rounded-md transition-colors duration-200 border-b-2  ${activeTab === index ? 'text-white bg-custom-blue-dark' : 'border-transparent '}`}
+                                        onClick={() => setActiveTab(index)}
+                                        type="button"
+                                        role="tab"
+                                    >
+                                        <span>{getGestion(grupo.id)}</span>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                        {gestionArray.map((grupo, index) => (
+                            <div key={`content-${grupo.id}`} style={{display: activeTab === index ? 'block' : 'none'}}>
+                                {grupo.hijos?.length > 0 && (
+                                    <div>
+                                        {grupo.hijos.map((hijo, hijoIndex) => {
+                                            const {documentos, nombre_gestion, traces, ...otrosCampos} = hijo;
 
-        {/* Boton de volver */}
-        {/* <div class="d-flex justify-content-end mt-4">
+                                            return (
+                                                <div className=" !border border-custom-blue-dark rounded-lg mb-4 mx-3 p-3 " key={nombre_gestion}>
+                                                    {/* Encabezado con botones */}
+                                                    <div className="d-flex justify-content-between  mb-3">
+                                                        {nombre_gestion === 'RESEÑA HISTORICA' ? (
+                                                            <h5 className="fw-bold mb-0"></h5>
+                                                        ) : (
+                                                            <h5 className="fw-bold mb-0">{nombre_gestion}</h5>
+                                                        )}
+                                                        <div class={'flex gap-1'}>
+                                                            <button
+                                                                className="!border border-custom-blue-light rounded-pill py-0.5 px-1 text-custom-blue-light"
+                                                                onClick={() => setCurrentModal({
+                                                                    gestionIndex: index,
+                                                                    hijoIndex,
+                                                                    formData: {...otrosCampos},
+                                                                    documentos,
+                                                                    nombre_gestion
+                                                                })}
+                                                            >
+                                                                <i className="fa-solid fa-arrow-rotate-right"></i>Actualizar
+                                                            </button>
+                                                            <CTooltip label={'Históricos'}>
+                                                                <button
+                                                                    className="bg-custom-blue-dark text-white rounded-pill py-1 px-2"
+                                                                    onClick={() => setHistoricosModal({
+                                                                        index,
+                                                                        hijoIndex,
+                                                                        nombre_gestion,
+                                                                        traces
+                                                                    })}
+                                                                >
+                                                                    <i className="fas fa-history"></i>
+                                                                </button>
+                                                            </CTooltip>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Contenido normal (vista) */}
+                                                    <div>
+                                                        {Object.entries(otrosCampos)
+                                                            .filter(([clave]) => clave !== 'relation_name')
+                                                            .map(([clave, valor]) => (
+                                                                <div className="mb-3" key={clave}>
+                                                                    <div
+                                                                        className="col-md-6 fw-semibold text-capitalize">
+                                                                        {clave.replace(/_/g, ' ')}:
+                                                                    </div>
+                                                                    <div className="text-break">
+                                                                        {valor ||
+                                                                            <span className="text-muted fst-italic">No registrado</span>}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                    </div>
+
+                                                    {/* Documentos */}
+                                                    {documentos && Object.keys(documentos).length > 0 && (
+                                                        <div className="mt-4">
+                                                            <h6 className="fw-bold mb-3">Documentos</h6>
+                                                            <div>
+                                                                {Object.entries(documentos).map(([docNombre, docValor]) => (
+                                                                    (
+                                                                        <div className="d-inline-block mx-3 mb-2"
+                                                                             key={docNombre}>
+                                                                            <div
+                                                                                className="fw-semibold text-capitalize">
+                                                                                {docNombre
+                                                                                    .replace(/([A-Z])/g, ' $1')
+                                                                                    .replace(/^./, str => str.toUpperCase())
+                                                                                    .replace(/_/g, ' ')
+                                                                                    .trim()}
+                                                                            </div>
+                                                                            {docValor?.ruta ? (
+                                                                                <a
+                                                                                    href={`/storage/${docValor.ruta}`}
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    className="badge bg-primary rounded-pill text-decoration-none"
+                                                                                >
+                                                                                    Ver documento
+                                                                                </a>
+                                                                            ) : (
+                                                                                <span className="text-muted fst-italic">Sin información</span>
+                                                                            )}
+                                                                        </div>
+                                                                    )
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Boton de volver */}
+                    {/* <div class="d-flex justify-content-end mt-4">
         <button
           onClick={() => window.history.back()}
-          class="btn btn-secondary"
+          class="border bg-blue-500  text-white p-2 rounded-pill"
         >
           <i class="fas fa-arrow-left me-2"></i> Volver
         </button>
       </div> */}
 
-      </div>
 
-      {/* Modal de Ajustes */}
-      {currentModal && (
-        <ModalAjustes
-          nombre_gestion={currentModal.nombre_gestion}
-          institucionId={institucionId}
-          csrfToken={csrfToken}
-          formData={currentModal.formData}
+            </div>
+        </div>
+        {/* Modal de Ajustes */}
+        {currentModal && (
+            <ModalAjustes
+                nombre_gestion={currentModal.nombre_gestion}
+                institucionId={institucionId}
+                csrfToken={csrfToken}
+                formData={currentModal.formData}
           setFormData={(newData) => setCurrentModal({...currentModal, formData: newData})}
           documentos={currentModal.documentos}
           onClose={() => setCurrentModal(null)}

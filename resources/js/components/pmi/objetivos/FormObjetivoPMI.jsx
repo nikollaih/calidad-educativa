@@ -111,8 +111,9 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
     };
 
     return (
-        <div className="container py-4">
-                <h3 className="mb-4">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
+        <div className="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div className={'p-3'}>
+                <h3 className="mb-4 text-custom-blue-dark">{objetivoExistente ? 'Editar' : 'Crear'} objetivo PMI</h3>
 
                 {/* Sección del objetivo */}
                 <div className="card mb-4">
@@ -121,7 +122,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                     </div>
 
                     <div className="card-body">
-                        <label className="form-label">Gestión*</label>
+                        <label className="block text-sm mb-2 ml-4">Gestión*</label>
                         <CAutocompleteFromArray
                             data={gestiones}
                             fieldName={"gestion_id"}
@@ -139,7 +140,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
 
                     {gestionSeleccionada && (
                         <div className="card-body">
-                            <label className="form-label">Factor crítico*</label>
+                            <label className="block text-sm mb-2 ml-4">Factor crítico*</label>
                             <CAutocompleteFromArray
                                 key={gestionSeleccionada.id}   // 🔑 fuerza reset al cambiar gestión
                                 data={factoresFiltrados}
@@ -156,10 +157,10 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                     )}
                     <div className="card-body">
                         <div className="mb-3">
-                            <label htmlFor="descripcion" className="form-label">Descripción*</label>
+                            <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">Descripción*</label>
                             <textarea
                                 id="descripcion"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 name="descripcion"
                                 value={objetivo.descripcion}
                                 onChange={handleObjetivoChange}
@@ -201,37 +202,16 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor={`meta-desc-${i}`} className="form-label">Descripción*</label>
+                                        <label htmlFor={`meta-desc-${i}`} className="block text-sm mb-2 ml-4">Descripción*</label>
                                         <textarea
                                             id={`meta-desc-${i}`}
-                                            className="form-control"
+                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             name="descripcion"
                                             value={meta.descripcion}
                                             onChange={(e) => handleMetaChange(i, e)}
                                             disabled={!editable}
                                             required
                                         />
-                                    </div>
-                                    <div className="row">
-                                        <div className=" mb-3">
-                                            <label htmlFor="unidad_medida" className="form-label">Unidad de Medida*</label>
-                                            <CAutocompleteFromArray
-                                                isEditable={editable}
-                                                data={unidadesMedida}
-                                                initialValue={meta.indicador_id}
-                                                fieldName={"indicador_id"}
-                                                searchFields={['unidad_total', 'unidad_parcial']}
-                                                labelFields={['unidad_parcial', 'unidad_total']}
-                                                onSelect={(unidadMedida) => {
-                                                    const newMeta = [...metas];
-                                                    newMeta[i] = {
-                                                        ...newMeta[i],
-                                                        ['indicador_id']: unidadMedida.id
-                                                    };
-                                                    setMetas(newMeta);
-                                                }}
-                                            />
-                                        </div>
                                     </div>
                                 </div>
                             );
@@ -240,7 +220,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 </div>
 
 
-            <form method="POST" action={agregarUrl}>
+                <form method="POST" action={agregarUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
                 <input type="hidden" name="id" value={objetivo.id} />
                 <input type="hidden" name="descripcion" value={objetivo.descripcion} />
@@ -270,6 +250,7 @@ const CreateObjetivoPMI = ({ agregarUrl = '', csrfToken = '', objetivoExistente 
                 ) }
 
             </form>
+            </div>
         </div>
     );
 };

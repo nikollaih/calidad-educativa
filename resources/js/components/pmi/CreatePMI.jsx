@@ -25,7 +25,7 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
     }, [anioInicio]);
 
     return (
-        <div className="container py-4">
+        <div className="container my-4 py-3 !border border-custom-blue-light rounded-xl bg-white">
             <form method="POST" action={createUrl}>
                 <input type="hidden" name="_token" value={csrfToken} />
                 <input type="hidden" name="pmi[autoevaluacion_id]" value={selectedId} />
@@ -33,10 +33,10 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                 <h5 className="mb-2">Seleccionar años de ejecución del PMI <span className="text-danger">*</span></h5>
                 <div className="row mb-3">
                     <div className="col">
-                        <label htmlFor="anioInicio" className="form-label">Año de inicio</label>
+                        <label htmlFor="anioInicio" className="block text-sm mb-2 ml-4">Año de inicio</label>
                         <select
                             id="anioInicio"
-                            className="form-select"
+                            className="w-full !border border-custom-blue-dark rounded-xl"
                             name="pmi[anio_inicio]"
                             value={anioInicio}
                             onChange={(e) => setAnioInicio(e.target.value)}
@@ -49,10 +49,10 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                         </select>
                     </div>
                     <div className="col">
-                        <label htmlFor="anioFin" className="form-label">Año de fin</label>
+                        <label htmlFor="anioFin" className="block text-sm mb-2 ml-4">Año de fin</label>
                         <select
                             id="anioFin"
-                            className="form-select"
+                            className="w-full !border border-custom-blue-dark rounded-xl"
                             name="pmi[anio_fin]"
                             value={anioFin}
                             onChange={(e) => setAnioFin(e.target.value)}
@@ -68,12 +68,12 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
 
                 <h5 className="mb-2">Ingresa una descripción del PMI</h5>
                 <textarea
-                    className="form-control mb-3"
+                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl mb-3"
                     type="text"
                     name="pmi[descripcion]"
                 ></textarea>
 
-                <button className="btn btn-success">
+                <button className="border bg-blue-500  text-white p-2 rounded-pill">
                     Crear PMI
                 </button>
             </form>

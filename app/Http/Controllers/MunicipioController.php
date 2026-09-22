@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMunicipioRequest;
+use App\Http\Requests\UpdateMunicipioRequest;
 use App\Models\Municipio;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Gate;
 
 class MunicipioController extends Controller {
     public function index() {
@@ -14,44 +14,32 @@ class MunicipioController extends Controller {
     }
 
     public function create() {
-        //$permissions = Permission::all();
-        // return view('roles.create', compact('permissions'));
+        Gate::authorize('s-parametro-editar');
+        return view('municipality.create');
     }
 
-    public function store(Request $request) {
-        $municipioData = $request->all();
-        if ( Municipio::where('nombre', $municipioData['nombre'])->first() ) {
-            return redirect()->route('municipios.index')->with('flash_error_message', 'El municipio ya existe.');
-        } else {
-            Municipio::create($municipioData);
-            return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio creado correctamente.');
-        }
+    public function store(StoreMunicipioRequest $request) {
+        Municipio::create($request->validated());
+        return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio creado correctamente.');
     }
 
-    public function edit(Role $role) {
-        //permissions = Permission::all();
-        //return view('roles.edit', compact('role', 'permissions'));
+    public function edit(int $municipio) {
+        Gate::authorize('s-parametro-editar');
+        $municipio = Municipio::findOrFail($municipio);
+        return view('municipality.edit', compact('municipio'));
     }
 
-    public function update(Request $request, int $municipio) {
-        $municipioData = $request->all();
-        $municipioToUpdate = Municipio::find($municipio);
-        if ( $municipioToUpdate ) {
-            $municipioToUpdate->nombre = $municipioData['nombre'];
-            $municipioToUpdate->save();
-            return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio actualizado correctamente.');
-        } else {
-            return redirect()->route('municipios.index')->with('flash_error_message', 'El municipio no existe.');
-        }
+    public function update(UpdateMunicipioRequest $request, int $municipio) {
+        $municipioToUpdate = Municipio::findOrFail($municipio);
+        $municipioToUpdate->update($request->validated());
+        return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio actualizado correctamente.');
     }
-
 
     public function destroy(int $municipio) {
-        $municipioToDel = Municipio::find($municipio);
-        if ( $municipioToDel ) {
-            $municipioToDel->delete();
-            return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio eliminado correctamente.');
-        }
-        return redirect()->route('municipios.index')->with('flash_error_message', 'El municipio no existe.');
+        Gate::authorize('s-parametro-editar');
+        $municipioToDel = Municipio::findOrFail($municipio);
+        $municipioToDel->delete();
+        return redirect()->route('municipios.index')->with('flash_success_message', 'Municipio eliminado correctamente.');
     }
 }
+

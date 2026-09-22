@@ -1,11 +1,14 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
 export default function ListaUnidadMeta({
     agregarUrl,
     unidadesMeta,
     csrfToken = "",
+    canEditParametros = false,
 }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState("agregar"); // 'agregar' o 'editar'
@@ -92,11 +95,14 @@ export default function ListaUnidadMeta({
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Indicadores</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar indicador
-            </button>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Indicadores</h2>
+            {canEditParametros && (
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
+            )}
 
             <table class="table">
                 <thead>
@@ -104,7 +110,7 @@ export default function ListaUnidadMeta({
                         {/* Eliminado: La columna 'Código' */}
                         <th>Unidad parcial</th>
                         <th>Unidad total</th>
-                        <th>Acciones</th>
+                        {canEditParametros && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -113,55 +119,57 @@ export default function ListaUnidadMeta({
                             {/* Eliminado: La celda 'código' */}
                             <td>{unidadMeta.unidad_parcial}</td>
                             <td>{unidadMeta.unidad_total}</td>
-                            <td>
-                                <button
-                                    onClick={() =>
-                                        handleEditarClick(unidadMeta)
-                                    }
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <form
-                                    action={`/unidades-meta/${unidadMeta.id}`}
-                                    method="POST"
-                                    style={{ display: "inline" }}
-                                    onSubmit={(e) => {
-                                        if (
-                                            !confirm(
-                                                "¿Estás seguro de que quieres eliminar esta unidad de meta?"
-                                            )
-                                        ) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="_token"
-                                        value={csrfToken}
+                            {canEditParametros && (
+                                <td>
+                                    <CTableActionButton
+                                        title={'Editar'}
+                                        onClick={() => handleEditarClick(unidadMeta)}
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
                                     />
-                                    <input
-                                        type="hidden"
-                                        name="_method"
-                                        value="DELETE"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="btn btn-danger btn-sm"
+                                    <form id="delete-form-unidad-meta"
+                                        action={`/unidades-meta/${unidadMeta.id}`}
+                                        method="POST"
+                                        style={{ display: "inline" }}
+                                        onSubmit={(e) => {
+                                            if (
+                                                !confirm(
+                                                    "¿Estás seguro de que quieres eliminar esta unidad de meta?"
+                                                )
+                                            ) {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                     >
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
+                                        <input
+                                            type="hidden"
+                                            name="_token"
+                                            value={csrfToken}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="_method"
+                                            value="DELETE"
+                                        />
+                                        <CTableActionButton
+                                            formRef={'#delete-form-unidad-meta'}
+                                            title={'Eliminar'}
+                                            iconClass={'fa fa-trash'}
+                                            confirmMessage={'¿Estás seguro de que quieres eliminar esta unidad de meta?'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                    </form>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <CPagination  pagination={unidadesMeta} />
+            <CPagination pagination={unidadesMeta} />
+            </div>
             {/* Modal */}
-            {showModal && (
+            {showModal && canEditParametros && (
                 <div
                     class="modal d-block"
                     style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
@@ -186,7 +194,7 @@ export default function ListaUnidadMeta({
                                     <div class="mb-3">
                                         <label
                                             for="unidadParcial"
-                                            class="form-label"
+                                            class="block text-sm mb-2 ml-4"
                                         >
                                             Unidad parcial{" "}
                                             <span className="text-danger">
@@ -194,7 +202,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="unidadParcial"
                                             value={unidadParcial}
                                             onInput={(e) =>
@@ -209,7 +217,7 @@ export default function ListaUnidadMeta({
                                     <div class="mb-3">
                                         <label
                                             for="unidadTotal"
-                                            class="form-label"
+                                            class="block text-sm mb-2 ml-4"
                                         >
                                             Unidad total{" "}
                                             <span className="text-danger">
@@ -217,7 +225,7 @@ export default function ListaUnidadMeta({
                                             </span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="unidadTotal"
                                             value={unidadTotal}
                                             onInput={(e) =>
@@ -231,14 +239,14 @@ export default function ListaUnidadMeta({
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         // Modificado: Deshabilitar si ambos campos están vacíos
                                         disabled={
                                             !unidadParcial.trim() ||

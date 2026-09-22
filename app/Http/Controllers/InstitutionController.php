@@ -15,11 +15,14 @@ use App\Models\GrupoCalificacion;
 use App\Models\Institucion;
 use App\Models\Municipio;
 use App\Models\PeiHistorial;
+use App\Models\Seguridad\Role\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -38,13 +41,133 @@ class InstitutionController extends Controller {
                 $query->where('municipio_id', $municipioId);
             })
             ->filters($request->filters())
-            ->paginate('10');
+            ->orderBy('nombre', 'asc')
+            ->paginate('10')
+            ->appends(request()->query());
         return view(
             'institutional_profile.institution.index',
             [
                 'paginate' =>$paginate
             ]
         );
+    }
+    public function usuariosInstitucionByRector(InstitucionRequest $request) {
+        $institucion = Auth::user()->institucion;
+        if (empty($institucion)) {
+            return redirect()->back()->with('flash_error_message', 'Debes estar asociado a una institucion.');
+        }
+
+        $search = $request->input('search');
+
+        $paginate = User::whereHas('instituciones', function($query) use ($institucion) {
+            $query->where('institucions.id', $institucion->id);
+        })
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })
+        ->paginate(10)
+        ->appends(request()->query());
+
+        // Agregar is_active directamente a cada usuario
+        $paginate->getCollection()->transform(function($user) use ($institucion) {
+            $pivot = \DB::table('institucion_user')
+                ->where('user_id', $user->id)
+                ->where('institucion_id', $institucion->id)
+                ->first();
+
+            $user->is_active = $pivot ? $pivot->is_active : null;
+            return $user;
+        });
+        return view(
+            'usuarios_institucion.index',
+            [
+                'paginate' => $paginate,
+                'search' => $search,
+            ]
+        );
+    }
+    public function createUsuariosInstitucion() {
+        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
+        return view(
+            'usuarios_institucion.create',
+            [
+                'roles'=> $roles,
+            ]
+        );
+    }
+    public function editUsuarioInstitucion(Request $request, int $userId) {
+        $user = User::where('id', $userId)->with('roles')->first();
+        if (empty($user)) {
+            return redirect()->back()->with('flash_error_message', 'Usuario no encontrado.');
+        }
+        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
+        return view(
+            'usuarios_institucion.edit',
+            [
+                'roles'=> $roles,
+                'user' => $user,
+            ]
+        );
+    }
+    public function storeUsuariosInstitucion(InstitucionRequest $request) {
+        /**
+         * @var Institucion|null $institution
+         */
+        $institution = Auth::user()?->institucion;
+        if (empty($institution)) {
+            return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
+        }
+        $userData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+        ]);
+        $user = User::create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'password' => Hash::make($userData['password']),
+        ]);
+        // Asignar varios roles
+        $user->syncRoles($userData['roles']);
+        $institution->users()->attach($user->id);
+        return redirect()->route('instituciones.usuarios_institucion-index')
+            ->with('flash_success_message', 'Usuario creado correctamente.');
+    }
+    public function updateUsuariosInstitucion(InstitucionRequest $request, User $user) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$user->id}",
+            'password' => 'nullable|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+        ]);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+
+        // Asignar varios roles
+        $user->syncRoles($validated['roles']);
+        return redirect()->route('instituciones.usuarios_institucion-index')
+            ->with('flash_success_message', 'Usuario creado correctamente.');
+    }
+    public function deleteUsuarioInstitucion(Request $request, User $user) {
+        /**
+         * @var Institucion|null $institution
+         */
+        $institution = Auth::user()?->institucion;
+        if (empty($institution)) {
+            return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
+        }
+        if ($institution->users()->where('users.id', $user->id)->exists()) {
+            $user->delete();
+            return redirect()->route('instituciones.usuarios_institucion-index')
+                ->with('flash_success_message', 'Usuario creado correctamente.');
+        }
+        return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
     }
 
     /**
@@ -85,7 +208,17 @@ class InstitutionController extends Controller {
     }
     public function fortalezasDebilidades(int $autoevaluacionId) {
         $fortalezasDebilidades = $this->autoevaluacionService->getFortalezasDebilidades(autoevaluacionId:$autoevaluacionId);
-        return view('institutional_profile.institution.resultados.form', $fortalezasDebilidades);
+        $autoevaluacionOwner = Autoevaluacion::find($autoevaluacionId);
+        $institucionNombre = null;
+        if ($autoevaluacionOwner) {
+            $institucionNombre = Institucion::find($autoevaluacionOwner->institucion_id)?->nombre;
+        }
+        return view(
+            'institutional_profile.institution.resultados.form',
+            array_merge($fortalezasDebilidades, [
+                'institucionNombre' => $institucionNombre,
+            ])
+        );
     }
 
     public function sincronizarFactoresCriticos(Request $request, $autoevaluacionId) {
@@ -139,13 +272,18 @@ class InstitutionController extends Controller {
         return redirect()->route('institution.fort_deb', ['autoevaluacionId' => $autoevaluacionId])
             ->with('flash_success_message', "Resultados actualizados correctamente");
     }
-    public function autoevaluaciones(int $institution ) {
-        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)->paginate(10);
-        // $roles = Role::all();
-        return view('institutional_profile.institution.autoevaluaciones.index',
-            ['institutionId' => $institution, 'autoevaluaciones' => $autoevaluaciones]);
+    public function autoevaluaciones(InstitucionRequest $request, int $institution ) {
+        $autoevaluaciones = Autoevaluacion::where('institucion_id',$institution)
+            ->orderBy('anio_vigencia', 'desc')
+            ->paginate(10);
+        $institucionNombre = Institucion::find($institution)?->nombre;
+        return view('institutional_profile.institution.autoevaluaciones.index', [
+            'institutionId' => $institution,
+            'autoevaluaciones' => $autoevaluaciones,
+            'institucionNombre' => $institucionNombre,
+        ]);
     }
-    public function autoevaluacionesCrear(int $institution ) {
+    public function autoevaluacionesCrear(InstitucionRequest $request, int $institution ) {
         $gruposCalificaciones = GrupoCalificacion::with(['hijos.calificaciones', 'hijos.calificaciones.notasCalificacion', 'calificaciones'])
             ->whereNull('padre_id')
             ->get();
@@ -159,7 +297,7 @@ class InstitutionController extends Controller {
             ]
         );
     }
-    public function autoevaluacionesEditar(int $autoevaluacionId = null) {
+    public function autoevaluacionesEditar(InstitucionRequest $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::with('notas','notas.calificacion')->where('id', $autoevaluacionId)->first();
         if (empty($autoevaluacionId)) {
             return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
@@ -234,14 +372,13 @@ class InstitutionController extends Controller {
                     'ponderados' => $ponderados,
                 ];
             });
-        return view('institutional_profile.institution.autoevaluaciones.ver',
-            [
-                'gruposCalificaciones' => $gruposCalificaciones,
-                'autoevaluacion' => $autoevaluacion,
-                'statistics' => $statistics,
-                'institucionId' => $autoevaluacion->institucion_id,
-            ]
-        );
+        return view('institutional_profile.institution.autoevaluaciones.ver', [
+            'gruposCalificaciones' => $gruposCalificaciones,
+            'autoevaluacion' => $autoevaluacion,
+            'statistics' => $statistics,
+            'institucionId' => $autoevaluacion->institucion_id,
+            'institucionNombre' => Institucion::find($autoevaluacion->institucion_id)?->nombre,
+        ]);
     }
     public function autoevaluacionesAlmacenar(Request $request) {
         $autoevaluacionData =  $request->input('autoevaluacion');
@@ -307,6 +444,63 @@ class InstitutionController extends Controller {
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación actualizada correctamente");
     }
+
+    public function autoevaluacionesActualizarHijo(Request $request, int $autoevaluacionId, int $hijoId) {
+        $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
+        $notas = $request->input('notas');
+
+        if (!$autoevaluacion) {
+            return redirect()->back()->with('flash_error_message', 'Autoevaluación no encontrada.');
+        }
+
+        // Obtener el hijo (grupo) para validar
+        $hijo = GrupoCalificacion::with('calificaciones')->find($hijoId);
+
+        if (!$hijo) {
+            return redirect()->back()->with('flash_error_message', 'Componente no encontrado.');
+        }
+
+        // Obtener los IDs de las calificaciones que pertenecen a este hijo
+        $calificacionesDelHijo = $hijo->calificaciones->pluck('id')->toArray();
+
+        if ($notas) {
+            $syncData = [];
+	    $idsAAdjuntar = [];
+
+            foreach ($notas as $nota) {
+                // Verificar que la nota pertenece a una calificación de este hijo
+                $notaCalificacion = \App\Models\NotaCalificacion::with('calificacion')->find($nota['nota_calificacion_id']);
+
+                if ($notaCalificacion && in_array($notaCalificacion->calificacion->id, $calificacionesDelHijo)) {
+                    $syncData[$nota['nota_calificacion_id']] = ['evidencia' => $nota['evidencia']];
+		    $idsAAdjuntar[] = (int) $nota['nota_calificacion_id'];
+                }
+            }
+
+            // Sincronizar solo las notas de este hijo (sin desconectar las demás)
+            if (!empty($syncData)) {
+		    // 1. Obtener TODOS los ids posibles (los 4 niveles) de las calificaciones que se están enviando
+            $indicesEnviados = \App\Models\NotaCalificacion::whereIn('id', $idsAAdjuntar)
+                ->pluck('indice_calificacion');
+
+            $todosLosNivelesPosibles = \App\Models\NotaCalificacion::whereIn('indice_calificacion', $indicesEnviados)
+                ->pluck('id')
+                ->toArray();
+
+            // 2. Detach solo los niveles "hermanos" que NO son los que se están adjuntando ahora
+            $idsADetach = array_diff($todosLosNivelesPosibles, $idsAAdjuntar);
+            if (!empty($idsADetach)) {
+                $autoevaluacion->notas()->detach($idsADetach);
+            }
+
+            // 3. Ahora sí, adjuntar/actualizar los niveles correctos
+            $autoevaluacion->notas()->syncWithoutDetaching($syncData);
+            }
+        }
+
+        return redirect()->route('institution.autoevaluaciones-editar', ['autoevaluacionId' => $autoevaluacionId])
+            ->with('flash_success_message', "Componente '{$hijo->nombre}' actualizado correctamente");
+    }
     public function create() {
         $municipios = Municipio::get();
         // Lista de rectores disponibles
@@ -321,10 +515,6 @@ class InstitutionController extends Controller {
         return view('institutional_profile.institution.create', ['municipios' => $municipios, 'availableRectors' => $availableRectors]);
     }
     public function store(Request $request) {
-        // Valida si hay un file de licencia de funcionamiento
-        if (!$request->hasFile('licencia_funcionamiento')) {
-            return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar una licencia de funcionamiento.');
-        }
         if ($request->rector_id == null) {
             return redirect()->route('institution.create')->with('flash_error_message', 'Se debe seleccionar un rector.');
         }

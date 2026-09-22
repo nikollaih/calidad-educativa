@@ -1,6 +1,6 @@
 // src/components/VerAvancesPMI.jsx
-import { useState, useEffect } from "preact/hooks";
-import { h } from "preact";
+import { useState, useEffect } from 'preact/hooks';
+import { h } from 'preact';
 
 const VerAvancesPMI = ({ actividad, onClose }) => {
     const [avances, setAvances] = useState([]);
@@ -20,7 +20,7 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
 
     const fetchAvances = async () => {
         try {
-            const response = await fetch("/pmi/get-avances-actividad/" + actividad?.id);
+            const response = await fetch('/pmi/get-avances-actividad/' + actividad?.id);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -31,15 +31,14 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
             setMeta(data.meta);
             setAvances(sortedData);
         } catch (error) {
-            console.error("Error al cargar los avances:", error);
+            console.error('Error al cargar los avances:', error);
         }
     };
-
 
     return (
         <div
             className="modal fade show"
-            style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+            style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
             tabIndex="-1"
             aria-labelledby="advanceFormModalLabel"
             aria-modal="true"
@@ -52,23 +51,10 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
                             Ver Avances
                         </h5>
                         <div className="d-flex gap-2 flex-wrap ms-3">
-                            <div className="card shadow-sm border-0 bg-primary text-white px-2 py-1 small">
-                                Valor meta: {meta?.valor_requerido}
-                            </div>
-
-                            <div className="card shadow-sm border-0 bg-success text-white px-2 py-1 small">
-                                {meta?.indicador_info?.unidad_total}: {meta?.valor_requerido}
-                            </div>
-
-                            <div className="card shadow-sm border-0 bg-warning text-dark px-2 py-1 small">
-                                {meta?.indicador_info?.unidad_parcial}: {meta?.indicador}
-                            </div>
-
                             <div className="card shadow-sm border-0 bg-info text-dark px-2 py-1 small">
                                 Total avances: {avances.length}
                             </div>
                         </div>
-
 
                         <button
                             type="button"
@@ -84,59 +70,84 @@ const VerAvancesPMI = ({ actividad, onClose }) => {
                             <div className="table-responsive">
                                 <table className="table table-striped table-bordered align-middle">
                                     <thead className="table-light">
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Descripción</th>
-                                        <th>% Ejecutado</th>
-                                        <th>Suma al Indicador</th>
-                                        <th>Adjuntos</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Descripción</th>
+                                            <th>% Ejecutado</th>
+                                            <th>Suma al Indicador</th>
+                                            <th>Adjuntos</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {avances.map((avance, idx) => (
-                                        <tr key={avance.id}>
-                                            <td>{avance.fecha_avance}</td>
-                                            <td>{avance.descripcion}</td>
-                                            <td>{avance.porcentaje_ejecutado}%</td>
-                                            <td>{avance.suma_al_indicador}</td>
-                                            <td>
-                                                {avance.adjuntos && avance.adjuntos.length > 0 ? (
-                                                    <ul className="list-unstyled mb-0 d-flex flex-wrap gap-3">
-                                                        {avance.adjuntos.map((file) => (
-                                                            <li key={file.id} className="text-center">
-                                                                <a
-                                                                    href={`/storage/${file.ruta}`}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
+                                        {avances.map((avance, idx) => (
+                                            <tr key={avance.id}>
+                                                <td>{avance.fecha_avance}</td>
+                                                <td>{avance.descripcion}</td>
+                                                <td>{avance.porcentaje_ejecutado}%</td>
+                                                <td>{avance.suma_al_indicador}</td>
+                                                <td>
+                                                    {avance.adjuntos &&
+                                                    avance.adjuntos.length > 0 ? (
+                                                        <ul className="list-unstyled mb-0 d-flex flex-wrap gap-3">
+                                                            {avance.adjuntos.map((file) => (
+                                                                <li
+                                                                    key={file.id}
+                                                                    className="text-center"
                                                                 >
-                                                                    {file.tipo_mime.startsWith("image/") ? (
-                                                                        <div>
-                                                                            <img
-                                                                                src={`/storage/${file.ruta}`}
-                                                                                alt={file.nombre}
-                                                                                style={{ maxWidth: "100px", maxHeight: "80px" }}
-                                                                                className="img-thumbnail mb-1"
-                                                                            />
-                                                                            <div className="small text-truncate" style={{ maxWidth: "100px" }}>
-                                                                                {file.nombre_completo}
+                                                                    <a
+                                                                        href={`/storage/${file.ruta}`}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                    >
+                                                                        {file.tipo_mime.startsWith(
+                                                                            'image/'
+                                                                        ) ? (
+                                                                            <div>
+                                                                                <img
+                                                                                    src={`/storage/${file.ruta}`}
+                                                                                    alt={
+                                                                                        file.nombre
+                                                                                    }
+                                                                                    style={{
+                                                                                        maxWidth:
+                                                                                            '100px',
+                                                                                        maxHeight:
+                                                                                            '80px',
+                                                                                    }}
+                                                                                    className="img-thumbnail mb-1"
+                                                                                />
+                                                                                <div
+                                                                                    className="small text-truncate"
+                                                                                    style={{
+                                                                                        maxWidth:
+                                                                                            '100px',
+                                                                                    }}
+                                                                                >
+                                                                                    {
+                                                                                        file.nombre_completo
+                                                                                    }
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div className="small">
-                                                                            📄 {file.nombre_completo}
-                                                                        </div>
-                                                                    )}
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                ) : (
-                                                    <span className="text-muted">Sin adjuntos</span>
-                                                )}
-                                            </td>
-
-                                        </tr>
-                                    ))}
+                                                                        ) : (
+                                                                            <div className="small">
+                                                                                📄{' '}
+                                                                                {
+                                                                                    file.nombre_completo
+                                                                                }
+                                                                            </div>
+                                                                        )}
+                                                                    </a>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    ) : (
+                                                        <span className="text-muted">
+                                                            Sin adjuntos
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>

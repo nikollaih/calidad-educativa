@@ -20,12 +20,16 @@ class PmiActividadVinculada extends Model {
         'indicador_id',
         'afecta_indicador',
         'max_suma_indicador',
-        'indicador_acumulado'
+        'indicador_acumulado',
+        'frecuencia_recoleccion',
     ];
     protected $casts = [
         'afecta_indicador' => 'boolean',
     ];
     public function indicador() {
         return $this->belongsTo(PmiIndicadorVinculado::class,'indicador_id');
+    }
+    public function avances() {
+        return $this->hasMany(PmiActividadAvance::class,'actividad_id');
     }
 }

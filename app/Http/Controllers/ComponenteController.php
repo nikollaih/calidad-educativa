@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Componente;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 
 class ComponenteController extends Controller {
@@ -36,6 +37,7 @@ class ComponenteController extends Controller {
     }
 
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'descripcion' => 'required|string',
         ]);
@@ -52,6 +54,7 @@ class ComponenteController extends Controller {
     }
 
     public function update(Request $request, int $componenteId) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'descripcion' => 'required|string',
         ]);
@@ -66,6 +69,7 @@ class ComponenteController extends Controller {
     }
 
     public function destroy(int $componenteId) {
+        Gate::authorize('s-parametro-editar');
         $componente = Componente::findOrFail($componenteId);
         $componente->delete();
         return redirect()->route('componentes.index')->with('flash_success_message', 'Componente eliminado correctamente.');

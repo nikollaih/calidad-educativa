@@ -25,6 +25,11 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\UserController;
 use App\Models\Municipio;
+use App\Models\Institucion;
+use App\Models\Sede;
+use App\Models\Pmi;
+use App\Models\Autoevaluacion;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,12 +45,156 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => redirect()->route('dashboard'));
 
 Route::get('/dashboard', function () {
+    $user = Auth::user();
+    $isRector = $user->hasRole('rector');
+    $canSeeAll = $user->hasRole('super_admin') || $user->hasRole('administrador');
+
+    if (!$canSeeAll && !$isRector) {
+       return redirect()->route('institution.index');
+    }
+
+    if ($isRector) {
+        $institucion = $user->institucion;
+
+        if (!$institucion) {
+            return redirect()->route('institution.index')
+                ->with('flash_error_message', 'No tienes una institución asociada.');
+        }
+
+        $institucionId = $institucion->id;
+
+        $institucionesCount = 1;
+        $sedesCount = Sede::where('institution_id', $institucionId)->count();
+        $avgSedesPorInstitucion = $sedesCount;
+
+        $pmiTotal = Pmi::whereHas('autoevaluacion', fn($q) => $q->where('institucion_id', $institucionId))->count();
+        $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
+            ->whereHas('autoevaluacion', fn($q) => $q->where('institucion_id', $institucionId))
+            ->groupBy('estado')
+            ->pluck('total', 'estado');
+
+        $topMunicipiosInstituciones = collect([
+            ['nombre' => $institucion->municipio?->nombre ?? 'Sin municipio', 'total' => 1],
+        ]);
+
+        $autoevaluacionesTotal = Autoevaluacion::where('institucion_id', $institucionId)->count();
+        $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
+            ->where('institucion_id', $institucionId)
+            ->groupBy('alias_estado')
+            ->pluck('total', 'alias_estado');
+
+        $topMunicipiosSedes = DB::table('sedes')
+            ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
+            ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
+            ->where('sedes.institution_id', $institucionId)
+            ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
+            ->groupBy('municipios.nombre')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+    } else {
+        $institucionesCount = Institucion::count();
+        $sedesCount = Sede::count();
+        $avgSedesPorInstitucion = $institucionesCount > 0 ? round($sedesCount / $institucionesCount, 2) : 0;
+
+        $pmiTotal = Pmi::count();
+        $pmiPorEstado = Pmi::select('estado', DB::raw('count(*) as total'))
+            ->groupBy('estado')
+            ->pluck('total', 'estado');
+
+        $topMunicipiosInstituciones = Institucion::select('municipio_id', DB::raw('count(*) as total'))
+            ->with('municipio')
+            ->groupBy('municipio_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'nombre' => $row->municipio?->nombre ?? 'Sin municipio',
+                    'total' => (int) $row->total,
+                ];
+            });
+
+        $autoevaluacionesTotal = Autoevaluacion::count();
+        $autoevaluacionesPorEstado = Autoevaluacion::select('alias_estado', DB::raw('count(*) as total'))
+            ->groupBy('alias_estado')
+            ->pluck('total', 'alias_estado');
+
+        $topMunicipiosSedes = DB::table('sedes')
+            ->join('institucions', 'sedes.institution_id', '=', 'institucions.id')
+            ->join('municipios', 'institucions.municipio_id', '=', 'municipios.id')
+            ->select('municipios.nombre as nombre', DB::raw('count(sedes.id) as total'))
+            ->groupBy('municipios.nombre')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+    }
+
+    $pmiAprobados = $pmiPorEstado['Aprobado'] ?? 0;
+    $pmiPresentados = $pmiPorEstado['Presentado'] ?? 0;
+    $pmiProceso = $pmiPorEstado['Proceso'] ?? 0;
+
+    $porcAprobados = $pmiTotal > 0 ? round(($pmiAprobados / $pmiTotal) * 100, 1) : 0;
+    $porcPresentados = $pmiTotal > 0 ? round(($pmiPresentados / $pmiTotal) * 100, 1) : 0;
+    $porcProceso = $pmiTotal > 0 ? round(($pmiProceso / $pmiTotal) * 100, 1) : 0;
+
+    $autoProceso = $autoevaluacionesPorEstado['PROCESO'] ?? 0;
+    $autoValidacion = $autoevaluacionesPorEstado['VALIDACION'] ?? 0;
+
     $municipios = Municipio::get();
-    return view('dashboard', ['municipios' => $municipios]);
+
+    return view('dashboard', [
+        'municipios' => $municipios,
+        'stats' => [
+            'instituciones' => $institucionesCount,
+            'sedes' => $sedesCount,
+            'promedio_sedes_por_institucion' => $avgSedesPorInstitucion,
+            'pmi_total' => $pmiTotal,
+            'pmi_aprobados' => $pmiAprobados,
+            'pmi_presentados' => $pmiPresentados,
+            'pmi_proceso' => $pmiProceso,
+            'porc_aprobados' => $porcAprobados,
+            'porc_presentados' => $porcPresentados,
+            'porc_proceso' => $porcProceso,
+            'autoevaluaciones_total' => $autoevaluacionesTotal,
+            'autoevaluaciones_proceso' => $autoProceso,
+            'autoevaluaciones_validacion' => $autoValidacion,
+        ],
+        'charts' => [
+            'pmi_por_estado' => [
+                'labels' => array_values(['Proceso','Presentado','Aprobado']),
+                'series' => [
+                    (int) ($pmiPorEstado['Proceso'] ?? 0),
+                    (int) ($pmiPorEstado['Presentado'] ?? 0),
+                    (int) ($pmiPorEstado['Aprobado'] ?? 0),
+                ],
+            ],
+            'instituciones_por_municipio' => [
+                'labels' => $topMunicipiosInstituciones->pluck('nombre')->values(),
+                'series' => $topMunicipiosInstituciones->pluck('total')->values(),
+            ],
+            'autoevaluaciones_por_estado' => [
+                'labels' => array_values($autoevaluacionesPorEstado->keys()->toArray()),
+                'series' => array_values($autoevaluacionesPorEstado->toArray()),
+            ],
+            'sedes_por_municipio' => [
+                'labels' => $topMunicipiosSedes->pluck('nombre')->values(),
+                'series' => $topMunicipiosSedes->pluck('total')->values(),
+            ],
+        ],
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::prefix('usuarios-institucion')->group(function () {
+        Route::get('/', [InstitutionController::class, 'usuariosInstitucionByRector'])->name('instituciones.usuarios_institucion-index');
+        Route::get('/create', [InstitutionController::class, 'createUsuariosInstitucion'])->name('instituciones.usuarios_institucion-create');
+        Route::post('/', [InstitutionController::class, 'storeUsuariosInstitucion'])->name('instituciones.usuarios_institucion-store');
+        Route::get('/{userId}', [InstitutionController::class, 'editUsuarioInstitucion'])->name('instituciones.usuarios_institucion-edit');
+        Route::patch('/{user}', [InstitutionController::class, 'updateUsuariosInstitucion'])->name('instituciones.usuarios_institucion-update');
+        Route::delete('/{user}', [InstitutionController::class, 'deleteUsuarioInstitucion'])->name('instituciones.usuarios_institucion-delete');
+    });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -62,7 +211,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
     Route::patch('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
     Route::delete('/usuarios/{usuario}', [UserController::class, 'destroy'])->name('usuarios.destroy');
-
     // Roles
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
@@ -91,6 +239,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('institution/{autoevaluacionId}/autoevaluaciones-ver'            , [InstitutionController::class, 'autoevaluacionesVer'])->name('institution.autoevaluaciones-ver');
         Route::post('institution/{institution}/autoevaluaciones-almacenar'        , [InstitutionController::class, 'autoevaluacionesAlmacenar'])->name('institution.autoevaluaciones-almacenar');
         Route::post('institution/{autoevaluacionId}/autoevaluaciones-actualizar/' , [InstitutionController::class, 'autoevaluacionesAlmacenarActualizacion'])->name('institution.autoevaluaciones-actualizar');
+        Route::post('institution/{autoevaluacionId}/autoevaluaciones-actualizar-hijo/{hijoId}' , [InstitutionController::class, 'autoevaluacionesActualizarHijo'])->name('institution.autoevaluaciones-actualizar-hijo');
         Route::post('institution/{autoevaluacionId}/autoevaluaciones-validar/' , [InstitutionController::class, 'autoevaluacionesValidar'])->name('institution.autoevaluaciones-validar');
 
         Route::resource('institution'             , InstitutionController::class);
@@ -169,8 +318,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a redes de aprendizaje
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
+    // Ruta para compartir una red de aprendizaje
+    Route::post('/red-actividades/actividades/share', [RedesActividadesController::class, 'shareWithIntegrants'] );
     // Rutas relacionadas a las actividades de redes
     Route::resource('red-actividades', RedesActividadesController::class);
+    Route::post('/proyecto-transversal-actividades/share', [ProyectoTransversalActividadesController::class, 'shareWithIntegrants'] );
     // Rutas relacionadas a las actividades de redes
     Route::resource('{proyectoTransversalId}/proyecto-transversal-actividades', ProyectoTransversalActividadesController::class);
     // Rutas relacionadas a los integrantes de redes

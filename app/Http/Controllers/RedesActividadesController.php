@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
+use App\Http\Services\MailService;
+use App\Models\ProyectosActividad;
 use App\Models\RedesAprendizaje;
 use App\Models\Adjunto;
 use App\Models\RedesActividad;
@@ -17,6 +19,7 @@ class RedesActividadesController extends Controller {
 
     public function __construct(
         private AdjuntoService $adjuntoService,
+        private MailService $mailService,
     ){}
 
     public function index(Request $request) {
@@ -74,6 +77,59 @@ class RedesActividadesController extends Controller {
         $permissions = Permission::all();
         // Se corrige el nombre de la vista y la variable.
         return view('redesAprendizajes.create', compact('permissions'));
+    }
+
+    public function shareWithIntegrants(Request $request) {
+        $input = $request->all();
+        /**
+         * @var RedesActividad proyectoActividad Actividad asociada con sus relaciones
+         */
+        $redesActividad = RedesActividad::with(['redAprendizaje.representante', 'redAprendizaje.integrantes'])
+            ->find(data_get($input, 'actividad_id'));
+
+        if (!$redesActividad) {
+            return response()->json([
+                'message' => 'Actividad no encontrada.',
+            ], 500);
+        }
+        /**
+         * @var array $activityData Son los datos de la actividad que se mostrara'n en el correo
+         */
+        $activityData = [
+            'fecha' => $redesActividad?->fecha,
+            'descripcion' => $redesActividad?->descripcion,
+        ];
+        /**
+         * @var array $redAprendizajeData Es la informacion del proyecto transversal que se va a mandar
+         */
+        $redAprendizajeData = [
+            'nombre'      => $redesActividad?->redAprendizaje?->nombre,
+            'descripcion' => $redesActividad?->redAprendizaje?->descripcion
+        ];
+        /**
+         * @var ?string $mensaje Es el mensaje custom del compartir
+         */
+        $mensaje = data_get($input, 'description');
+        $redesActividad->redAprendizaje
+            ->integrantes
+            ->where('rol', '=', $input["role"])
+            ->each(function ($integrante) use ($input, $activityData, $redAprendizajeData, $mensaje) {
+                // Enviar correo (retorna false si falla)
+                $this->mailService->sendMail(
+                    email: $integrante->correo,
+                    subject: 'Notifiación red de aprendizaje',
+                    template: 'email.red_aprendizaje.actividad.share',
+                    data:[
+                        'nombre'              => $integrante->nombre,
+                        'actividad'           => $activityData,
+                        'redAprendizaje' => $redAprendizajeData,
+                        'mensaje'         => $mensaje,
+                    ]
+                );
+            });
+        return response()->json([
+            'message' => 'Correos enviados exitosamente.',
+        ], 200);
     }
 
     public function store(Request $request) {
@@ -181,7 +237,7 @@ class RedesActividadesController extends Controller {
 
     public function destroy(int $redActividadId) {
         $redActividad = RedesActividad::findOrFail($redActividadId);
-        
+
         $redActividad->delete();
         return redirect()->route('red-actividades.index')->with('flash_success_message', 'Red de Aprendizaje eliminada correctamente.');
     }

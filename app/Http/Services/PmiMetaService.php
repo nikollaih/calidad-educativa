@@ -14,8 +14,7 @@ class PmiMetaService {
         foreach ($metasArray as $key => $meta) {
             $cannotCreateOrUpdate = !is_array($meta) ||
                 empty($meta) ||
-                empty($meta['descripcion']) ||
-                empty($meta['indicador_id']);
+                empty($meta['descripcion']);
 
             if ($cannotCreateOrUpdate) {
                 continue;

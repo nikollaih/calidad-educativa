@@ -28,7 +28,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -38,10 +38,11 @@
         data-component="CInstitutionNavigations"
         data-back-url="{{ route('institution.index') }}"
         data-detail-url="{{ route('institution.show', $institutionId) }}"
-        data-pei-url="{{ route('institution.pei', $institutionId) }}"
+        data-pei-url="{{ route('institution.pei.update-pei', $institutionId) }}"
         data-autevaluacion-url="#"
         data-pmi-url="{{ route('pmi.index', $institutionId) }}"
         data-proyectos-transversales-url="{{ route('proyectos_transversales.index', $institutionId) }}"
+        data-institution-name="{{ $institucionNombre ?? '' }}"
     >
     </div>
     <div

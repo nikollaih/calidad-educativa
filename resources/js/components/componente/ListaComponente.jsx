@@ -1,8 +1,10 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
-export default function ListaComponente({ agregarUrl, componentes, csrfToken = '' }) {
+export default function ListaComponente({ agregarUrl, componentes, csrfToken = '', canEditParametros = false }) {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar'); // 'agregar' o 'editar'
     const [currentComponente, setCurrentComponente] = useState(null);
@@ -72,55 +74,65 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
     };
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Componentes</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar componente
-            </button>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div class={'p-3'}>
+                <h2 class="mb-4 text-custom-blue-dark">Componentes</h2>
+                {canEditParametros && (
+                    <CAddButton
+                        onClick={handleAgregarClick}
+                    />
+                )}
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {componentes.data.map((componente) => (
-                        <tr key={componente.id}>
-                            <td>{componente.descripcion}</td>
-                            <td>
-                                <button
-                                    onClick={() => handleEditarClick(componente)}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <form
-                                    action={`/componentes/${componente.id}`}
-                                    method="POST"
-                                    style={{display: 'inline'}}
-                                    onSubmit={(e) => {
-                                        if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <input type="hidden" name="_token" value={csrfToken}/>
-                                    <input type="hidden" name="_method" value="DELETE"/>
-                                    <button type="submit" className="btn btn-danger btn-sm">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            {canEditParametros && <th>Acciones</th>}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <CPagination  pagination={componentes} />
+                    </thead>
+                    <tbody>
+                        {componentes.data.map((componente) => (
+                            <tr key={componente.id}>
+                                <td>{componente.descripcion}</td>
+                                {canEditParametros && (
+                                    <td>
+                                        <CTableActionButton
+                                            title={'Editar'}
+                                            onClick={() => handleEditarClick(componente)}
+                                            iconClass={'fas fa-pencil'}
+                                            hoverIconColor={'text-custom-primary'}
+                                        />
+                                        <form id="delete-form-lista-componente"
+                                            action={`/componentes/${componente.id}`}
+                                            method="POST"
+                                            style={{ display: 'inline' }}
+                                            onSubmit={(e) => {
+                                                if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        >
+                                            <input type="hidden" name="_token" value={csrfToken} />
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            <CTableActionButton
+                                                formRef={'#delete-form-lista-componente'}
+                                                title={'Eliminar'}
+                                                iconClass={'fa fa-trash'}
+                                                confirmMessage={'¿Está seguro de eliminar este municipio?'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
+                                        </form>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <CPagination pagination={componentes} />
+            </div>
             {/* Modal */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -136,11 +148,11 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                             <form onSubmit={handleSubmit}>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="descripcion" class="form-label">
+                                        <label for="descripcion" class="block text-sm mb-2 ml-4">
                                             Descripción del componente <span className="text-danger">*</span>
                                         </label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="descripcion"
                                             value={descripcion}
                                             onInput={(e) => setDescripcion(e.target.value)}
@@ -152,14 +164,14 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         disabled={!descripcion.trim()}
                                     >
                                         {modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}

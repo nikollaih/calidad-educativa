@@ -20,12 +20,12 @@
                 @method('patch')
 
                 <div class="mb-2">
-                    <label for="name" class="form-label small mb-1">Nombre</label>
+                    <label for="name" class="block text-sm mb-2 ml-4 small mb-1">Nombre</label>
                     <input
                         type="text"
                         id="name"
                         name="name"
-                        class="form-control form-control-sm @error('name') is-invalid @enderror"
+                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('name') is-invalid @enderror"
                         value="{{ old('name', $user->name) }}"
                         required
                         autofocus
@@ -37,12 +37,12 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="email" class="form-label small mb-1">Correo electrónico</label>
+                    <label for="email" class="block text-sm mb-2 ml-4 small mb-1">Correo electrónico</label>
                     <input
                         type="email"
                         id="email"
                         name="email"
-                        class="form-control form-control-sm @error('email') is-invalid @enderror"
+                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill !border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill-sm @error('email') is-invalid @enderror"
                         value="{{ old('email', $user->email) }}"
                         required
                         autocomplete="username"

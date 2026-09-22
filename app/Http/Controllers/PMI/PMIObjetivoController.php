@@ -8,6 +8,7 @@ use App\Models\FactorCriticoCalificacion;
 use App\Models\PMI\PmiIndicador;
 use App\Models\PMI\PmiObjetivo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PMIObjetivoController extends Controller {
     public function __construct(
@@ -66,6 +67,7 @@ class PMIObjetivoController extends Controller {
         ]);
     }
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $input =  $request->all();
         $objetivoData['descripcion'] = $input['descripcion'];
         $objetivoData['factor_id'] = $input['factor_id'];

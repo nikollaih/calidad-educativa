@@ -65,6 +65,11 @@
                                 </tr>
                                 <tr>
                                     <td style="padding: 10px 15px; border-bottom: 1px solid #ddd; font-size: 15px;">
+                                        <strong>Institución:</strong> {{ $pmi?->institucion?->nombre }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 15px; border-bottom: 1px solid #ddd; font-size: 15px;">
                                         <strong>Vigencia:</strong> {{ $pmi->anio_inicio }} - {{ $pmi->anio_fin }}
                                     </td>
                                 </tr>

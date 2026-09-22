@@ -11,7 +11,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('hr-usuario-editar');
     }
 
     /**
@@ -21,8 +21,15 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('usuario')->id;
+
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$userId}",
+            'password' => 'nullable|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
+            'institucion_id' => 'nullable|exists:institucions,id',
         ];
     }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
 import TextMultipleTags from '@/components/shared/TextMultipleTags.jsx';
 
@@ -13,6 +14,7 @@ const FactorCriticoEdit = ({
     objetivosGenerales,
     agregarUrl = '',
     indicadores = [],
+    frecuenciasRecoleccion = [],
 }) => {
     const [formData, setFormData] = useState({
         objetivos: [], // Array de objetivos
@@ -246,6 +248,7 @@ const FactorCriticoEdit = ({
                                           fecha_inicio: '',
                                           fecha_fin: '',
                                           indicador_id: indicadorId,
+                                          frecuencia_recoleccion: '',
                                       },
                                   ],
                               }
@@ -368,9 +371,9 @@ const FactorCriticoEdit = ({
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
-                        <label className="form-label fw-bold">Descripción:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
                         <textarea
-                            className="form-control"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
                             value={actividad.descripcion}
                             onChange={(e) =>
@@ -388,8 +391,8 @@ const FactorCriticoEdit = ({
 
                     <div className="row">
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">
-                                Peso:
+                            <label className="block text-sm mb-2 ml-4 fw-bold">
+                                Peso (%) :
                                 {restante < 0 ? (
                                     <span className="text-danger fw-bold">
                                         Excedido por {Math.abs(restante)}%
@@ -400,10 +403,10 @@ const FactorCriticoEdit = ({
                                     </span>
                                 )}
                             </label>
-                            <div className="input-group">
+                            <div className="flex">
                                 <input
                                     type="number"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     value={actividad.peso}
                                     onChange={(e) =>
                                         updateField(
@@ -418,12 +421,11 @@ const FactorCriticoEdit = ({
                                     max="100"
                                     step="0.01"
                                 />
-                                <span className="input-group-text">%</span>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="d-flex justify-content-center align-items-center h-100">
-                                <label className="form-label fw-bold  m-0 px-2">
+                                <label className="block text-sm mb-2 ml-4 fw-bold  m-0 px-2">
                                     Sumará al indicador:
                                 </label>
                                 <input
@@ -443,7 +445,7 @@ const FactorCriticoEdit = ({
                         </div>
                         {Boolean(actividad.afecta_indicador) && (
                             <div className="col-md-6">
-                                <label className="form-label fw-bold">
+                                <label className="block text-sm mb-2 ml-4 fw-bold">
                                     Valor que aporta al indicador:
                                     {restanteValorRequerido < 0 ? (
                                         <span className="text-danger fw-bold">
@@ -458,7 +460,7 @@ const FactorCriticoEdit = ({
 
                                 <input
                                     type="number"
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     value={actividad.max_suma_indicador}
                                     onChange={(e) =>
                                         updateField(
@@ -473,7 +475,7 @@ const FactorCriticoEdit = ({
                         )}
 
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Responsables:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Responsables:</label>
                             <TextMultipleTags
                                 initialValue={actividad.responsables}
                                 label={''}
@@ -488,7 +490,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">
+                            <label className="block text-sm mb-2 ml-4 fw-bold">
                                 Instrumentos de recolección:
                             </label>
                             <TextMultipleTags
@@ -505,7 +507,35 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Recursos:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Frecuencia de recolección:</label>
+                            <Select
+                                value={
+                                    actividad.frecuencia_recoleccion
+                                        ? {
+                                              value: actividad.frecuencia_recoleccion,
+                                              label: actividad.frecuencia_recoleccion,
+                                          }
+                                        : null
+                                }
+                                options={frecuenciasRecoleccion.map((frecuencia) => ({
+                                    value: frecuencia,
+                                    label: frecuencia,
+                                }))}
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                classNamePrefix="select"
+                                placeholder="Selecciona la frecuencia de recolección..."
+                                onChange={(frecuencia) => {
+                                    updateField(
+                                        actividad.id,
+                                        'frecuencia_recoleccion',
+                                        frecuencia.value,
+                                        'actividad'
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Recursos:</label>
                             <TextMultipleTags
                                 initialValue={actividad.recursos}
                                 label={''}
@@ -518,10 +548,10 @@ const FactorCriticoEdit = ({
 
                     <div className="row mt-3">
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Fecha de Inicio:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Inicio:</label>
                             <input
                                 type="date"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 value={actividad.fecha_inicio}
                                 onChange={(e) =>
                                     updateField(
@@ -536,10 +566,10 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-bold">Fecha de Fin:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Fin:</label>
                             <input
                                 type="date"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 value={actividad.fecha_fin}
                                 onChange={(e) =>
                                     updateField(
@@ -577,9 +607,9 @@ const FactorCriticoEdit = ({
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
-                        <label className="form-label fw-bold">Descripción:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
                         <textarea
-                            className="form-control"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
                             value={meta.descripcion}
                             onChange={(e) =>
@@ -592,7 +622,7 @@ const FactorCriticoEdit = ({
                     {meta?.indicadores?.length == 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addIndicador(meta.id)}
                         >
                             Agregar indicador
@@ -605,7 +635,7 @@ const FactorCriticoEdit = ({
                     {meta?.indicadores?.length > 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addIndicador(meta.id)}
                         >
                             Agregar indicador
@@ -648,10 +678,10 @@ const FactorCriticoEdit = ({
                 <div className="card-body">
                     <div className="row">
                         <div className="col-md-4">
-                            <label className="form-label fw-bold">Unidad Total:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad Total:</label>
                             <input
                                 type="text"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 value={indicador.unidad_total}
                                 onChange={(e) =>
                                     updateField(
@@ -661,14 +691,14 @@ const FactorCriticoEdit = ({
                                         'indicador'
                                     )
                                 }
-                                placeholder="Ej: Estudiantes"
+                                placeholder="Ej: Total de estudiantes beneficiados"
                             />
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label fw-bold">Unidad Parcial:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad Parcial:</label>
                             <input
                                 type="text"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 value={indicador.unidad_parcial}
                                 onChange={(e) =>
                                     updateField(
@@ -678,14 +708,14 @@ const FactorCriticoEdit = ({
                                         'indicador'
                                     )
                                 }
-                                placeholder="Ej: Graduados"
+                                placeholder="Ej: Número de estudiantes beneficiados"
                             />
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label fw-bold">Valor Requerido:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Valor Requerido:</label>
                             <input
                                 type="number"
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 value={indicador.valor_requerido}
                                 onChange={(e) =>
                                     updateField(
@@ -703,7 +733,7 @@ const FactorCriticoEdit = ({
                         {indicador?.actividades?.length == 0 && (
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-primary mt-4"
+                                className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                                 onClick={() => addActividad(indicador.id)}
                             >
                                 Agregar Actividad
@@ -724,7 +754,7 @@ const FactorCriticoEdit = ({
                     {indicador?.actividades?.length > 0 && (
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-primary mt-4"
+                            className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
                             onClick={() => addActividad(indicador.id)}
                         >
                             Agregar Actividad
@@ -761,9 +791,9 @@ const FactorCriticoEdit = ({
                     {/* Descripción completa del objetivo seleccionado */}
                     {
                         <div className="mt-3">
-                            <label className="form-label fw-bold">Descripción del objetivo:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción del objetivo:</label>
                             <textarea
-                                className="form-control"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 rows="3"
                                 value={objetivo.descripcion}
                                 onChange={(e) =>
@@ -779,9 +809,9 @@ const FactorCriticoEdit = ({
                         </div>
                     }
                     <div className="mb-3">
-                        <label className="form-label fw-bold">Seleccione un objetivo:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold">Seleccione un objetivo:</label>
                         <select
-                            className="form-control"
+                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                             value={objetivo.objetivo_general_id || ''}
                             onChange={(e) => handleObjetivoChange(objetivo.id, e.target.value)}
                         >
@@ -803,10 +833,10 @@ const FactorCriticoEdit = ({
                     {/* Select de metas + botón agregar */}
                     {objetivo.objetivo_general_id && (
                         <div className="mb-3">
-                            <label className="form-label fw-bold">Metas del objetivo:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold">Metas del objetivo:</label>
                             <div className="d-flex gap-2">
                                 <select
-                                    className="form-control"
+                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                     value={selectedMetaId}
                                     onChange={(e) =>
                                         setSelectedMetaByObjetivo((prev) => ({
@@ -852,7 +882,7 @@ const FactorCriticoEdit = ({
                     {objetivo.metas && objetivo.metas.map((meta) => renderMeta(meta, objetivo.id))}
                     <button
                         type="button"
-                        className="btn btn-outline-primary"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={() => {
                             const newMeta = {
                                 id: `meta-virtual-${uniqueId()}`,
@@ -984,6 +1014,15 @@ const FactorCriticoEdit = ({
                             });
                             return;
                         }
+                        // Validación de frecuencia de recolección
+                        if (!actividad.frecuencia_recoleccion) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Frecuencia de recolección',
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener una frecuencia de recolección.`,
+                            });
+                            return;
+                        }
                         // Validación de responsables
                         if (!actividad.responsables) {
                             Swal.fire({
@@ -1038,7 +1077,7 @@ const FactorCriticoEdit = ({
                 <div className="card-body">
                     <button
                         type="button"
-                        className="btn btn-success mb-4"
+                        className="border bg-blue-500  text-white p-2 rounded-pill"
                         onClick={agregarObjetivo}
                     >
                         <i className="fas fa-plus-circle"></i> Agregar Objetivo
@@ -1175,6 +1214,13 @@ const FactorCriticoEdit = ({
                                                                         />
                                                                         <input
                                                                             type="hidden"
+                                                                            name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][frecuencia_recoleccion]`}
+                                                                            value={
+                                                                                actividad.frecuencia_recoleccion
+                                                                            }
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
                                                                             name={`objetivos[${i}][metas][${j}][indicadores][${k}][actividades][${l}][recursos]`}
                                                                             value={
                                                                                 actividad.recursos
@@ -1213,7 +1259,7 @@ const FactorCriticoEdit = ({
 
                         <button
                             type="submit"
-                            className="btn btn-primary me-2"
+                            className="border bg-blue-500  text-white p-2 rounded-pill me-2"
                             disabled={formData.objetivos.length === 0}
                         >
                             <i className="fas fa-save"></i> {isEditing ? 'Actualizar' : 'Guardar'}

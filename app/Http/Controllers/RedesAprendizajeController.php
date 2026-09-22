@@ -7,6 +7,7 @@ use App\Models\Adjunto;
 use App\Models\RedesAprendizaje;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class RedesAprendizajeController extends Controller {
@@ -40,6 +41,7 @@ class RedesAprendizajeController extends Controller {
     }
 
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         // Se agregan las reglas de validación para todos los campos de la solicitud, incluyendo el archivo.
         // Se ha modificado la regla 'mimes' para aceptar formatos de imagen.
         $request->validate([
@@ -97,6 +99,7 @@ class RedesAprendizajeController extends Controller {
     }
 
     public function update(Request $request, int $redAprendizaje) {
+        Gate::authorize('s-parametro-editar');
         // MODIFICACION: Se actualizan las reglas de validación. El archivo ahora es opcional.
         $request->validate([
             'nombre' => 'required|string',
@@ -156,6 +159,7 @@ class RedesAprendizajeController extends Controller {
     }
 
     public function destroy(int $redAprendizaje) {
+        Gate::authorize('s-parametro-editar');
         $redAprendizaje = RedesAprendizaje::findOrFail($redAprendizaje);
 
         // Se agrega la lógica para eliminar el archivo relacionado antes de eliminar el registro.

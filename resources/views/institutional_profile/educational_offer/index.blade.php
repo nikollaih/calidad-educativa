@@ -15,7 +15,7 @@
             <h1 class="card-header">Ofertas educativas</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('educational-offer.create') }}" class="btn btn-primary mb-3">Crear oferta educativa</a>
+                    <a href="{{ route('educational-offer.create') }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear oferta educativa</a>
                     <table class="table">
                         <thead>
                         <tr>
@@ -53,11 +53,11 @@
                                         </td>
                                 @endisset
                                 <td>
-                                    <a href="{{ route('educational-offer.edit', $educationalOffer->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{{ route('educational-offer.edit', $educationalOffer->id) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('educational-offer.destroy', $educationalOffer->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
+                                        <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta institución?')">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>

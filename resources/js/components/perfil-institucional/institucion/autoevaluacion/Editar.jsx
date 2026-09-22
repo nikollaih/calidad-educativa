@@ -1,19 +1,56 @@
 import { h } from 'preact';
-import {useEffect, useState} from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { addLineBreaks } from '@utils/string.js';
+import auth from '@/utilidades/auth';
+import {useMemo} from "preact/hooks";
+
+export default function Editar({ editarUrl = '#',
+    gruposCalificaciones = [],
+    csrfToken = '',
+    autoevaluacion = {}
+}) {
+	const getDefaultTab = () => {
+    const permissionMap = {
+        0: permissions.editDirectiva,
+        1: permissions.editAcademica,
+        2: permissions.editFinanciera,
+        3: permissions.editComunidad,
+    };
+    for (let i = 0; i < 4; i++) {
+        if (permissionMap[i]) return i;
+    }
+    return 0;
+};
 
 
-export default function Editar({  editarUrl = '#',
-                                  gruposCalificaciones = [],
-                                  csrfToken = '',
-                                  autoevaluacion = {}
-                        }) {
-
-    const [activeTab, setActiveTab] = useState(0);
     const [notasSeleccionadas, setNotasSeleccionadas] = useState({});
     const [evidencias, setEvidencias] = useState({});
+    // Verificar permisos y roles
+    const permissions = useMemo(() => ({
+        editDirectiva: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_directiva'),
+        editAcademica: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_academica'),
+        editFinanciera:  auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_admin_financi'),
+        editComunidad: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.can('s-autoevaluacion-calificar-gestion_comunidad'),
+    }), []);
+    const getPermissionForGroup = (indice) => {
+        const permissionMap = {
+            '1': permissions.editDirectiva,
+            '2': permissions.editAcademica,
+            '3': permissions.editFinanciera,
+            '4': permissions.editComunidad,
+        };
+        return permissionMap[indice] || false;
+    };
 
-
+    const [activeTab, setActiveTab] = useState(getDefaultTab());
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
@@ -89,7 +126,7 @@ export default function Editar({  editarUrl = '#',
     useEffect(() => {
         if (autoevaluacion?.notas?.length) {
             autoevaluacion.notas.forEach(nota => {
-                handleNotaClick(nota?.calificacion?.id,nota);
+                handleNotaClick(nota?.calificacion?.id, nota);
                 handleEvidenciaChange(nota?.calificacion?.id, nota?.pivot?.evidencia);
             });
         }
@@ -97,35 +134,34 @@ export default function Editar({  editarUrl = '#',
 
     return (
         <div class="container mt-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Editar autoevaluación</h2>
-            </div>
-            <form method="POST" action={editarUrl}>
-                <input type="hidden" name="_token" value={csrfToken} />
-
-                <div className="mb-1 d-flex justify-content-end gap-4">
-                    <label className="form-label" htmlFor="anio-vigencia">
-                        Año de Vigencia: {autoevaluacion?.anio_vigencia}
-                    </label>
-                    <label className="form-label" htmlFor="estado">
-                        Estado: {autoevaluacion?.alias_estado}
-                    </label>
+            <div className="flex justify-between gap-4">
+                <div className={'flex row'}>
+                    <h2 className="mb-0">Autoevaluación - Áreas de Gestión</h2>
+                    <div className={'flex'}>
+                        <label className="block text-xs mb-2 ml-4" htmlFor="anio-vigencia">
+                            Año de Vigencia: {autoevaluacion?.anio_vigencia}
+                        </label>
+                        <label className="block text-xs mb-2 ml-4" htmlFor="estado">
+                            Estado: {autoevaluacion?.alias_estado}
+                        </label>
+                    </div>
                 </div>
-
-                <div class="mb-4">
-                    <ul class="nav nav-tabs border" id="gruposTabs" role="tablist">
+            </div>
+            <div>
+                <div class="mb-4 bg-white !border border-custom-blue-light rounded-xl ">
+                    <ul class="nav justify-between " id="gruposTabs" role="tablist">
                         {gruposCalificaciones.map((grupo, index) => (
-                            <li class="nav-item" key={`tab-${grupo.id}`}>
+                            getPermissionForGroup(grupo?.indice??"0") && <li class="nav-item" key={`tab-${grupo.id}`}>
                                 <button
-                                    className={`nav-link ${activeTab === index ? 'active' : ''}`}
+                                    className={`m-2 p-2 ${activeTab === index ? '!border border-custom-blue-light rounded-xl bg-custom-gray-light' : ''}`}
                                     onClick={() => setActiveTab(index)}
                                     type="button"
                                     role="tab"
                                 >
                                     <div>
-                                        <div>{grupo.nombre}</div>
+                                        <div class={'font-medium '}>{grupo.nombre.replace(/gestión/i, '').trim()}</div>
                                         {grupo.hijos?.length > 0 && (
-                                            <div className="badge bg-dark mt-1">
+                                            <div className="font-medium border-b border-t border-custom-blue-light mt-1 text-custom-blue-light">
                                                 Promedio: {calcularPromedioGrupo(grupo)}
                                             </div>
                                         )}
@@ -135,11 +171,11 @@ export default function Editar({  editarUrl = '#',
                         ))}
                     </ul>
 
-                    <div class="border border-top-0 rounded-bottom p-3">
+                    <div class="p-3">
                         {gruposCalificaciones.map((grupo, index) => (
                             <div
                                 key={`content-${grupo.id}`}
-                                style={{display: activeTab === index ? 'block' : 'none'}}
+                                style={{ display: activeTab === index ? 'block' : 'none' }}
                             >
                                 {grupo.calificaciones?.length > 0 && (
                                     <>
@@ -162,118 +198,134 @@ export default function Editar({  editarUrl = '#',
 
                                 {grupo.hijos?.length > 0 && (
                                     <div>
-                                        {grupo.hijos.map((hijo) => (
-                                            <div class="mb-4 p-3 border rounded" key={hijo.id}>
-                                                <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
-                                                {hijo.calificaciones?.length > 0 ? (
-                                                    <>
-                                                        <ul class="list-group">
-                                                            {hijo.calificaciones.map((cal) => {
-                                                                const notaSeleccionada = notasSeleccionadas[cal.id];
-                                                                return (
-                                                                    <li className="list-group-item">
-                                                                        <div className="row g-3">
-                                                                            {/* Nombre de calificación */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <strong>{cal.indice}</strong>
-                                                                                <div>{cal.nombre}</div>
-                                                                            </div>
+                                        {grupo.hijos.map((hijo) => {
+                                            // Filtrar las notas que pertenecen a este hijo
+                                            const notasDelHijo = Object.entries(notasSeleccionadas)
+                                                .filter(([calId, nota]) => {
+                                                    return hijo.calificaciones?.some(cal => cal.id == calId);
+                                                });
 
-                                                                            {/* Notas seleccionables */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
-                                                                                <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
-                                                                                    {cal.notas_calificacion
-                                                                                        .sort((a, b) => a.valor - b.valor)
-                                                                                        .map(nota => (
-                                                                                            <div
-                                                                                                key={nota.id}
-                                                                                                title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
-                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                style={{ cursor: 'pointer' }}
-                                                                                                onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                            >
-                                                                                                {nota.valor}
-                                                                                            </div>
-                                                                                        ))}
-                                                                                </div>
-                                                                            </div>
+                                            const saveUrl = `/institutional_profile/institution/${autoevaluacion?.id}/autoevaluaciones-actualizar-hijo/${hijo.id}`;
 
+                                            return (
+                                                <form method="POST" action={saveUrl} key={hijo.id}>
+                                                    <input type="hidden" name="_token" value={csrfToken} />
 
-                                                                            {/* Categoría y valor */}
-                                                                            <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
-                                                                                {notaSeleccionada ? (
-                                                                                    <>
-                                                                                        <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
-                                                                                            {notaSeleccionada.valor}
-                                                                                        </span>
-                                                                                        <div>
-                                                                                            <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
+                                                    <div class="mb-4 p-3 !border border-custom-blue-dark rounded-xl">
+                                                        <div class="fw-bold mb-2">{hijo.indice} {hijo.nombre}</div>
+                                                        {hijo.calificaciones?.length > 0 ? (
+                                                            <>
+                                                                <ul class="list-group !border border-custom-blue-dark">
+                                                                    {hijo.calificaciones.map((cal) => {
+                                                                        const notaSeleccionada = notasSeleccionadas[cal.id];
+                                                                        return (
+                                                                            <li className="list-group-item" key={cal.id}>
+                                                                                <div className="row g-3">
+                                                                                    {/* Nombre de calificación */}
+                                                                                    <div className="col-12 col-md-3">
+                                                                                        <strong>{cal.indice}</strong>
+                                                                                        <div>{cal.nombre}</div>
+                                                                                    </div>
+
+                                                                                    {/* Notas seleccionables */}
+                                                                                    <div className="col-12 col-md-3 d-flex justify-content-center align-items-center" >
+                                                                                        <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
+                                                                                            {cal.notas_calificacion
+                                                                                                .sort((a, b) => a.valor - b.valor)
+                                                                                                .map(nota => (
+                                                                                                    <div
+                                                                                                        key={nota.id}
+                                                                                                        title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
+                                                                                                        className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                        style={{ cursor: 'pointer' }}
+                                                                                                        onClick={() => handleNotaClick(cal.id, nota)}
+                                                                                                    >
+                                                                                                        {nota.valor}
+                                                                                                    </div>
+                                                                                                ))}
                                                                                         </div>
-                                                                                    </>
-                                                                                ) : (
-                                                                                    <div className="text-muted">No seleccionado</div>
-                                                                                )}
-                                                                            </div>
+                                                                                    </div>
 
 
-                                                                            {/* Evidencia */}
-                                                                            <div className="col-12 col-md-3">
-                                                                                <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="form-label">Evidencia</label>
-                                                                                <textarea
-                                                                                    id={`evidencia-${cal.id}`}
-                                                                                    className="form-control"
-                                                                                    rows="1"
-                                                                                    maxLength="400"
-                                                                                    value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
-                                                                                ></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                );
-                                                            })}
-                                                        </ul>
+                                                                                    {/* Categoría y valor */}
+                                                                                    <div className="col-12 col-md-3 d-flex justify-content-center align-items-center text-center" >
+                                                                                        {notaSeleccionada ? (
+                                                                                            <>
+                                                                                                <span className={`badge ${getColorClass(notaSeleccionada.valor)} text-white me-2`}>
+                                                                                                    {notaSeleccionada.valor}
+                                                                                                </span>
+                                                                                                <div>
+                                                                                                    <small className="text-muted">Categoría:</small> {getCategoria(notaSeleccionada.valor)}
+                                                                                                </div>
+                                                                                            </>
+                                                                                        ) : (
+                                                                                            <div className="text-muted">No seleccionado</div>
+                                                                                        )}
+                                                                                    </div>
 
-                                                        {/* Total proceso siempre visible */}
-                                                        <div class="mt-3 p-3 bg-light rounded border">
-                                                            <strong>Total proceso:</strong>{' '}
-                                                            <span class="badge bg-dark">
-                                                                {calcularPromedio(hijo)}
-                                                            </span>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <small class="text-muted">Sin calificaciones</small>
-                                                )}
-                                            </div>
-                                        ))}
+
+                                                                                    {/* Evidencia */}
+                                                                                    <div className="col-12 col-md-3">
+                                                                                        <label htmlFor={`evidencia-${cal.id}`}
+                                                                                            className="block text-sm mb-2 ml-4">Evidencia</label>
+                                                                                        <textarea
+                                                                                            id={`evidencia-${cal.id}`}
+                                                                                            className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
+                                                                                            rows="1"
+                                                                                            maxLength="400"
+                                                                                            value={evidencias[cal.id] || ''}
+                                                                                            onInput={(e) => handleEvidenciaChange(cal.id, e.target.value)}
+                                                                                        ></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
+
+                                                                {/* Hidden inputs for notes belonging to this hijo */}
+                                                                {notasDelHijo.map(([calId, nota], index) => (
+                                                                    <div key={`nota-hidden-${calId}`}>
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`notas[${index}][nota_calificacion_id]`}
+                                                                            value={nota.id}
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name={`notas[${index}][evidencia]`}
+                                                                            value={evidencias[calId] || ''}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+
+                                                                {/* Total proceso with save button */}
+                                                                <div class="flex justify-between items-center mt-3 p-3 bg-custom-gray-light rounded-xl !border border-custom-blue-light">
+                                                                    <div>
+                                                                        <strong>TOTAL PROCESO:</strong>{' '}
+                                                                        <span class="!border rounded-pill p-1 border-custom-blue-light text-custom-blue-light font-medium">
+                                                                            {calcularPromedio(hijo)}
+                                                                        </span>
+                                                                    </div>
+                                                                    <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
+                                                                        Guardar {hijo.nombre}
+                                                                    </button>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <small class="text-muted">Sin calificaciones</small>
+                                                        )}
+                                                    </div>
+                                                </form>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>
                         ))}
                     </div>
                 </div>
-                {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
-                    <div key={`nota-hidden-${calId}`}>
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][nota_calificacion_id]`}
-                            value={nota.id}
-                        />
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][evidencia]`}
-                            value={evidencias[calId] || ''}
-                        />
-                    </div>
-                ))}
-
-
-                <button type="submit" className="btn btn-primary mt-4">
-                    Guardar Autoevaluación
-                </button>
-            </form>
+            </div>
         </div>
     );
 }

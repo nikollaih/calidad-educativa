@@ -5,7 +5,7 @@ import CNavigationButton from '../shared/CNavigationButton';
 import CrearAvance from './CrearAvance';
 import VerAvance from './VerAvance';
 
-const PamIndex = ({ pamGeneralId, isInProceso }) => {
+const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false, canConsultarPam = false }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,18 +23,18 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
 
   const openAvancesModal = (accionId, meta, valorMeta) => {
     console.log(accionId, meta, valorMeta);
-    
-      setSelectedAccionId(accionId);
-      setSelectedMeta(meta);
-      setSelectedValorMeta(valorMeta);
-      setShowAvancesModal(true);
+
+    setSelectedAccionId(accionId);
+    setSelectedMeta(meta);
+    setSelectedValorMeta(valorMeta);
+    setShowAvancesModal(true);
   };
 
   const closeAvancesModal = () => {
-      setShowAvancesModal(false);
-      setSelectedMeta(null);
-      setSelectedValorMeta(null);
-      setSelectedAccionId(null);
+    setShowAvancesModal(false);
+    setSelectedMeta(null);
+    setSelectedValorMeta(null);
+    setSelectedAccionId(null);
   };
 
   // Function to open the modal
@@ -272,13 +272,13 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
   }
 
   return (
-    <div className="container-fluid mt-4">
-      <div className="d-flex justify-content-start gap-2 mb-4">
-        {/* <CBackButton /> */}
-        {isInProceso && (
+    <div className="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3 mt-4">
+      <div className="d-flex justify-content-start gap-2 mb-4 mx-3">
+        {/* Back button visible for all users with any PAM permission */}
+        {canGestionarPam && isInProceso && (
           <CNavigationButton label="Crear registro" to="pam-form" icon="fas fa-plus" />
         )}
-        {!isInProceso && (
+        {canGestionarPam && !isInProceso && (
           <CNavigationButton
             label="Crear avance"
             to="#"
@@ -286,7 +286,10 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
             onClick={openCrearAvance}
           />
         )}
-        <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable}/>
+        {/* Export button visible for users with either permission */}
+        {(canGestionarPam || canConsultarPam) && (
+          <CNavigationButton label="Exportar tabla" to="#" icon="fas fa-file-excel" onClick={handleExportTable} />
+        )}
         <CNavigationButton
           label="Vista completa"
           to="tabla-completa-pam"
@@ -296,21 +299,21 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
       </div><div className="card shadow-sm">
         <div className="card-body p-0">
           <div className="table-responsive" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-            <table className="table table-hover table-bordered mb-0">
-              <thead className="sticky-top" style={{ backgroundColor: '#f8f9fa' }}>
+              <table className="table table-bordered border-custom-blue-light mb-0"  style={{ '--bs-table-border-color': '#28ace5' }}>
+              <thead className="bg-custom-blue-dark  items-center ">
                 <tr>
-                  <th className="align-middle">OBJETIVO ESTRATÉGICO</th>
-                  <th className="align-middle" style={{ minWidth: "150px" }}>META</th>
-                  <th className="align-middle">VALOR DE META</th>
-                  <th className="align-middle" style={{ minWidth: "150px" }}>INDICADOR</th>
-                  <th className="align-middle" style={{ minWidth: "250px" }}>ACCIONES</th>
-                  <th className="align-middle">RESPONSABLE</th>
-                  <th className="align-middle">RECURSOS</th>
-                  <th className="align-middle">FECHA INICIO</th>
-                  <th className="align-middle">FECHA FIN</th>
-                  <th className="align-middle">DIAS RESTANTES</th>
-                  <th className="align-middle">PORCENTAJE DE AVANCE</th>
-                  <th className="align-middle text-center">ACCIONES</th>
+                  <th className="align-middle text-white">OBJETIVO ESTRATÉGICO</th>
+                  <th className="align-middle text-white" style={{ minWidth: "150px" }}>META</th>
+                  <th className="align-middle text-white">VALOR DE META</th>
+                  <th className="align-middle text-white" style={{ minWidth: "150px" }}>INDICADOR</th>
+                  <th className="align-middle text-white" style={{ minWidth: "250px" }}>ACCIONES</th>
+                  <th className="align-middle text-white">RESPONSABLE</th>
+                  <th className="align-middle text-white">RECURSOS</th>
+                  <th className="align-middle text-white">FECHA INICIO</th>
+                  <th className="align-middle text-white">FECHA FIN</th>
+                  <th className="align-middle text-white">DIAS RESTANTES</th>
+                  <th className="align-middle text-white">PORCENTAJE DE AVANCE</th>
+                  {canGestionarPam && <th className="align-middle text-center text-white">ACCIONES</th>}
                 </tr>
               </thead>
               <tbody>
@@ -327,36 +330,38 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
                     <td className="py-3">{row.fechaTerminacion || <span className="text-muted">Sin información</span>}</td>
                     <td className="py-3">{row.dias_restantes || <span className="text-muted">Sin información</span>}</td>
                     <td className="text-center py-3">{row.meta.porcentaje_meta || <span className="text-muted">Sin información</span>}</td>
-                    <td className="text-center">
-                      <div className="d-flex justify-content-center gap-2">
-                        <button
+                    {canGestionarPam && (
+                      <td className="text-center">
+                        <div className="d-flex justify-content-center gap-2">
+                          <button
                             className="btn btn-sm btn-info text-white"
                             onClick={() => openAvancesModal(row.id, row.meta.descripcion, row.meta.valor_meta)}
                             title="Ver Avances"
-                        >
+                          >
                             <i className="fas fa-eye"></i>
-                        </button>
-                        {isInProceso && (
-                          <a
-                            href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
-                            className="btn btn-sm btn-primary"
-                            title="Editar registro"
-                          >
-                            <i className="fas fa-edit"></i>
-                          </a>
-                        )}
-                        {isInProceso && (
-                          <button
-                            className="btn btn-sm btn-danger"
-                            onClick={() => deleteRow(row.id)}
-                            disabled={isLoading}
-                            title="Eliminar registro"
-                          >
-                            <i className="fas fa-trash-alt"></i>
                           </button>
-                        )}
-                      </div>
-                    </td>
+                          {isInProceso && (
+                            <a
+                              href={`/pam/pam-form/${row.id}?pam=${pamGeneralId}`}
+                              className="btn btn-sm btn-primary"
+                              title="Editar registro"
+                            >
+                              <i className="fas fa-edit"></i>
+                            </a>
+                          )}
+                          {isInProceso && (
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => deleteRow(row.id)}
+                              disabled={isLoading}
+                              title="Eliminar registro"
+                            >
+                              <i className="fas fa-trash-alt"></i>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -374,12 +379,12 @@ const PamIndex = ({ pamGeneralId, isInProceso }) => {
           <CrearAvance onClose={closeCrearAvance} pamGeneralId={pamGeneralId} />
         )}
         {showAvancesModal && (
-            <VerAvance
-                accionId={selectedAccionId}
-                onClose={closeAvancesModal}
-                meta={selectedMeta}
-                valorMeta={selectedValorMeta}
-            />
+          <VerAvance
+            accionId={selectedAccionId}
+            onClose={closeAvancesModal}
+            meta={selectedMeta}
+            valorMeta={selectedValorMeta}
+          />
         )}
       </div>
     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Indicador;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 
 class UnidadMetaController extends Controller {
@@ -36,6 +37,7 @@ class UnidadMetaController extends Controller {
     }
 
     public function store(Request $request) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'unidad_parcial' => 'required|string',
             'unidad_total' => 'required|string',
@@ -51,6 +53,7 @@ class UnidadMetaController extends Controller {
     }
 
     public function update(Request $request, int $unidadMetaId) {
+        Gate::authorize('s-parametro-editar');
         $request->validate([
             'unidad_parcial' => 'required|string',
             'unidad_total' => 'required|string',
@@ -67,6 +70,7 @@ class UnidadMetaController extends Controller {
     }
 
     public function destroy(int $unidadMetaId) {
+        Gate::authorize('s-parametro-editar');
         $unidadMeta = Indicador::findOrFail($unidadMetaId);
         $unidadMeta->delete();
         return redirect()->route('unidades-meta.index')->with('flash_success_message', 'Unidad de meta eliminado correctamente.');

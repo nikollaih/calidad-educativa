@@ -1,8 +1,10 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
+import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
+import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
 
-export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '' }) {
+export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '', canEditParametros = false }) {
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('agregar');
@@ -168,27 +170,27 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
     };
 
     const handleSubmit = (e) => {
-      // Esta función ahora solo realiza la validación.
-      // Si la validación falla, se evita el envío del formulario.
-      // MODIFICACION: Validar que el campo de correo no esté vacío
-      if (!nombre.trim() || !representanteId || !correoElectronico.trim()) {
-          showAlert('Por favor, completa los campos obligatorios (Nombre, Representante y Correo Electrónico).');
-          e.preventDefault(); // Detiene el envío nativo del formulario
-          return;
-      }
-      // MODIFICACION: Validar el formato del correo electrónico
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(correoElectronico)) {
-          showAlert('Por favor, introduce un correo electrónico válido.');
-          e.preventDefault();
-          return;
-      }
+        // Esta función ahora solo realiza la validación.
+        // Si la validación falla, se evita el envío del formulario.
+        // MODIFICACION: Validar que el campo de correo no esté vacío
+        if (!nombre.trim() || !representanteId || !correoElectronico.trim()) {
+            showAlert('Por favor, completa los campos obligatorios (Nombre, Representante y Correo Electrónico).');
+            e.preventDefault(); // Detiene el envío nativo del formulario
+            return;
+        }
+        // MODIFICACION: Validar el formato del correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correoElectronico)) {
+            showAlert('Por favor, introduce un correo electrónico válido.');
+            e.preventDefault();
+            return;
+        }
 
-      if (modalMode === 'agregar' && !actoAdministrativo) {
-          showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
-          e.preventDefault(); // Detiene el envío nativo del formulario
-          return;
-      }
+        if (modalMode === 'agregar' && !actoAdministrativo) {
+            showAlert('El "Acto Administrativo" es un campo obligatorio para la creación.');
+            e.preventDefault(); // Detiene el envío nativo del formulario
+            return;
+        }
     };
 
     // Maneja la acción de eliminar
@@ -225,11 +227,14 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
 
     return (
-        <div class="container mt-4">
-            <h2 class="mb-4">Redes de Aprendizaje</h2>
-            <button class="btn btn-primary mb-3" onClick={handleAgregarClick}>
-                Agregar red de aprendizaje
-            </button>
+        <div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light py-3">
+            <div className={'p-3'}>
+            <h2 class="mb-4 text-custom-blue-dark">Redes de Aprendizaje</h2>
+            {canEditParametros && (
+                <CAddButton
+                    onClick={handleAgregarClick}
+                />
+            )}
             {loading && <div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>}
 
             <table class="table">
@@ -240,7 +245,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                         <th>Representante</th>
                         <th>Correo Electrónico</th>
                         <th>Acto Administrativo</th>
-                        <th>Acciones</th>
+                        {canEditParametros && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -258,34 +263,36 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     'sin información'
                                 )}
                             </td>
-                            <td>
-                                <button
-                                    onClick={() => handleVerClick(redAprendizaje)}
-                                    className="btn btn-info btn-sm me-2"
-                                >
-                                    Ver
-                                </button>
-                                <button
-                                    onClick={() => handleEditarClick(redAprendizaje)}
-                                    className="btn btn-warning btn-sm me-2"
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => handleDelete(redAprendizaje.id)}
-                                >
-                                    Eliminar
-                                </button>
-                            </td>
+                            {canEditParametros && (
+                                <td>
+                                    <CTableActionButton
+                                        title={'Ver'}
+                                        onClick={() => handleVerClick(redAprendizaje)}
+                                        iconClass={'fas fa-eye'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <CTableActionButton
+                                        title={'Editar'}
+                                        onClick={() => handleEditarClick(redAprendizaje)}
+                                        iconClass={'fas fa-pencil'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                    <CTableActionButton
+                                        title={'Eliminar'}
+                                        onClick={() => handleDelete(redAprendizaje.id)}
+                                        iconClass={'fas fa-trash'}
+                                        hoverIconColor={'text-custom-primary'}
+                                    />
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
 
             {/* Modal de formulario (agregar/editar) */}
-            {showModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            {showModal && canEditParametros && (
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -310,10 +317,10 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     )}
                                     <input type="hidden" name="_token" value={csrfToken} />
                                     <div class="mb-3">
-                                        <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                        <label for="nombre" class="block text-sm mb-2 ml-4">Nombre <span class="text-danger">*</span></label>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="nombre"
                                             name="nombre"
                                             value={nombre}
@@ -322,9 +329,9 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         />
                                     </div>
                                     <div class="mb-3">
-                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <label for="descripcion" class="block text-sm mb-2 ml-4">Descripción</label>
                                         <textarea
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                             id="descripcion"
                                             name="descripcion"
                                             value={descripcion}
@@ -333,7 +340,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         ></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="actoAdministrativo" class="form-label">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
+                                        <label for="actoAdministrativo" class="block text-sm mb-2 ml-4">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
                                         {/* MODIFICACION: Mostrar el documento actual y la opción de reemplazarlo */}
                                         {modalMode === 'editar' && actoAdministrativoUrl && (
                                             <div class="mb-2">
@@ -343,7 +350,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         )}
                                         <input
                                             type="file"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="actoAdministrativo"
                                             name="acto_administrativo"
                                             onChange={(e) => setActoAdministrativo(e.target.files[0])}
@@ -351,14 +358,14 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         />
                                     </div>
                                     <div class="mb-3">
-                                        <label for="representante" class="form-label">Representante <span class="text-danger">*</span></label>
+                                        <label for="representante" class="block text-sm mb-2 ml-4">Representante <span class="text-danger">*</span></label>
                                         {isLoadingUsers ? (
                                             <div>Cargando usuarios...</div>
                                         ) : usersError ? (
                                             <div class="text-danger">Error: {usersError}</div>
                                         ) : (
                                             <select
-                                                class="form-select"
+                                                class="w-full !border border-custom-blue-dark rounded-xl"
                                                 id="representante"
                                                 name="representante_id"
                                                 value={representanteId}
@@ -375,10 +382,11 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                         )}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="numeroContacto" class="form-label">Número de Contacto</label>
-                                        <input
+                                        <label for="numeroContacto" class="block text-sm mb-2 ml-4">Número de
+                                            Contacto <span className="text-danger">*</span></label>
+                                        <input required
                                             type="text"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="numeroContacto"
                                             name="numero_contacto"
                                             value={numeroContacto}
@@ -387,10 +395,10 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                     </div>
                                     {/* MODIFICACION: Nuevo campo para el correo electrónico */}
                                     <div class="mb-3">
-                                        <label for="correoElectronico" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                        <label for="correoElectronico" class="block text-sm mb-2 ml-4">Correo Electrónico <span class="text-danger">*</span></label>
                                         <input
                                             type="email"
-                                            class="form-control"
+                                            class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                             id="correoElectronico"
                                             name="correo"
                                             value={correoElectronico}
@@ -402,14 +410,14 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <div class="modal-footer">
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         onClick={handleCloseModal}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="border bg-blue-500  text-white p-2 rounded-pill"
                                         // MODIFICACION: Se agregó el campo de correo electrónico a la validación
                                         disabled={loading || !nombre.trim() || !representanteId || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
                                     >
@@ -424,7 +432,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
             {/* NUEVO: Modal para ver actividades e integrantes */}
             {showViewModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -465,7 +473,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                                                 <small>{actividad.fecha ? new Date(actividad.fecha).toLocaleDateString() : ''}</small>
                                                             </div>
                                                             {actividad.descripcion && (
-                                                                <p class="mb-1 text-muted small" style={{wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal'}}>{actividad.descripcion}</p>
+                                                                <p class="mb-1 text-muted small" style={{ wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{actividad.descripcion}</p>
                                                             )}
                                                         </div>
                                                     ))}
@@ -527,7 +535,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                             <div class="modal-footer">
                                 <button
                                     type="button"
-                                    class="btn btn-secondary"
+                                    class="border bg-blue-500  text-white p-2 rounded-pill"
                                     onClick={handleCloseViewModal}
                                 >
                                     Cerrar
@@ -538,10 +546,10 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                 </div>
             )}
 
-            <CPagination  pagination={redesAprendizajes} />
+            <CPagination pagination={redesAprendizajes} />
             {/* Modal de alerta personalizado */}
             {showAlertModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -552,7 +560,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <p>{alertMessage}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onClick={() => setShowAlertModal(false)}>Aceptar</button>
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowAlertModal(false)}>Aceptar</button>
                             </div>
                         </div>
                     </div>
@@ -561,7 +569,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
 
             {/* Modal de confirmación personalizado */}
             {showConfirmModal && (
-                <div class="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <div class="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -572,8 +580,8 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                 <p>{alertMessage}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
-                                <button type="button" class="btn btn-danger" onClick={() => {
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => setShowConfirmModal(false)}>Cancelar</button>
+                                <button type="button" class="border bg-blue-500  text-white p-2 rounded-pill" onClick={() => {
                                     if (confirmAction) {
                                         confirmAction();
                                     }
@@ -584,6 +592,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

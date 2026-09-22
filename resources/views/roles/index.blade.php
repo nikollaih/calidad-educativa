@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card">
-        <h1 class="card-header">Edición del rol</h1>
+<div class="col-md-12 bg-white rounded-xl !border border-custom-blue-light">
+    <div class="p-3">
+        <h1 class="text-custom-blue-dark">Roles del sistema</h1>
         <div class="card-body">
             <div class="col-md-12">
-                <a href="{{ route('roles.create') }}" class="btn btn-primary">Crear rol</a>
+                @can('s-role-crear')
+                    <div data-component="CAddButton"
+                         data-route="{{ route('roles.create') }}"
+                    ></div>
+                @endcan
                 <table class="table mt-3">
                     <thead>
                         <tr>
@@ -20,12 +24,28 @@
                         <tr>
                             <td>{{ $role->name_translated}}</td>
                             <td>{{ $role->permissions->pluck('name_translated')->join(', ') }}</td>
-                            <td>
-                                <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('roles.destroy', $role) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar rol?')">Eliminar</button>
-                                </form>
+                            <td class="flex">
+                                @can('s-role-editar')
+                                    <div data-component="CTableActionButton"
+                                         data-title="Editar"
+                                         data-route="{{ route('roles.edit', $role) }}"
+                                         data-icon-class="fas fa-pencil"
+                                         data-hover-icon-color="text-custom-primary"
+                                    ></div>
+                                @endcan
+                                @can('s-role-eliminar')
+                                    <form id="delete-form-{{$role}}" action="{{ route('roles.destroy', $role) }}" method="POST" style="display:inline;">
+                                        @csrf @method('DELETE')
+                                        <div
+                                            data-form-ref="#delete-form-{{$role}}"
+                                            data-component="CTableActionButton"
+                                            data-title="Eliminar"
+                                            data-icon-class="fa fa-trash"
+                                            data-confirm-message="¿Está seguro de eliminar este rol?"
+                                            data-hover-icon-color="text-custom-primary"
+                                        ></div>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

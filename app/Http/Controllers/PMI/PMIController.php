@@ -8,12 +8,14 @@ use App\Exports\PmiEvaluacionExport;
 use App\Exports\PmiExport;
 use App\Exports\PmiSintesisExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PMI\GestionValidarPMI;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\MailService;
 use App\Http\Services\PMI\PmiObjetivoVinculadoService;
 use App\Http\Services\PmiService;
 use App\Models\Autoevaluacion;
+use App\Models\Enums\PmiActividad\FrecuenciaRecoleccionEnum;
 use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\Pmi;
@@ -49,17 +51,20 @@ class PMIController extends Controller {
         $pmis = Pmi::with('comentarios','comentarios.autor','comentarios.factor')
             ->whereHas('autoevaluacion', function ($query) use ($institucionId) {
                 $query->where('institucion_id', $institucionId);
-            })->paginate(20);
+            })
+            ->orderBy('anio_inicio', 'desc')
+            ->paginate(20);
 
         return view('pmi.index', [
             'institucionId' => $institucionId,
             'pmis' => $pmis,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
         ]);
     }
     /*
     * Obtiene los pmis en estado de validacion, y renderiza la vista de pmis en estado de validacion
     */
-    public function pmiValidacion(Request $request) {
+    public function pmiValidacion(GestionValidarPMI $request) {
         $pmis = Pmi::with('institucion')
             ->whereIn('estado', [
                 PmiEstadoEnum::Presentado->value,
@@ -98,11 +103,11 @@ class PMIController extends Controller {
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
             ->get();
-        return view('pmi.create',
-            [
-                'autoevaluaciones' => $autoevaluaciones,
-                'institucionId' => $institucionId,
-            ]);
+        return view('pmi.create', [
+            'autoevaluaciones' => $autoevaluaciones,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function store(Request $request, int $institucionId ) {
         try {
@@ -156,11 +161,11 @@ class PMIController extends Controller {
                 'factoresCriticos.objetivos.metas.indicadores.actividades',
             )
             ->first();
-        return view('pmi.edit',
-            [
-                'pmi' => $pmi,
-                'institucionId' => $institucionId,
-            ]);
+        return view('pmi.edit', [
+            'pmi' => $pmi,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function presentarPmi(Request $request, int $institucionId , int $pmiId) {
         $pmi = Pmi::find($pmiId);
@@ -235,9 +240,10 @@ class PMIController extends Controller {
                 'objetivos' => $objetivos,
                 'indicadores' => $indicadores,
                 'institucionId' => $institucionId,
+                'frecuenciasRecoleccion' => FrecuenciaRecoleccionEnum::cases()
             ]);
     }
-    public function pmiValidar(Request $request, int $pmiId ) {
+    public function pmiValidar(GestionValidarPMI $request, int $pmiId ) {
         $pmi = PMI::with('institucion','comentarios')
             ->where('id', $pmiId)
             ->with(
@@ -250,7 +256,7 @@ class PMIController extends Controller {
                 'pmi' => $pmi,
             ]);
     }
-    public function pmiAlmacenarComentario(Request $request) {
+    public function pmiAlmacenarComentario(GestionValidarPMI $request) {
         // se obtienen los datos
         $input = $request->all();
         $input['estado'] = PmiEstadoComentario::Activo->value;
@@ -295,7 +301,7 @@ class PMIController extends Controller {
                        ->withInput()
                 ->with('flash_error_message', ' Comentario no encontrado.');
     }
-    public function pmiCambiarEstado(Request $request, int $pmiId) {
+    public function pmiCambiarEstado(GestionValidarPMI $request, int $pmiId) {
         $pmi = Pmi::with('comentarios')->where('id',$pmiId)->first();
         if (!$pmi) {
             return redirect()->back()
@@ -449,6 +455,19 @@ class PMIController extends Controller {
             DB::rollBack();
             return $e->getMessage();
         }
+    }
+    public function show(Request $request, int $institucionId , int $pmi) {
+        $pmi = PMI::where('id', $pmi)
+            ->with(
+                'factoresCriticos.calificacion.grupo.padre',
+                'factoresCriticos.objetivos.metas.indicadores.actividades',
+            )
+            ->first();
+        return view('pmi.show', [
+            'pmi' => $pmi,
+            'institucionId' => $institucionId,
+            'institucionNombre' => \App\Models\Institucion::find($institucionId)?->nombre,
+        ]);
     }
     public function avancesActividadByActividadId(Request $request, int $actividadId = null) {
         $meta = PmiMetaVinculada::with('indicadores')
