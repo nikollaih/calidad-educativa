@@ -98,7 +98,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                         {permissions.canValidate && evaluacion.alias_estado === "PROCESO" && (
                                             <>
                                                 <form
-                                                    ref={formRef}
+						    id={`form-validar-${evaluacion.id}`}
                                                     action={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-validar`}
                                                     method="POST"
                                                     style={{display: 'none'}}
@@ -109,7 +109,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                                     title={'Enviar a Validación'}
                                                     iconClass={'fa fa-paper-plane'}
                                                     hoverIconColor={'text-custom-primary'}
-                                                    onClick={() => formRef.current?.submit()}
+						    onClick={() => document.getElementById(`form-validar-${evaluacion.id}`)?.submit()}
                                                 />
                                             </>
                                         )}
