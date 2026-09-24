@@ -13,7 +13,7 @@ RUN npm run build
 # 2️⃣ Etapa base para PHP + Composer
 # ========================
 FROM php:8.2-fpm-bullseye AS app
-
+RUN apt-get update
 # Instalar dependencias del sistema y extensiones PHP necesarias
 RUN apt-get update && apt-get install -y \
     git curl unzip libpng-dev libjpeg-dev libfreetype6-dev libonig-dev \
@@ -50,6 +50,13 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi && \
 
 # Cachear configuración y vistas (omite route:cache temporalmente)
 RUN php artisan config:cache && php artisan view:cache || true
+# Habilitar el local storage
+RUN php artisan storage:link
+# Configurar permisos para Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
+
+
 
 # ========================
 # 3️⃣ Configurar Nginx y PHP-FPM con Supervisor
