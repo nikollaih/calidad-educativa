@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    env_file: .env
+    ports:
+      - "8081:80"  # o no publicar puerto si se accede solo desde el reverse proxy
+    restart: always
+    volumes:
+      - './storage/app/public:/var/www/html/storage/app/public'
+#     networks:
+#       - backend
+
+# networks:
+#   backend:
+#     external: true
