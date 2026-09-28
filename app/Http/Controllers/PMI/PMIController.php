@@ -129,20 +129,27 @@ class PMIController extends Controller {
         $anioInicio = (int) $pmiData['anio_inicio'];
         $anioFin = (int) $pmiData['anio_fin'];
 
-        // Validar traslape de intervalos de PMIs
-        $existeTraslape = Pmi::whereHas('autoevaluacion', function ($query) use ($institucionId) {
-            $query->where('institucion_id', $institucionId);
-        })
-            ->where(function ($query) use ($anioInicio, $anioFin) {
-                $query->where('anio_inicio', '<=', $anioFin)
-                    ->Where('anio_fin', '=>', $anioInicio);
-            })
-            ->exists();
+        $autoevaluacion = Autoevaluacion::where('institucion_id', $institucionId)
+            ->whereDoesntHave('pmi')
+            ->find($pmiData['autoevaluacion_id']);
 
-        if (false) {
+        if (!$autoevaluacion) {
             return redirect()->back()
                 ->withInput()
-                ->with('flash_error_message', 'El intervalo de años se cruza con otro PMI existente para esta institución.');
+                ->with('flash_error_message', 'La autoevaluación seleccionada no está disponible para crear un PMI.');
+        }
+
+        $anioAutoevaluacion = (int) $autoevaluacion->anio_vigencia;
+        if ($anioInicio < $anioAutoevaluacion || $anioInicio > $anioAutoevaluacion + 3) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'El año de inicio debe estar entre el año de la autoevaluación y tres años después.');
+        }
+
+        if ($anioFin > $anioInicio + 4) {
+            return redirect()->back()
+                ->withInput()
+                ->with('flash_error_message', 'El año de fin no puede superar cuatro años después del año de inicio.');
         }
 
         $pmiCreated = Pmi::create($pmiData);

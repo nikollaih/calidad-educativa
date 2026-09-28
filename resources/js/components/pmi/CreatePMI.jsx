@@ -5,22 +5,36 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
     const [selectedId, setSelectedId] = useState('');
     const [anioInicio, setAnioInicio] = useState('');
     const [anioFin, setAnioFin] = useState('');
+    const [aniosInicioDisponibles, setAniosInicioDisponibles] = useState([]);
     const [aniosFinDisponibles, setAniosFinDisponibles] = useState([]);
 
-    const aniosDisponibles = [...new Set(autoevaluacionesDisponibles.map((a) => a.anio_vigencia))].sort((a, b) => b - a);
-
-    // Al cambiar el año de inicio, actualizar autoevaluación seleccionada y los años de fin disponibles
+    // La autoevaluación define los años válidos para iniciar el PMI.
     useEffect(() => {
-        const autoeval = autoevaluacionesDisponibles.find((a) => parseInt(a.anio_vigencia) === parseInt(anioInicio));
+        const autoeval = autoevaluacionesDisponibles.find((a) => a.id.toString() === selectedId);
         if (autoeval) {
-            setSelectedId(autoeval.id.toString());
-            // Generar lista de años fin válidos (de anioInicio hasta anioInicio + 3)
-            const inicio = parseInt(anioInicio);
-            const opcionesFin = Array.from({ length: 4 }, (_, i) => inicio + i);
-            setAniosFinDisponibles(opcionesFin);
-            if (!opcionesFin.includes(parseInt(anioFin))) {
-                setAnioFin(''); // reset si el año fin no es válido
-            }
+            const anioAutoevaluacion = parseInt(autoeval.anio_vigencia, 10);
+            setAniosInicioDisponibles(Array.from({ length: 4 }, (_, i) => anioAutoevaluacion + i));
+        } else {
+            setAniosInicioDisponibles([]);
+        }
+        setAnioInicio('');
+        setAnioFin('');
+        setAniosFinDisponibles([]);
+    }, [selectedId]);
+
+    // El año fin puede llegar hasta cuatro años después del año de inicio.
+    useEffect(() => {
+        if (!anioInicio) {
+            setAniosFinDisponibles([]);
+            setAnioFin('');
+            return;
+        }
+
+        const inicio = parseInt(anioInicio, 10);
+        const opcionesFin = Array.from({ length: 5 }, (_, i) => inicio + i);
+        setAniosFinDisponibles(opcionesFin);
+        if (!opcionesFin.includes(parseInt(anioFin, 10))) {
+            setAnioFin('');
         }
     }, [anioInicio]);
 
@@ -33,6 +47,23 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                 <h5 className="mb-2">Seleccionar años de ejecución del PMI <span className="text-danger">*</span></h5>
                 <div className="row mb-3">
                     <div className="col">
+                        <label htmlFor="autoevaluacion" className="block text-sm mb-2 ml-4">Autoevaluación</label>
+                        <select
+                            id="autoevaluacion"
+                            className="w-full !border border-custom-blue-dark rounded-xl"
+                            value={selectedId}
+                            onChange={(e) => setSelectedId(e.target.value)}
+                            required
+                        >
+                            <option value="">-- Selecciona autoevaluación --</option>
+                            {autoevaluacionesDisponibles.map((autoevaluacion) => (
+                                <option key={autoevaluacion.id} value={autoevaluacion.id}>
+                                    Autoevaluación {autoevaluacion.anio_vigencia}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="col">
                         <label htmlFor="anioInicio" className="block text-sm mb-2 ml-4">Año de inicio</label>
                         <select
                             id="anioInicio"
@@ -41,9 +72,10 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                             value={anioInicio}
                             onChange={(e) => setAnioInicio(e.target.value)}
                             required
+                            disabled={!selectedId}
                         >
                             <option value="">-- Selecciona año inicio --</option>
-                            {aniosDisponibles.map((y) => (
+                            {aniosInicioDisponibles.map((y) => (
                                 <option key={y} value={y}>{y}</option>
                             ))}
                         </select>
