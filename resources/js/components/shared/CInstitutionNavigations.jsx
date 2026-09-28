@@ -58,7 +58,7 @@ const CInstitutionNavigations = ({
                             }}
                             title={institutionName}
                         >
-                           IE {institutionName}
+                    {institutionName}
                         </span>
                     </div>
                 );
