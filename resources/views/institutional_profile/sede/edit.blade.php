@@ -610,6 +610,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade"  id="modelos" role="tabpanel">
+                        @if($educationalOffer)
                         <div class="row">
                             <!-- Modelos educativos -->
                             <div class="col-md-6">
@@ -680,6 +681,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <!-- Botones de acción -->
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">

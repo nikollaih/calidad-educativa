@@ -492,6 +492,7 @@
                             </div>
                         </div>
                         <div class="tab-pane fade"  id="modelos" role="tabpanel">
+                            @if($educationalOffer)
                             <div class="m-3">
                         <div class="row">
                             <!-- Modelos educativos -->
@@ -565,6 +566,7 @@
                         </div>
                         </div>
                         </div>
+                            @endif
                         <div class="tab-pane fade"  id="ofertas" role="tabpanel">
                             <div class="card-body">
                                 <div class="col-md-12">
