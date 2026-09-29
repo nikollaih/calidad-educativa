@@ -21,7 +21,7 @@ $sidebarMenu = [
             [
                 'url' => 'usuarios-institucion',
                 'icon' => 'fa-solid fa-users',
-                'label' => 'Usuarios de institucion',
+                'label' => 'Usuarios de institución',
                 'role' =>'rector',
             ],
             [

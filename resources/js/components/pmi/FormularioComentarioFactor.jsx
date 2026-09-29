@@ -76,7 +76,7 @@ const FormularioComentarioFactor = ({
         if (!formData.comentario.trim()) {
             setSubmitMessage({
                 type: 'error',
-                text: 'El campo de comentario no puede estar vacio.',
+                text: 'El campo de comentario no puede estar vacío.',
             });
             return;
         }

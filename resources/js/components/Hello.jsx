@@ -19,7 +19,7 @@ export default function Hello() {
             <table class="table table-bordered">
                 <thead class="table-light">
                 <tr>
-                    <th>Periodo Evaluado</th>
+                    <th>Período Evaluado</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>

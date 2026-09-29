@@ -24,10 +24,10 @@
                     <tr>
                         <td style="padding: 30px 30px 20px 30px;">
                             <p style="margin: 0 0 15px 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Estimad@ {{ $notificado?->name }},
+                                Estimado/a {{ $notificado?->name }},
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                El rector <strong>{{ $rector->name }}</strong> ha <strong style="color: #f39c12;">PRESENTADO</strong> el <strong>Plan de Mejoramiento Institucional (PMI)</strong> correspondiente al periodo <strong>{{ $pmi->anio_inicio }} - {{ $pmi->anio_fin }}</strong>.
+                                El rector <strong>{{ $rector->name }}</strong> ha <strong style="color: #f39c12;">PRESENTADO</strong> el <strong>Plan de Mejoramiento Institucional (PMI)</strong> correspondiente al período <strong>{{ $pmi->anio_inicio }} - {{ $pmi->anio_fin }}</strong>.
                             </p>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                                         <td style="vertical-align: top;">
                                             <h2 style="margin: 0 0 10px 0; color: #856404; font-size: 18px; font-weight: bold;">Acción requerida</h2>
                                             <p style="margin: 0; color: #856404; font-size: 15px; line-height: 1.6;">
-                                                Por favor, ingrese a la plataforma para <strong>validar el PMI presentado</strong> y verificar que cumple con los criterios necearios.
+                                                Por favor, ingrese a la plataforma para <strong>validar el PMI presentado</strong> y verificar que cumple con los criterios necesarios.
                                             </p>
                                         </td>
                                     </tr>
@@ -153,4 +153,3 @@
     </table>
 </body>
 </html>
-

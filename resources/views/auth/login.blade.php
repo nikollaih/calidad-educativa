@@ -4,7 +4,7 @@
     <div class="card-body px-4 py-5">
         <!-- Logo -->
         <div class="text-center mb-4">
-            <img src="{{ asset('imagenes/educacion_menu-nobg.png')}}" alt="Secretaria de Educación" style="max-width: 280px; width: 100%;">
+            <img src="{{ asset('imagenes/educacion_menu-nobg.png')}}" alt="Secretaría de Educación" style="max-width: 280px; width: 100%;">
         </div>
 
         <style>

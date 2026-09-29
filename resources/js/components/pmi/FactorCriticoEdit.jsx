@@ -1010,7 +1010,7 @@ const FactorCriticoEdit = ({
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Instrumentos de recolección',
-                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener almenos un instrumento de recolección.`,
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener al menos un instrumento de recolección.`,
                             });
                             return;
                         }
@@ -1028,7 +1028,7 @@ const FactorCriticoEdit = ({
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Responsables',
-                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener almenos un responsable.`,
+                                text: `La actividad "${actividad.descripcion}" del indicador "${indicador.unidad_parcial}/${indicador.unidad_total}" debe tener al menos un responsable.`,
                             });
                             return;
                         }

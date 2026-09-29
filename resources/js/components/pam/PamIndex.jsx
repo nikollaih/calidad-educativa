@@ -311,7 +311,7 @@ const PamIndex = ({ pamGeneralId, isInProceso, canGestionarPam = false, canConsu
                   <th className="align-middle text-white">RECURSOS</th>
                   <th className="align-middle text-white">FECHA INICIO</th>
                   <th className="align-middle text-white">FECHA FIN</th>
-                  <th className="align-middle text-white">DIAS RESTANTES</th>
+                  <th className="align-middle text-white">DÍAS RESTANTES</th>
                   <th className="align-middle text-white">PORCENTAJE DE AVANCE</th>
                   {canGestionarPam && <th className="align-middle text-center text-white">ACCIONES</th>}
                 </tr>

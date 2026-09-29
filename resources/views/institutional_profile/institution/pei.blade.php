@@ -63,7 +63,7 @@
                                                 data-tab="resena-historica"
                                                 aria-selected="true"
                                             >
-                                                RESEÑA HISTORICA
+                                                RESEÑA HISTÓRICA
                                             </button>
                                         </div>
                                         <div class="flex-1">
@@ -83,7 +83,7 @@
                                                 role="tab"
                                                 data-tab="gestion-academica"
                                             >
-                                                GESTIÓN ACADEMICA
+                                                GESTIÓN ACADÉMICA
                                             </button>
                                         </div>
                                         <div class="flex-1">
@@ -252,7 +252,7 @@
                                                     </div>
 
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Manual de Funciones Gobierno Escolar:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Manual de funciones del Gobierno Escolar:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($gobiernoEscolar && $gobiernoEscolar->anexoGobiernoEscolar)
                                                                 <a href="{{ $gobiernoEscolar->anexoGobiernoEscolar->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -404,7 +404,7 @@
                                                     </div>
 
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento sector productivo:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento del sector productivo:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($relacionesEntorno && $relacionesEntorno->anexoAlianzasSectorProductivo)
                                                                 <a href="{{ $relacionesEntorno->anexoAlianzasSectorProductivo->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -458,7 +458,7 @@
 
                                                     <!-- Documentos especiales -->
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento de plan:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento del plan:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($disenos && $disenos->anexoPlanEstudios)
                                                                 <a href="{{ $disenos->anexoPlanEstudios->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -471,7 +471,7 @@
                                                     </div>
 
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento de enfoque:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento del enfoque:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($disenos && $disenos->anexoEnfoquePedagogico)
                                                                 <a href="{{ $disenos->anexoEnfoquePedagogico->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -484,7 +484,7 @@
                                                     </div>
 
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento de análisis:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento del análisis:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($disenos && $disenos->anexoAnalisisJornada)
                                                                 <a href="{{ $disenos->anexoAnalisisJornada->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -822,7 +822,7 @@
 
                                                     <!-- Documentos especiales -->
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento presupuesto:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento de presupuesto:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($financiero && $financiero->anexoPresupuestoFse)
                                                                 <a href="{{ $financiero->anexoPresupuestoFse->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
@@ -947,7 +947,7 @@
 
                                                     <!-- Documentos especiales -->
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento prevención:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Documento de prevención:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($prevencion && $prevencion->anexoPrevencionRiesgosFisicos)
                                                                 <a href="{{ $prevencion->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">

@@ -23,7 +23,7 @@
                     <tr>
                         <td style="padding: 30px 30px 20px 30px;">
                             <p style="margin: 0 0 15px 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Estimad@ {{$usuario->name}} ,
+                                Estimado/a {{$usuario->name}} ,
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
                                 Nos complace informarle que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido <strong style="color: #27ae60;">APROBADO</strong> exitosamente.

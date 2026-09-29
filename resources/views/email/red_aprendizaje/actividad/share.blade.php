@@ -16,7 +16,7 @@
                 <tr>
                     <td style="padding: 30px 30px 20px 30px;">
                         <p style="margin: 0 0 15px 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                            Estimad@ {{$nombre}},
+                            Estimado/a {{$nombre}},
                         </p>
                         <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
                             Le informamos que ha sido notificado(a) en relación con una actividad asociada a una red de aprendizaje:

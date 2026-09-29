@@ -22,7 +22,7 @@
                     <tr>
                         <td style="padding: 30px 30px 20px 30px;">
                             <p style="margin: 0 0 15px 0; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Estimad@ {{$usuario->name}} ,
+                                Estimado/a {{$usuario->name}} ,
                             </p>
                             <p style="margin: 0; color: #333333; font-size: 16px; line-height: 1.6;">
                                 Le informamos que su <strong>Plan de Mejoramiento Institucional (PMI)</strong> con vigencia desde {{$pmi->anio_inicio}} hasta {{$pmi->anio_fin}} ha sido revisado y <strong>remitido</strong> para que realice los ajustes necesarios.
@@ -42,7 +42,7 @@
                                         <td style="vertical-align: top;">
                                             <h2 style="margin: 0 0 10px 0; color: #856404; font-size: 18px; font-weight: bold;">Comentarios pendientes de atención</h2>
                                             <p style="margin: 0; color: #856404; font-size: 15px; line-height: 1.6;">
-                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} observacion/es</strong> que requieren su atención inmediata.
+                                                Se han registrado <strong style="font-size: 18px;">{{$cantidadComentariosPendientes}} {{ $cantidadComentariosPendientes == 1 ? 'observación' : 'observaciones' }}</strong> que requieren su atención inmediata.
                                             </p>
                                         </td>
                                     </tr>

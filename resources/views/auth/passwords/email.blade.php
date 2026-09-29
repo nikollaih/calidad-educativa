@@ -4,7 +4,7 @@
     <div class="card-body">
         <div class="app-brand justify-content-center mb-4">
             <a href="{{ url('/') }}" class="app-brand-link gap-2">
-                <img src="{{ asset('imagenes/educacion_menu-nobg.png') }}" alt="Secretaria de Educación" width="100%">
+                <img src="{{ asset('imagenes/educacion_menu-nobg.png') }}" alt="Secretaría de Educación" width="100%">
             </a>
         </div>
 

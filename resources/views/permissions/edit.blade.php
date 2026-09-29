@@ -3,7 +3,7 @@
 @section('content')
 <div class="col-md-12">
     <div class="card">
-        <h1 class="card-header">Edicion Permiso</h1>
+        <h1 class="card-header">Editar permiso</h1>
         <div class="card-body">
             <div class="col-md-12">
                 <form action="{{ route('permissions.update', $permission->id) }}" method="POST">

@@ -21,7 +21,7 @@ export default function IndexMetaPMI({ agregarUrl, metasPaginated = {}, csrfToke
             <table class="table">
                 <thead>
                 <tr>
-                    <th>DESCRIPCION</th>
+                    <th>DESCRIPCIÓN</th>
                     <th>UNIDAD DE MEDIDA</th>
                     <th>VALOR REQUERIDO</th>
                     <th>Acciones</th>

@@ -495,10 +495,10 @@ export default function ActualizarPei({
 
   const getGestion = (valor) => {
     switch (valor) {
-      case 'resena_historica': return 'RESEÑA HISTORICA';
+      case 'resena_historica': return 'RESEÑA HISTÓRICA';
       case 'gestion_academica': return 'GESTIÓN ACADÉMICA';
       case 'gestion_administrativa': return 'GESTIÓN ADMINISTRATIVA Y FINANCIERA';
-      case 'gestion_comunidad': return 'GESTIÓN COMUNIDAD';
+      case 'gestion_comunidad': return 'GESTIÓN DE LA COMUNIDAD';
       case 'gestion_directiva': return 'GESTIÓN DIRECTIVA';
       default: return valor.replace(/_/g, ' ').toUpperCase();
     }
