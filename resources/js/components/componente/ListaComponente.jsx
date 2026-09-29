@@ -102,12 +102,12 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                                             iconClass={'fas fa-pencil'}
                                             hoverIconColor={'text-custom-primary'}
                                         />
-                                        <form id="delete-form-lista-componente"
+                                        <form id={`delete-form-lista-componente-${componente.id}`}
                                             action={`/componentes/${componente.id}`}
                                             method="POST"
                                             style={{ display: 'inline' }}
                                             onSubmit={(e) => {
-                                                if (!confirm('¿Estás seguro de que quieres eliminar esta componente?')) {
+                                                if (!confirm('¿Estás seguro de que quieres eliminar este componente?')) {
                                                     e.preventDefault();
                                                 }
                                             }}
@@ -115,10 +115,10 @@ export default function ListaComponente({ agregarUrl, componentes, csrfToken = '
                                             <input type="hidden" name="_token" value={csrfToken} />
                                             <input type="hidden" name="_method" value="DELETE" />
                                             <CTableActionButton
-                                                formRef={'#delete-form-lista-componente'}
+                                                formRef={`#delete-form-lista-componente-${componente.id}`}
                                                 title={'Eliminar'}
                                                 iconClass={'fa fa-trash'}
-                                                confirmMessage={'¿Está seguro de eliminar este municipio?'}
+                                                confirmMessage={'¿Está seguro de eliminar este componente?'}
                                                 hoverIconColor={'text-custom-primary'}
                                             />
                                         </form>

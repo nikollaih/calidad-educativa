@@ -26,7 +26,7 @@ const CTableActionButton = ({
         }
 
         if (formRef) {
-            const form = document.querySelector(formRef);
+            const form = e.currentTarget.closest('form') || document.querySelector(formRef);
             if (form) {
                 form.submit();
             }

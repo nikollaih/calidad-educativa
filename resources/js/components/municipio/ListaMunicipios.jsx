@@ -109,7 +109,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                         iconClass={'fas fa-pencil'}
                                         hoverIconColor={'text-custom-primary'}
                                     />
-                                    <form id="delete-form-municipio"
+                                    <form id={`delete-form-municipio-${municipio.id}`}
                                         action={`/municipios/${municipio.id}`}
                                         method="POST"
                                         style={{display: 'inline'}}
@@ -122,7 +122,7 @@ export default function ListaMunicipios({ agregarUrl, municipios, csrfToken = ''
                                         <input type="hidden" name="_token" value={csrfToken}/>
                                         <input type="hidden" name="_method" value="DELETE"/>
                                         <CTableActionButton
-                                            formRef={'#delete-form-municipio'}
+                                            formRef={`#delete-form-municipio-${municipio.id}`}
                                             title={'Eliminar'}
                                             iconClass={'fa fa-trash'}
                                             confirmMessage={'¿Está seguro de eliminar este municipio?'}

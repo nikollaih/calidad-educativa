@@ -132,7 +132,7 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                             iconClass={'fas fa-pencil'}
                                             hoverIconColor={'text-custom-primary'}
                                         />
-                                        <form id="delete-form-indicador-pmi"
+                                        <form id={`delete-form-indicador-pmi-${indicador.id}`}
                                             action={`/indicadores-pmi/${indicador.id}`}
                                             method="POST"
                                             style={{ display: 'inline' }}
@@ -145,7 +145,7 @@ export default function ListaMunicipios({ agregarUrl, indicadores, csrfToken = '
                                             <input type="hidden" name="_token" value={csrfToken} />
                                             <input type="hidden" name="_method" value="DELETE" />
                                             <CTableActionButton
-                                                formRef={'#delete-form-indicador-pmi'}
+                                                formRef={`#delete-form-indicador-pmi-${indicador.id}`}
                                                 title={'Eliminar'}
                                                 iconClass={'fa fa-trash'}
                                                 confirmMessage={'¿Estás seguro de que quieres eliminar este indicador?'}

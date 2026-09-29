@@ -127,7 +127,7 @@ export default function ListaUnidadMeta({
                                         iconClass={'fas fa-pencil'}
                                         hoverIconColor={'text-custom-primary'}
                                     />
-                                    <form id="delete-form-unidad-meta"
+                                    <form id={`delete-form-unidad-meta-${unidadMeta.id}`}
                                         action={`/unidades-meta/${unidadMeta.id}`}
                                         method="POST"
                                         style={{ display: "inline" }}
@@ -152,7 +152,7 @@ export default function ListaUnidadMeta({
                                             value="DELETE"
                                         />
                                         <CTableActionButton
-                                            formRef={'#delete-form-unidad-meta'}
+                                             formRef={`#delete-form-unidad-meta-${unidadMeta.id}`}
                                             title={'Eliminar'}
                                             iconClass={'fa fa-trash'}
                                             confirmMessage={'¿Estás seguro de que quieres eliminar esta unidad de meta?'}

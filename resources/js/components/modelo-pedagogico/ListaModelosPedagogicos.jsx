@@ -110,7 +110,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
                                         iconClass={'fas fa-pencil'}
                                         hoverIconColor={'text-custom-primary'}
                                     />
-                                    <form id="delete-form-modelo-pedagogico"
+                                    <form id={`delete-form-modelo-pedagogico-${modeloPedagogico.id}`}
                                         action={`/modelos-pedagogicos/${modeloPedagogico.id}`}
                                         method="POST"
                                         style={{display: 'inline'}}
@@ -123,7 +123,7 @@ export default function ListaModelosPedagogicos({ agregarUrl, modelosPedagogicos
                                         <input type="hidden" name="_token" value={csrfToken}/>
                                         <input type="hidden" name="_method" value="DELETE"/>
                                         <CTableActionButton
-                                            formRef={'#delete-form-modelo-pedagogico'}
+                                            formRef={`#delete-form-modelo-pedagogico-${modeloPedagogico.id}`}
                                             title={'Eliminar'}
                                             iconClass={'fa fa-trash'}
                                             confirmMessage={'¿Estás seguro de que quieres eliminar este modelo pedagógico?'}

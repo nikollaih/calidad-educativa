@@ -117,7 +117,7 @@ const FormularioComentarioFactor = ({
                         ></button>
                     </div>
                     <div className="modal-body">
-                        <form>
+                        <div>
                             <div className="mb-3">
                                 <label htmlFor="descripcion" className="block text-sm mb-2 ml-4">
                                     Factor crítico:
@@ -174,7 +174,7 @@ const FormularioComentarioFactor = ({
                                     </form>
                                 )}
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

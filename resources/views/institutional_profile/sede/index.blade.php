@@ -36,7 +36,7 @@
                                 <td>PRINCIPAL</td>
                                 <td>
                                     <a href="{{ route('sede.show', 1) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
-                                    <a href="{{ route('sede.edit', 2) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', 1) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 1) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>

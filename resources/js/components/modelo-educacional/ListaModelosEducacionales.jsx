@@ -111,7 +111,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                         iconClass={'fas fa-pencil'}
                                         hoverIconColor={'text-custom-primary'}
                                     />
-                                    <form id="delete-form-modelo"
+                                    <form id={`delete-form-modelo-${modeloEducacional.id}`}
                                         action={`/modelos-educacionales/${modeloEducacional.id}`}
                                         method="POST"
                                         style={{ display: 'inline' }}
@@ -124,7 +124,7 @@ export default function ListaModelosEducacionales({ agregarUrl, modelosEducacion
                                         <input type="hidden" name="_token" value={csrfToken} />
                                         <input type="hidden" name="_method" value="DELETE" />
                                         <CTableActionButton
-                                            formRef={'#delete-form-municipio'}
+                                            formRef={`#delete-form-modelo-${modeloEducacional.id}`}
                                             title={'Eliminar'}
                                             iconClass={'fa fa-trash'}
                                             confirmMessage={'¿Estás seguro de que quieres eliminar este modelo educacional?'}

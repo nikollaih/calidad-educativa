@@ -477,6 +477,7 @@
                     adultScheduleTemplate.cloneNode(true) :
                     scheduleTemplate.cloneNode(true);
 
+                scheduleCard.removeAttribute('id');
                 scheduleCard.style.display = 'block';
 
                 // Actualizar los datos del nivel
@@ -573,7 +574,12 @@
             const checkboxes = scheduleCard.querySelectorAll('.adult-schedule-checkbox');
             const hiddenFieldsContainer = scheduleCard.querySelector('.hidden-fields');
 
-            checkboxes.forEach(checkbox => {
+            checkboxes.forEach((checkbox, checkboxIndex) => {
+                const originalId = checkbox.id;
+                const uniqueId = `adult-schedule-${index}-${checkboxIndex}`;
+                checkbox.id = uniqueId;
+                scheduleCard.querySelector(`label[for="${originalId}"]`)?.setAttribute('for', uniqueId);
+
                 checkbox.addEventListener('change', function() {
                     const scheduleType = this.value;
                     const inputsContainer = this.closest('.card').querySelector('.adult-schedule-inputs');
@@ -646,6 +652,7 @@
         function replaceWithNormalTemplate(currentCard, index) {
             const scheduleTemplate = document.getElementById('scheduleTemplate');
             const newCard = scheduleTemplate.cloneNode(true);
+            newCard.removeAttribute('id');
             newCard.style.display = 'block';
 
             // Copiar datos básicos
@@ -684,6 +691,7 @@
         function replaceWithAdultEducationTemplate(currentCard, index) {
             const adultScheduleTemplate = document.getElementById('adultEducationScheduleTemplate');
             const newCard = adultScheduleTemplate.cloneNode(true);
+            newCard.removeAttribute('id');
             newCard.style.display = 'block';
 
             // Copiar datos básicos
