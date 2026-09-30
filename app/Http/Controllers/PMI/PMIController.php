@@ -53,6 +53,7 @@ class PMIController extends Controller {
                 $query->where('institucion_id', $institucionId);
             })
             ->orderBy('anio_inicio', 'desc')
+            ->orderBy('anio_fin', 'desc')
             ->paginate(20);
 
         return view('pmi.index', [
