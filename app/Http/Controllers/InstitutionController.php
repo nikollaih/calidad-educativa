@@ -27,6 +27,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class InstitutionController extends Controller {
+    private array $rolesExcluded = [
+        'super_admin',
+        'rector',
+        'administrador',
+        'secretaria_educacion',
+    ];
+
     public function __construct(
         private AdjuntoService $adjuntoService,
         private RedesSocialesService $redesSocialesService,
@@ -87,7 +94,7 @@ class InstitutionController extends Controller {
         );
     }
     public function createUsuariosInstitucion() {
-        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
+        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->get();
         return view(
             'usuarios_institucion.create',
             [
@@ -100,7 +107,7 @@ class InstitutionController extends Controller {
         if (empty($user)) {
             return redirect()->back()->with('flash_error_message', 'Usuario no encontrado.');
         }
-        $roles = Role::with('permissions')->whereNotIn('name',['super_admin','rector', 'administrador'])->get();
+        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->get();
         return view(
             'usuarios_institucion.edit',
             [
