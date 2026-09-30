@@ -56,7 +56,9 @@ const CTooltip = ({ children, label = 'Tooltip', position = 'top' }) => {
                          whiteSpace: 'normal',
                          overflowWrap: 'normal',
                          wordBreak: 'normal',
+                         width: 'max-content',
                          maxWidth: 'min(720px, 80vw)',
+                         boxSizing: 'border-box',
                          pointerEvents: 'none',
                          zIndex: 1000,
                         ...positionStyles[position]
