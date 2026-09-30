@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { addLineBreaks } from '@utils/string.js';
+import CTooltip from '@/components/shared/CTooltip.jsx';
 import GraficoCircularCalificaciones from './GraficoCircularCalificaciones';
 import Chart from 'chart.js/auto';
 
@@ -335,16 +335,19 @@ export default function Ver({  gruposCalificaciones = [],
                                                                                     className="d-flex flex-row gap-2 align-items-center justify-content-center">
                                                                                     {cal.notas_calificacion
                                                                                         .sort((a, b) => a.valor - b.valor)
-                                                                                        .map(nota => (
-                                                                                            <div
-                                                                                                title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
-                                                                                                key={nota.id}
-                                                                                                className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                style={{cursor: 'pointer'}}
-                                                                                            >
-                                                                                                {nota.valor}
-                                                                                            </div>
-                                                                                        ))}
+                                                                                         .map(nota => (
+                                                                                             <CTooltip
+                                                                                                 key={nota.id}
+                                                                                                 label={nota.descripcion || 'sin descripcion'}
+                                                                                             >
+                                                                                                 <div
+                                                                                                     className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                     style={{cursor: 'pointer'}}
+                                                                                                 >
+                                                                                                     {nota.valor}
+                                                                                                 </div>
+                                                                                             </CTooltip>
+                                                                                         ))}
                                                                                 </div>
                                                                             </div>
 

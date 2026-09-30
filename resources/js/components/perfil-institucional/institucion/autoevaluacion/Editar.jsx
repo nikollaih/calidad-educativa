@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { addLineBreaks } from '@utils/string.js';
+import CTooltip from '@/components/shared/CTooltip.jsx';
 import auth from '@/utilidades/auth';
 import {useMemo} from "preact/hooks";
 
@@ -232,17 +232,20 @@ export default function Editar({ editarUrl = '#',
                                                                                         <div className="d-flex flex-row gap-2 align-items-center justify-content-center">
                                                                                             {cal.notas_calificacion
                                                                                                 .sort((a, b) => a.valor - b.valor)
-                                                                                                .map(nota => (
-                                                                                                    <div
-                                                                                                        key={nota.id}
-                                                                                                        title={nota.descripcion ? addLineBreaks(nota.descripcion) : 'sin descripcion'}
-                                                                                                        className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
-                                                                                                        style={{ cursor: 'pointer' }}
-                                                                                                        onClick={() => handleNotaClick(cal.id, nota)}
-                                                                                                    >
-                                                                                                        {nota.valor}
-                                                                                                    </div>
-                                                                                                ))}
+                                                                                                 .map(nota => (
+                                                                                                     <CTooltip
+                                                                                                         key={nota.id}
+                                                                                                         label={nota.descripcion || 'sin descripcion'}
+                                                                                                     >
+                                                                                                         <div
+                                                                                                             className={`badge ${getColorClass(nota.valor)} text-white ${notaSeleccionada?.id === nota.id ? 'border border-2 border-dark' : ''}`}
+                                                                                                             style={{ cursor: 'pointer' }}
+                                                                                                             onClick={() => handleNotaClick(cal.id, nota)}
+                                                                                                         >
+                                                                                                             {nota.valor}
+                                                                                                         </div>
+                                                                                                     </CTooltip>
+                                                                                                 ))}
                                                                                         </div>
                                                                                     </div>
 

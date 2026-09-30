@@ -48,14 +48,17 @@ const CTooltip = ({ children, label = 'Tooltip', position = 'top' }) => {
                 <div
                     style={{
                         position: 'absolute',
-                        backgroundColor: '#333',
-                        color: '#fff',
-                        padding: '6px 12px',
-                        borderRadius: '4px',
-                        fontSize: '14px',
-                        whiteSpace: 'nowrap',
-                        pointerEvents: 'none',
-                        zIndex: 1000,
+                         backgroundColor: '#333',
+                         color: '#fff',
+                         padding: '6px 12px',
+                         borderRadius: '4px',
+                         fontSize: '14px',
+                         whiteSpace: 'pre-line',
+                         overflowWrap: 'break-word',
+                         wordBreak: 'normal',
+                         maxWidth: 'min(360px, 80vw)',
+                         pointerEvents: 'none',
+                         zIndex: 1000,
                         ...positionStyles[position]
                     }}
                 >
