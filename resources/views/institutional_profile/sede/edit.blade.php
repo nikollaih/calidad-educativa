@@ -192,14 +192,14 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="administrative_act_file" class="block text-sm mb-2 ml-4">Acto Administrativo </label>
+                                    <label for="administrative_act_file" class="block text-sm mb-2 ml-4">Acto Administrativo (Opcional)</label>
                                      @if($sede?->administrativeAct?->url)
                                         <a href="{{ $sede?->administrativeAct?->url }}" target="_blank" class="btn btn-outline-info btn-sm">
                                             <i class="fas fa-eye"></i> Ver anexo
                                         </a>
                                         <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf">
                                     @else
-                                        <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf" required>
+                                        <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf">
                                      @endif
                                 </div>
 

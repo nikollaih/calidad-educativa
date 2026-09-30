@@ -176,8 +176,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="administrative_act_file" class="block text-sm mb-2 ml-4">Acto Administrativo</label>
-                            <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf" required>
+                            <label for="administrative_act_file" class="block text-sm mb-2 ml-4">Acto Administrativo (Opcional)</label>
+                            <input type="file" name="administrative_act_file" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" accept="application/pdf">
                         </div>
 
                         <div class="mb-3">
