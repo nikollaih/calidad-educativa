@@ -505,7 +505,12 @@ class InstitutionController extends Controller {
             }
         }
 
-        return redirect()->route('institution.autoevaluaciones-editar', ['autoevaluacionId' => $autoevaluacionId])
+        $redirectParameters = ['autoevaluacionId' => $autoevaluacionId];
+        if ($request->filled('tab')) {
+            $redirectParameters['tab'] = $request->input('tab');
+        }
+
+        return redirect()->route('institution.autoevaluaciones-editar', $redirectParameters)
             ->with('flash_success_message', "Componente '{$hijo->nombre}' actualizado correctamente");
     }
     public function create() {

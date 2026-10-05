@@ -50,7 +50,20 @@ export default function Editar({ editarUrl = '#',
         return permissionMap[indice] || false;
     };
 
-    const [activeTab, setActiveTab] = useState(getDefaultTab());
+    const getInitialTab = () => {
+        const tab = new URLSearchParams(window.location.search).get('tab');
+        if (tab) {
+            const tabIndex = gruposCalificaciones.findIndex((grupo) =>
+                String(grupo.id) === tab || String(grupo.indice) === tab
+            );
+
+            if (tabIndex >= 0) return tabIndex;
+        }
+
+        return getDefaultTab();
+    };
+
+    const [activeTab, setActiveTab] = useState(getInitialTab());
     const getColorClass = (valor) => {
         switch (valor) {
             case 1: return 'bg-danger';
@@ -205,7 +218,7 @@ export default function Editar({ editarUrl = '#',
                                                     return hijo.calificaciones?.some(cal => cal.id == calId);
                                                 });
 
-                                            const saveUrl = `/institutional_profile/institution/${autoevaluacion?.id}/autoevaluaciones-actualizar-hijo/${hijo.id}`;
+                                             const saveUrl = `/institutional_profile/institution/${autoevaluacion?.id}/autoevaluaciones-actualizar-hijo/${hijo.id}?tab=${encodeURIComponent(grupo.id)}`;
 
                                             return (
                                                 <form method="POST" action={saveUrl} key={hijo.id}>
