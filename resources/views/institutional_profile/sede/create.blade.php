@@ -267,6 +267,7 @@
                                        'Lápiz interactivo',
                                        'Kit Iot estudio',
                                        'Microscopio digital ',
+                                       'Otro',
                                    ];
                                     @endphp
                                     @foreach ($equipos as $key => $equipo)
@@ -292,6 +293,7 @@
                                                         <option value="Recursos propios">Recursos propios</option>
                                                         <option value="Donación entidad estatal">Donación entidad estatal</option>
                                                         <option value="Donación entidad privada">Donación entidad privada</option>
+                                                        <option value="Otro">Otro</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
@@ -516,6 +518,9 @@
                                              ]
                                             ,[
                                                  'nombre' => 'Archivador',
+                                             ],
+                                             [
+                                                 'nombre' => 'Otro',
                                              ],
 
                                          ];

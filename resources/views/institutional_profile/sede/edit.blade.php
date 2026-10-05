@@ -294,6 +294,7 @@
                                        'Lápiz interactivo',
                                        'Kit Iot estudio',
                                        'Microscopio digital ',
+                                       'Otro',
                                    ];
                                 @endphp
                                 @foreach ($equipos as $key => $equipo)
@@ -319,6 +320,7 @@
                                                     <option value="Recursos propios" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Recursos propios')->count() > 0 ? 'selected' : '' }}>Recursos propios</option>
                                                     <option value="Donación entidad estatal" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad estatal')->count() > 0 ? 'selected' : '' }}>Donación entidad estatal</option>
                                                     <option value="Donación entidad privada"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad privada')->count() > 0 ? 'selected' : '' }}>Donación entidad privada</option>
+                                                    <option value="Otro" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Otro')->count() > 0 ? 'selected' : '' }}>Otro</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
@@ -564,6 +566,9 @@
                                              ]
                                             ,[
                                                  'nombre' => 'Archivador',
+                                             ],
+                                             [
+                                                 'nombre' => 'Otro',
                                              ],
 
                                          ];
