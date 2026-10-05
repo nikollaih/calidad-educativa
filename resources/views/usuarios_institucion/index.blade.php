@@ -3,25 +3,29 @@
 @section('content')
     <div class="!border border-custom-blue-light rounded-md">
         <div class="card">
-            <h1 class="p-2 px-3 text-custom-primary">Lista de usuarios</h1>
-            <div class="px-3">
-                <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center gap-3 p-2 px-3">
+                <div class="d-flex align-items-center gap-3 flex-shrink-0">
+                    <h1 class="mb-0 text-custom-primary">Lista de usuarios</h1>
                     @role('rector')
-                    <a href="{{ route('instituciones.usuarios_institucion-create') }}" class="inline-flex items-center mb-3 group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
-                        <!-- Icono visible siempre -->
+                    <a href="{{ route('instituciones.usuarios_institucion-create') }}" class="inline-flex items-center group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
                         <div class="flex items-center justify-center w-10 h-10 flex-shrink-0 transition-all duration-300">
                             <i class="fa fa-plus text-custom-blue-light text-xl" aria-hidden="true"></i>
                         </div>
-
-                        <!-- Texto que aparece en hover -->
                         <span class="inline-block py-2 text-custom-blue-light font-medium whitespace-nowrap
                                   w-0 opacity-0 overflow-hidden px-0
                                   group-hover:w-32 group-hover:opacity-100 group-hover:px-4
                                   transition-all duration-300 ease-out">
-                            Agregar
+                            Agregar usuario
                         </span>
                     </a>
                     @endrole
+                </div>
+                <div class="flex-grow-1">
+                    <x-usuarios-institucion.rector-info :rector="$rector" />
+                </div>
+            </div>
+            <div class="px-3">
+                <div class="col-md-12">
                     <form method="GET" action="{{ route('instituciones.usuarios_institucion-index') }}" class="mt-3 mb-3">
                         <div class="input-group" style="max-width: 400px;">
                             <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="{{ $search ?? '' }}">
@@ -77,7 +81,6 @@
                         data-component="CPagination"
                         data-pagination='{!! json_encode($paginate) !!}'>
                     </div>
-                    <x-usuarios-institucion.rector-info :rector="$rector" />
                 </div>
             </div>
         </div>
