@@ -20,7 +20,7 @@
                     </a>
                     @endrole
                 </div>
-                <div class="flex-grow-1">
+                <div class="flex-grow-1 d-flex justify-content-end">
                     <x-usuarios-institucion.rector-info :rector="$rector" />
                 </div>
             </div>
