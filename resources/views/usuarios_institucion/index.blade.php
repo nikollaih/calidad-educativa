@@ -77,6 +77,7 @@
                         data-component="CPagination"
                         data-pagination='{!! json_encode($paginate) !!}'>
                     </div>
+                    <x-usuarios-institucion.rector-info :rector="$rector" />
                 </div>
             </div>
         </div>

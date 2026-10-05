@@ -59,7 +59,7 @@ class InstitutionController extends Controller {
         );
     }
     public function usuariosInstitucionByRector(InstitucionRequest $request) {
-        $institucion = Auth::user()->institucion;
+        $institucion = Auth::user()->institucion?->load('rector');
         if (empty($institucion)) {
             return redirect()->back()->with('flash_error_message', 'Debes estar asociado a una institucion.');
         }
@@ -90,6 +90,7 @@ class InstitutionController extends Controller {
             [
                 'paginate' => $paginate,
                 'search' => $search,
+                'rector' => $institucion->rector,
             ]
         );
     }
