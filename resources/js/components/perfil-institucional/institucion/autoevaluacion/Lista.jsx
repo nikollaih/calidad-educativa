@@ -48,7 +48,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
     return (
         <div className="!border border-custom-blue-light rounded-md mt-3">
             <div className="card">
-                <h1 class="p-2 px-3 text-custom-primary">Auto Evaluación</h1>
+                <h1 class="p-2 px-3 text-custom-primary">Autoevaluación</h1>
                 <div className="card-body">
                     <div className="col-md-12">
                         {permissions.canCreateAutoevaluacion &&
