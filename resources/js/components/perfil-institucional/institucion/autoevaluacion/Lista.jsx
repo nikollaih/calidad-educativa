@@ -23,7 +23,8 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
             auth.can('s-autoevaluacion-calificar-gestion_comunidad')
         ,
         canValidate: auth.can('s-institucion-editar') ||
-            auth.hasRole('rector'),
+            auth.hasRole('rector') ||
+            auth.hasRole('super_admin'),
         canEditResoults: auth.can('s-institucion-editar') ||
             auth.hasRole('rector'),
     }), []);

@@ -410,7 +410,7 @@ class InstitutionController extends Controller {
         }
         return redirect()->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])->with('flash_success_message', "Autoevaluación creada correctamente");
     }
-    public function autoevaluacionesValidar(Request $request, int $autoevaluacionId = null) {
+    public function autoevaluacionesValidar(InstitucionRequest $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);
 
         if (!$autoevaluacion) {

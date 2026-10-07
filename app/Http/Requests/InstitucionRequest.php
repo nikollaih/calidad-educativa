@@ -50,6 +50,10 @@ class InstitucionRequest extends FormRequest {
                     's-autoevaluacion-calificar-gestion_comunidad',
                 ],
                 'roles' => ['rector'],
+            ],
+            'autoevaluacionesValidar' => [
+                'permissions' => ['s-institucion-editar'],
+                'roles' => ['rector', 'super_admin'],
             ]
         ];
     }
