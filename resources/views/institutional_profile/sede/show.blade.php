@@ -1,9 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $backUrl = request()->query('origin') === 'edit'
+            ? route('institution.edit', $sede->institution_id)
+            : route('institution.show', $sede->institution_id);
+    @endphp
     <div
         data-component="CInstitutionNavigations"
-        data-back-url="{{ route('institution.edit', $sede->institution_id) }}"
+        data-back-url="{{ $backUrl }}"
         data-detail-url="#"
         data-pei-url="{{ route('institution.pei.update-pei', $sede->institution_id) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $sede->institution_id) }}"

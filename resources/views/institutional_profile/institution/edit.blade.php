@@ -294,14 +294,14 @@
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Ver detalles"
-                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}"
+                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit']) }}"
                                             data-icon-class="fa fa-eye"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Editar"
-                                            data-route="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}"
+                                             data-route="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit']) }}"
                                             data-icon-class="fa fa-pencil"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>

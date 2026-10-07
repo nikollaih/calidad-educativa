@@ -243,7 +243,7 @@
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Ver detalles"
-                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id]) }}"
+                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'show']) }}"
                                             data-icon-class="fa fa-eye"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>
