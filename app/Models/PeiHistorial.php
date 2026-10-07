@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -43,6 +44,13 @@ class PeiHistorial extends Model
         'old_data' => 'array',
         'new_data' => 'array',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('latest_first', function (Builder $builder) {
+            $builder->orderByDesc('date')->orderByDesc('id');
+        });
+    }
 
     /**
      * Get the parent model (Institucion or other).
