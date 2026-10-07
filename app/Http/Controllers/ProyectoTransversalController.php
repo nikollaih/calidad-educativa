@@ -49,6 +49,11 @@ class ProyectoTransversalController extends Controller {
                 'required',
                 'exists:users,id',
                 'unique:proyectos_transversales,representante_id',
+                function ($attribute, $value, $fail) use ($institucion) {
+                    if (!$this->userBelongsToInstitution($institucion, (int) $value)) {
+                        $fail('El líder seleccionado no pertenece a la institución.');
+                    }
+                },
             ],
             'acto_administrativo' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
         ], [
@@ -113,6 +118,12 @@ class ProyectoTransversalController extends Controller {
             'acto_administrativo' => 'nullable|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
         ]);
 
+        if (!$this->userBelongsToInstitution($institucion, (int) $request->representante_id)) {
+            return redirect()->back()
+                ->withErrors(['representante_id' => 'El líder seleccionado no pertenece a la institución.'])
+                ->withInput();
+        }
+
         // CAMBIO: Se busca el proyecto transversal por el ID en la URL.
         $proyectoTransversalModel = ProyectosTransversal::with('institucion')->findOrFail($proyectoTransversal);
         // Se carga el usuario en sesion para hacer validaciones
@@ -170,5 +181,18 @@ class ProyectoTransversalController extends Controller {
 
         $proyectoTransversal->delete();
         return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto Transversal eliminada correctamente.');
+    }
+
+    private function userBelongsToInstitution(int $institucionId, int $userId): bool
+    {
+        return Institucion::whereKey($institucionId)
+            ->where(function ($query) use ($userId) {
+                $query->where('rector_id', $userId)
+                    ->orWhereHas('users', function ($query) use ($userId) {
+                        $query->whereKey($userId)
+                            ->where('institucion_user.is_active', true);
+                    });
+            })
+            ->exists();
     }
 }

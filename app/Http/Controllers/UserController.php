@@ -38,10 +38,23 @@ class UserController extends Controller
         return view('usuarios.index', compact('usuarios', 'sort', 'direction', 'search'));
     }
 
-    public function all()
+    public function all(Request $request)
     {
         try {
-            $usuarios = User::orderBy('id', 'desc')->get();
+            $institucionId = $request->integer('institucion_id');
+            $usuarios = User::query()
+                ->when($institucionId, function ($query) use ($institucionId) {
+                    $query->where(function ($query) use ($institucionId) {
+                        $query->whereHas('instituciones', function ($query) use ($institucionId) {
+                            $query->where('institucions.id', $institucionId)
+                                ->where('institucion_user.is_active', true);
+                        })->orWhereHas('institucion', function ($query) use ($institucionId) {
+                            $query->where('institucions.id', $institucionId);
+                        });
+                    });
+                })
+                ->orderBy('id', 'desc')
+                ->get();
 
             return response()->json([
                 'success' => true,

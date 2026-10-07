@@ -38,7 +38,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         const fetchUsers = async () => {
             setIsLoadingUsers(true);
             try {
-                const response = await fetch('/get-usuarios');
+                const response = await fetch(`/get-usuarios?institucion_id=${institucionId}`);
                 if (!response.ok) {
                     throw new Error('Error al obtener los usuarios.');
                 }
