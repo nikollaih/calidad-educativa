@@ -16,8 +16,8 @@
         data-component="ActualizarPei"
         data-csrf-token="{{ csrf_token() }}"
         data-institucion-id='{!! json_encode($institucionId) !!}'
-        data-institucion-data='{!! json_encode($institucionData) !!}'
-        data-institucion-nombre='{!! $institucionNombre !!}'
+        data-institucion-data="{{ json_encode($institucionData) }}"
+        data-institucion-nombre="{{ $institucionNombre }}"
     ></div>
     @vite('resources/js/app.js')
 @endsection
