@@ -2,6 +2,14 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CTooltip from "@/components/shared/CTooltip.jsx";
 
+const requiresAdministrativeAct = (formData, nombreGestion) => {
+  const isHistoricalReview = formData.relation_name === 'resenaHistorica->resenaHistorica'
+    || nombreGestion === 'RESEÑA HISTORICA'
+    || nombreGestion === 'RESEÑA HISTÓRICA';
+
+  return Number(formData.tipo_codificacion) !== 4 && !isHistoricalReview;
+};
+
 // Modal de editar
 const ModalAjustes = ({
   nombre_gestion,
@@ -19,10 +27,7 @@ const ModalAjustes = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const requiresAdministrativeAct = Number(formData.tipo_codificacion) !== 4
-      && nombre_gestion !== 'RESEÑA HISTORICA';
-
-    if (requiresAdministrativeAct && !fileUploads.documento_adicional) {
+    if (requiresAdministrativeAct(formData, nombre_gestion) && !fileUploads.documento_adicional) {
       alert('Debe seleccionar el Acto administrativo antes de guardar.');
       return;
     }
@@ -533,7 +538,12 @@ export default function ActualizarPei({
   };
 
 
-    const handleSave = async (institucionId, hijoIndex, formData, files) => {
+    const handleSave = async (institucionId, hijoIndex, formData, files, nombreGestion) => {
+    if (requiresAdministrativeAct(formData, nombreGestion) && !files?.documento_adicional) {
+      alert('Debe seleccionar el Acto administrativo antes de guardar.');
+      return;
+    }
+
     try {
       // Crear FormData para enviar tanto campos como archivos
       const formDataToSend = new FormData();
@@ -740,7 +750,13 @@ export default function ActualizarPei({
           setFormData={(newData) => setCurrentModal({...currentModal, formData: newData})}
           documentos={currentModal.documentos}
           onClose={() => setCurrentModal(null)}
-          onSave={(formData, files) => handleSave(institucionId, currentModal.gestionIndex, formData, files)}
+          onSave={(formData, files) => handleSave(
+            institucionId,
+            currentModal.gestionIndex,
+            formData,
+            files,
+            currentModal.nombre_gestion
+          )}
         />
       )}
        {/* Nuevo Modal de Históricos */}
