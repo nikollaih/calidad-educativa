@@ -20,6 +20,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -679,7 +680,13 @@ class InstitutionController extends Controller {
                 'fecha' => 'required|date_format:Y-m-d',
                 'observacion' => 'nullable|string|max:500',
                 'relation_name' => 'required|string',
-                'documento_adicional' => 'file',
+                'documento_adicional' => [
+                    Rule::requiredIf(function () use ($request) {
+                        return (int) $request->input('tipo_codificacion') !== 4
+                            && $request->input('relation_name') !== 'resenaHistorica->resenaHistorica';
+                    }),
+                    'file',
+                ],
             ]);
 
             $input = $request->all();
@@ -761,7 +768,7 @@ class InstitutionController extends Controller {
             $filteredOldData = array_intersect_key($oldData, array_flip($changedFields));
             $guardaArchivoAdicional = null;
             // Guarda documento de edicion
-            if ($request->hasFile('documento_adicional')) {
+            if ((int) $input['tipo_codificacion'] !== 4 && $request->hasFile('documento_adicional')) {
                 $guardaArchivoAdicional = $this->adjuntoService->storeAdjunto($request->file('documento_adicional'),"institucion/{$institutionId}/edicion_pei",'public');
             }
             // La fecha del PEI es una fecha calendario, no un instante horario.

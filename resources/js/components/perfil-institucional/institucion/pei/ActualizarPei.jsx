@@ -35,12 +35,26 @@ const ModalAjustes = ({
 };
 
 
-const handleNewFile = (fieldName, e) => {
-  setFileUploads({
-    ...fileUploads,
-    [fieldName]: e.target.files[0]
-  });
-};
+  const handleNewFile = (fieldName, e) => {
+    setFileUploads({
+      ...fileUploads,
+      [fieldName]: e.target.files[0]
+    });
+  };
+
+  const handleTipoCodificacionChange = (e) => {
+    const tipoCodificacion = e.target.value;
+
+    setFormData({...formData, tipo_codificacion: tipoCodificacion});
+
+    if (Number(tipoCodificacion) === 4) {
+      setFileUploads((currentFiles) => {
+        const filesWithoutAdministrativeAct = {...currentFiles};
+        delete filesWithoutAdministrativeAct.documento_adicional;
+        return filesWithoutAdministrativeAct;
+      });
+    }
+  };
 
   const tipoCodificacionOptions = [
     { value: 1, label: 'Inicial' },
@@ -74,7 +88,7 @@ const handleNewFile = (fieldName, e) => {
                   <select
                     className="w-full !border border-custom-blue-dark rounded-xl"
                     value={formData.tipo_codificacion || ''}
-                    onChange={(e) => setFormData({...formData, tipo_codificacion: e.target.value})}
+                    onChange={handleTipoCodificacionChange}
                     required
                   >
                     {tipoCodificacionOptions.map((option) => (
@@ -204,23 +218,20 @@ const handleNewFile = (fieldName, e) => {
                 />
               </div>
 
-              {/* Campo adicional para subir documento */}
-              <div className="col-md-12 mb-3">
-                <label className="block text-sm mb-2 ml-4 text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
-                <div className="input-group">
-                  <input
-                    type="file"
-                    required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
-                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                    onChange={(e) => handleNewFile('documento_adicional', e)}
-                  />
-                  {/* {fileUploads['documento_adicional'] && (
-                    <span className="input-group-text">
-                      {fileUploads['documento_adicional'].name}
-                    </span>
-                  )} */}
+              {/* Campo adicional para subir documento. Las correcciones no requieren acto administrativo. */}
+              {Number(formData.tipo_codificacion) !== 4 && (
+                <div className="col-md-12 mb-3">
+                  <label className="block text-sm mb-2 ml-4 text-capitalize">Acto administrativo  <span style={{color: 'red'}}>*</span></label>
+                  <div className="input-group">
+                    <input
+                      type="file"
+                      required={nombre_gestion !== 'RESEÑA HISTORICA'} // No requerido solo para reseña histórica
+                      className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                      onChange={(e) => handleNewFile('documento_adicional', e)}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="modal-footer">
@@ -269,7 +280,7 @@ const ModalHistoricos = ({
       1: 'Inicial',
       2: 'Resignificación',
       3: 'Ajuste',
-      4: 'Error'
+       4: 'Corrección'
     };
     return tipos[tipo] || 'Desconocido';
   };
@@ -525,7 +536,7 @@ export default function ActualizarPei({
 
       // Agregar archivos subidos
       Object.entries(files).forEach(([fieldName, file]) => {
-        if (file) {
+        if (file && !(Number(formData.tipo_codificacion) === 4 && fieldName === 'documento_adicional')) {
           formDataToSend.append(fieldName, file);
         }
       });
