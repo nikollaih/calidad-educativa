@@ -20,7 +20,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -675,19 +674,22 @@ class InstitutionController extends Controller {
 
         try {
             // Validar los datos recibidos
-            $validated = $request->validate([
+            $requiresAdministrativeAct = (int) $request->input('tipo_codificacion') !== 4
+                && $request->input('relation_name') !== 'resenaHistorica->resenaHistorica';
+
+            $validationRules = [
                 'tipo_codificacion' => 'required|integer',
                 'fecha' => 'required|date_format:Y-m-d',
                 'observacion' => 'nullable|string|max:500',
                 'relation_name' => 'required|string',
-                'documento_adicional' => [
-                    Rule::requiredIf(function () use ($request) {
-                        return (int) $request->input('tipo_codificacion') !== 4
-                            && $request->input('relation_name') !== 'resenaHistorica->resenaHistorica';
-                    }),
-                    'file',
-                ],
-            ]);
+                'documento_adicional' => ['file'],
+            ];
+
+            if ($requiresAdministrativeAct) {
+                $validationRules['documento_adicional'][] = 'required';
+            }
+
+            $validated = $request->validate($validationRules);
 
             $input = $request->all();
 

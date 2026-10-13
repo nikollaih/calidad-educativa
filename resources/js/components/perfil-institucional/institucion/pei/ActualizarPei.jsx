@@ -18,6 +18,15 @@ const ModalAjustes = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const requiresAdministrativeAct = Number(formData.tipo_codificacion) !== 4
+      && nombre_gestion !== 'RESEÑA HISTORICA';
+
+    if (requiresAdministrativeAct && !fileUploads.documento_adicional) {
+      alert('Debe seleccionar el Acto administrativo antes de guardar.');
+      return;
+    }
+
     onSave(formData, fileUploads);
   };
 
@@ -395,7 +404,7 @@ const ModalHistoricos = ({
                         {trace.observation}
                       </div>
                     )}
-                    {trace.attachment_url && (
+                    {trace.attachment_url && trace.attachment_url !== 'Sin ruta' && (
                       <div className="my-3 border rounded p-2">
                         <i className="fas fa-file-signature me-2 text-muted"></i>
                         <a
