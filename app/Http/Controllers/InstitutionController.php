@@ -676,7 +676,7 @@ class InstitutionController extends Controller {
             // Validar los datos recibidos
             $validated = $request->validate([
                 'tipo_codificacion' => 'required|integer',
-                'fecha' => 'required',
+                'fecha' => 'required|date_format:Y-m-d',
                 'observacion' => 'nullable|string|max:500',
                 'relation_name' => 'required|string',
                 'documento_adicional' => 'file',
@@ -764,13 +764,16 @@ class InstitutionController extends Controller {
             if ($request->hasFile('documento_adicional')) {
                 $guardaArchivoAdicional = $this->adjuntoService->storeAdjunto($request->file('documento_adicional'),"institucion/{$institutionId}/edicion_pei",'public');
             }
+            // La fecha del PEI es una fecha calendario, no un instante horario.
+            $fechaPei = Carbon::createFromFormat('!Y-m-d', $input['fecha'])->format('Y-m-d');
+
             // Crear registro de historial
             $historial = PeiHistorial::create([
                 'model_id' => $model->getKey(),
                 'model_type' => get_class($model),
                 'attachment_id' => $guardaArchivoAdicional?->data?->id,
                 'tipo_codificacion' => (int) $input['tipo_codificacion'],
-                'date' => Carbon::parse($input['fecha']),
+                'date' => $fechaPei,
                 'observation' => !empty($input['observacion']) ? $input['observacion'] : null,
                 'old_data' => $filteredOldData,
                 'new_data' => $newData,

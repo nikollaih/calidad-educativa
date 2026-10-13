@@ -251,8 +251,16 @@ const ModalHistoricos = ({
 }) => {
   // Función para formatear la fecha
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString('es-ES', options);
+    if (!dateString) return '';
+
+    // Las fechas PEI son días calendario. No deben pasar por Date porque
+    // JavaScript interpreta los valores ISO como UTC y puede restar un día.
+    const [year, month, day] = String(dateString).slice(0, 10).split('-').map(Number);
+    return new Intl.DateTimeFormat('es-CO', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(new Date(year, month - 1, day));
   };
 
   // Función para obtener el tipo de cambio

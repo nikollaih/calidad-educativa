@@ -39,7 +39,7 @@ class PeiHistorial extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'date' => 'datetime',
+        'date' => 'date:Y-m-d',
         'tipo_codificacion' => 'integer',
         'old_data' => 'array',
         'new_data' => 'array',
