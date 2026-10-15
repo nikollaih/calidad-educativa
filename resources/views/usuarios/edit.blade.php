@@ -4,6 +4,7 @@
 <div
     data-component="FormularioUsuario"
     data-roles='@json($roles)'
+    data-states='@json($states)'
     data-user='@json($usuario)'
     data-institutions-without-rector='@json($institutionsWithoutRector)'
     data-institutions='@json($institutions)'

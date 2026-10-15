@@ -9,6 +9,7 @@ use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
 use App\Models\Autoevaluacion;
+use App\Models\Enums\UserStateEnum;
 use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\GrupoCalificacion;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class InstitutionController extends Controller {
     private array $rolesExcluded = [
@@ -104,9 +106,14 @@ class InstitutionController extends Controller {
         );
     }
     public function editUsuarioInstitucion(Request $request, int $userId) {
-        $user = User::where('id', $userId)->with('roles')->first();
+        $institution = Auth::user()?->institucion;
+        if (empty($institution)) {
+            return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
+        }
+
+        $user = $institution->users()->where('users.id', $userId)->with('roles')->first();
         if (empty($user)) {
-            return redirect()->back()->with('flash_error_message', 'Usuario no encontrado.');
+            return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
         }
         $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->get();
         return view(
@@ -114,6 +121,7 @@ class InstitutionController extends Controller {
             [
                 'roles'=> $roles,
                 'user' => $user,
+                'states' => $this->stateOptions(),
             ]
         );
     }
@@ -144,17 +152,24 @@ class InstitutionController extends Controller {
             ->with('flash_success_message', 'Usuario creado correctamente.');
     }
     public function updateUsuariosInstitucion(InstitucionRequest $request, User $user) {
+        $institution = Auth::user()?->institucion;
+        if (empty($institution) || !$institution->users()->where('users.id', $user->id)->exists()) {
+            return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => "required|email|unique:users,email,{$user->id}",
             'password' => 'nullable|min:6|confirmed',
             'roles' => 'required|array|min:1',
             'roles.*' => 'exists:roles,name',
+            'state' => ['required', Rule::enum(UserStateEnum::class)],
         ]);
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
+            'state' => $validated['state'],
         ]);
 
         // Asignar varios roles
@@ -171,9 +186,9 @@ class InstitutionController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Error al obtener la institución del rector.');
         }
         if ($institution->users()->where('users.id', $user->id)->exists()) {
-            $user->delete();
+            $user->update(['state' => UserStateEnum::Inactivo->value]);
             return redirect()->route('instituciones.usuarios_institucion-index')
-                ->with('flash_success_message', 'Usuario creado correctamente.');
+                ->with('flash_success_message', 'Usuario inactivado correctamente.');
         }
         return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
     }
@@ -520,6 +535,7 @@ class InstitutionController extends Controller {
         $availableRectors = User::whereHas('roles', function ($query) {
             $query->where('name', 'rector');
         })
+        ->where('state', UserStateEnum::Activo->value)
         ->where(function ($query) {
             $query->whereDoesntHave('institucion');
         })
@@ -572,6 +588,7 @@ class InstitutionController extends Controller {
         $availableRectors = User::whereHas('roles', function ($query) {
             $query->where('name', 'rector');
         })
+        ->where('state', UserStateEnum::Activo->value)
         ->where(function ($query) use ($rectorActualId) {
             $query->whereDoesntHave('institucion')
                   ->orWhere('id', $rectorActualId);
@@ -810,5 +827,16 @@ class InstitutionController extends Controller {
                 'error' => 'Error al actualizar el PEI: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    private function stateOptions(): array
+    {
+        return array_map(
+            fn (UserStateEnum $state) => [
+                'value' => $state->value,
+                'label' => ucfirst($state->value),
+            ],
+            UserStateEnum::cases()
+        );
     }
 }

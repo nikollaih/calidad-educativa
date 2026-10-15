@@ -45,6 +45,7 @@
                             <th>Nombre</th>
                             <th>Email</th>
                             <th>Rol</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -54,6 +55,7 @@
                                 <td>{{ $usuario->name }}</td>
                                 <td>{{ $usuario->email }}</td>
                                 <td>{{ $usuario->roles->pluck('name_translated')->join(', ') }}</td>
+                                <td>{{ ucfirst($usuario->state?->value ?? $usuario->state) }}</td>
                                 <td>
                                     @role('rector')
                                     <a href="{{ route('instituciones.usuarios_institucion-edit', $usuario) }}">
@@ -63,14 +65,16 @@
                                     @endrole
 
                                     @role('rector')
+                                    @if(($usuario->state?->value ?? $usuario->state) === 'activo')
                                     <form action="{{ route('instituciones.usuarios_institucion-delete', $usuario) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('¿Eliminar usuario?')">
-                                            <i class="fa fa-trash text-gray-500 hover:text-red-600 cursor-pointer text-xl hover:border hover:rounded-md p-2 hover:border-custom-blue-dark hover:bg-gray-100" aria-hidden="true">
+                                            <button type="submit" onclick="return confirm('¿Inactivar usuario?')">
+                                            <i class="fa fa-ban text-gray-500 hover:text-red-600 cursor-pointer text-xl hover:border hover:rounded-md p-2 hover:border-custom-blue-dark hover:bg-gray-100" aria-hidden="true">
                                             </i>
                                         </button>
                                     </form>
+                                    @endif
                                     @endrole
                                 </td>
                             </tr>

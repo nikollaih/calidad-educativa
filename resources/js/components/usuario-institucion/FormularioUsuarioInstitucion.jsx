@@ -2,12 +2,16 @@ import { useEffect, useState } from 'preact/hooks';
 import Select from 'react-select';
 import CNewPasswordInput from "@/components/shared/CNewPasswordInput.jsx";
 
-export default function FormularioUsuario({ roles, institutionsWithoutRector,institutions, storeUrl, indexUrl, user }) {
+export default function FormularioUsuario({ roles, states, institutionsWithoutRector,institutions, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
+    const [selectedState, setSelectedState] = useState(user?.state || 'activo');
     const handleRolesChange = (selected) => {
         setSelectedRoles(selected || []);
     };
     useEffect(() => {
+        if (user?.state) {
+            setSelectedState(user.state);
+        }
         if (user?.roles?.length) {
             const mappedRoles = user.roles.map(role => ({
                 value: role.name,
@@ -125,6 +129,27 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector,ins
                                     />
                                     </div>
                                 </div>
+                                {user && (
+                                    <div className="mb-3">
+                                        <label htmlFor="state" className="block text-xs mb-2 ml-4">
+                                            ESTADO
+                                        </label>
+                                        <select
+                                            id="state"
+                                            name="state"
+                                            value={selectedState}
+                                            onChange={(event) => setSelectedState(event.target.value)}
+                                            className="w-full px-3 py-2 !border border-custom-blue-dark rounded-pill focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent"
+                                            required
+                                        >
+                                            {(states || []).map((state) => (
+                                                <option key={state.value} value={state.value}>
+                                                    {state.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
                             </div>
                             <div class={"flex w-full justify-end gap-1"}>
                                 {/* Botones */}

@@ -2,13 +2,12 @@
 <section class="">
     <div class="card border-0 shadow-sm">
         <div class="card-header py-2 bg-danger text-white">
-            <h2 class="h6 mb-0 text-white">Eliminar cuenta</h2>
+            <h2 class="h6 mb-0 text-white">Inactivar cuenta</h2>
         </div>
 
         <div class="card-body p-3">
             <p class="text-muted small mb-3">
-                Una vez que elimines tu cuenta, todos tus recursos y datos serán eliminados de forma permanente.
-                Descarga cualquier información que desees conservar antes de continuar.
+                Tu cuenta pasará a estado inactivo y conservará sus recursos y datos históricos.
             </p>
 
             <button
@@ -17,7 +16,7 @@
                 x-data=""
                 x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
             >
-                Eliminar cuenta
+                Inactivar cuenta
             </button>
         </div>
     </div>
@@ -28,11 +27,10 @@
             @csrf
             @method('delete')
 
-            <h2 class="h6 text-danger mb-2">¿Estás seguro de que deseas eliminar tu cuenta?</h2>
+            <h2 class="h6 text-danger mb-2">¿Estás seguro de que deseas inactivar tu cuenta?</h2>
 
             <p class="text-muted small mb-3">
-                Una vez eliminada, todos tus datos serán borrados de forma permanente.
-                Ingresa tu contraseña para confirmar.
+                Tu cuenta dejará de estar activa. Ingresa tu contraseña para confirmar.
             </p>
 
             <div class="mb-2">
@@ -54,10 +52,9 @@
                     Cancelar
                 </button>
                 <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">
-                    Eliminar cuenta
+                    Inactivar cuenta
                 </button>
             </div>
         </form>
     </x-modal>
 </section>
-

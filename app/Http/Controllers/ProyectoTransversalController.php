@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
+use App\Models\Enums\UserStateEnum;
 use App\Http\Services\AutoevaluacionService;
 use App\Http\Services\RedesSocialesService;
 use App\Models\Adjunto;
@@ -12,6 +13,7 @@ use App\Models\ProyectosTransversal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProyectoTransversalController extends Controller {
     public function __construct(
@@ -47,7 +49,7 @@ class ProyectoTransversalController extends Controller {
             'numero_contacto' => 'nullable|string',
             'representante_id' => [
                 'required',
-                'exists:users,id',
+                Rule::exists('users', 'id')->where('state', UserStateEnum::Activo->value),
                 'unique:proyectos_transversales,representante_id',
                 function ($attribute, $value, $fail) use ($institucion) {
                     if (!$this->userBelongsToInstitution($institucion, (int) $value)) {
@@ -112,7 +114,10 @@ class ProyectoTransversalController extends Controller {
     public function update(Request $request, int $institucion, int $proyectoTransversal) {
         $request->validate([
             'nombre' => 'required|string',
-            'representante_id' => 'required|exists:users,id',
+            'representante_id' => [
+                'required',
+                Rule::exists('users', 'id')->where('state', UserStateEnum::Activo->value),
+            ],
             'descripcion' => 'nullable|string',
             'numero_contacto' => 'nullable|string',
             'acto_administrativo' => 'nullable|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
@@ -188,8 +193,12 @@ class ProyectoTransversalController extends Controller {
         return Institucion::whereKey($institucionId)
             ->where(function ($query) use ($userId) {
                 $query->where('rector_id', $userId)
+                    ->whereHas('rector', function ($query) {
+                        $query->where('state', UserStateEnum::Activo->value);
+                    })
                     ->orWhereHas('users', function ($query) use ($userId) {
                         $query->whereKey($userId)
+                            ->where('users.state', UserStateEnum::Activo->value)
                             ->where('institucion_user.is_active', true);
                     });
             })

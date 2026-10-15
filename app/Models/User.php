@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Enums\UserStateEnum;
 use App\Models\Seguridad\Role\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,6 +26,7 @@ class User extends Authenticatable {
         'name',
         'email',
         'password',
+        'state',
     ];
 
     /**
@@ -45,6 +47,7 @@ class User extends Authenticatable {
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'state' => UserStateEnum::class,
     ];
     /**
      * Alias para relaciones polimorficas

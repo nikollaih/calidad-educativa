@@ -4,6 +4,7 @@
 <div
     data-component="FormularioUsuario"
     data-roles='@json($roles)'
+    data-states='@json($states)'
     data-institutions-without-rector='@json($institutionsWithoutRector)'
     data-institutions='@json($institutions)'
     data-store-url="{{ route('usuarios.store') }}"
@@ -11,4 +12,3 @@
 ></div>
 
 @endsection
-

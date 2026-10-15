@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AdjuntoService;
 use App\Models\Adjunto;
+use App\Models\Enums\UserStateEnum;
 use App\Models\RedesAprendizaje;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class RedesAprendizajeController extends Controller {
     public function __construct(
@@ -49,7 +51,7 @@ class RedesAprendizajeController extends Controller {
             'descripcion' => 'nullable|string',
             'representante_id' => [
                 'required',
-                'exists:users,id',
+                Rule::exists('users', 'id')->where('state', UserStateEnum::Activo->value),
                 // Se ha añadido la regla 'unique' para asegurar que el representante no esté en otra red,
                 // con un mensaje de error personalizado en español.
                 'unique:redes_aprendizaje,representante_id',
@@ -105,7 +107,10 @@ class RedesAprendizajeController extends Controller {
             'nombre' => 'required|string',
             'correo' => 'required|string',
             'descripcion' => 'nullable|string',
-            'representante_id' => 'required|exists:users,id',
+            'representante_id' => [
+                'required',
+                Rule::exists('users', 'id')->where('state', UserStateEnum::Activo->value),
+            ],
             'numero_contacto' => 'nullable|string',
             'acto_administrativo' => 'nullable|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
         ]);

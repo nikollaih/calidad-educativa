@@ -3,12 +3,13 @@ import Select from 'react-select';
 import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
 import CPasswordInput from "@/components/shared/CPasswordInput.jsx";
 
-export default function FormularioUsuario({ roles, institutionsWithoutRector, institutions, storeUrl, indexUrl, user }) {
+export default function FormularioUsuario({ roles, states, institutionsWithoutRector, institutions, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [showInstitutionField, setShowInstitutionField] = useState(false);
     const [institucionSelected, setInstitucionSelected] = useState(undefined);
     const [showInstitutionToBelong, setShowInstitutionToBelong] = useState(false);
     const [institucionToBelongSelected, setInstitucionToBelongSelected] = useState(undefined);
+    const [selectedState, setSelectedState] = useState(user?.state || 'activo');
 
     const handleRolesChange = (selected) => {
         setSelectedRoles(selected || []);
@@ -19,6 +20,9 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, in
     };
 
     useEffect(() => {
+        if (user?.state) {
+            setSelectedState(user.state);
+        }
         if (user?.roles?.length) {
             const mappedRoles = user.roles.map(role => ({
                 value: role.name,
@@ -118,6 +122,26 @@ export default function FormularioUsuario({ roles, institutionsWithoutRector, in
                                     onChange={handleRolesChange}
                                 />
                             </div>
+
+                            {user && (
+                                <div class="mb-3">
+                                    <label htmlFor="state" class="block text-sm mb-2 ml-4">Estado</label>
+                                    <select
+                                        id="state"
+                                        name="state"
+                                        value={selectedState}
+                                        onChange={(event) => setSelectedState(event.target.value)}
+                                        class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                        required
+                                    >
+                                        {(states || []).map((state) => (
+                                            <option key={state.value} value={state.value}>
+                                                {state.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
 
                             {/* Institución del rector — ocupa las 2 columnas */}
                             {showInstitutionField && (

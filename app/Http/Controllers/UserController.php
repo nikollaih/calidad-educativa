@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Enums\UserStateEnum;
 use App\Models\Institucion;
 use App\Models\Seguridad\Role\Role;
 use App\Models\User;
@@ -43,6 +44,7 @@ class UserController extends Controller
         try {
             $institucionId = $request->integer('institucion_id');
             $usuarios = User::query()
+                ->where('state', UserStateEnum::Activo->value)
                 ->when($institucionId, function ($query) use ($institucionId) {
                     $query->where(function ($query) use ($institucionId) {
                         $query->whereHas('instituciones', function ($query) use ($institucionId) {
@@ -79,6 +81,7 @@ class UserController extends Controller
             'usuarios.create',
             [
                 'roles' => $roles,
+                'states' => $this->stateOptions(),
                 'institutionsWithoutRector' => $institutionsWithoutRector,
                 'institutions' => $institutions,
             ]
@@ -142,6 +145,7 @@ class UserController extends Controller
             [
                 'usuario' => $usuario,
                 'roles' => $roles,
+                'states' => $this->stateOptions(),
                 'institutionsWithoutRector' => $institutionsWithoutRector,
                 'institutions' => $institutions,
             ]
@@ -155,6 +159,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $usuario->password,
+            'state' => $validated['state'],
         ]);
 
         // Asignar varios roles
@@ -192,8 +197,19 @@ class UserController extends Controller
 
     public function destroy(User $usuario)
     {
-        $usuario->delete();
+        $usuario->update(['state' => UserStateEnum::Inactivo->value]);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Usuario inactivado correctamente.');
+    }
+
+    private function stateOptions(): array
+    {
+        return array_map(
+            fn (UserStateEnum $state) => [
+                'value' => $state->value,
+                'label' => ucfirst($state->value),
+            ],
+            UserStateEnum::cases()
+        );
     }
 }

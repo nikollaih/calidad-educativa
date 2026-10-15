@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enums\UserStateEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -30,6 +32,7 @@ class UpdateUserRequest extends FormRequest
             'roles' => 'required|array|min:1',
             'roles.*' => 'exists:roles,name',
             'institucion_id' => 'nullable|exists:institucions,id',
+            'state' => ['required', Rule::enum(UserStateEnum::class)],
         ];
     }
 }

@@ -30,6 +30,7 @@
                             <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => (($sort ?? 'id') == 'name' && ($direction ?? 'desc') == 'asc' ? 'desc' : 'asc')]) }}">Nombre @if(($sort ?? 'id') == 'name'){{ $direction == 'asc' ? '↑' : '↓' }}@endif</a></th>
                             <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => (($sort ?? 'id') == 'email' && ($direction ?? 'desc') == 'asc' ? 'desc' : 'asc')]) }}">Email @if(($sort ?? 'id') == 'email'){{ $direction == 'asc' ? '↑' : '↓' }}@endif</a></th>
                             <th>Rol</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -39,6 +40,7 @@
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
                             <td>{{ $usuario->roles->pluck('name_translated')->join(', ') }}</td>
+                            <td>{{ ucfirst($usuario->state?->value ?? $usuario->state) }}</td>
                             <td class="flex">
                                 @can('hr-usuario-editar')
                                 <div data-component="CTableActionButton"
@@ -49,17 +51,19 @@
                                 ></div>
                                 @endcan
                                 @can('hr-usuario-eliminar')
+                                @if(($usuario->state?->value ?? $usuario->state) === 'activo')
                                 <form id="delete-form-{{$usuario}}" action="{{ route('usuarios.destroy', $usuario) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
                                     <div
                                         data-form-ref="#delete-form-{{$usuario}}"
                                         data-component="CTableActionButton"
-                                        data-title="Eliminar"
+                                         data-title="Inactivar"
                                         data-icon-class="fa fa-trash"
-                                        data-confirm-message="¿Está seguro de eliminar este usuario?"
+                                         data-confirm-message="¿Está seguro de inactivar este usuario?"
                                         data-hover-icon-color="text-custom-primary"
                                     ></div>
                                 </form>
+                                @endif
                                 @endcan
                             </td>
                         </tr>
