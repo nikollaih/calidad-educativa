@@ -694,7 +694,7 @@ class PAMController extends Controller {
                 $q->whereHas('meta.objetivoEstrategico.metaPlanDesarrollo.subproceso.proceso.componente', function ($query) use ($pamGeneralId) {
                     $query->where('pam_id', $pamGeneralId);
                 });
-            })->with(['indicador'])->get();
+            })->with(['indicador'])->orderBy('descripcion')->get();
 
             return response()->json([
                 'success' => true,

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
 import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '', canEditParametros = false }) {
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
@@ -373,7 +374,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
                                                 required
                                             >
                                                 <option value="">Selecciona un representante</option>
-                                                {usuarios.map((user) => (
+                                                 {sortBySelectorText(usuarios, (user) => user.name).map((user) => (
                                                     <option key={user.id} value={user.id}>
                                                         {user.name}
                                                     </option>

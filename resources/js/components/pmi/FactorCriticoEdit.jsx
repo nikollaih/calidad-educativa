@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import TextMultipleTags from '@/components/shared/TextMultipleTags.jsx';
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 const uniqueId = (p = 'v-') => `${p}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -517,10 +518,10 @@ const FactorCriticoEdit = ({
                                           }
                                         : null
                                 }
-                                options={frecuenciasRecoleccion.map((frecuencia) => ({
-                                    value: frecuencia,
-                                    label: frecuencia,
-                                }))}
+                                 options={sortBySelectorText(frecuenciasRecoleccion.map((frecuencia) => ({
+                                     value: frecuencia,
+                                     label: frecuencia,
+                                 })), option => option.label)}
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                                 classNamePrefix="select"
                                 placeholder="Selecciona la frecuencia de recolección..."
@@ -816,7 +817,7 @@ const FactorCriticoEdit = ({
                             onChange={(e) => handleObjetivoChange(objetivo.id, e.target.value)}
                         >
                             <option value="">-- Seleccione un objetivo --</option>
-                            {objetivosGenerales.map((objetivoGeneral) => (
+                            {sortBySelectorText(objetivosGenerales, (objetivoGeneral) => objetivoGeneral.descripcion).map((objetivoGeneral) => (
                                 <option
                                     key={objetivoGeneral.id}
                                     value={objetivoGeneral.id}
@@ -847,7 +848,7 @@ const FactorCriticoEdit = ({
                                     style={{ maxWidth: '100%' }}
                                 >
                                     <option value="">-- Seleccione una meta --</option>
-                                    {metasParaSelect.map((meta) => (
+                                    {sortBySelectorText(metasParaSelect, (meta) => meta.descripcion).map((meta) => (
                                         <option key={meta.id} value={meta.id}>
                                             {meta.descripcion.length > 120
                                                 ? meta.descripcion.substring(0, 120) + '...'

@@ -97,7 +97,7 @@ class InstitutionController extends Controller {
         );
     }
     public function createUsuariosInstitucion() {
-        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->get();
+        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get();
         return view(
             'usuarios_institucion.create',
             [
@@ -115,7 +115,7 @@ class InstitutionController extends Controller {
         if (empty($user)) {
             return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
         }
-        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->get();
+        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get();
         return view(
             'usuarios_institucion.edit',
             [
@@ -200,7 +200,7 @@ class InstitutionController extends Controller {
      */
     public function all(): JsonResponse {
         try {
-            $instituciones = Institucion::all();
+            $instituciones = Institucion::orderBy('nombre')->get();
 
             return response()->json($instituciones, 200);
         } catch (\Exception $e) {
@@ -212,7 +212,7 @@ class InstitutionController extends Controller {
     }
 
     public function show(int $institucion) {
-        $municipios = Municipio::get();
+        $municipios = Municipio::orderBy('nombre')->get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -530,7 +530,7 @@ class InstitutionController extends Controller {
             ->with('flash_success_message', "Componente '{$hijo->nombre}' actualizado correctamente");
     }
     public function create() {
-        $municipios = Municipio::get();
+        $municipios = Municipio::orderBy('nombre')->get();
         // Lista de rectores disponibles
         $availableRectors = User::whereHas('roles', function ($query) {
             $query->where('name', 'rector');
@@ -567,7 +567,7 @@ class InstitutionController extends Controller {
         return redirect()->route('institution.index')->with('flash_success_message', "Institución creada correctamente.");
     }
     public function edit(int $institucion) {
-        $municipios = Municipio::get();
+        $municipios = Municipio::orderBy('nombre')->get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',

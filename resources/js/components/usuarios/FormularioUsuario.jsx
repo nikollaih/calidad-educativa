@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import Select from 'react-select';
 import CAutocompleteFromArray from "@/components/shared/CAutocompleteFromArray.jsx";
 import CPasswordInput from "@/components/shared/CPasswordInput.jsx";
+import { sortBySelectorText } from "@/utilidades/string.js";
 
 export default function FormularioUsuario({ roles, states, institutionsWithoutRector, institutions, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -111,11 +112,11 @@ export default function FormularioUsuario({ roles, states, institutionsWithoutRe
                                     isMulti
                                     name="roles[]"
                                     value={selectedRoles}
-                                    options={roles.map(role => ({
-                                        value: role.name,
-                                        label: role.name_translated,
-                                        permissions: role.permissions
-                                    }))}
+                                     options={sortBySelectorText(roles.map(role => ({
+                                         value: role.name,
+                                         label: role.name_translated,
+                                         permissions: role.permissions
+                                     })), option => option.label)}
                                     className="!border border-custom-blue-dark rounded-pill p-1"
                                     classNamePrefix="select"
                                     placeholder="Selecciona uno o varios roles..."
@@ -152,8 +153,7 @@ export default function FormularioUsuario({ roles, states, institutionsWithoutRe
                                         data={institutionsWithoutRector}
                                         fieldName={"institucion_id"}
                                         initialValue={institucionSelected}
-                                        orderBy={{ field: 'indice', direction: 'asc' }}
-                                        searchFields={['nombre', 'nit']}
+                                         searchFields={['nombre', 'nit']}
                                         labelFields={['nombre', 'nit']}
                                     />
                                 </div>
@@ -168,8 +168,7 @@ export default function FormularioUsuario({ roles, states, institutionsWithoutRe
                                         data={institutions}
                                         fieldName={"institucion_id"}
                                         initialValue={institucionSelected}
-                                        orderBy={{ field: 'indice', direction: 'asc' }}
-                                        searchFields={['nombre', 'nit']}
+                                         searchFields={['nombre', 'nit']}
                                         labelFields={['nombre', 'nit']}
                                     />
                                 </div>

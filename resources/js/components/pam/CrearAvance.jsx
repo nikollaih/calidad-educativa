@@ -1,6 +1,7 @@
 // src/components/CrearAvance.jsx
 import { useState, useEffect } from "preact/hooks";
 import Select from "react-select";
+import { sortBySelectorText } from "@/utilidades/string.js";
 
 const CrearAvance = ({ onClose, pamGeneralId }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -70,7 +71,7 @@ const CrearAvance = ({ onClose, pamGeneralId }) => {
                 // react-select espera un formato { label, value } por defecto,
                 // pero aquí usamos getOptionLabel y getOptionValue para
                 // usar las propiedades 'descripcion' e 'id' directamente.
-                setMetasOptions(data);
+                setMetasOptions(sortBySelectorText(data, (meta) => meta.descripcion));
             } catch (error) {
                 console.error("Error al cargar las metas:", error);
             } finally {

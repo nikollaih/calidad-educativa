@@ -55,7 +55,7 @@ class UserController extends Controller
                         });
                     });
                 })
-                ->orderBy('id', 'desc')
+                ->orderBy('name', 'asc')
                 ->get();
 
             return response()->json([
@@ -73,9 +73,9 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->get();
-        $institutionsWithoutRector = Institucion::whereNull('deleted_at')->whereNull('rector_id')->get();
-        $institutions = Institucion::whereNull('deleted_at')->get();
+        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get();
+        $institutionsWithoutRector = Institucion::whereNull('deleted_at')->whereNull('rector_id')->orderBy('nombre')->get();
+        $institutions = Institucion::whereNull('deleted_at')->orderBy('nombre')->get();
 
         return view(
             'usuarios.create',
@@ -131,14 +131,14 @@ class UserController extends Controller
         if ($usuario->hasRole('rector')) {
             $usuario->institucion;
         }
-        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->get();
+        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get();
         $institutionsWithoutRector = Institucion::whereNull('deleted_at')
             ->where(function ($query) use ($usuario) {
                 $query->whereNull('rector_id')
                     ->orWhere('rector_id', $usuario->id);
             })
-            ->get();
-        $institutions = Institucion::whereNull('deleted_at')->get();
+            ->orderBy('nombre')->get();
+        $institutions = Institucion::whereNull('deleted_at')->orderBy('nombre')->get();
 
         return view(
             'usuarios.edit',

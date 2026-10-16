@@ -20,7 +20,7 @@ class UnidadMetaController extends Controller {
          */
     public function all(): JsonResponse {
         try {
-            $unidadesMeta = Indicador::all();
+            $unidadesMeta = Indicador::orderBy('unidad_parcial')->get();
 
             return response()->json($unidadesMeta, 200);
         } catch (\Exception $e) {

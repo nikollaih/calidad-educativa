@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { sortBySelectorText } from '@/utilidades/string.js';
 // Se eliminó la importación de Lucide-React y se usaron las clases de Font Awesome directamente.
 // Los íconos de Font Awesome deben estar disponibles a través de una hoja de estilos CSS en el proyecto HTML.
 
@@ -816,7 +817,7 @@ useEffect(() => {
                         >
                             <option value="">Selecciona un rol</option>
                             {/* MODIFICACIÓN: Se usa map() para generar las opciones */}
-                            {integrantesRoles.map(rol => (
+                             {sortBySelectorText(integrantesRoles, (rol) => rol.name).map(rol => (
                                 <option key={rol.id} value={rol.id}>{rol.name}</option>
                             ))}
                         </select>

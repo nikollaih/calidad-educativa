@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { sortBySelectorText } from '@/utilidades/string.js';
 import { useEffect, useState } from "preact/hooks";
 
 export default function AutoevaluacionResultados({
@@ -331,9 +332,12 @@ const getOportunidadesMejora = (gestionNombre) => {
                                                 }}
                                             >
                                                 <option value="">+ Seleccionar factor crítico existente</option>
-                                                {factoresCriticosInstitucion
-                                                    .filter((f) => f.indice_calificacion === calificacion.indice) // 🔑 Filtrar solo los que correspondan a la calificación actual
-                                                    .map((f) => (
+                                                 {sortBySelectorText(
+                                                     factoresCriticosInstitucion
+                                                         .filter((f) => f.indice_calificacion === calificacion.indice),
+                                                     (f) => f.descripcion
+                                                 )
+                                                     .map((f) => (
                                                         <option key={f.id} value={f.id}>
                                                              {f.descripcion.substring(0, 80)}...
                                                         </option>

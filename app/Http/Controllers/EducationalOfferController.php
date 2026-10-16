@@ -38,7 +38,7 @@ class EducationalOfferController extends Controller
 
     public function create()
     {
-       $eduactionalModels = EducationalModel::get();
+       $eduactionalModels = EducationalModel::orderBy('name')->get();
 
         // Pasar el array de sedes a la vista
         return view(
@@ -74,7 +74,7 @@ class EducationalOfferController extends Controller
     public function edit( int $educational_offer = null)
     {
         $educationalOffer = EducationalOffer::where('id',$educational_offer)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::get();
+        $eduactionalModels = EducationalModel::orderBy('name')->get();
 
         if(empty($educationalOffer))
             return redirect()->back()->with('flash_error_message', "Oferta educativa no encontrada");
@@ -246,7 +246,7 @@ class EducationalOfferController extends Controller
             return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
 
         $selectedSede = $levelSede->sede;
-        $allSedes = Sede::select('id','name')->get();
+         $allSedes = Sede::select('id','name')->orderBy('name')->get();
 
         $allEducationalLevels =  EducationalOfferLevel::whereIn('category',[
             EducationalOfferLevelCategoryEnum::Emphasis->value,

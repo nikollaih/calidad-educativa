@@ -37,9 +37,9 @@ class SedeController extends Controller {
     }
 
     public function create(Request $request, int $institutionId = null) {
-        $eduactionalModels = EducationalModel::get();
-        $modelosPedagogicos = ModeloPedagogico::get();
-        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
+        $eduactionalModels = EducationalModel::orderBy('name')->get();
+        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->orderBy('name')->get();
         return view(
             'institutional_profile.sede.create',
             [
@@ -157,10 +157,10 @@ class SedeController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::get();
-        $modelosPedagogicos = ModeloPedagogico::get();
+        $eduactionalModels = EducationalModel::orderBy('name')->get();
+        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
 
-        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->whereNot('id',$sede->id)->select('name','id')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->whereNot('id',$sede->id)->select('name','id')->orderBy('name')->get();
         return view('institutional_profile.sede.edit',
             [
                 'sede' => $sede,
@@ -186,9 +186,9 @@ class SedeController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::get();
-        $modelosPedagogicos = ModeloPedagogico::get();
-        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->get();
+        $eduactionalModels = EducationalModel::orderBy('name')->get();
+        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
+        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->orderBy('name')->get();
 
         return view('institutional_profile.sede.show',
             [

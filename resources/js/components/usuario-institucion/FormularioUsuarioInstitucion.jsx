@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import Select from 'react-select';
 import CNewPasswordInput from "@/components/shared/CNewPasswordInput.jsx";
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 export default function FormularioUsuario({ roles, states, institutionsWithoutRector,institutions, storeUrl, indexUrl, user }) {
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -97,11 +98,11 @@ export default function FormularioUsuario({ roles, states, institutionsWithoutRe
                                         isMulti
                                         name="roles[]"
                                         value={selectedRoles}
-                                        options={roles.map(role => ({
-                                            value: role.name,
-                                            label: role.name_translated,
-                                            permissions: role.permissions
-                                        }))}
+                                         options={sortBySelectorText(roles.map(role => ({
+                                             value: role.name,
+                                             label: role.name_translated,
+                                             permissions: role.permissions
+                                         })), option => option.label)}
                                         styles={{
                                             control: (base, state) => ({
                                                 ...base,

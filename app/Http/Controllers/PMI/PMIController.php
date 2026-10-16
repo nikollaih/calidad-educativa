@@ -95,6 +95,7 @@ class PMIController extends Controller {
             });
         })
         ->with('indicador.meta')
+        ->orderBy('descripcion')
         ->get();
         return response()->json($actividades);
     }

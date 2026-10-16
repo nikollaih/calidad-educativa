@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { route } from 'preact-router';
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import Swal from 'sweetalert2';
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   // El estado ahora maneja un array de componentes, permitiendo múltiples jerarquías
@@ -1008,7 +1009,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
                 required
               >
                 <option value="">Seleccione un responsable</option>
-                {users.map((user) => (
+                {sortBySelectorText(users, (user) => user.name).map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
@@ -1169,7 +1170,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               <option value="">
                 {isUnidadesMetaLoading ? 'Cargando unidades...' : 'Seleccione una unidad'}
               </option>
-              {unidadesMeta.map((unidad) => (
+               {sortBySelectorText(unidadesMeta, (unidad) => unidad.unidad_parcial).map((unidad) => (
                 <option key={unidad.id} value={unidad.id}>
                   {`${unidad.unidad_parcial}`}
                 </option>
@@ -1395,7 +1396,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
               <option value="">
                 {isComponentesLoading ? 'Cargando componentes...' : 'Seleccione un componente'}
               </option>
-              {componentes.map((componente) => (
+               {sortBySelectorText(componentes, (componente) => componente.descripcion).map((componente) => (
                 <option key={componente.id} value={componente.id}>
                   {`${componente.descripcion}`}
                 </option>

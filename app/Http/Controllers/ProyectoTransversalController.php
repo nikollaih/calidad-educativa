@@ -94,7 +94,7 @@ class ProyectoTransversalController extends Controller {
     }
 
     public function edit(int $institucion) {
-        $municipios = Municipio::get();
+        $municipios = Municipio::orderBy('nombre')->get();
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',

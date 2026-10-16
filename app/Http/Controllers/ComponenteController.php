@@ -20,7 +20,7 @@ class ComponenteController extends Controller {
          */
     public function all(): JsonResponse {
         try {
-            $componentes = Componente::all();
+            $componentes = Componente::orderBy('descripcion')->get();
 
             return response()->json($componentes, 200);
         } catch (\Exception $e) {

@@ -24,8 +24,8 @@ class PMIObjetivoController extends Controller {
     }
 
     public function create() {
-        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
-        $unidadesMedida = PmiIndicador::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->orderBy('indice_calificacion')->get();
+        $unidadesMedida = PmiIndicador::orderBy('unidad_parcial')->get();
         return view('pmi.objetivos.create',
             [
                 'factoresCriticos' => $factoresCriticos,
@@ -41,8 +41,8 @@ class PMIObjetivoController extends Controller {
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
-        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
-        $unidadesMedida = PmiIndicador::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->orderBy('indice_calificacion')->get();
+        $unidadesMedida = PmiIndicador::orderBy('unidad_parcial')->get();
         return view('pmi.objetivos.edit', [
             'objetivo' => $objetivo,
             'factoresCriticos' => $factoresCriticos,
@@ -58,8 +58,8 @@ class PMIObjetivoController extends Controller {
                 ->route('objetivo-pmi.index')
                 ->with('flash_error_message', 'objetivo no encontrado.');
         }
-        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->get();
-        $unidadesMedida = PmiIndicador::get();
+        $factoresCriticos = FactorCriticoCalificacion::with('calificacion.grupo.padre')->orderBy('indice_calificacion')->get();
+        $unidadesMedida = PmiIndicador::orderBy('unidad_parcial')->get();
         return view('pmi.objetivos.show', [
             'objetivo' => $objetivo,
             'factoresCriticos' => $factoresCriticos,

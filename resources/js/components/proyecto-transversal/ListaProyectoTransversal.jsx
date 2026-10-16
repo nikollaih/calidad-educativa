@@ -4,6 +4,7 @@ import CPagination from '@/components/shared/CPagination.jsx';
 import auth from "@utils/auth.js";
 import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
 import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, esRector = false, csrfToken = '' }) {
 
@@ -342,7 +343,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                         required
                                                     >
                                                         <option value="">Selecciona un lider</option>
-                                                        {usuarios.map((user) => (
+                                                         {sortBySelectorText(usuarios, (user) => user.name).map((user) => (
                                                             <option key={user.id} value={user.id}>
                                                                 {user.name}
                                                             </option>

@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 const CAutocompleteFromArray = ({
                                     isEditable=true,
@@ -8,9 +9,8 @@ const CAutocompleteFromArray = ({
                                     fieldName = '',
                                     valueField = 'id',         // Campo que se guarda como value real
                                     searchFields = [],         // Campos que se usan para buscar
-                                    labelFields = [],           // Campos que se muestran en el desplegable
-                                    initialValue = null,       // Valor inicial (ej: id),
-                                    orderBy = null
+                                     labelFields = [],           // Campos que se muestran en el desplegable
+                                     initialValue = null        // Valor inicial (ej: id)
                                 }) => {
     const [displayValue, setDisplayValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
@@ -20,17 +20,9 @@ const CAutocompleteFromArray = ({
 
         // --- función para ordenar con múltiples campos
     const sortData = (arr) => {
-        if (!orderBy) return arr;
-
-        const orderArray = Array.isArray(orderBy) ? orderBy : [orderBy];
-        return [...arr].sort((a, b) => {
-            for (let { field, direction } of orderArray) {
-                const dir = direction?.toLowerCase() === 'desc' ? -1 : 1;
-                if (a[field] < b[field]) return -1 * dir;
-                if (a[field] > b[field]) return 1 * dir;
-            }
-            return 0;
-        });
+        return sortBySelectorText(arr, (item) =>
+            labelFields.map((field) => String(item[field] ?? '')).join(' - ')
+        );
     };
 
     // Cerrar el menú si se hace clic afuera
@@ -59,7 +51,7 @@ const CAutocompleteFromArray = ({
         // --- cuando cambia `data` o `orderBy`, reordenar
     useEffect(() => {
         setFiltered(sortData(data));
-    }, [data, orderBy]);
+    }, [data, labelFields.join('|')]);
 
     const handleInput = (e) => {
         const value = e.target.value;

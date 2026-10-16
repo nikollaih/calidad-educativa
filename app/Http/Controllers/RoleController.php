@@ -29,7 +29,7 @@ class RoleController extends Controller {
     public function all(): JsonResponse {
         try {
             // Se carga la relación con el representante para el JSON.
-            $roles = Role::get();
+            $roles = Role::orderBy('name')->get();
             return response()->json($roles, 200);
         } catch (\Exception $e) {
             // Manejo de errores

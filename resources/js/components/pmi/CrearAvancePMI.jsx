@@ -1,6 +1,7 @@
 // src/components/CrearAvance.jsx
 import { useState, useEffect } from 'preact/hooks';
 import Select from 'react-select';
+import { sortBySelectorText } from '@/utilidades/string.js';
 import { h } from 'preact';
 import CMultiFileUploader from '@/components/shared/CMultiFileUploader.jsx';
 
@@ -68,7 +69,7 @@ const CrearAvancePMI = ({
                 // Código modificado:
                 // react-select espera un formato { label, value } por defecto,
                 // pero aquí usamos getOptionLabel y getOptionValue para
-                setActividades(data);
+                setActividades(sortBySelectorText(data, (actividad) => actividad.descripcion));
             } catch (error) {
                 console.error('Error al cargar las Actividades:', error);
             } finally {

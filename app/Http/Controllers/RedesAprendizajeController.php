@@ -32,7 +32,9 @@ class RedesAprendizajeController extends Controller {
     public function all(): JsonResponse {
         try {
             // Se carga la relación con el representante para el JSON.
-            $redAprendizaje = RedesAprendizaje::with(['representante', 'actoAdministrativo'])->get();
+            $redAprendizaje = RedesAprendizaje::with(['representante', 'actoAdministrativo'])
+                ->orderBy('nombre')
+                ->get();
             return response()->json($redAprendizaje, 200);
         } catch (\Exception $e) {
             // Manejo de errores

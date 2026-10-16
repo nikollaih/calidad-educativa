@@ -23,3 +23,29 @@ export const addLineBreaks = (text, maxLength = 30) => {
     result += currentLine.trim();
     return result;
 };
+
+/** Compara textos agrupando primero etiquetas que inician en mayuscula. */
+export const compareSelectorText = (left, right) => {
+    const leftText = String(left ?? '');
+    const rightText = String(right ?? '');
+    const caseRank = (text) => {
+        const first = text.charAt(0);
+        if (!first) return 0;
+        if (first === first.toLocaleUpperCase() && first !== first.toLocaleLowerCase()) return 0;
+        if (first === first.toLocaleLowerCase() && first !== first.toLocaleUpperCase()) return 1;
+        return 0;
+    };
+    const rankDifference = caseRank(leftText) - caseRank(rightText);
+    if (rankDifference !== 0) return rankDifference;
+
+    return leftText.localeCompare(rightText, 'es', {
+        caseFirst: 'upper',
+        sensitivity: 'variant',
+        numeric: true,
+    });
+};
+
+export const sortBySelectorText = (items, getText) =>
+    [...(items ?? [])].sort((left, right) =>
+        compareSelectorText(getText(left), getText(right))
+    );
