@@ -52,7 +52,6 @@ export default function ListaTemasEnsenanzaObligatoria({
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             {canEdit && <th>Acciones</th>}
                         </tr>
@@ -60,13 +59,12 @@ export default function ListaTemasEnsenanzaObligatoria({
                     <tbody>
                         {rows.length === 0 ? (
                             <tr>
-                                <td colSpan={canEdit ? 3 : 2} className="text-center">
+                                <td colSpan={canEdit ? 2 : 1} className="text-center">
                                     No hay temas de enseñanza obligatoria registrados.
                                 </td>
                             </tr>
                         ) : rows.map((tema) => (
                             <tr key={tema.id}>
-                                <td>{tema.id}</td>
                                 <td>{tema.nombre}</td>
                                 {canEdit && (
                                     <td>

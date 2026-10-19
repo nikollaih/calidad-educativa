@@ -366,7 +366,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 </label>
                                                 <Select
                                                     isMulti
-                                                    name="temas_ensenanza_obligatoria[]"
+                                                    name={temasSeleccionados.length > 0 ? 'temas_ensenanza_obligatoria[]' : undefined}
                                                     inputId="temas-ensenanza-obligatoria"
                                                     options={temasOptions}
                                                     value={temasValue}

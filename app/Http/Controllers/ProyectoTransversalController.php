@@ -60,7 +60,7 @@ class ProyectoTransversalController extends Controller {
             ],
             'acto_administrativo' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
             'temas_ensenanza_obligatoria' => 'nullable|array',
-            'temas_ensenanza_obligatoria.*' => 'integer|exists:temas_ensenanza_obligatoria,id',
+            'temas_ensenanza_obligatoria.*' => 'nullable|integer|distinct|exists:temas_ensenanza_obligatoria,id',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.string' => 'El nombre debe ser una cadena de texto.',
@@ -92,7 +92,12 @@ class ProyectoTransversalController extends Controller {
             'descripcion' => $request?->descripcion,
             'numero_contacto' => $request?->numero_contacto,
         ]);
-        $proyectoTransversal->temasEnsenanzaObligatoria()->sync($request->input('temas_ensenanza_obligatoria', []));
+        $temaIds = collect($request->input('temas_ensenanza_obligatoria', []))
+            ->filter(fn ($id) => $id !== null && $id !== '')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+        $proyectoTransversal->temasEnsenanzaObligatoria()->sync($temaIds);
 
         return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto transversal creada correctamente.');
     }
@@ -126,7 +131,7 @@ class ProyectoTransversalController extends Controller {
             'numero_contacto' => 'nullable|string',
             'acto_administrativo' => 'nullable|file|mimes:pdf,doc,docx,jpeg,jpg,png,gif,svg,webp|max:10240',
             'temas_ensenanza_obligatoria' => 'nullable|array',
-            'temas_ensenanza_obligatoria.*' => 'integer|exists:temas_ensenanza_obligatoria,id',
+            'temas_ensenanza_obligatoria.*' => 'nullable|integer|distinct|exists:temas_ensenanza_obligatoria,id',
         ]);
 
         if (!$this->userBelongsToInstitution($institucion, (int) $request->representante_id)) {
@@ -182,7 +187,12 @@ class ProyectoTransversalController extends Controller {
             'descripcion' => $request->descripcion,
             'numero_contacto' => $request->numero_contacto,
         ]);
-        $proyectoTransversalModel->temasEnsenanzaObligatoria()->sync($request->input('temas_ensenanza_obligatoria', []));
+        $temaIds = collect($request->input('temas_ensenanza_obligatoria', []))
+            ->filter(fn ($id) => $id !== null && $id !== '')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+        $proyectoTransversalModel->temasEnsenanzaObligatoria()->sync($temaIds);
 
         // CAMBIO: Se redirecciona a la ruta de proyectos transversales con el ID de la instituci?n.
         return redirect()->route('proyectos-transversales.index', ['institucionId' => $institucion])->with('flash_success_message', 'Proyecto Transversal actualizado correctamente.');
