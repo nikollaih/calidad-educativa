@@ -4,6 +4,7 @@ import CPagination from '@/components/shared/CPagination.jsx';
 import auth from "@utils/auth.js";
 import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
 import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
+import Select from 'react-select';
 import { sortBySelectorText, withSelectorNameOrder } from '@/utilidades/string.js';
 
 export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, esRector = false, csrfToken = '' }) {
@@ -21,6 +22,10 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
     const [actoAdministrativoUrl, setActoAdministrativoUrl] = useState(null);
     const [representanteId, setRepresentanteId] = useState(''); // ID del representante seleccionado
     const [numeroContacto, setNumeroContacto] = useState('');
+    const [temasDisponibles, setTemasDisponibles] = useState([]);
+    const [temasSeleccionados, setTemasSeleccionados] = useState([]);
+    const [isLoadingTemas, setIsLoadingTemas] = useState(false);
+    const [temasError, setTemasError] = useState(null);
 
     // Estado para la lista de usuarios (representantes)
     const [usuarios, setUsuarios] = useState([]);
@@ -57,6 +62,30 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        const fetchTemas = async () => {
+            setIsLoadingTemas(true);
+            try {
+                const response = await fetch(withSelectorNameOrder('/get-temas-ensenanza-obligatoria'));
+                if (!response.ok) {
+                    throw new Error('No se pudieron cargar los temas de enseñanza obligatoria.');
+                }
+
+                const data = await response.json();
+                setTemasDisponibles(Array.isArray(data) ? data : []);
+                setTemasError(null);
+            } catch (error) {
+                setTemasError(error.message);
+                showAlert(error.message);
+                setTemasDisponibles([]);
+            } finally {
+                setIsLoadingTemas(false);
+            }
+        };
+
+        fetchTemas();
+    }, []);
+
     // Estado para la lista de redes de aprendizaje
     const [proyectos, setProyectos] = useState(proyectosTransversales.data);
 
@@ -80,6 +109,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setDescripcion('');
         setActoAdministrativo(null);
         setRepresentanteId('');
+        setTemasSeleccionados([]);
         // MODIFICACION: Limpiar la URL del documento
         setActoAdministrativoUrl(null);
         setNumeroContacto('');
@@ -103,6 +133,10 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setActoAdministrativo(null); // No se precarga el archivo
         // MODIFICACION: Cargar la URL del documento existente
         setActoAdministrativoUrl(proyectoTransversal.acto_administrativo?.ruta || null);
+        const temasAsociados = proyectoTransversal.temas_ensenanza_obligatoria
+            || proyectoTransversal.temasEnsenanzaObligatoria
+            || [];
+        setTemasSeleccionados(temasAsociados.map((tema) => Number(tema.id)));
         setShowModal(true);
     };
 
@@ -116,6 +150,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         setActoAdministrativoUrl(null);
         setNumeroContacto('');
         setRepresentanteId('');
+        setTemasSeleccionados([]);
         // MODIFICACION: Limpiar el campo de correo electrónico
         // setCorreoElectronico('');
         setCurrentProyectoTransversal(null);
@@ -129,6 +164,11 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
       if (!nombre.trim() || !representanteId) {
           showAlert('Por favor, asegurese de completar todos los campos obligatorios.');
           e.preventDefault(); // Detiene el envío nativo del formulario
+          return;
+      }
+      if (modalMode === 'editar' && (isLoadingTemas || temasError)) {
+          showAlert('No se pudieron cargar los temas asociados. Intenta nuevamente antes de guardar para conservar las asociaciones actuales.');
+          e.preventDefault();
           return;
       }
       // MODIFICACION: Validar el formato del correo electrónico
@@ -193,6 +233,11 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         canEditResoults: auth.can('s-institucion-editar') ||
             auth.hasRole('rector'),
     }), []);
+
+    const temasOptions = sortBySelectorText(temasDisponibles, (tema) => tema.nombre)
+        .map((tema) => ({ value: Number(tema.id), label: tema.nombre }));
+    const temasValue = temasOptions.filter((tema) => temasSeleccionados.includes(tema.value));
+
     return (
         <div className="!border border-custom-blue-light rounded-md mt-3">
             <div className="card">
@@ -209,6 +254,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                             <tr>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
+                                <th>Temas de enseñanza obligatoria</th>
                                 <th>Lider</th>
                                 <th>Acto Administrativo</th>
                                 <th>Acciones</th>
@@ -219,6 +265,11 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                 <tr key={proyectoTransversal.id}>
                                     <td>{proyectoTransversal.nombre}</td>
                                     <td>{proyectoTransversal.descripcion ?? 'Sin información'}</td>
+                                    <td>
+                                        {proyectoTransversal.temas_ensenanza_obligatoria?.length
+                                            ? sortBySelectorText(proyectoTransversal.temas_ensenanza_obligatoria, (tema) => tema.nombre).map((tema) => tema.nombre).join(', ')
+                                            : 'Ninguno'}
+                                    </td>
                                     <td>{proyectoTransversal.representante ? proyectoTransversal.representante.name : 'N/A'}</td>
                                     <td>
                                         {proyectoTransversal.acto_administrativo?.ruta ? (
@@ -310,6 +361,28 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 ></textarea>
                                             </div>
                                             <div class="mb-3">
+                                                <label for="temas-ensenanza-obligatoria" class="block text-sm mb-2 ml-4">
+                                                    Temas de enseñanza obligatoria
+                                                </label>
+                                                <Select
+                                                    isMulti
+                                                    name="temas_ensenanza_obligatoria[]"
+                                                    inputId="temas-ensenanza-obligatoria"
+                                                    options={temasOptions}
+                                                    value={temasValue}
+                                                    onChange={(selected) => setTemasSeleccionados((selected || []).map((tema) => tema.value))}
+                                                    isLoading={isLoadingTemas}
+                                                    isClearable
+                                                    closeMenuOnSelect={false}
+                                                    placeholder="Selecciona uno o varios temas..."
+                                                    noOptionsMessage={() => 'No hay temas disponibles'}
+                                                    classNamePrefix="select"
+                                                />
+                                                {temasError && (
+                                                    <small class="text-danger">{temasError}</small>
+                                                )}
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="actoAdministrativo" class="block text-sm mb-2 ml-4">Acto Administrativo {modalMode === 'agregar' && <span class="text-danger">*</span>}</label>
                                                 {/* MODIFICACION: Mostrar el documento actual y la opción de reemplazarlo */}
                                                 {modalMode === 'editar' && actoAdministrativoUrl && (
@@ -377,7 +450,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
                                                 class="border bg-blue-500  text-white p-2 rounded-pill"
                                                 // MODIFICACION: Se agregó el campo de correo electrónico a la validación
                                                 // disabled={loading || !nombre.trim() || !correoElectronico.trim() || (modalMode === 'agregar' && !actoAdministrativo)}
-                                                disabled={loading || !nombre.trim() || !representanteId || (modalMode === 'agregar' && !actoAdministrativo)}
+                                                disabled={loading || !nombre.trim() || !representanteId || (modalMode === 'agregar' && !actoAdministrativo) || (modalMode === 'editar' && (isLoadingTemas || Boolean(temasError)))}
                                             >
                                                 {loading ? 'Cargando...' : modalMode === 'agregar' ? 'Agregar' : 'Guardar Cambios'}
                                             </button>

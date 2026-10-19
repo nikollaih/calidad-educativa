@@ -49,13 +49,14 @@ $sidebarMenu = [
         'icon_type' => 'svg_inline',
         'label' => 'Parámetros',
         'permission' => 's-parametro-editar',
-        'routes' => 'municipios*|ajustes*|modelos*|redes*|unidades*|componentes*|objetivo*|indicadores*',
+        'routes' => 'municipios*|ajustes*|modelos*|redes*|unidades*|componentes*|objetivo*|indicadores*|temas-ensenanza-obligatoria*',
         'items' => [
             ['url' => 'municipios', 'icon' => 'fas fa-map', 'label' => 'Municipios'],
             ['url' => 'ajustes', 'icon' => 'fa-solid fa-gears', 'label' => 'Ajustes de la página'],
             ['url' => 'modelos-educacionales', 'icon' => 'fas fa-lightbulb', 'label' => 'Modelos flexibles'],
             ['url' => 'modelos-pedagogicos', 'icon' => 'fas fa-chalkboard-teacher', 'label' => 'Estrategias pedagógicas'],
             ['url' => 'redes-aprendizajes', 'icon' => 'fas fa-graduation-cap', 'label' => 'Redes de aprendizaje'],
+            ['url' => 'temas-ensenanza-obligatoria', 'icon' => 'fas fa-book-open', 'label' => 'Temas de enseñanza obligatoria'],
             [
                 'label' => 'PAM',
                 'icon' => 'fas fa-clipboard-list',

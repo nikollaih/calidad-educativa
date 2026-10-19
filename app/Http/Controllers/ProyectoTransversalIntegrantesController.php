@@ -28,7 +28,7 @@ class ProyectoTransversalIntegrantesController extends Controller {
                 })
                 ->get();
 
-            $proyectoTransversal = ProyectosTransversal::find($proyectoTransversalId);
+            $proyectoTransversal = ProyectosTransversal::with('temasEnsenanzaObligatoria')->find($proyectoTransversalId);
 
             $isRelatedToProyecto = $proyectoTransversal && $proyectoTransversal->representante_id === $user->id;
 

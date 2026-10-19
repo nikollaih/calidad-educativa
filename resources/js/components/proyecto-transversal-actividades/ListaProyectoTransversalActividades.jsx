@@ -433,6 +433,16 @@ useEffect(() => {
                 {detalleProyecto.descripcion || 'No hay descripción disponible'}
               </p>
             </div>
+            <div className="col-12 mb-3">
+              <h5>Temas de enseñanza obligatoria</h5>
+              <p className="text-muted">
+                {sortBySelectorText(
+                  detalleProyecto.temas_ensenanza_obligatoria || detalleProyecto.temasEnsenanzaObligatoria || [],
+                  (tema) => tema.nombre
+                ).map((tema) => tema.nombre)
+                  .join(', ') || 'No hay temas asociados'}
+              </p>
+            </div>
             {detalleProyecto.acto_administrativo.ruta && (
               <div className="col-12 mb-3">
                 <h5>Documento</h5>

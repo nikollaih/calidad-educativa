@@ -22,6 +22,7 @@ use App\Http\Controllers\RedesAprendizajeController;
 use App\Http\Controllers\RedesIntegrantesController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SedeController;
+use App\Http\Controllers\TemaEnsenanzaObligatoriaController;
 use App\Http\Controllers\UnidadMetaController;
 use App\Http\Controllers\UserController;
 use App\Models\Municipio;
@@ -207,6 +208,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-roles', [RoleController::class, 'all'])->name('roles.all');
     Route::get('/get-redes-aprendizajes', [RedesAprendizajeController::class, 'all'])->name('redesAprendizajes.all');
     Route::get('/get-unidades-meta', [UnidadMetaController::class, 'all'])->name('unidades-meta.all');
+    Route::get('/get-temas-ensenanza-obligatoria', [TemaEnsenanzaObligatoriaController::class, 'all'])->name('temas-ensenanza-obligatoria.all');
     Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
     Route::patch('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
@@ -318,6 +320,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('modelos-pedagogicos', ModeloPedagogicoController::class);
     // Rutas relacionadas a redes de aprendizaje
     Route::resource('redes-aprendizajes', RedesAprendizajeController::class);
+    Route::get('temas-ensenanza-obligatoria', [TemaEnsenanzaObligatoriaController::class, 'index'])->name('temas-ensenanza-obligatoria.index');
+    Route::post('temas-ensenanza-obligatoria', [TemaEnsenanzaObligatoriaController::class, 'store'])->name('temas-ensenanza-obligatoria.store');
+    Route::get('temas-ensenanza-obligatoria/{tema}', [TemaEnsenanzaObligatoriaController::class, 'show'])->name('temas-ensenanza-obligatoria.show');
+    Route::put('temas-ensenanza-obligatoria/{tema}', [TemaEnsenanzaObligatoriaController::class, 'update'])->name('temas-ensenanza-obligatoria.update');
+    Route::delete('temas-ensenanza-obligatoria/{tema}', [TemaEnsenanzaObligatoriaController::class, 'destroy'])->name('temas-ensenanza-obligatoria.destroy');
     // Ruta para compartir una red de aprendizaje
     Route::post('/red-actividades/actividades/share', [RedesActividadesController::class, 'shareWithIntegrants'] );
     // Rutas relacionadas a las actividades de redes

@@ -31,7 +31,7 @@ class ProyectoTransversalActividadesController extends Controller {
                 })
                 ->get();
 
-            $proyectoTransversal = ProyectosTransversal::with(['actoAdministrativo'])
+            $proyectoTransversal = ProyectosTransversal::with(['actoAdministrativo', 'temasEnsenanzaObligatoria'])
                 ->where('id', $proyectoTransversalId)->first();
 
             $isRelatedToProyecto = $proyectoTransversal && $proyectoTransversal->representante_id === $user->id;
