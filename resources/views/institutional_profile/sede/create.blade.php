@@ -292,8 +292,9 @@
                                                         <option value="Donación entidad privada">Donación entidad privada</option>
                                                         <option value="Obras por impuestos">Obras por impuestos</option>
                                                         <option value="Otro">Otro</option>
-                                                        <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
+                                                        <option value="Recurso combinado">Recurso combinado</option>
                                                         <option value="Recursos propios">Recursos propios</option>
+                                                        <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">

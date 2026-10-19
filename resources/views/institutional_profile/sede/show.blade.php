@@ -271,8 +271,9 @@
                                                          <option value="Donación entidad privada"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad privada')->count() > 0 ? 'selected' : '' }}>Donación entidad privada</option>
                                                          <option value="Obras por impuestos" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Obras por impuestos')->count() > 0 ? 'selected' : '' }}>Obras por impuestos</option>
                                                          <option value="Otro" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Otro')->count() > 0 ? 'selected' : '' }}>Otro</option>
-                                                         <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
+                                                         <option value="Recurso combinado" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Recurso combinado')->count() > 0 ? 'selected' : '' }}>Recurso combinado</option>
                                                          <option value="Recursos propios" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Recursos propios')->count() > 0 ? 'selected' : '' }}>Recursos propios</option>
+                                                         <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
