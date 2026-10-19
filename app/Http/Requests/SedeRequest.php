@@ -34,6 +34,9 @@ class SedeRequest extends FormRequest {
     public function rules(): array {
         return [
             'municipio_id' => ['nullable', 'integer'],
+            'inventory.*.observacion' => ['nullable', 'string', 'max:255'],
+            'infraestructura.*.observacion' => ['nullable', 'string', 'max:255'],
+            'mobiliario.*.observacion' => ['nullable', 'string', 'max:255'],
         ];
     }
 

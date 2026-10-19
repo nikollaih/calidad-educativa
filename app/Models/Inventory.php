@@ -17,6 +17,7 @@ class Inventory extends Model
         'name',
         'financing_source',
         'quantity',
+        'observacion',
         'sede_id',
     ];
 

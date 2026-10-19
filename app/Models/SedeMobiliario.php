@@ -16,6 +16,7 @@ class SedeMobiliario extends Model
     protected $fillable = [
         'nombre',
         'cantidad',
+        'observacion',
         'sede_id',
     ];
 }

@@ -31,7 +31,10 @@ class MobiliarioService {
                 }
                 $mobiliario['sede_id']= $sedeId;
                 // Syncroniza el registro
-                $mobiliarioCreated = SedeMobiliario::updateOrCreate(['nombre' => $mobiliario['nombre']], $mobiliario);
+                $mobiliarioCreated = SedeMobiliario::updateOrCreate(
+                    ['nombre' => $mobiliario['nombre'], 'sede_id' => $sedeId],
+                    $mobiliario
+                );
 
                 array_push($ids, $mobiliarioCreated->id);
             }

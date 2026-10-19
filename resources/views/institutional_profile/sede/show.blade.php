@@ -279,11 +279,16 @@
                                                 <div class="col-md-4">
                                                     <div id="label_cantidad_{{ Str::slug($equipo) }}" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
                                                         <label class="form-check-label">Cantidad</label>
-                                                    </div>
-                                                    <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                     </div>
+                                                     <input type="number" name="inventory[{{$key}}][quantity]" id="cantidad_{{ Str::slug($equipo) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" placeholder="Cantidad" value="{{  $sede->inventories->firstWhere('name', Str::slug($equipo))?->quantity}}" disabled>
+                                                 </div>
+                                             </div>
+                                             @if($sede->inventories->firstWhere('name', Str::slug($equipo))?->observacion !== null)
+                                                 <div class="row mt-2">
+                                                     <div class="col-12"><strong>Observación:</strong> {{ $sede->inventories->firstWhere('name', Str::slug($equipo))->observacion }}</div>
+                                                 </div>
+                                             @endif
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -406,11 +411,16 @@
                                                         <label class="form-check-label">Área (m²).</label>
                                                     </div>
                                                     <input type="hidden" name="infraestructura[{{$key}}][nombre]" value="{{ $equipo['nombre'] }}"  />
-                                                    <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
-                                                    <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                     <input type="hidden" name="infraestructura[{{$key}}][tiene_cantidad]" value="{{ $equipo['tiene_cantidad'] }}"  />
+                                                     <input type="number" name="infraestructura[{{$key}}][area]" id="area_{{ Str::slug($equipo['nombre']) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" value="{{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre'])?->area  }}" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo ['nombre']) != null ? 'block' : 'none' }};" placeholder="Área (m²)" step="0.1" disabled>
+                                                 </div>
+                                             </div>
+                                             @if($sede->infraestructuras->firstWhere('nombre', $equipo['nombre'])?->observacion !== null)
+                                                 <div class="row mt-2">
+                                                     <div class="col-12"><strong>Observación:</strong> {{ $sede->infraestructuras->firstWhere('nombre', $equipo['nombre'])->observacion }}</div>
+                                                 </div>
+                                             @endif
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -490,10 +500,15 @@
                                                     </div>
                                                     <input type="hidden" name="mobiliario[{{$key}}][nombre]" value="{{ $mobiliario['nombre'] }}"  />
 
-                                                    <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                     <input type="number" name="mobiliario[{{$key}}][cantidad]" id="cantidad_{{ Str::slug($mobiliario['nombre']) }}"  value="{{$sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->cantidad }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};" placeholder="Cantidad" step="1" disabled>
+                                                 </div>
+                                             </div>
+                                             @if($sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->observacion !== null)
+                                                 <div class="row mt-2">
+                                                     <div class="col-12"><strong>Observación:</strong> {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])->observacion }}</div>
+                                                 </div>
+                                             @endif
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>

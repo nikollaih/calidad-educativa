@@ -30,7 +30,10 @@ class InfraestructuraService {
                 }
                 $infraestructura['sede_id']= $sedeId;
                 // Syncroniza el registro
-                $infraestructuraCreated = SedeInfraestructura::updateOrCreate(['nombre' => $infraestructura['nombre']], $infraestructura);
+                $infraestructuraCreated = SedeInfraestructura::updateOrCreate(
+                    ['nombre' => $infraestructura['nombre'], 'sede_id' => $sedeId],
+                    $infraestructura
+                );
 
                 array_push($ids, $infraestructuraCreated->id);
             }

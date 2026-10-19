@@ -344,8 +344,12 @@
                                                         data-rango="positivo_sin_cero"
                                                     >
                                                  </div>
-                                            </div>
-                                        </div>
+                                             </div>
+                                             <div id="observacion_inventario_wrapper_{{ Str::slug($equipo) }}" class="col-12 mt-2" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};">
+                                                 <label for="observacion_inventario_{{ Str::slug($equipo) }}" class="form-check-label">Observación (opcional)</label>
+                                                 <textarea name="inventory[{{$key}}][observacion]" id="observacion_inventario_{{ Str::slug($equipo) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" maxlength="200" rows="2">{{ old("inventory.$key.observacion", $sede->inventories->firstWhere('name', Str::slug($equipo))?->observacion) }}</textarea>
+                                             </div>
+                                         </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -500,8 +504,12 @@
                                                         data-rango="positivo_sin_cero"
                                                     >
                                                     </div>
+                                                </div>
+                                                <div id="observacion_infraestructura_wrapper_{{ Str::slug($equipo['nombre']) }}" class="col-12 mt-2" style="display: {{ $sede->infraestructuras->firstWhere('nombre', $equipo['nombre']) != null ? 'block' : 'none' }};">
+                                                    <label for="observacion_infraestructura_{{ Str::slug($equipo['nombre']) }}" class="form-check-label">Observación (opcional)</label>
+                                                    <textarea name="infraestructura[{{$key}}][observacion]" id="observacion_infraestructura_{{ Str::slug($equipo['nombre']) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" maxlength="200" rows="2">{{ old("infraestructura.$key.observacion", $sede->infraestructuras->firstWhere('nombre', $equipo['nombre'])?->observacion) }}</textarea>
+                                                </div>
                                             </div>
-                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -604,6 +612,10 @@
                                                     data-rango="positivo_sin_cero"
                                                 >
                                                 </div>
+                                            </div>
+                                            <div id="observacion_mobiliario_wrapper_{{ Str::slug($mobiliario['nombre']) }}" class="col-12 mt-2" style="display: {{ $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre']) != null ? 'block' : 'none' }};">
+                                                <label for="observacion_mobiliario_{{ Str::slug($mobiliario['nombre']) }}" class="form-check-label">Observación (opcional)</label>
+                                                <textarea name="mobiliario[{{$key}}][observacion]" id="observacion_mobiliario_{{ Str::slug($mobiliario['nombre']) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl" maxlength="200" rows="2">{{ old("mobiliario.$key.observacion", $sede->mobiliarios->firstWhere('nombre', $mobiliario['nombre'])?->observacion) }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -834,18 +846,21 @@
                     const labelCantidad = document.getElementById(`label_cantidad_${equipoId}`);
                     const fuenteFinanciacion = document.getElementById(`fuente_financiacion_${equipoId}`);
                     const cantidad = document.getElementById(`cantidad_${equipoId}`);
+                    const observacion = document.getElementById(`observacion_inventario_wrapper_${equipoId}`);
 
                     if (this.checked) {
                         labelFuente.style.display = 'block';
                         labelCantidad.style.display = 'block';
                         fuenteFinanciacion.style.display = 'block';
                         cantidad.style.display = 'block';
+                        observacion.style.display = 'block';
                     } else {
                         labelFuente.style.display = 'none';
                         labelCantidad.style.display = 'none';
                         fuenteFinanciacion.style.display = 'none';
                         cantidad.value='';
                         cantidad.style.display = 'none';
+                        observacion.style.display = 'none';
                     }
                 });
             });
@@ -858,10 +873,12 @@
                     const labelCantidad = document.getElementById(`label_cantidad_${equipoId}`);
                     const cantidad = document.getElementById(`cantidad_${equipoId}`);
                     const area = document.getElementById(`area_${equipoId}`);
+                    const observacion = document.getElementById(`observacion_infraestructura_wrapper_${equipoId}`);
 
                     if (this.checked) {
                         labelArea.style.display = 'block';
                         area.style.display = 'block';
+                        observacion.style.display = 'block';
                         if ( labelCantidad && cantidad){
                             cantidad.style.display = 'block';
                             labelCantidad.style.display = 'block';
@@ -869,6 +886,7 @@
                     } else {
                         labelArea.style.display = 'none';
                         area.style.display = 'none';
+                        observacion.style.display = 'none';
                         if ( labelCantidad && cantidad){
                             cantidad.style.display = 'none';
                             labelCantidad.style.display = 'none';
@@ -883,14 +901,17 @@
                     const equipoId = this.id.replace('mobiliario_', '');
                     const labelCantidad = document.getElementById(`label_cantidad_${equipoId}`);
                     const cantidad = document.getElementById(`cantidad_${equipoId}`);
+                    const observacion = document.getElementById(`observacion_mobiliario_wrapper_${equipoId}`);
 
                     if (this.checked) {
                         cantidad.style.display = 'block';
                         labelCantidad.style.display = 'block';
+                        observacion.style.display = 'block';
 
                     } else {
                         cantidad.style.display = 'none';
                         labelCantidad.style.display = 'none';
+                        observacion.style.display = 'none';
                     }
                 });
             });

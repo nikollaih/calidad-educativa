@@ -17,6 +17,7 @@ class SedeInfraestructura extends Model
         'nombre',
         'cantidad',
         'area',
+        'observacion',
         'sede_id',
     ];
 

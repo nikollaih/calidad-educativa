@@ -27,7 +27,10 @@ class InventoryService {
                 }
                 $inventory['sede_id']= $sedeId;
                 // Syncroniza el registro
-                $inventoryCreated = Inventory::updateOrCreate($inventory, $inventory);
+                $inventoryCreated = Inventory::updateOrCreate(
+                    ['name' => $inventory['name'], 'sede_id' => $sedeId],
+                    $inventory
+                );
 
                 array_push($ids, $inventoryCreated->id);
             }
