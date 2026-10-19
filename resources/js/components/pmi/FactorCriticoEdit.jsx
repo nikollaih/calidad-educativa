@@ -657,7 +657,7 @@ const FactorCriticoEdit = ({
                         <strong>Peso asignado: </strong>
                         {sumaPesos}% &nbsp; | &nbsp;
                         {restante > 0 && (
-                            <span className="text-success">Restante: {restante}%</span>
+                            <span className="text-success">Faltante: {restante}%</span>
                         )}
                         {restante === 0 && (
                             <span className="text-primary fw-bold">Completado ✅</span>

@@ -326,7 +326,7 @@ const CreateMetaPMI = ({ agregarUrl = '', csrfToken = '' }) => {
                                                         <div className="col-md-6 d-flex align-items-end">
                                                             <small className="text-muted">
                                                                 {j === indicador.actividades.length - 1 ? (
-                                                                    <span>Peso restante: {pesoRestante}%</span>
+                                                                     <span>Peso faltante: {pesoRestante}%</span>
                                                                 ) : null}
                                                             </small>
                                                         </div>
