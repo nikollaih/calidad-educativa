@@ -14,11 +14,11 @@ return new class extends Migration
             $table->timestamps();
 
             $table->primary(['proyecto_transversal_id', 'tema_ensenanza_obligatoria_id']);
-            $table->foreign('proyecto_transversal_id')
+            $table->foreign('proyecto_transversal_id', 'ptteo_proyecto_fk')
                 ->references('id')
                 ->on('proyectos_transversales')
                 ->onDelete('cascade');
-            $table->foreign('tema_ensenanza_obligatoria_id')
+            $table->foreign('tema_ensenanza_obligatoria_id', 'ptteo_tema_fk')
                 ->references('id')
                 ->on('temas_ensenanza_obligatoria')
                 ->onDelete('restrict');
