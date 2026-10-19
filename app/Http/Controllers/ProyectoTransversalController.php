@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Http\Services\AdjuntoService;
 use App\Models\Enums\UserStateEnum;
 use App\Http\Services\AutoevaluacionService;
@@ -94,7 +95,7 @@ class ProyectoTransversalController extends Controller {
     }
 
     public function edit(int $institucion) {
-        $municipios = Municipio::orderBy('nombre')->get();
+        $municipios = SelectorOrder::sort(Municipio::orderBy('nombre')->get(), fn (Municipio $municipio) => $municipio->nombre);
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',

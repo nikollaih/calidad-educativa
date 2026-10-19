@@ -3,7 +3,7 @@
 @section('content')
     <div
         data-component="CInstitutionNavigations"
-        data-back-url="{{ route('institution.edit', $selectedSede->institution->id) }}"
+        data-back-url="{{ route('institution.edit', ['institution' => $selectedSede->institution->id, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-detail-url="#"
         data-pei-url="{{ route('institution.pei.update-pei', $selectedSede->institution->id) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $selectedSede->institution->id) }}"
@@ -109,7 +109,7 @@
 
                 <!-- Botones de acción -->
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('institution.edit', ['institution' => $selectedSede->institution->id]) }}" class="border bg-blue-500  text-white p-2 rounded-pill me-2">
+                    <a href="{{ route('institution.edit', ['institution' => $selectedSede->institution->id, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill me-2">
                         <i class="fas fa-times"></i> Cancelar
                     </a>
                     <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">

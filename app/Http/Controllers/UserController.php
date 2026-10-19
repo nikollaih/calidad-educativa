@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Enums\UserStateEnum;
@@ -43,7 +44,7 @@ class UserController extends Controller
     {
         try {
             $institucionId = $request->integer('institucion_id');
-            $usuarios = User::query()
+            $query = User::query()
                 ->where('state', UserStateEnum::Activo->value)
                 ->when($institucionId, function ($query) use ($institucionId) {
                     $query->where(function ($query) use ($institucionId) {
@@ -54,9 +55,11 @@ class UserController extends Controller
                             $query->where('institucions.id', $institucionId);
                         });
                     });
-                })
-                ->orderBy('name', 'asc')
-                ->get();
+                });
+
+            $usuarios = SelectorOrder::requestedByName($request)
+                ? SelectorOrder::sort($query->get(), fn (User $user) => $user->name)
+                : $query->orderBy('name', 'asc')->get();
 
             return response()->json([
                 'success' => true,
@@ -73,9 +76,9 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get();
-        $institutionsWithoutRector = Institucion::whereNull('deleted_at')->whereNull('rector_id')->orderBy('nombre')->get();
-        $institutions = Institucion::whereNull('deleted_at')->orderBy('nombre')->get();
+        $roles = SelectorOrder::sort(Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get(), fn (Role $role) => $role->name_translated ?? $role->name);
+        $institutionsWithoutRector = SelectorOrder::sort(Institucion::whereNull('deleted_at')->whereNull('rector_id')->orderBy('nombre')->get(), fn (Institucion $institution) => $institution->nombre);
+        $institutions = SelectorOrder::sort(Institucion::whereNull('deleted_at')->orderBy('nombre')->get(), fn (Institucion $institution) => $institution->nombre);
 
         return view(
             'usuarios.create',
@@ -131,14 +134,14 @@ class UserController extends Controller
         if ($usuario->hasRole('rector')) {
             $usuario->institucion;
         }
-        $roles = Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get();
-        $institutionsWithoutRector = Institucion::whereNull('deleted_at')
+        $roles = SelectorOrder::sort(Role::with('permissions')->whereNot('name', 'super_admin')->orderBy('name')->get(), fn (Role $role) => $role->name_translated ?? $role->name);
+        $institutionsWithoutRector = SelectorOrder::sort(Institucion::whereNull('deleted_at')
             ->where(function ($query) use ($usuario) {
                 $query->whereNull('rector_id')
                     ->orWhere('rector_id', $usuario->id);
             })
-            ->orderBy('nombre')->get();
-        $institutions = Institucion::whereNull('deleted_at')->orderBy('nombre')->get();
+            ->orderBy('nombre')->get(), fn (Institucion $institution) => $institution->nombre);
+        $institutions = SelectorOrder::sort(Institucion::whereNull('deleted_at')->orderBy('nombre')->get(), fn (Institucion $institution) => $institution->nombre);
 
         return view(
             'usuarios.edit',

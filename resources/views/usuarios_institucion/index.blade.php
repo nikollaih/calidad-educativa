@@ -7,7 +7,7 @@
                 <div class="d-flex align-items-center gap-3 flex-shrink-0">
                     <h1 class="mb-0 text-custom-primary">Lista de usuarios</h1>
                     @role('rector')
-                    <a href="{{ route('instituciones.usuarios_institucion-create') }}" class="inline-flex items-center group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
+                    <a href="{{ route('instituciones.usuarios_institucion-create', ['sort' => 'nombre', 'direction' => 'asc']) }}" class="inline-flex items-center group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
                         <div class="flex items-center justify-center w-10 h-10 flex-shrink-0 transition-all duration-300">
                             <i class="fa fa-plus text-custom-blue-light text-xl" aria-hidden="true"></i>
                         </div>
@@ -58,7 +58,7 @@
                                 <td>{{ ucfirst($usuario->state?->value ?? $usuario->state) }}</td>
                                 <td>
                                     @role('rector')
-                                    <a href="{{ route('instituciones.usuarios_institucion-edit', $usuario) }}">
+                                    <a href="{{ route('instituciones.usuarios_institucion-edit', ['userId' => $usuario->id, 'sort' => 'nombre', 'direction' => 'asc']) }}">
                                         <i class="fa fa-pencil text-gray-500 hover:text-custom-primary cursor-pointer text-xl hover:border hover:rounded-md p-2 hover:border-custom-blue-dark hover:bg-gray-100" aria-hidden="true">
                                         </i>
                                     </a>

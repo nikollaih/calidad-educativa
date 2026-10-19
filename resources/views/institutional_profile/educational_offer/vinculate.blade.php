@@ -3,7 +3,7 @@
 @section('content')
     <div
         data-component="CInstitutionNavigations"
-        data-back-url="{{ route('institution.edit', $institutionId) }}"
+        data-back-url="{{ route('institution.edit', ['institution' => $institutionId, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-detail-url="#"
         data-pei-url="{{ route('institution.pei.update-pei', $institutionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institutionId) }}"

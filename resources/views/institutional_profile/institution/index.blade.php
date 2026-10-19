@@ -11,7 +11,7 @@
                         @endphp
                         @if($user->hasAnyRole(['super_admin', 'administrador']) ||
                             ($user->hasRole('rector') && $user->institucion === null))
-                            @include('layouts.app.components.buttons.add', ['route' => 'institution.create'])
+                            @include('layouts.app.components.buttons.add', ['route' => 'institution.create', 'routeParameters' => ['sort' => 'nombre', 'direction' => 'asc']])
                         @endif
                                             @if(session('success'))
                         <div class="alert alert-success">
@@ -32,7 +32,7 @@
 
                         @foreach ($paginate as $institucion)
                             <tr>
-                                <td><a href="{{ route('institution.show', $institucion->id) }}">{{$institucion->nombre}}</a></td>
+                                <td><a href="{{ route('institution.show', ['institution' => $institucion->id, 'sort' => 'nombre', 'direction' => 'asc']) }}">{{$institucion->nombre}}</a></td>
                                 <td>{{$institucion->nit}}</td>
                                 <td>{{$institucion->dane}}</td>
                                 <td>{{$institucion->email}}</td>

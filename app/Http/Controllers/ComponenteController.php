@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Models\Componente;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,10 @@ class ComponenteController extends Controller {
          *
          * @return JsonResponse
          */
-    public function all(): JsonResponse {
+    public function all(Request $request): JsonResponse {
         try {
             $componentes = Componente::orderBy('descripcion')->get();
+            $componentes = SelectorOrder::sortIfRequested($componentes, $request, fn (Componente $componente) => $componente->descripcion);
 
             return response()->json($componentes, 200);
         } catch (\Exception $e) {

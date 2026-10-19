@@ -128,19 +128,19 @@
                         <label class="block text-sm mb-2 ml-4">Redes Sociales</label>
                         @php
                             $redes = [
+                                ['icono' => 'fa-discord', 'nombre' => 'Discord'],
                                 ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
-                                ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
                                 ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
                                 ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
-                                ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
-                                ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
-                                ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
-                                ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
-                                ['icono' => 'fa-discord', 'nombre' => 'Discord'],
-                                ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
-                                ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
                                 ['icono' => 'fa-pinterest', 'nombre' => 'Pinterest'],
+                                ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
+                                ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
+                                ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
                                 ['icono' => 'fa-threads', 'nombre' => 'Threads'],
+                                ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
+                                ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
+                                ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
+                                ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
                             ];
 
                             $redesGuardadas = collect($institution?->redesSociales ?? []);
@@ -251,7 +251,7 @@
                         <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill">
                             <i class="fas fa-save "></i> Guardar
                         </button>
-                        <a href="{{ route('institution.show', $institution->id) }}" class="border bg-blue-500  text-white p-2 rounded-pill">
+                        <a href="{{ route('institution.show', ['institution' => $institution->id, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
                     </div>
@@ -269,7 +269,7 @@
                 <h1 class="card-header">Sedes</h1>
                 <div class="card-body">
                     <div class="col-md-12">
-                        <a href="{{ route('sede-with-institution.create',$institution->id) }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
+                        <a href="{{ route('sede-with-institution.create', ['institutionId' => $institution->id, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
                         <table class="table">
                             <thead>
                             <tr>
@@ -294,14 +294,14 @@
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Ver detalles"
-                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit']) }}"
+                                             data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit', 'sort' => 'nombre', 'direction' => 'asc']) }}"
                                             data-icon-class="fa fa-eye"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Editar"
-                                             data-route="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit']) }}"
+                                             data-route="{{ route('sede-with-institution.edit', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'edit', 'sort' => 'nombre', 'direction' => 'asc']) }}"
                                             data-icon-class="fa fa-pencil"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>

@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 @can('hr-usuario-crear')
                     <div data-component="CAddButton"
-                         data-route="{{ route('usuarios.create') }}"
+                         data-route="{{ route('usuarios.create', ['sort' => 'nombre', 'direction' => 'asc']) }}"
                     ></div>
                 @endcan
                 <form method="GET" action="{{ route('usuarios.index') }}" class="mt-3 mb-3">
@@ -45,7 +45,7 @@
                                 @can('hr-usuario-editar')
                                 <div data-component="CTableActionButton"
                                      data-title="Editar"
-                                     data-route="{{ route('usuarios.edit', $usuario) }}"
+                                      data-route="{{ route('usuarios.edit', ['usuario' => $usuario, 'sort' => 'nombre', 'direction' => 'asc']) }}"
                                      data-icon-class="fas fa-pencil"
                                      data-hover-icon-color="text-custom-primary"
                                 ></div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { sortBySelectorText } from '@/utilidades/string.js';
+import { sortBySelectorText, withSelectorNameOrder } from '@/utilidades/string.js';
 // Se eliminó la importación de Lucide-React y se usaron las clases de Font Awesome directamente.
 // Los íconos de Font Awesome deben estar disponibles a través de una hoja de estilos CSS en el proyecto HTML.
 
@@ -100,7 +100,7 @@ export default function ListaProyectoTransversalActividades({
     const fetchUsers = async () => {
       setIsLoadingUsers(true);
       try {
-        const response = await fetch('/get-usuarios');
+        const response = await fetch(withSelectorNameOrder('/get-usuarios'));
         if (!response.ok) {
           throw new Error('Error al obtener los usuarios.');
         }
@@ -121,7 +121,7 @@ export default function ListaProyectoTransversalActividades({
     if (showShareModal) {
       const fetchRoles = async () => {
         try {
-          const response = await fetch('/get-roles'); // O la URL de tu endpoint para roles
+          const response = await fetch(withSelectorNameOrder('/get-roles')); // O la URL de tu endpoint para roles
           if (!response.ok) {
             throw new Error('Error al obtener los roles.');
           }
@@ -899,7 +899,7 @@ useEffect(() => {
                           onChange={(e) => setSelectedRole(e.target.value)}
                         >
                           <option value="">-- Selecciona --</option>
-                          {integrantesRoles.map( rol => (
+                          {sortBySelectorText(integrantesRoles, (rol) => rol.name).map( rol => (
                             <option key={rol.id} value={rol.id}>{rol.name}</option>
                           ))}
                         </select>

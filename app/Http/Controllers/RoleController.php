@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Models\Seguridad\Permission\Permission;
 use App\Models\Seguridad\Role\Role;
 use Illuminate\Http\JsonResponse;
@@ -26,10 +27,11 @@ class RoleController extends Controller {
      *
      * @return JsonResponse
      */
-    public function all(): JsonResponse {
+    public function all(Request $request): JsonResponse {
         try {
             // Se carga la relación con el representante para el JSON.
             $roles = Role::orderBy('name')->get();
+            $roles = SelectorOrder::sortIfRequested($roles, $request, fn (Role $role) => $role->name);
             return response()->json($roles, 200);
         } catch (\Exception $e) {
             // Manejo de errores

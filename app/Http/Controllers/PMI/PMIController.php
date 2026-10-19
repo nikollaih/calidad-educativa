@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PMI;
 
+use App\Helpers\SelectorOrder;
 use App\DTOs\Result;
 use App\Exports\PmiCumplimientoExport;
 use App\Exports\PmiEvaluacionExport;
@@ -100,11 +101,16 @@ class PMIController extends Controller {
         return response()->json($actividades);
     }
 
-    public function create(int $institucionId ) {
+    public function create(Request $request, int $institucionId ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
             ->where('alias_estado', 'VALIDACION')
             ->whereDoesntHave('pmi')
             ->get();
+        $autoevaluaciones = SelectorOrder::sortIfRequested(
+            $autoevaluaciones,
+            $request,
+            fn (Autoevaluacion $autoevaluacion) => 'Autoevaluación ' . $autoevaluacion->anio_vigencia
+        );
         return view('pmi.create', [
             'autoevaluaciones' => $autoevaluaciones,
             'institucionId' => $institucionId,

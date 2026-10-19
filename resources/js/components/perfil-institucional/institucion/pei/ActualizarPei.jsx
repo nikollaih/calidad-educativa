@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CTooltip from "@/components/shared/CTooltip.jsx";
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 const requiresAdministrativeAct = (formData, nombreGestion) => {
   const isHistoricalReview = formData.relation_name === 'resenaHistorica->resenaHistorica'
@@ -105,7 +106,7 @@ const ModalAjustes = ({
                     onChange={handleTipoCodificacionChange}
                     required
                   >
-                    {tipoCodificacionOptions.map((option) => (
+                    {sortBySelectorText(tipoCodificacionOptions, (option) => option.label).map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

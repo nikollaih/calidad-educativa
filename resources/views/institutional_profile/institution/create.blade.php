@@ -106,18 +106,18 @@
                         <div id="redes-sociales-container" class="row">
                             @php
                                 $redes = [
+                                     ['icono' => 'fa-discord', 'nombre' => 'Discord'],
                                      ['icono' => 'fa-facebook', 'nombre' => 'Facebook'],
-                                     ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
                                      ['icono' => 'fa-instagram', 'nombre' => 'Instagram'],
                                      ['icono' => 'fa-linkedin', 'nombre' => 'LinkedIn'],
-                                     ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
-                                     ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
-                                     ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
-                                     ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
-                                     ['icono' => 'fa-discord', 'nombre' => 'Discord'],
-                                     ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
-                                     ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
                                      ['icono' => 'fa-pinterest', 'nombre' => 'Pinterest'],
+                                     ['icono' => 'fa-reddit', 'nombre' => 'Reddit'],
+                                     ['icono' => 'fa-snapchat', 'nombre' => 'Snapchat'],
+                                     ['icono' => 'fa-telegram', 'nombre' => 'Telegram'],
+                                     ['icono' => 'fa-tiktok', 'nombre' => 'TikTok'],
+                                     ['icono' => 'fa-whatsapp', 'nombre' => 'WhatsApp'],
+                                     ['icono' => 'fa-x-twitter', 'nombre' => 'X (Twitter)'],
+                                     ['icono' => 'fa-youtube', 'nombre' => 'YouTube'],
                                  ];
 
                             @endphp

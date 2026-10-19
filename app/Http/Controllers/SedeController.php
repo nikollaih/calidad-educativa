@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SedeRequest as Request;
+use App\Helpers\SelectorOrder;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\EducationalModelService;
 use App\Http\Services\EducationalOfferService;
@@ -37,9 +38,9 @@ class SedeController extends Controller {
     }
 
     public function create(Request $request, int $institutionId = null) {
-        $eduactionalModels = EducationalModel::orderBy('name')->get();
-        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
-        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->orderBy('name')->get();
+        $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
+        $modelosPedagogicos = SelectorOrder::sort(ModeloPedagogico::orderBy('nombre')->get(), fn (ModeloPedagogico $model) => $model->nombre);
+        $availableSedes = SelectorOrder::sort(Sede::where('institution_id', $institutionId)->select('name', 'id')->orderBy('name')->get(), fn (Sede $sede) => $sede->name);
         return view(
             'institutional_profile.sede.create',
             [
@@ -157,10 +158,10 @@ class SedeController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::orderBy('name')->get();
-        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
+        $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
+        $modelosPedagogicos = SelectorOrder::sort(ModeloPedagogico::orderBy('nombre')->get(), fn (ModeloPedagogico $model) => $model->nombre);
 
-        $availableSedes = Sede::where('institution_id', $institutionId )->whereNull('parent_sede_id')->whereNot('id',$sede->id)->select('name','id')->orderBy('name')->get();
+        $availableSedes = SelectorOrder::sort(Sede::where('institution_id', $institutionId)->whereNull('parent_sede_id')->whereNot('id', $sede->id)->select('name', 'id')->orderBy('name')->get(), fn (Sede $availableSede) => $availableSede->name);
         return view('institutional_profile.sede.edit',
             [
                 'sede' => $sede,
@@ -186,9 +187,9 @@ class SedeController extends Controller {
             return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::orderBy('name')->get();
-        $modelosPedagogicos = ModeloPedagogico::orderBy('nombre')->get();
-        $availableSedes = Sede::where('institution_id', $institutionId )->select('name','id')->orderBy('name')->get();
+        $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
+        $modelosPedagogicos = SelectorOrder::sort(ModeloPedagogico::orderBy('nombre')->get(), fn (ModeloPedagogico $model) => $model->nombre);
+        $availableSedes = SelectorOrder::sort(Sede::where('institution_id', $institutionId)->select('name', 'id')->orderBy('name')->get(), fn (Sede $availableSede) => $availableSede->name);
 
         return view('institutional_profile.sede.show',
             [

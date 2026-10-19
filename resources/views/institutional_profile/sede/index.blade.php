@@ -6,7 +6,7 @@
             <h1 class="card-header">Sedes</h1>
             <div class="card-body">
                 <div class="col-md-12">
-                    <a href="{{ route('sede.create') }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
+                    <a href="{{ route('sede.create', ['sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill mb-3">Crear Sede</a>
 
                     @if(session('success'))
                         <div class="alert alert-success">
@@ -35,8 +35,8 @@
                                 <td>Norte</td>
                                 <td>PRINCIPAL</td>
                                 <td>
-                                    <a href="{{ route('sede.show', 1) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
-                                    <a href="{{ route('sede.edit', 1) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.show', ['sede' => 1, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', ['sede' => 1, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 1) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
@@ -51,7 +51,7 @@
                                 <td>Centro</td>
                                 <td>ADSCRITA</td>
                                 <td>
-                                    <a href="{{ route('sede.edit', 2) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', ['sede' => 2, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 2) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>
@@ -66,7 +66,7 @@
                                 <td>Sur</td>
                                 <td>PRINCIPAL</td>
                                 <td>
-                                    <a href="{{ route('sede.edit', 3) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
+                                    <a href="{{ route('sede.edit', ['sede' => 3, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm">Editar</a>
                                     <form action="{{ route('sede.destroy', 3) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="border bg-blue-500  text-white p-2 rounded-pill btn-sm" onclick="return confirm('¿Está seguro de eliminar esta sede?')">Eliminar</button>

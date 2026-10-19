@@ -6,11 +6,11 @@ namespace App\Models\Enums;
  * Nombres de los modulos
  */
 enum EducationalOfferScheduleEnum: string {
-    case Morning           = 'Mañana';
-    case Afternoon         = 'Tarde';
+    case AdultEducation    = 'Educación adultos';
     case RotatingDay       = 'Jornada rotativa';
     case Unique            = 'Jornada única';
-    case AdultEducation    = 'Educación adultos';
+    case Morning           = 'Mañana';
+    case Afternoon         = 'Tarde';
 
 
     public static function toArray(): array

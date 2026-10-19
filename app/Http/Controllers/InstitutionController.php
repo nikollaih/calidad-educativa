@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Http\Requests\InstitucionRequest;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
@@ -97,7 +98,7 @@ class InstitutionController extends Controller {
         );
     }
     public function createUsuariosInstitucion() {
-        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get();
+        $roles = SelectorOrder::sort(Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get(), fn (Role $role) => $role->name_translated ?? $role->name);
         return view(
             'usuarios_institucion.create',
             [
@@ -115,7 +116,7 @@ class InstitutionController extends Controller {
         if (empty($user)) {
             return redirect()->back()->with('flash_error_message', 'El usuario no pertenece a la institución.');
         }
-        $roles = Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get();
+        $roles = SelectorOrder::sort(Role::with('permissions')->whereNotIn('name', $this->rolesExcluded)->orderBy('name')->get(), fn (Role $role) => $role->name_translated ?? $role->name);
         return view(
             'usuarios_institucion.edit',
             [
@@ -198,9 +199,10 @@ class InstitutionController extends Controller {
      *
      * @return JsonResponse
      */
-    public function all(): JsonResponse {
+    public function all(Request $request): JsonResponse {
         try {
             $instituciones = Institucion::orderBy('nombre')->get();
+            $instituciones = SelectorOrder::sortIfRequested($instituciones, $request, fn (Institucion $institucion) => $institucion->nombre);
 
             return response()->json($instituciones, 200);
         } catch (\Exception $e) {
@@ -212,7 +214,7 @@ class InstitutionController extends Controller {
     }
 
     public function show(int $institucion) {
-        $municipios = Municipio::orderBy('nombre')->get();
+        $municipios = SelectorOrder::sort(Municipio::orderBy('nombre')->get(), fn (Municipio $municipio) => $municipio->nombre);
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -530,16 +532,16 @@ class InstitutionController extends Controller {
             ->with('flash_success_message', "Componente '{$hijo->nombre}' actualizado correctamente");
     }
     public function create() {
-        $municipios = Municipio::orderBy('nombre')->get();
+        $municipios = SelectorOrder::sort(Municipio::orderBy('nombre')->get(), fn (Municipio $municipio) => $municipio->nombre);
         // Lista de rectores disponibles
-        $availableRectors = User::whereHas('roles', function ($query) {
+        $availableRectors = SelectorOrder::sort(User::whereHas('roles', function ($query) {
             $query->where('name', 'rector');
         })
         ->where('state', UserStateEnum::Activo->value)
         ->where(function ($query) {
             $query->whereDoesntHave('institucion');
         })
-        ->get();
+        ->get(), fn (User $user) => $user->name);
         // $roles = Role::all();
         return view('institutional_profile.institution.create', ['municipios' => $municipios, 'availableRectors' => $availableRectors]);
     }
@@ -567,7 +569,7 @@ class InstitutionController extends Controller {
         return redirect()->route('institution.index')->with('flash_success_message', "Institución creada correctamente.");
     }
     public function edit(int $institucion) {
-        $municipios = Municipio::orderBy('nombre')->get();
+        $municipios = SelectorOrder::sort(Municipio::orderBy('nombre')->get(), fn (Municipio $municipio) => $municipio->nombre);
         $institucion = Institucion::with(
             'licenciaFuncionamiento',
             'redesSociales',
@@ -585,7 +587,7 @@ class InstitutionController extends Controller {
         // ID del rector actual de la institución (si existe)
         $rectorActualId = $institucion->rector?->id;
         // Lista de rectores disponibles
-        $availableRectors = User::whereHas('roles', function ($query) {
+        $availableRectors = SelectorOrder::sort(User::whereHas('roles', function ($query) {
             $query->where('name', 'rector');
         })
         ->where('state', UserStateEnum::Activo->value)
@@ -593,7 +595,7 @@ class InstitutionController extends Controller {
             $query->whereDoesntHave('institucion')
                   ->orWhere('id', $rectorActualId);
         })
-        ->get();
+        ->get(), fn (User $user) => $user->name);
 
         return view('institutional_profile.institution.edit',
             [

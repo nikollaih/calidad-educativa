@@ -3,7 +3,7 @@ import { useState, useEffect } from 'preact/hooks';
 import CPagination from '@/components/shared/CPagination.jsx';
 import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
 import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
-import { sortBySelectorText } from '@/utilidades/string.js';
+import { sortBySelectorText, withSelectorNameOrder } from '@/utilidades/string.js';
 
 export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, csrfToken = '', canEditParametros = false }) {
     // Estado para controlar la visibilidad del modal y su modo (agregar/editar)
@@ -61,7 +61,7 @@ export default function ListaRedesAprendizaje({ agregarUrl, redesAprendizajes, c
         const fetchUsers = async () => {
             setIsLoadingUsers(true);
             try {
-                const response = await fetch('/get-usuarios');
+                const response = await fetch(withSelectorNameOrder('/get-usuarios'));
                 if (!response.ok) {
                     throw new Error('Error al obtener los usuarios.');
                 }

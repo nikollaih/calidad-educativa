@@ -4,7 +4,7 @@ import CPagination from '@/components/shared/CPagination.jsx';
 import auth from "@utils/auth.js";
 import CAddButton from "@/components/layout/components/buttons/CAddButton.jsx";
 import CTableActionButton from "@/components/layout/components/buttons/CTableActionButton.jsx";
-import { sortBySelectorText } from '@/utilidades/string.js';
+import { sortBySelectorText, withSelectorNameOrder } from '@/utilidades/string.js';
 
 export default function ListaProyectoTransversal({ agregarUrl, proyectosTransversales, institucionId, esRector = false, csrfToken = '' }) {
 
@@ -39,7 +39,7 @@ export default function ListaProyectoTransversal({ agregarUrl, proyectosTransver
         const fetchUsers = async () => {
             setIsLoadingUsers(true);
             try {
-                const response = await fetch(`/get-usuarios?institucion_id=${institucionId}`);
+                const response = await fetch(withSelectorNameOrder(`/get-usuarios?institucion_id=${institucionId}`));
                 if (!response.ok) {
                     throw new Error('Error al obtener los usuarios.');
                 }

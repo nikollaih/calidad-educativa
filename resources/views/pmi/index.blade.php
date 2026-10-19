@@ -4,7 +4,7 @@
     <div
         data-component="CInstitutionNavigations"
         data-back-url="{{ route('institution.index') }}"
-        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', ['institution' => $institucionId, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-pei-url="{{ route('institution.pei.update-pei', $institucionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
         data-pmi-url="#"
@@ -14,7 +14,7 @@
     </div>
     <div
         data-component="IndexPMI"
-        data-agregar-url="{{route('pmi.create',$institucionId)}}"                                                                                                                                                                                                                                                                                                                                                      rl
+        data-agregar-url="{{ route('pmi.create', ['institucionId' => $institucionId, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-institucion-id="{{$institucionId}}"
         data-csrf-token="{{csrf_token()}}"
         data-pmis-paginated='@json($pmis)'

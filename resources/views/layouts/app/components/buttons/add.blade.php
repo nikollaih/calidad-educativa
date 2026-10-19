@@ -1,4 +1,4 @@
-<a href="{{ route($route) }}" class="inline-flex items-center mb-3 group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
+<a href="{{ route($route, $routeParameters ?? []) }}" class="inline-flex items-center mb-3 group cursor-pointer !border border-custom-blue-light overflow-hidden transition-all duration-300 rounded-full hover:no-underline" style="border-radius: 9999px;">
     <!-- Icono visible siempre -->
     <div class="flex items-center justify-center w-10 h-10 flex-shrink-0 transition-all duration-300">
         <i class="fa fa-plus text-custom-blue-light text-xl" aria-hidden="true"></i>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { h } from 'preact';
+import { sortBySelectorText } from '@/utilidades/string.js';
 
 const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles = [] }) => {
     const [selectedId, setSelectedId] = useState('');
@@ -56,7 +57,7 @@ const CreatePMI = ({ createUrl = '', csrfToken = '', autoevaluacionesDisponibles
                             required
                         >
                             <option value="">-- Selecciona autoevaluación --</option>
-                            {autoevaluacionesDisponibles.map((autoevaluacion) => (
+                            {sortBySelectorText(autoevaluacionesDisponibles, (autoevaluacion) => `Autoevaluación ${autoevaluacion.anio_vigencia}`).map((autoevaluacion) => (
                                 <option key={autoevaluacion.id} value={autoevaluacion.id}>
                                     Autoevaluación {autoevaluacion.anio_vigencia}
                                 </option>

@@ -49,3 +49,8 @@ export const sortBySelectorText = (items, getText) =>
     [...(items ?? [])].sort((left, right) =>
         compareSelectorText(getText(left), getText(right))
     );
+
+export const withSelectorNameOrder = (url) => {
+    const separator = String(url).includes('?') ? '&' : '?';
+    return `${url}${separator}sort=nombre&direction=asc`;
+};

@@ -143,7 +143,7 @@ export default function FormularioUsuario({ roles, states, institutionsWithoutRe
                                             className="w-full px-3 py-2 !border border-custom-blue-dark rounded-pill focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent"
                                             required
                                         >
-                                            {(states || []).map((state) => (
+                                            {sortBySelectorText(states || [], (state) => state.label).map((state) => (
                                                 <option key={state.value} value={state.value}>
                                                     {state.label}
                                                 </option>

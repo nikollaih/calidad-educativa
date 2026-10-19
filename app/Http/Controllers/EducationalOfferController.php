@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Http\Services\AdjuntoService;
 use App\Http\Services\EducationalModelService;
 use App\Http\Services\EducationalOfferService;
@@ -38,7 +39,7 @@ class EducationalOfferController extends Controller
 
     public function create()
     {
-       $eduactionalModels = EducationalModel::orderBy('name')->get();
+       $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
 
         // Pasar el array de sedes a la vista
         return view(
@@ -74,7 +75,7 @@ class EducationalOfferController extends Controller
     public function edit( int $educational_offer = null)
     {
         $educationalOffer = EducationalOffer::where('id',$educational_offer)->with('educationalModels','validationAuthorizationAdjunto')->first();
-        $eduactionalModels = EducationalModel::orderBy('name')->get();
+        $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
 
         if(empty($educationalOffer))
             return redirect()->back()->with('flash_error_message', "Oferta educativa no encontrada");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { route } from 'preact-router';
 import CNavigationButton from "@/components/shared/CNavigationButton.jsx";
 import Swal from 'sweetalert2';
-import { sortBySelectorText } from '@/utilidades/string.js';
+import { sortBySelectorText, withSelectorNameOrder } from '@/utilidades/string.js';
 
 const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
   // El estado ahora maneja un array de componentes, permitiendo múltiples jerarquías
@@ -353,7 +353,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     const fetchUsers = async () => {
       setIsUsersLoading(true);
       try {
-        const response = await fetch('/get-usuarios', {
+        const response = await fetch(withSelectorNameOrder('/get-usuarios'), {
           headers: {
             'Accept': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
@@ -390,7 +390,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     const fetchUnidadesMeta = async () => {
       setIsUnidadesMetaLoading(true);
       try {
-        const response = await fetch('/get-unidades-meta');
+        const response = await fetch(withSelectorNameOrder('/get-unidades-meta'));
         if (!response.ok) {
           throw new Error(`Error fetching unidades de meta: ${response.statusText}`);
         }
@@ -422,7 +422,7 @@ const PamForm = ({ id, csrfToken = '', pamGeneralId }) => {
     const fetchComponentes = async () => {
       setIsComponentesLoading(true);
       try {
-        const response = await fetch('/get-componentes');
+        const response = await fetch(withSelectorNameOrder('/get-componentes'));
         if (!response.ok) {
           throw new Error(`Error fetching componentes: ${response.statusText}`);
         }

@@ -4,7 +4,7 @@
     <div
         data-component="CInstitutionNavigations"
         data-back-url="{{ route('pmi.edit',  ['institucionId'=>$institucionId, 'pmi'=>$pmiId ]) }}"
-        data-detail-url="{{ route('institution.show', $institucionId) }}"
+        data-detail-url="{{ route('institution.show', ['institution' => $institucionId, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-pei-url="{{ route('institution.pei.update-pei', $institucionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institucionId) }}"
         data-pmi-url="#"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SelectorOrder;
 use App\Models\Indicador;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,10 @@ class UnidadMetaController extends Controller {
          *
          * @return JsonResponse
          */
-    public function all(): JsonResponse {
+    public function all(Request $request): JsonResponse {
         try {
             $unidadesMeta = Indicador::orderBy('unidad_parcial')->get();
+            $unidadesMeta = SelectorOrder::sortIfRequested($unidadesMeta, $request, fn (Indicador $unidadMeta) => $unidadMeta->unidad_parcial);
 
             return response()->json($unidadesMeta, 200);
         } catch (\Exception $e) {

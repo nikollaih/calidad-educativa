@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center justify-content-between container">
         <div data-component="CBackButton" data-to="{{ route('pmi.index', $institucionId) }}" data-is-container="{{false}}"></div>
         <div class="d-flex gap-2">
-            <a href="{{ route('institution.show', $institucionId) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
+            <a href="{{ route('institution.show', ['institution' => $institucionId, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="btn btn-outline-primary btn-sm">Perfil</a>
             <a href="{{ route('institution.pei.update-pei', $institucionId) }}" class="btn btn-outline-success  btn-sm">PEI</a>
             <a href="{{ route('institution.autoevaluaciones', $institucionId) }}" class="btn btn-outline-info btn-sm">Autoevaluación</a>
             <a href="#" class="border bg-blue-500  text-white p-2 rounded-pill  btn-sm">PMI</a>

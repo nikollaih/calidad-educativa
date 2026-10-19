@@ -193,7 +193,7 @@
             <div class="py-3 d-flex justify-content-center">
                 <div class="d-flex gap-2">
                     @if(auth()->user()->can('s-institucion-editar') || auth()->user()->hasRole('rector'))
-                        <a href="{{ route('institution.edit', $institution->id) }}" class="border bg-blue-500 text-white p-2 rounded-pill inline-block">
+                        <a href="{{ route('institution.edit', ['institution' => $institution->id, 'sort' => 'nombre', 'direction' => 'asc']) }}" class="border bg-blue-500 text-white p-2 rounded-pill inline-block">
                             <i class="fa fa-pencil"></i> Editar
                         </a>
                     @endif
@@ -243,7 +243,7 @@
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Ver detalles"
-                                            data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'show']) }}"
+                                             data-route="{{ route('sede-with-institution.show', ['institutionId' => $institution->id, 'sede_with_institution' => $sede->id, 'origin' => 'show', 'sort' => 'nombre', 'direction' => 'asc']) }}"
                                             data-icon-class="fa fa-eye"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>

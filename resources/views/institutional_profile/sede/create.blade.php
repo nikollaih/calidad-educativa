@@ -3,7 +3,7 @@
 @section('content')
     <div
         data-component="CInstitutionNavigations"
-        data-back-url="{{ route('institution.edit', $institutionId) }}"
+        data-back-url="{{ route('institution.edit', ['institution' => $institutionId, 'sort' => 'nombre', 'direction' => 'asc']) }}"
         data-detail-url="#"
         data-pei-url="{{ route('institution.pei.update-pei', $institutionId) }}"
         data-autevaluacion-url="{{ route('institution.autoevaluaciones', $institutionId) }}"
@@ -64,8 +64,8 @@
                             <div class="mb-3">
                                 <label for="tipo_sede" class="block text-sm mb-2 ml-4">Tipo de Sede<span class="text-danger">*</span></label>
                                 <select name="tipo_sede" id="tipo_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" required>
-                                    <option value="Principal">Principal</option>
                                     <option value="Adscrita a una principal">Adscrita a una principal</option>
+                                    <option value="Principal">Principal</option>
                                 </select>
                             </div>
                             <div class="mb-3" id="sede_principal_container" style="display: none;">
@@ -116,11 +116,11 @@
                             <div class="mb-3">
                                 <label for="titularidad_sede" class="block text-sm mb-2 ml-4">Titularidad de la Sede<span class="text-danger">*</span></label>
                                 <select name="titularity[titularity_type]" id="titularidad_sede" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill w-full" required>
-                                    <option value="Municipio">Municipio</option>
-                                    <option value="Departamento">Departamento</option>
                                     <option value="Comité de Cafeteros">Comité de Cafeteros</option>
-                                    <option value="Otro">Otro</option>
+                                    <option value="Departamento">Departamento</option>
                                     <option value="En arriendo">En arriendo</option>
+                                    <option value="Municipio">Municipio</option>
+                                    <option value="Otro">Otro</option>
                                 </select>
                             </div>
                             <div class="row" id="otro_titularidad_container" style="display: none;">
@@ -286,14 +286,14 @@
                                                     </div>
                                                     <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}">
                                                     <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill" style="display: none;">
-                                                        <option value="Computadores para educar">Computadores para educar</option>
-                                                        <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
                                                         <option value="Aula Steam">Aula Steam</option>
-                                                        <option value="Obras por impuestos">Obras por impuestos</option>
-                                                        <option value="Recursos propios">Recursos propios</option>
+                                                        <option value="Computadores para educar">Computadores para educar</option>
                                                         <option value="Donación entidad estatal">Donación entidad estatal</option>
                                                         <option value="Donación entidad privada">Donación entidad privada</option>
+                                                        <option value="Obras por impuestos">Obras por impuestos</option>
                                                         <option value="Otro">Otro</option>
+                                                        <option value="Regalías: Bilingüismo, Innovación Social">Regalías: Bilingüismo, Innovación Social</option>
+                                                        <option value="Recursos propios">Recursos propios</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">

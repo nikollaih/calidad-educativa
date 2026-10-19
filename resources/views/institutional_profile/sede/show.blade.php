@@ -3,8 +3,8 @@
 @section('content')
     @php
         $backUrl = request()->query('origin') === 'edit'
-            ? route('institution.edit', $sede->institution_id)
-            : route('institution.show', $sede->institution_id);
+            ? route('institution.edit', ['institution' => $sede->institution_id, 'sort' => 'nombre', 'direction' => 'asc'])
+            : route('institution.show', ['institution' => $sede->institution_id, 'sort' => 'nombre', 'direction' => 'asc']);
     @endphp
     <div
         data-component="CInstitutionNavigations"
@@ -72,8 +72,8 @@
                                     <div class="mb-3">
                                         <label for="tipo_sede" class="block text-sm mb-2 ml-4">Tipo de sede</label>
                                         <select name="tipo_sede" id="tipo_sede" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" disabled>
-                                            <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                             <option value="Adscrita a una principal" @selected($sede->parentSede != null)>Adscrita a una principal</option>
+                                            <option value="Principal" @selected($sede->parentSede == null)>Principal</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
@@ -112,11 +112,11 @@
                                         <label for="titularidad_sede" class="block text-sm mb-2 ml-4">Titularidad de la sede</label>
 
                                         <select name="titularity[titularity_type]" id="titularidad_sede" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill w-full"  disabled>
-                                            <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
-                                             <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
                                              <option value="Comité de Cafeteros" @selected($sede?->titularidadSede?->titularity_type == 'Comité de Cafeteros')>Comité de Cafeteros</option>
-                                             <option value="Otro" @selected($sede?->titularidadSede?->titularity_type == 'Otro')>Otro</option>
+                                             <option value="Departamento" @selected($sede?->titularidadSede?->titularity_type == 'Departamento')>Departamento</option>
                                              <option value="En arriendo" @selected($sede?->titularidadSede?->titularity_type == 'En arriendo')>En arriendo</option>
+                                             <option value="Municipio" @selected($sede?->titularidadSede?->titularity_type == 'Municipio')>Municipio</option>
+                                             <option value="Otro" @selected($sede?->titularidadSede?->titularity_type == 'Otro')>Otro</option>
                                         </select>
                                     </div>
                                     <div class="row" id="otro_titularidad_container" style="display: none;">
@@ -265,13 +265,14 @@
                                                     </div>
                                                     <input hidden name="inventory[{{$key}}][name]" value="{{Str::slug($equipo)}}" disabled>
                                                     <select name="inventory[{{$key}}][financing_source]" id="fuente_financiacion_{{ Str::slug($equipo) }}" class="border-gray-100 bg-gray-100 cursor-not-allowed w-full px-3 py-2 rounded-pill" style="display: {{ $sede->inventories->firstWhere('name', Str::slug($equipo)) != null ? 'block' : 'none' }};" disabled>
-                                                        <option value="Computadores para educar"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Computadores para educar')->count() > 0 ? 'selected' : '' }}>Computadores para educar</option>
-                                                        <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
-                                                        <option value="Aula Steam" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Aula Steam')->count() > 0 ? 'selected' : '' }}>Aula Steam</option>
-                                                        <option value="Obras por impuestos" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Obras por impuestos')->count() > 0 ? 'selected' : '' }}>Obras por impuestos</option>
-                                                        <option value="Recursos propios" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Recursos propios')->count() > 0 ? 'selected' : '' }}>Recursos propios</option>
-                                                        <option value="Donación entidad estatal" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad estatal')->count() > 0 ? 'selected' : '' }}>Donación entidad estatal</option>
-                                                        <option value="Donación entidad privada"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad privada')->count() > 0 ? 'selected' : '' }}>Donación entidad privada</option>
+                                                         <option value="Aula Steam" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Aula Steam')->count() > 0 ? 'selected' : '' }}>Aula Steam</option>
+                                                         <option value="Computadores para educar"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Computadores para educar')->count() > 0 ? 'selected' : '' }}>Computadores para educar</option>
+                                                         <option value="Donación entidad estatal" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad estatal')->count() > 0 ? 'selected' : '' }}>Donación entidad estatal</option>
+                                                         <option value="Donación entidad privada"  {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Donación entidad privada')->count() > 0 ? 'selected' : '' }}>Donación entidad privada</option>
+                                                         <option value="Obras por impuestos" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Obras por impuestos')->count() > 0 ? 'selected' : '' }}>Obras por impuestos</option>
+                                                         <option value="Otro" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Otro')->count() > 0 ? 'selected' : '' }}>Otro</option>
+                                                         <option value="Regalías: Bilingüismo, Innovación Social" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Regalías: Bilingüismo, Innovación Social')->count() > 0 ? 'selected' : '' }}>Regalías: Bilingüismo, Innovación Social</option>
+                                                         <option value="Recursos propios" {{ $sede->inventories->where('name', Str::slug($equipo))->where('financing_source', 'Recursos propios')->count() > 0 ? 'selected' : '' }}>Recursos propios</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
