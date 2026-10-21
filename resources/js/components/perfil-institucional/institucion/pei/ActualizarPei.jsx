@@ -11,6 +11,19 @@ const requiresAdministrativeAct = (formData, nombreGestion) => {
   return Number(formData.tipo_codificacion) !== 4 && !isHistoricalReview;
 };
 
+const isHiddenDocument = (nombreGestion, docKey) =>
+  nombreGestion === 'GESTIÓN DE AULA' && docKey === 'anexoTemasEnsenanza';
+
+const getDocumentDisplayName = (docKey) => {
+  if (docKey === 'anexoCulturaInstitucional') return 'Anexo Politica de Comunicación';
+
+  return docKey
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, (letter) => letter.toUpperCase())
+    .replace(/_/g, ' ')
+    .trim();
+};
+
 // Modal de editar
 const ModalAjustes = ({
   nombre_gestion,
@@ -155,71 +168,64 @@ const ModalAjustes = ({
                 <h6 className="fw-bold mb-3">Documentos</h6>
                 <div className="row">
                   {Object.entries(documentos)
-                    .filter(([docKey]) => !(nombre_gestion === 'GESTIÓN DE AULA' && docKey === 'anexoTemasEnsenanza'))
+                    .filter(([docKey]) => !isHiddenDocument(nombre_gestion, docKey))
                     .map(([docKey, docData]) => {
-                    // Si docData es null, creamos un objeto vacío con la estructura básica
-                    const documentData = docData || {
-                      id: null,
-                      ruta: null,
-                      nombre_completo: null,
-                      document_key: docKey
-                        .replace(/([A-Z])/g, '_$1')
-                        .toLowerCase()
-                        .replace(/^_/, ''),
-                      original_key: docKey
-                    };
+                      // Si docData es null, creamos un objeto vacío con la estructura básica
+                      const documentData = docData || {
+                        id: null,
+                        ruta: null,
+                        nombre_completo: null,
+                        document_key: docKey
+                          .replace(/([A-Z])/g, '_$1')
+                          .toLowerCase()
+                          .replace(/^_/, ''),
+                        original_key: docKey
+                      };
 
-                    const { id, ruta, nombre_completo } = documentData;
-                    const nombreMostrar = docKey === 'anexoCulturaInstitucional'
-                      ? 'Anexo Politica de Comunicación'
-                      : docKey
-                        .replace(/([A-Z])/g, ' $1')
-                        .replace(/_/g, ' ')
-                        .trim()
-                        .toLowerCase()
-                        .replace(/\b\w/g, l => l.toUpperCase());
+                      const { id, ruta, nombre_completo } = documentData;
+                      const nombreMostrar = getDocumentDisplayName(docKey);
 
-                    // Verificamos si hay un archivo subido recientemente para este documento
-                    const hasUploadedFile = fileUploads[documentData.document_key] ||
-                                          fileUploads[documentData.original_key];
+                      // Verificamos si hay un archivo subido recientemente para este documento
+                      const hasUploadedFile = fileUploads[documentData.document_key] ||
+                                            fileUploads[documentData.original_key];
 
-                    return (
-                      <div className="col-md-6 mb-3" key={`edit-doc-${id || docKey}`}>
-                        <div className="d-flex justify-content-between align-items-center">
-                          <span className="text-capitalize">{nombreMostrar}</span>
-                          <div>
-                            <label className="btn btn-sm btn-outline-primary mb-0">
-                              <i className="fas fa-upload me-1"></i> Subir
-                              <input
-                                type="file"
-                                style={{display: 'none'}}
-                                onChange={(e) => handleFileChange(documentData, e)}
-                              />
-                            </label>
+                      return (
+                        <div className="col-md-6 mb-3" key={`edit-doc-${id || docKey}`}>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-capitalize">{nombreMostrar}</span>
+                            <div>
+                              <label className="btn btn-sm btn-outline-primary mb-0">
+                                <i className="fas fa-upload me-1"></i> Subir
+                                <input
+                                  type="file"
+                                  style={{display: 'none'}}
+                                  onChange={(e) => handleFileChange(documentData, e)}
+                                />
+                              </label>
 
-                            {/* Mostrar nombre del archivo subido recientemente */}
-                            {hasUploadedFile && (
-                              <span className="ms-2">{hasUploadedFile.name}</span>
-                            )}
+                              {/* Mostrar nombre del archivo subido recientemente */}
+                              {hasUploadedFile && (
+                                <span className="ms-2">{hasUploadedFile.name}</span>
+                              )}
 
-                            {/* Mostrar botón Ver si hay ruta o archivo subido */}
-                            {(ruta || hasUploadedFile) && (
-                              <a
-                                href={ruta ? `/storage/${ruta}` : URL.createObjectURL(hasUploadedFile)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn btn-sm btn-outline-success ms-2"
-                              >
-                                <i className="fas fa-eye me-1"></i> Ver
-                              </a>
-                            )}
+                              {/* Mostrar botón Ver si hay ruta o archivo subido */}
+                              {(ruta || hasUploadedFile) && (
+                                <a
+                                  href={ruta ? `/storage/${ruta}` : URL.createObjectURL(hasUploadedFile)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn btn-sm btn-outline-success ms-2"
+                                >
+                                  <i className="fas fa-eye me-1"></i> Ver
+                                </a>
+                              )}
+                            </div>
                           </div>
+                          {nombre_completo && (
+                            <small className="text-muted d-block">{nombre_completo}</small>
+                          )}
                         </div>
-                        {nombre_completo && (
-                          <small className="text-muted d-block">{nombre_completo}</small>
-                        )}
-                      </div>
-                    );
+                      );
                     })}
                 </div>
               </div>
@@ -631,6 +637,9 @@ export default function ActualizarPei({
                                     <div>
                                         {grupo.hijos.map((hijo, hijoIndex) => {
                                             const {documentos, nombre_gestion, traces, ...otrosCampos} = hijo;
+                                            const documentosVisibles = documentos
+                                                ? Object.entries(documentos).filter(([docKey]) => !isHiddenDocument(nombre_gestion, docKey))
+                                                : [];
 
                                             return (
                                                 <div className=" !border border-custom-blue-dark rounded-lg mb-4 mx-3 p-3 " key={nombre_gestion}>
@@ -689,21 +698,17 @@ export default function ActualizarPei({
                                                     </div>
 
                                                     {/* Documentos */}
-                                                    {documentos && Object.keys(documentos).length > 0 && (
+                                                    {documentosVisibles.length > 0 && (
                                                         <div className="mt-4">
                                                             <h6 className="fw-bold mb-3">Documentos</h6>
                                                             <div>
-                                                                {Object.entries(documentos).map(([docNombre, docValor]) => (
+                                                                {documentosVisibles.map(([docNombre, docValor]) => (
                                                                     (
                                                                         <div className="d-inline-block mx-3 mb-2"
                                                                              key={docNombre}>
                                                                             <div
                                                                                 className="fw-semibold text-capitalize">
-                                                                                {docNombre
-                                                                                    .replace(/([A-Z])/g, ' $1')
-                                                                                    .replace(/^./, str => str.toUpperCase())
-                                                                                    .replace(/_/g, ' ')
-                                                                                    .trim()}
+                                                                                {getDocumentDisplayName(docNombre)}
                                                                             </div>
                                                                             {docValor?.ruta ? (
                                                                                 <a
