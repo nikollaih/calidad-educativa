@@ -523,7 +523,7 @@ class UpdatePeiResource extends JsonResource
                 $this->transformWithDocuments(
                     $this->gestionComunidad->prevencionRiesgos,
                     ['prevencion_riesgos_fisicos', 'prevencion_riesgos_psicosociales'],
-                    ['anexoPrevencionRiesgosFisicos']
+                    ['anexoPrevencionRiesgosFisicos', 'anexoPrevencionRiesgosPsicosociales']
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos'),

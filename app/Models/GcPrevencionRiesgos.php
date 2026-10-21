@@ -14,7 +14,8 @@ class GcPrevencionRiesgos extends Model implements Auditable {
     public $with = [
 'historialesPei',
         // 'gestionComunidad',
-        'anexoPrevencionRiesgosFisicos'
+        'anexoPrevencionRiesgosFisicos',
+        'anexoPrevencionRiesgosPsicosociales'
     ];
     public $primaryKey = 'gestion_comunidad_id';
 
@@ -22,7 +23,8 @@ class GcPrevencionRiesgos extends Model implements Auditable {
         'gestion_comunidad_id',
         'prevencion_riesgos_fisicos',
         'anexo_prevencion_riesgos_fisicos_id',
-        'prevencion_riesgos_psicosociales'
+        'prevencion_riesgos_psicosociales',
+        'anexo_prevencion_riesgos_psicosociales_id'
     ];
 
     public function gestionComunidad()
@@ -37,5 +39,10 @@ class GcPrevencionRiesgos extends Model implements Auditable {
     public function anexoPrevencionRiesgosFisicos()
     {
         return $this->belongsTo(Adjunto::class, 'anexo_prevencion_riesgos_fisicos_id');
+    }
+
+    public function anexoPrevencionRiesgosPsicosociales()
+    {
+        return $this->belongsTo(Adjunto::class, 'anexo_prevencion_riesgos_psicosociales_id');
     }
 }

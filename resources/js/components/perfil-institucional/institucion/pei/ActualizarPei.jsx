@@ -16,6 +16,7 @@ const isHiddenDocument = (nombreGestion, docKey) =>
 
 const getDocumentDisplayName = (docKey) => {
   if (docKey === 'anexoCulturaInstitucional') return 'Anexo Politica de Comunicación';
+  if (docKey === 'anexoPrevencionRiesgosPsicosociales') return 'Anexo de Riesgos Psicosociales';
 
   return docKey
     .replace(/([A-Z])/g, ' $1')

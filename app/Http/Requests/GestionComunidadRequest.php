@@ -24,6 +24,7 @@ class GestionComunidadRequest extends FormRequest {
             'prevencion_riesgos_fisicos' => 'required|string',
             'anexo_prevencion_riesgos_fisicos' => 'nullable|file',
             'prevencion_riesgos_psicosociales' => 'required|string',
+            'anexo_prevencion_riesgos_psicosociales' => 'nullable|file',
         ];
     }
    
@@ -42,6 +43,7 @@ class GestionComunidadRequest extends FormRequest {
             'prevencion_riesgos_fisicos' => 'prevención de riesgos físicos',
             'anexo_prevencion_riesgos_fisicos' => 'anexo de prevención de riesgos físicos',
             'prevencion_riesgos_psicosociales' => 'prevención de riesgos psicosociales',
+            'anexo_prevencion_riesgos_psicosociales' => 'anexo de riesgos psicosociales',
         ];
     }
 

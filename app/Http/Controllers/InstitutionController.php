@@ -748,8 +748,18 @@ class InstitutionController extends Controller {
             $relationPath = str_replace('->', '.', $input['relation_name']);
             $model = data_get($institucion, $relationPath);
 
+            if (!$model) {
+                throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
+            }
+
             // Almacena los documentos nuevos
+            $documentosProcesados = [];
             foreach ($documentos as $key => $value) {
+                $snakeKey = Str::snake($key);
+                if (isset($documentosProcesados[$snakeKey])) {
+                    continue;
+                }
+
                 $adjuntoInfo = [];
 
                 // Obtener la extensi?n original del archivo
@@ -772,13 +782,13 @@ class InstitutionController extends Controller {
                 if ($rutaArchivo) {
                     $adjuntoInfo['ruta'] = $rutaArchivo;
                     $adjuntoGuardado = Adjunto::create($adjuntoInfo);
-                    $snakeKey = Str::snake($key);
-                    $dataToUpdate[$snakeKey] = $adjuntoGuardado->id;
+                    $foreignKey = $snakeKey . '_id';
+                    if (!in_array($foreignKey, $model->getFillable(), true)) {
+                        $foreignKey = $snakeKey;
+                    }
+                    $dataToUpdate[$foreignKey] = $adjuntoGuardado->id;
+                    $documentosProcesados[$snakeKey] = true;
                 }
-            }
-
-            if (!$model) {
-                throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
 
             // Capturar datos originales

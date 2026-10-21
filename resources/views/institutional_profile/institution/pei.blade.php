@@ -934,10 +934,23 @@
 
                                                     <!-- Documentos especiales -->
                                                     <div class="mb-3 text-left">
-                                                        <div class="font-semibold text-gray-800 mb-2">Documento de prevención:</div>
+                                                        <div class="font-semibold text-gray-800 mb-2">Anexo de riesgos físicos:</div>
                                                         <div class="break-words text-gray-700">
                                                             @if($prevencion && $prevencion->anexoPrevencionRiesgosFisicos)
                                                                 <a href="{{ $prevencion->anexoPrevencionRiesgosFisicos->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
+                                                                    Ver documento
+                                                                </a>
+                                                            @else
+                                                                <span class="text-gray-500 italic">No disponible</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3 text-left">
+                                                        <div class="font-semibold text-gray-800 mb-2">Anexo de riesgos psicosociales:</div>
+                                                        <div class="break-words text-gray-700">
+                                                            @if($prevencion && $prevencion->anexoPrevencionRiesgosPsicosociales)
+                                                                <a href="{{ $prevencion->anexoPrevencionRiesgosPsicosociales->url }}" target="_blank" class="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors no-underline">
                                                                     Ver documento
                                                                 </a>
                                                             @else
