@@ -527,7 +527,7 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('prevencion_riesgos'),
-                    'relation_name' => 'prevencionRiesgos',
+                    'relation_name' => 'gestionComunidad->prevencionRiesgos',
                     'traces' => $this->gestionComunidad->prevencionRiesgos?->historialesPei->map(function ($trace) {
                         return [
                             'model_id'          => $trace->model_id ?? 'Sin informacion',
