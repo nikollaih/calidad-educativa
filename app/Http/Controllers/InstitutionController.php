@@ -712,6 +712,11 @@ class InstitutionController extends Controller {
 
             $input = $request->all();
 
+            // El anexo de temas de enseñanza ya no debe poder agregarse desde Gestión de Aula.
+            if (($input['relation_name'] ?? null) === 'gestionAcademica->gestionAulas') {
+                unset($input['anexoTemasEnsenanza'], $input['anexo_temas_ensenanza']);
+            }
+
             // Obtener la instituci?n con relaciones
             $institucion = Institucion::with([
                 'gestionDirectiva',

@@ -154,7 +154,9 @@ const ModalAjustes = ({
               <div className="mb-4 pt-3 border-top">
                 <h6 className="fw-bold mb-3">Documentos</h6>
                 <div className="row">
-                  {Object.entries(documentos).map(([docKey, docData]) => {
+                  {Object.entries(documentos)
+                    .filter(([docKey]) => !(nombre_gestion === 'GESTIÓN DE AULA' && docKey === 'anexoTemasEnsenanza'))
+                    .map(([docKey, docData]) => {
                     // Si docData es null, creamos un objeto vacío con la estructura básica
                     const documentData = docData || {
                       id: null,
@@ -168,12 +170,14 @@ const ModalAjustes = ({
                     };
 
                     const { id, ruta, nombre_completo } = documentData;
-                    const nombreMostrar = docKey
-                      .replace(/([A-Z])/g, ' $1')
-                      .replace(/_/g, ' ')
-                      .trim()
-                      .toLowerCase()
-                      .replace(/\b\w/g, l => l.toUpperCase());
+                    const nombreMostrar = docKey === 'anexoCulturaInstitucional'
+                      ? 'Anexo Politica de Comunicación'
+                      : docKey
+                        .replace(/([A-Z])/g, ' $1')
+                        .replace(/_/g, ' ')
+                        .trim()
+                        .toLowerCase()
+                        .replace(/\b\w/g, l => l.toUpperCase());
 
                     // Verificamos si hay un archivo subido recientemente para este documento
                     const hasUploadedFile = fileUploads[documentData.document_key] ||
@@ -216,7 +220,7 @@ const ModalAjustes = ({
                         )}
                       </div>
                     );
-                  })}
+                    })}
                 </div>
               </div>
             )}
