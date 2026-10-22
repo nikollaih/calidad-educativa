@@ -18,7 +18,8 @@ const TEXTAREA_LIMIT = 1000;
 const OBSERVATION_LIMIT = 500;
 const NON_TEXT_FORM_FIELDS = ['tipo_codificacion', 'fecha', 'observacion', 'relation_name'];
 
-const countCharacters = (value) => Array.from(String(value ?? '')).length;
+const countCharacters = (value) =>
+  Array.from(String(value ?? '').replace(/\r\n|\r|\n/g, '\r\n')).length;
 
 const getTextLengthErrors = (formData) => {
   const errors = {};
