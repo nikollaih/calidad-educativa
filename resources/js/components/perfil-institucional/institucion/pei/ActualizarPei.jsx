@@ -14,6 +14,32 @@ const requiresAdministrativeAct = (formData, nombreGestion) => {
 const isHiddenDocument = (nombreGestion, docKey) =>
   nombreGestion === 'GESTIÓN DE AULA' && docKey === 'anexoTemasEnsenanza';
 
+const TEXTAREA_LIMIT = 1000;
+const OBSERVATION_LIMIT = 500;
+const NON_TEXT_FORM_FIELDS = ['tipo_codificacion', 'fecha', 'observacion', 'relation_name'];
+
+const countCharacters = (value) => Array.from(String(value ?? '')).length;
+
+const getTextLengthErrors = (formData) => {
+  const errors = {};
+
+  Object.entries(formData).forEach(([field, value]) => {
+    if (NON_TEXT_FORM_FIELDS.includes(field)) return;
+
+    const length = countCharacters(value);
+    if (length > TEXTAREA_LIMIT) {
+      errors[field] = `Este campo supera el máximo de ${TEXTAREA_LIMIT} caracteres (${length}).`;
+    }
+  });
+
+  const observationLength = countCharacters(formData.observacion);
+  if (observationLength > OBSERVATION_LIMIT) {
+    errors.observacion = `La observación supera el máximo de ${OBSERVATION_LIMIT} caracteres (${observationLength}).`;
+  }
+
+  return errors;
+};
+
 const getDocumentDisplayName = (docKey) => {
   if (docKey === 'anexoCulturaInstitucional') return 'Anexo Politica de Comunicación';
   if (docKey === 'anexoPrevencionRiesgosPsicosociales') return 'Anexo de Riesgos Psicosociales';
@@ -38,9 +64,24 @@ const ModalAjustes = ({
 }) => {
 
   const [fileUploads, setFileUploads] = useState({});
+  const [lengthErrors, setLengthErrors] = useState(() => getTextLengthErrors(formData));
+
+  const updateTextField = (field, value) => {
+    const updatedFormData = {...formData, [field]: value};
+    setFormData(updatedFormData);
+    setLengthErrors(getTextLengthErrors(updatedFormData));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const currentLengthErrors = getTextLengthErrors(formData);
+    setLengthErrors(currentLengthErrors);
+    if (Object.keys(currentLengthErrors).length > 0) {
+      const firstInvalidField = Object.keys(currentLengthErrors)[0];
+      document.getElementById(`pei-field-${firstInvalidField}`)?.focus();
+      return;
+    }
 
     if (requiresAdministrativeAct(formData, nombre_gestion) && !fileUploads.documento_adicional) {
       alert('Debe seleccionar el Acto administrativo antes de guardar.');
@@ -109,6 +150,14 @@ const ModalAjustes = ({
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="_token" value={csrfToken} />
 
+            {Object.keys(lengthErrors).length > 0 && (
+              <div className="alert alert-danger" role="alert">
+                <ul className="mb-0">
+                  {Object.values(lengthErrors).map((error, index) => <li key={index}>{error}</li>)}
+                </ul>
+              </div>
+            )}
+
             {/* Sección superior: Tipo de ajuste y Fecha */}
             <div className="row mb-4">
               <div className="col-md-6">
@@ -151,14 +200,22 @@ const ModalAjustes = ({
 
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
-                    <label className="block text-sm mb-2 ml-4 text-capitalize">{clave.replace(/_/g, ' ')}</label>
+                    <label className="block text-sm mb-2 ml-4 text-capitalize" htmlFor={`pei-field-${clave}`}>
+                      {clave.replace(/_/g, ' ')}
+                    </label>
                     <textarea
+                      id={`pei-field-${clave}`}
                       type="text"
                       className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                       value={valor || ''}
-                      maxLength={1000}
-                      onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
+                      maxLength={TEXTAREA_LIMIT}
+                      onChange={(e) => updateTextField(clave, e.target.value)}
+                      aria-invalid={Boolean(lengthErrors[clave])}
                     />
+                    <small className={lengthErrors[clave] ? 'text-danger' : 'text-muted'}>
+                      {countCharacters(valor)} / {TEXTAREA_LIMIT} caracteres
+                      {lengthErrors[clave] && ` — ${lengthErrors[clave]}`}
+                    </small>
                   </div>
                 );
               })}
@@ -236,14 +293,20 @@ const ModalAjustes = ({
             {/* Sección inferior: Observación y campo de documento adicional */}
             <div className="row mt-3">
               <div className="col-md-12 mb-3">
-                <label className="block text-sm mb-2 ml-4 text-capitalize">Observación</label>
+                <label className="block text-sm mb-2 ml-4 text-capitalize" htmlFor="pei-field-observacion">Observación</label>
                 <textarea
+                  id="pei-field-observacion"
                   className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                   value={formData.observacion || ''}
-                  maxLength={500}
-                  onChange={(e) => setFormData({...formData, observacion: e.target.value})}
+                  maxLength={OBSERVATION_LIMIT}
+                  onChange={(e) => updateTextField('observacion', e.target.value)}
+                  aria-invalid={Boolean(lengthErrors.observacion)}
                   rows="3"
                 />
+                <small className={lengthErrors.observacion ? 'text-danger' : 'text-muted'}>
+                  {countCharacters(formData.observacion)} / {OBSERVATION_LIMIT} caracteres
+                  {lengthErrors.observacion && ` — ${lengthErrors.observacion}`}
+                </small>
               </div>
 
               {/* Campo adicional para subir documento. Las correcciones no requieren acto administrativo. */}
