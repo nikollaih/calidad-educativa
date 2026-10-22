@@ -156,6 +156,7 @@ const ModalAjustes = ({
                       type="text"
                       className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                       value={valor || ''}
+                      maxLength={1000}
                       onChange={(e) => setFormData({...formData, [clave]: e.target.value})}
                     />
                   </div>
@@ -239,6 +240,7 @@ const ModalAjustes = ({
                 <textarea
                   className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                   value={formData.observacion || ''}
+                  maxLength={500}
                   onChange={(e) => setFormData({...formData, observacion: e.target.value})}
                   rows="3"
                 />

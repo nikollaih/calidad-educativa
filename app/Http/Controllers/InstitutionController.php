@@ -752,6 +752,23 @@ class InstitutionController extends Controller {
                 throw new \Exception("No se encontró el modelo para la relación: {$input['relation_name']}");
             }
 
+            $nonTextFields = [
+                'tipo_codificacion',
+                'fecha',
+                'observacion',
+                'relation_name',
+                'institucion_id',
+                'hijo_index',
+                'documento_adicional',
+            ];
+            $textFieldRules = [];
+            foreach ($request->except($nonTextFields) as $field => $value) {
+                if (!$value instanceof \Illuminate\Http\UploadedFile) {
+                    $textFieldRules[$field] = ['nullable', 'string', 'max:1000'];
+                }
+            }
+            $request->validate($textFieldRules);
+
             // Almacena los documentos nuevos
             $documentosProcesados = [];
             foreach ($documentos as $key => $value) {
