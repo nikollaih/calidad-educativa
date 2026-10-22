@@ -150,14 +150,6 @@ const ModalAjustes = ({
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="_token" value={csrfToken} />
 
-            {Object.keys(lengthErrors).length > 0 && (
-              <div className="alert alert-danger" role="alert">
-                <ul className="mb-0">
-                  {Object.values(lengthErrors).map((error, index) => <li key={index}>{error}</li>)}
-                </ul>
-              </div>
-            )}
-
             {/* Sección superior: Tipo de ajuste y Fecha */}
             <div className="row mb-4">
               <div className="col-md-6">
