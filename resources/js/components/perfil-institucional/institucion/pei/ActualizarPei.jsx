@@ -67,6 +67,29 @@ const getDocumentDisplayName = (docKey) => {
     .trim();
 };
 
+const HISTORICAL_REVIEW_PLACEHOLDERS = new Set([
+  'No existía',
+  'Vacío',
+  'Eliminado',
+  'Sin informacion',
+]);
+
+const renderHistoricalValue = (field, value) => {
+  if (value === null || value === undefined) {
+    return <span className="fst-italic text-muted">Vacío</span>;
+  }
+
+  if (
+    field === 'resena_historica'
+    && typeof value === 'string'
+    && !HISTORICAL_REVIEW_PLACEHOLDERS.has(value)
+  ) {
+    return <RichTextContent html={value} className="historical-rich-text" />;
+  }
+
+  return value;
+};
+
 // Modal de editar
 const ModalAjustes = ({
   nombre_gestion,
@@ -571,16 +594,16 @@ const ModalHistoricos = ({
                             </div>
 
                             <div className="row">
-                              <div className="col-md-6 mb-2">
+                              <div className={field === 'resena_historica' ? 'col-12 mb-3' : 'col-md-6 mb-2'}>
                                 <small className="text-muted d-block">Anterior</small>
-                                <div className="border rounded p-2 bg-light text-danger">
-                                  {values.old_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                <div className={`border rounded p-2 bg-light ${field === 'resena_historica' ? 'historical-review-value' : 'text-danger'}`}>
+                                  {renderHistoricalValue(field, values.old_value)}
                                 </div>
                               </div>
-                              <div className="col-md-6 mb-2">
+                              <div className={field === 'resena_historica' ? 'col-12 mb-2' : 'col-md-6 mb-2'}>
                                 <small className="text-muted d-block">Nuevo</small>
-                                <div className="border rounded p-2 bg-light text-success">
-                                  {values.new_value ?? <span className="fst-italic text-muted">Vacío</span>}
+                                <div className={`border rounded p-2 bg-light ${field === 'resena_historica' ? 'historical-review-value' : 'text-success'}`}>
+                                  {renderHistoricalValue(field, values.new_value)}
                                 </div>
                               </div>
                             </div>

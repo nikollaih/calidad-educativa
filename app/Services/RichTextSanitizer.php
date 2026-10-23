@@ -53,13 +53,35 @@ class RichTextSanitizer
         $config->set('Core.Encoding', 'UTF-8');
         $config->set(
             'HTML.Allowed',
-            'p,br,strong,b,em,i,u,s,del,ol,ul,li,h1,h2,h3,blockquote,a[href|title]'
+            'p[style],br,strong,b,em,i,u,s,del,sub,sup,ol,ul,li,'
+            .'h1[style],h2[style],h3[style],h4[style],blockquote[style],'
+            .'code,pre,hr,span[style],mark[data-color|style],a[href|title],'
+            .'table[style],colgroup,col[style],thead,tbody,tfoot,tr,'
+            .'td[colspan|rowspan],th[colspan|rowspan|scope]'
         );
+        $config->set('CSS.AllowedProperties', [
+            'text-align',
+            'color',
+            'background-color',
+            'font-size',
+            'font-family',
+            'width',
+            'min-width',
+        ]);
         $config->set('URI.AllowedSchemes', [
             'http' => true,
             'https' => true,
             'mailto' => true,
         ]);
+        $config->set('HTML.DefinitionID', 'pei-rich-text');
+        $config->set('HTML.DefinitionRev', 1);
+
+        $htmlDefinition = $config->maybeGetRawHTMLDefinition();
+        if ($htmlDefinition !== null) {
+            $htmlDefinition->addElement('mark', 'Inline', 'Inline', 'Common', [
+                'data-color' => 'Text',
+            ]);
+        }
 
         $this->purifier = new \HTMLPurifier($config);
 

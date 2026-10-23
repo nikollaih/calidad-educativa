@@ -2,17 +2,42 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import BackgroundColor from '@tiptap/extension-text-style/background-color';
+import Color from '@tiptap/extension-color';
+import FontFamily from '@tiptap/extension-font-family';
+import FontSize from '@tiptap/extension-text-style/font-size';
+import Highlight from '@tiptap/extension-highlight';
 import Placeholder from '@tiptap/extension-placeholder';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import { TableKit } from '@tiptap/extension-table/kit';
+import TextAlign from '@tiptap/extension-text-align';
+import { TextStyle } from '@tiptap/extension-text-style';
 import RichTextToolbar from './RichTextToolbar.jsx';
 import './richTextEditor.css';
 
 const editorExtensions = [
   StarterKit.configure({
-    code: false,
-    codeBlock: false,
-    horizontalRule: false,
     link: {
       openOnClick: false,
+    },
+  }),
+  TextStyle,
+  FontSize,
+  Color,
+  BackgroundColor,
+  FontFamily,
+  Highlight.configure({ multicolor: true }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
+    alignments: ['left', 'center', 'right', 'justify'],
+  }),
+  Subscript,
+  Superscript,
+  TableKit.configure({
+    table: {
+      resizable: false,
+      renderWrapper: false,
     },
   }),
 ];

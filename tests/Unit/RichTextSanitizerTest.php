@@ -34,6 +34,30 @@ class RichTextSanitizerTest extends TestCase
         $this->assertStringContainsString('enlace inseguro', $cleanHtml);
     }
 
+    public function test_it_preserves_extended_editor_formats_but_filters_unsafe_styles(): void
+    {
+        $cleanHtml = (new RichTextSanitizer)->sanitize(
+            '<h1 style="text-align:center">Título</h1>'
+            .'<p><sub>sub</sub> <sup>sup</sup> <mark data-color="#fef08a" style="background-color:#fef08a">resaltado</mark>'
+            .'<span style="color:#1d4ed8;font-size:24px;font-family:Georgia,serif;background-image:url(javascript:alert(1))">estilo</span></p>'
+            .'<table style="min-width:75px"><colgroup><col style="min-width:25px"></colgroup>'
+            .'<tbody><tr><th scope="col">A</th><td colspan="1">B</td></tr></tbody></table>'
+            .'<pre><code>código</code></pre><hr>'
+        );
+
+        $this->assertStringContainsString('<h1', $cleanHtml);
+        $this->assertStringContainsString('<sub>sub</sub>', $cleanHtml);
+        $this->assertStringContainsString('<sup>sup</sup>', $cleanHtml);
+        $this->assertStringContainsString('<mark', $cleanHtml);
+        $this->assertStringContainsString('<table style="min-width:75px;">', $cleanHtml);
+        $this->assertStringContainsString('<colgroup>', $cleanHtml);
+        $this->assertStringContainsString('min-width:75px', $cleanHtml);
+        $this->assertStringContainsString('<pre><code>código</code></pre>', $cleanHtml);
+        $this->assertStringContainsString('<hr', $cleanHtml);
+        $this->assertStringNotContainsString('background-image', $cleanHtml);
+        $this->assertStringNotContainsString('javascript:', strtolower($cleanHtml));
+    }
+
     public function test_empty_editor_markup_is_normalized_to_an_empty_string(): void
     {
         $this->assertSame('', (new RichTextSanitizer)->sanitize('<p><br></p>'));

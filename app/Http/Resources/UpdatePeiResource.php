@@ -34,19 +34,32 @@ class UpdatePeiResource extends JsonResource
                 ->sanitize($reviewFields['resena_historica']);
         }
 
+        $richTextSanitizer = app(RichTextSanitizer::class);
+        $sanitizeHistoricalReviewSnapshot = static function ($snapshot) use ($richTextSanitizer) {
+            if (!is_array($snapshot) || !array_key_exists('resena_historica', $snapshot)) {
+                return $snapshot;
+            }
+
+            $snapshot['resena_historica'] = $richTextSanitizer->sanitize(
+                $snapshot['resena_historica']
+            );
+
+            return $snapshot;
+        };
+
         return [
             'resena_historica' => array_merge(
                 $reviewFields ?? [],
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('resena_historica'),
                     'relation_name' => 'resenaHistorica->resenaHistorica',
-                    'traces' => $this->resenaHistorica->resenaHistorica?->historialesPei->map(function ($trace) {
+                    'traces' => $this->resenaHistorica->resenaHistorica?->historialesPei->map(function ($trace) use ($sanitizeHistoricalReviewSnapshot) {
                         return [
                             'model_id'          => $trace->model_id ?? 'Sin informacion',
                             'model_type'        => $trace->model_type ?? 'Sin informacion',
                             'changes'           => [
-                                'old_data'          => $trace->old_data ?? 'Sin informacion',
-                                'new_data'          => $trace->new_data ?? 'Sin informacion',
+                                'old_data'          => $sanitizeHistoricalReviewSnapshot($trace->old_data) ?? 'Sin informacion',
+                                'new_data'          => $sanitizeHistoricalReviewSnapshot($trace->new_data) ?? 'Sin informacion',
                             ],
                             'attachment_id'     => $trace->attachment_id ?? 'Sin informacion',
                             'attachment_url'    => $trace->attachment?->ruta,
