@@ -37,15 +37,11 @@
 
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
-        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/typography.css')}}" />
-        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/katex.css')}}" />
-        <link rel="stylesheet" href="{{asset('assets/vendor/libs/quill/editor.css')}}" />
 
         @yield('vendors_css')
         <!-- Custom CSS -->
         @yield('custom_css')
         @vite('resources/js/app.js')
-        <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
         <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
         <script src="{{asset('assets/js/config.js')}}"></script>
         <!--<script src="{{asset('assets/js/forms-editors-pei.js')}}"></script> -->
@@ -69,5 +65,4 @@
         @yield('javascripts')
     </body>
 </html>
-
 

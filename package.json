@@ -17,8 +17,11 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@tiptap/core": "3.32.0",
+        "@tiptap/extension-placeholder": "3.32.0",
+        "@tiptap/starter-kit": "3.32.0",
         "chart.js": "^4.4.9",
-        "preact": "^10.26.5",
+        "preact": "^10.29.8",
         "preact-router": "^4.1.2",
         "react-dropzone": "^14.3.8",
         "react-select": "^5.10.2",

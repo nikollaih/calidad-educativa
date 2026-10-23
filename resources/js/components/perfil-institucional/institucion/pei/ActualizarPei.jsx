@@ -1,15 +1,20 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import CTooltip from "@/components/shared/CTooltip.jsx";
+import RichTextEditor from '@/components/shared/rich-text-editor/LazyRichTextEditor.jsx';
+import RichTextContent from '@/components/shared/rich-text-editor/RichTextContent.jsx';
+import { HISTORICAL_REVIEW_MAX_LENGTH } from '@/components/shared/rich-text-editor/constants.js';
 import { sortBySelectorText } from '@/utilidades/string.js';
 
-const requiresAdministrativeAct = (formData, nombreGestion) => {
-  const isHistoricalReview = formData.relation_name === 'resenaHistorica->resenaHistorica'
+const HISTORICAL_REVIEW_RELATION = 'resenaHistorica->resenaHistorica';
+
+const isHistoricalReview = (formData, nombreGestion) =>
+  formData.relation_name === HISTORICAL_REVIEW_RELATION
     || nombreGestion === 'RESEÑA HISTORICA'
     || nombreGestion === 'RESEÑA HISTÓRICA';
 
-  return Number(formData.tipo_codificacion) !== 4 && !isHistoricalReview;
-};
+const requiresAdministrativeAct = (formData, nombreGestion) =>
+  Number(formData.tipo_codificacion) !== 4 && !isHistoricalReview(formData, nombreGestion);
 
 const isHiddenDocument = (nombreGestion, docKey) =>
   nombreGestion === 'GESTIÓN DE AULA' && docKey === 'anexoTemasEnsenanza';
@@ -21,11 +26,21 @@ const NON_TEXT_FORM_FIELDS = ['tipo_codificacion', 'fecha', 'observacion', 'rela
 const countCharacters = (value) =>
   Array.from(String(value ?? '').replace(/\r\n|\r|\n/g, '\r\n')).length;
 
+const countRichTextCharacters = (value) => {
+  const document = new DOMParser().parseFromString(String(value ?? ''), 'text/html');
+  return Array.from(document.body.textContent || '').length
+    + document.body.querySelectorAll('br').length;
+};
+
+const getHistoricalReviewLengthError = (length) =>
+  `La reseña supera el máximo de ${HISTORICAL_REVIEW_MAX_LENGTH.toLocaleString('es-CO')} caracteres (${length.toLocaleString('es-CO')}).`;
+
 const getTextLengthErrors = (formData) => {
   const errors = {};
 
   Object.entries(formData).forEach(([field, value]) => {
     if (NON_TEXT_FORM_FIELDS.includes(field)) return;
+    if (field === 'resena_historica' && isHistoricalReview(formData)) return;
 
     const length = countCharacters(value);
     if (length > TEXTAREA_LIMIT) {
@@ -66,17 +81,39 @@ const ModalAjustes = ({
 
   const [fileUploads, setFileUploads] = useState({});
   const [lengthErrors, setLengthErrors] = useState(() => getTextLengthErrors(formData));
+  const [historicalReviewLength, setHistoricalReviewLength] = useState(
+    () => countRichTextCharacters(formData.resena_historica)
+  );
 
-  const updateTextField = (field, value) => {
+  const updateTextField = (field, value, visibleLength) => {
     const updatedFormData = {...formData, [field]: value};
     setFormData(updatedFormData);
-    setLengthErrors(getTextLengthErrors(updatedFormData));
+
+    const updatedErrors = getTextLengthErrors(updatedFormData);
+    if (field === 'resena_historica' && isHistoricalReview(updatedFormData, nombre_gestion)) {
+      const characterCount = Number.isFinite(visibleLength)
+        ? visibleLength
+        : countRichTextCharacters(value);
+      setHistoricalReviewLength(characterCount);
+
+      if (characterCount > HISTORICAL_REVIEW_MAX_LENGTH) {
+        updatedErrors.resena_historica = getHistoricalReviewLengthError(characterCount);
+      }
+    }
+
+    setLengthErrors(updatedErrors);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const currentLengthErrors = getTextLengthErrors(formData);
+    if (
+      isHistoricalReview(formData, nombre_gestion)
+      && historicalReviewLength > HISTORICAL_REVIEW_MAX_LENGTH
+    ) {
+      currentLengthErrors.resena_historica = getHistoricalReviewLengthError(historicalReviewLength);
+    }
     setLengthErrors(currentLengthErrors);
     if (Object.keys(currentLengthErrors).length > 0) {
       const firstInvalidField = Object.keys(currentLengthErrors)[0];
@@ -190,6 +227,31 @@ const ModalAjustes = ({
               {Object.entries(formData).map(([clave, valor]) => {
 
                 if (['tipo_codificacion', 'fecha', 'observacion', 'relation_name'].includes(clave)) return null;
+
+                if (clave === 'resena_historica' && isHistoricalReview(formData, nombre_gestion)) {
+                  return (
+                    <div className="col-md-12 mb-3" key={`edit-${clave}`}>
+                      <RichTextEditor
+                        id={`pei-field-${clave}`}
+                        label="Reseña histórica"
+                        value={valor || ''}
+                        placeholder="Escribe la reseña histórica de la institución…"
+                        maxLength={HISTORICAL_REVIEW_MAX_LENGTH}
+                        invalid={Boolean(lengthErrors[clave])}
+                        describedBy={`pei-field-${clave}-hint`}
+                        onChange={(html, visibleLength) =>
+                          updateTextField(clave, html, visibleLength)
+                        }
+                      />
+                      <small
+                        id={`pei-field-${clave}-hint`}
+                        className={lengthErrors[clave] ? 'text-danger' : 'text-muted'}
+                      >
+                        {lengthErrors[clave] || 'Puedes usar títulos, listas, citas y enlaces.'}
+                      </small>
+                    </div>
+                  );
+                }
 
                 return (
                   <div className="col-md-6 mb-3" key={`edit-${clave}`}>
@@ -642,18 +704,17 @@ export default function ActualizarPei({
         body: formDataToSend
       });
 
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor');
+        const validationMessage = Object.values(data.errors || {})
+          .flat()
+          .find((message) => typeof message === 'string');
+        throw new Error(validationMessage || data.error || 'No fue posible guardar los cambios.');
       }
 
-      const data = await response.json();
-
-      location.reload();
-
-      console.log('Datos guardados exitosamente:', data);
       setCurrentModal(null);
-
       alert('Los cambios se guardaron correctamente');
+      location.reload();
 
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
@@ -748,10 +809,13 @@ export default function ActualizarPei({
                                                                         className="col-md-6 fw-semibold text-capitalize">
                                                                         {clave.replace(/_/g, ' ')}:
                                                                     </div>
-                                                                    <div className="text-break">
-                                                                        {valor ||
-                                                                            <span className="text-muted fst-italic">No registrado</span>}
-                                                                    </div>
+                                                                    {clave === 'resena_historica' && isHistoricalReview(otrosCampos, nombre_gestion) ? (
+                                                                      <RichTextContent html={valor} className="text-break" />
+                                                                    ) : (
+                                                                      <div className="text-break">
+                                                                        {valor || <span className="text-muted fst-italic">No registrado</span>}
+                                                                      </div>
+                                                                    )}
                                                                 </div>
                                                             ))}
                                                     </div>

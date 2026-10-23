@@ -119,6 +119,9 @@
 
                                                 @php
                                                     $resenaHistorica = $resena_historica->resenahistorica ?? null;
+                                                    $resenaHistoricaHtml = $resenaHistorica?->resena_historica
+                                                        ? app(\App\Services\RichTextSanitizer::class)->sanitize($resenaHistorica->resena_historica)
+                                                        : null;
                                                 @endphp
 
                                                     <!-- Resena historica -->
@@ -146,9 +149,15 @@
                                                     @foreach($camposGrupos as $titulo => $campo)
                                                         <div class="mb-3 text-left">
                                                             <div class="font-semibold text-gray-800 mb-2">{{ $titulo }}:</div>
-                                                            <div class="break-words text-gray-700">
-                                                                {!! $resenaHistorica->$campo ?? '<span class="text-gray-500 italic">No registrado</span>' !!}
-                                                            </div>
+                                                            @if($campo === 'resena_historica' && $resenaHistoricaHtml)
+                                                                <div class="pei-rich-text break-words text-gray-700">
+                                                                    {!! $resenaHistoricaHtml !!}
+                                                                </div>
+                                                            @else
+                                                                <div class="break-words text-gray-700">
+                                                                    <span class="text-gray-500 italic">No registrado</span>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     @endforeach
                                                 </div>

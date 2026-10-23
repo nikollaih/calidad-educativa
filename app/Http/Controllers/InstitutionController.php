@@ -19,6 +19,7 @@ use App\Models\Municipio;
 use App\Models\PeiHistorial;
 use App\Models\Seguridad\Role\Role;
 use App\Models\User;
+use App\Services\RichTextSanitizer;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,8 +29,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class InstitutionController extends Controller {
+    private const HISTORICAL_REVIEW_MAX_HTML_LENGTH = 2_000_000;
+    private const HISTORICAL_REVIEW_MAX_TEXT_LENGTH = 100_000;
+
     private array $rolesExcluded = [
         'super_admin',
         'rector',
@@ -688,7 +693,11 @@ class InstitutionController extends Controller {
         ]);
     }
 
-    public function updatePei(Request $request, int $institutionId) {
+    public function updatePei(
+        Request $request,
+        RichTextSanitizer $richTextSanitizer,
+        int $institutionId
+    ) {
         DB::beginTransaction();
 
         try {
@@ -762,12 +771,32 @@ class InstitutionController extends Controller {
                 'documento_adicional',
             ];
             $textFieldRules = [];
+            $isHistoricalReview = ($input['relation_name'] ?? null) === 'resenaHistorica->resenaHistorica';
             foreach ($request->except($nonTextFields) as $field => $value) {
                 if (!$value instanceof \Illuminate\Http\UploadedFile) {
-                    $textFieldRules[$field] = ['nullable', 'string', 'max:1000'];
+                    $maxLength = $isHistoricalReview && $field === 'resena_historica'
+                        ? self::HISTORICAL_REVIEW_MAX_HTML_LENGTH
+                        : 1000;
+                    $textFieldRules[$field] = ['nullable', 'string', "max:{$maxLength}"];
                 }
             }
             $request->validate($textFieldRules);
+
+            if ($isHistoricalReview && array_key_exists('resena_historica', $dataToUpdate)) {
+                $sanitizedReview = $richTextSanitizer->sanitize($dataToUpdate['resena_historica']);
+                if (
+                    $richTextSanitizer->plainTextLength($sanitizedReview)
+                    > self::HISTORICAL_REVIEW_MAX_TEXT_LENGTH
+                ) {
+                    throw ValidationException::withMessages([
+                        'resena_historica' => [
+                            'La reseña no puede superar los 100.000 caracteres de texto.',
+                        ],
+                    ]);
+                }
+
+                $dataToUpdate['resena_historica'] = $sanitizedReview;
+            }
 
             // Almacena los documentos nuevos
             $documentosProcesados = [];

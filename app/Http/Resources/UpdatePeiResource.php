@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\RichTextSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,12 +27,16 @@ class UpdatePeiResource extends JsonResource
     protected function transformResenaHistorica(): ?array {
         if (!$this->resenaHistorica) return null;
 
+        $historicalReview = $this->resenaHistorica->resenaHistorica;
+        $reviewFields = $this->transformSimple($historicalReview, ['resena_historica']);
+        if ($reviewFields !== null) {
+            $reviewFields['resena_historica'] = app(RichTextSanitizer::class)
+                ->sanitize($reviewFields['resena_historica']);
+        }
+
         return [
             'resena_historica' => array_merge(
-                $this->transformSimple(
-                    $this->resenaHistorica->resenaHistorica,
-                    ['resena_historica'],
-                ),
+                $reviewFields ?? [],
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('resena_historica'),
                     'relation_name' => 'resenaHistorica->resenaHistorica',

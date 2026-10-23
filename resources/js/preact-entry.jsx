@@ -6,7 +6,12 @@ import { h, render } from 'preact';
  */
 async function importAllComponents() {
     // Importación dinámica con modo eager para mejor rendimiento
-    const componentModules = import.meta.glob('./components/**/*.jsx', { eager: true });
+    const componentModules = import.meta.glob([
+        './components/**/*.jsx',
+        // The rich editor is loaded on demand by PEI so its ProseMirror code
+        // does not inflate the application bundle on screens that never use it.
+        '!./components/shared/rich-text-editor/**/*.jsx',
+    ], { eager: true });
     const components = {};
 
     // Procesamos cada módulo sin necesidad de awaits en bucle
