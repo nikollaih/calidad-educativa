@@ -493,7 +493,7 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('atencion_grupo_poblacionales'),
-                    'relation_name' => 'atencionGrupoPoblacionales',
+                    'relation_name' => 'gestionComunidad->atencionGrupoPoblacionales',
                     'traces' => $this->gestionComunidad->atencionGrupoPoblacionales?->historialesPei->map(function ($trace) {
                         return [
                             'model_id'          => $trace->model_id ?? 'Sin informacion',
@@ -519,7 +519,7 @@ class UpdatePeiResource extends JsonResource
                 ),
                 [
                     'nombre_gestion' => $this->obtieneNombreProceso('programas_servicio_social'),
-                    'relation_name' => 'programasServicioSocial',
+                    'relation_name' => 'gestionComunidad->programasServicioSocial',
                     'traces' => $this->gestionComunidad->programasServicioSocial?->historialesPei->map(function ($trace) {
                         return [
                             'model_id'          => $trace->model_id ?? 'Sin informacion',
