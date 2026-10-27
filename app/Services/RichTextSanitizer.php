@@ -50,6 +50,14 @@ class RichTextSanitizer
         }
 
         $config = \HTMLPurifier_Config::createDefault();
+        $serializerPath = dirname(__DIR__, 2).'/storage/framework/cache/htmlpurifier';
+        if (!is_dir($serializerPath)
+            && !mkdir($serializerPath, 0775, true)
+            && !is_dir($serializerPath)) {
+            throw new \RuntimeException("Unable to create HTMLPurifier cache directory: {$serializerPath}");
+        }
+
+        $config->set('Cache.SerializerPath', $serializerPath);
         $config->set('Core.Encoding', 'UTF-8');
         $config->set(
             'HTML.Allowed',

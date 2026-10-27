@@ -38,7 +38,8 @@ COPY . .
 COPY --from=build-frontend /app/public ./public
 
 # Configurar permisos para Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache && \
+RUN mkdir -p storage/framework/cache/htmlpurifier && \
+    chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
 # Instalar dependencias PHP (sin desarrollo)
