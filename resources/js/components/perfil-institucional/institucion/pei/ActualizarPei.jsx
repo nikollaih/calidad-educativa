@@ -579,36 +579,49 @@ const ModalHistoricos = ({
                     )}
 
                       {Object.keys(fieldChanges).length > 0 ? (
-                        Object.entries(fieldChanges).map(([field, values]) => (
-                          <div className="mb-4" key={field}>
-                            <div className="d-flex justify-content-between align-items-center mb-2">
-                              <strong className="text-capitalize">{field.replace(/_/g, ' ')}</strong>
-                              {values.status !== 'modified' && (
-                                <span className={`badge ${
-                                  values.status === 'added' ? 'bg-success-subtle text-success' :
-                                  'bg-danger-subtle text-danger'
-                                } text-capitalize`}>
-                                  {values.status}
-                                </span>
-                              )}
-                            </div>
+                        Object.entries(fieldChanges).map(([field, values]) => {
+                          const displayedValues = field === 'resena_historica'
+                            ? [
+                                { label: 'Nuevo', value: values.new_value, color: 'text-success' },
+                                { label: 'Anterior', value: values.old_value, color: 'text-danger' },
+                              ]
+                            : [
+                                { label: 'Anterior', value: values.old_value, color: 'text-danger' },
+                                { label: 'Nuevo', value: values.new_value, color: 'text-success' },
+                          ];
 
-                            <div className="row">
-                              <div className={field === 'resena_historica' ? 'col-12 mb-3' : 'col-md-6 mb-2'}>
-                                <small className="text-muted d-block">Anterior</small>
-                                <div className={`border rounded p-2 bg-light ${field === 'resena_historica' ? 'historical-review-value' : 'text-danger'}`}>
-                                  {renderHistoricalValue(field, values.old_value)}
-                                </div>
+                          return (
+                            <div className="mb-4" key={field}>
+                              <div className="d-flex justify-content-between align-items-center mb-2">
+                                <strong className="text-capitalize">{field.replace(/_/g, ' ')}</strong>
+                                {values.status !== 'modified' && (
+                                  <span className={`badge ${
+                                    values.status === 'added' ? 'bg-success-subtle text-success' :
+                                    'bg-danger-subtle text-danger'
+                                  } text-capitalize`}>
+                                    {values.status}
+                                  </span>
+                                )}
                               </div>
-                              <div className={field === 'resena_historica' ? 'col-12 mb-2' : 'col-md-6 mb-2'}>
-                                <small className="text-muted d-block">Nuevo</small>
-                                <div className={`border rounded p-2 bg-light ${field === 'resena_historica' ? 'historical-review-value' : 'text-success'}`}>
-                                  {renderHistoricalValue(field, values.new_value)}
-                                </div>
+
+                              <div className="row">
+                                {displayedValues.map(({ label, value, color }, index) => (
+                                  <div
+                                    className={field === 'resena_historica'
+                                      ? `col-12 ${index === 0 ? 'mb-3' : 'mb-2'}`
+                                      : 'col-md-6 mb-2'}
+                                    key={label}
+                                  >
+                                    <small className="text-muted d-block">{label}</small>
+                                    <div className={`border rounded p-2 bg-light ${field === 'resena_historica' ? 'historical-review-value' : color}`}>
+                                      {renderHistoricalValue(field, value)}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </div>
-                          </div>
-                        ))
+                          );
+                        })
                       ) : (
                         <div className="text-muted text-center">
                           <i className="far fa-info-circle me-2"></i>
