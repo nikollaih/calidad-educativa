@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\SelectorOrder;
+use App\Exports\AutoevaluacionExport;
 use App\Http\Requests\InstitucionRequest;
 use App\Http\Resources\UpdatePeiResource;
 use App\Http\Services\AdjuntoService;
@@ -30,6 +31,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InstitutionController extends Controller {
     private const HISTORICAL_REVIEW_MAX_HTML_LENGTH = 2_000_000;
@@ -410,6 +412,14 @@ class InstitutionController extends Controller {
             'institucionNombre' => Institucion::find($autoevaluacion->institucion_id)?->nombre,
         ]);
     }
+
+    public function autoevaluacionesExportar(InstitucionRequest $request, int $autoevaluacionId) {
+        $autoevaluacion = Autoevaluacion::findOrFail($autoevaluacionId);
+        $fileName = "autoevaluacion_{$autoevaluacion->anio_vigencia}.xlsx";
+
+        return Excel::download(new AutoevaluacionExport($autoevaluacionId), $fileName);
+    }
+
     public function autoevaluacionesAlmacenar(Request $request) {
         $autoevaluacionData =  $request->input('autoevaluacion');
         $autoevaluacionData['alias_estado'] = "PROCESO";

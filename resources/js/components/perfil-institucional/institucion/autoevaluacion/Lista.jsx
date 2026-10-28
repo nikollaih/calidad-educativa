@@ -79,6 +79,14 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                                 hoverIconColor={'text-custom-primary'}
                                             />
                                         }
+                                        {permissions.canEdit &&
+                                            <CTableActionButton
+                                                title={'Exportar Excel'}
+                                                route={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-exportar`}
+                                                iconClass={'fas fa-file-excel'}
+                                                hoverIconColor={'text-custom-primary'}
+                                            />
+                                        }
                                         {permissions.canEditResoults &&
                                             <CTableActionButton
                                                 title={'Resultados'}

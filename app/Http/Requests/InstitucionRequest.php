@@ -27,7 +27,7 @@ class InstitucionRequest extends FormRequest {
                 'permissions' => ['s-institucion-eliminar'],
                 'roles' => ['rector'],
             ],
-            'autoevaluacionesVer,autoevaluaciones'=> [
+            'autoevaluacionesVer,autoevaluaciones,autoevaluacionesExportar'=> [
                 'permissions' => [
                     's-institucion-editar',
                     's-autoevaluacion-calificar-gestion_directiva',
