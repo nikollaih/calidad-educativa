@@ -104,7 +104,8 @@ class AutoevaluacionGestionSheet implements FromArray, WithColumnWidths, WithEve
 
                 $sheet->getStyle("A1:F{$lastRow}")->applyFromArray([
                     'alignment' => [
-                        'vertical' => Alignment::VERTICAL_TOP,
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
+                        'vertical' => Alignment::VERTICAL_CENTER,
                         'wrapText' => true,
                     ],
                     'borders' => [
@@ -157,7 +158,6 @@ class AutoevaluacionGestionSheet implements FromArray, WithColumnWidths, WithEve
                         ],
                         'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
                     ]);
-                    $sheet->getStyle("C{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
                     $sheet->getRowDimension($row)->setRowHeight(25);
                 }
 
