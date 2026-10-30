@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import CTableActionButton from '@/components/layout/components/buttons/CTableActionButton.jsx';
 
 const TEXTAREA_LIMIT = 1000;
 const countCharacters = (value) => Array.from(String(value ?? '').replace(/\r\n|\r|\n/g, '\r\n')).length;
@@ -22,18 +23,16 @@ export default function SedeStateAction({
 
     return (
         <>
-            <button
-                type="button"
-                className="border bg-blue-500 text-white p-2 rounded-pill btn-sm"
+            <CTableActionButton
+                title={actionLabel}
                 onClick={() => setIsOpen(true)}
-            >
-                <i className={`fas ${isClosing ? 'fa-lock' : 'fa-lock-open'} me-1`} />
-                {actionLabel}
-            </button>
+                iconClass={`fas ${isClosing ? 'fa-lock' : 'fa-lock-open'}`}
+                hoverIconColor="text-custom-primary"
+            />
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-3">
-                    <div className="w-full max-w-xl rounded-xl bg-white p-4 shadow-xl">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-3">
+                    <div className="w-full max-w-xl rounded-xl bg-white p-4 shadow-2xl">
                         <div className="mb-3 flex items-center justify-between">
                             <h2 className="mb-0 text-lg font-semibold text-custom-primary">
                                 {actionLabel}: {sedeName}
@@ -90,7 +89,7 @@ export default function SedeStateAction({
                             {validationErrors.stateSlug && <div className="alert alert-danger">{validationErrors.stateSlug}</div>}
 
                             <div className="flex justify-end gap-2">
-                                <button type="button" className="btn btn-outline-secondary" onClick={() => setIsOpen(false)}>
+                                <button type="button" className="border bg-blue-500 text-white p-2 rounded-pill" onClick={() => setIsOpen(false)}>
                                     Cancelar
                                 </button>
                                 <button type="submit" className="border bg-blue-500 text-white p-2 rounded-pill">
