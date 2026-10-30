@@ -28,6 +28,17 @@ class EducationalOfferController extends Controller
         private EducationalModelService $educationalModelService,
     ){}
 
+    private function redirectIfSedeClosed(?Sede $sede) {
+        if (!$sede?->isClosed()) {
+            return null;
+        }
+
+        return redirect()->route('sede-with-institution.show', [
+            'institutionId' => $sede->institution_id,
+            'sede_with_institution' => $sede->id,
+        ])->with('flash_error_message', 'La sede está cerrada y no se puede editar.');
+    }
+
 
 
 
@@ -53,6 +64,10 @@ class EducationalOfferController extends Controller
 
         $educationalOfferData =  $request->input('educational_offer');
         $educationalModelsData =  $request->input('educational_models');
+        if (!empty($educationalOfferData['sede_id'])) {
+            $closedSedeResponse = $this->redirectIfSedeClosed(Sede::findOrFail($educationalOfferData['sede_id']));
+            if ($closedSedeResponse) return $closedSedeResponse;
+        }
         if($request->hasFile('validation_authorization')){
                 // Intenta almacenar el Adjunto
             $storeAuthorizationResponse = $this->adjuntoService->storeAdjunto(
@@ -80,6 +95,10 @@ class EducationalOfferController extends Controller
         if(empty($educationalOffer))
             return redirect()->back()->with('flash_error_message', "Oferta educativa no encontrada");
 
+        if ($closedSedeResponse = $this->redirectIfSedeClosed(Sede::find($educationalOffer->sede_id))) {
+            return $closedSedeResponse;
+        }
+
         return view('institutional_profile.educational_offer.form_edit', ['educationalOffer' => $educationalOffer, 'eduactionalModels' => $eduactionalModels]);
     }
 
@@ -89,6 +108,10 @@ class EducationalOfferController extends Controller
         $educationalOffer = EducationalOffer::where('id',$educational_offer)->with('educationalModels','validationAuthorizationAdjunto')->first();
         if(empty($educationalOffer)){
             return redirect()->back()->with('flash_error_message', 'Oferta educativa no encontrada');
+        }
+
+        if ($closedSedeResponse = $this->redirectIfSedeClosed(Sede::find($educationalOffer->sede_id))) {
+            return $closedSedeResponse;
         }
 
         $educationalOfferData =  $request->input('educational_offer');
@@ -117,11 +140,20 @@ class EducationalOfferController extends Controller
         if(empty($educationalOffer)){
             return redirect()->back()->with('flash_error_message', 'Oferta educativa no encontrada');
         }
+
+        if ($closedSedeResponse = $this->redirectIfSedeClosed(Sede::find($educationalOffer->sede_id))) {
+            return $closedSedeResponse;
+        }
         $educationalOffer->delete();
         return redirect()->back()->with('success', 'Oferta educativa eliminada correctamente.');
     }
     public function vinculationView(int $institutionId, int $sedeId)
     {
+        $sede = Sede::findOrFail($sedeId);
+        if ($closedSedeResponse = $this->redirectIfSedeClosed($sede)) {
+            return $closedSedeResponse;
+        }
+
         $allEducationalLevels =  EducationalOfferLevel::with('anexo')
             ->where('institution_id', $institutionId)
             ->whereIn('category',
@@ -150,6 +182,9 @@ class EducationalOfferController extends Controller
             $sedeEducationalData = $request->input('sede_educational');
             $levelSchedules = $request->input('level_schedules');
             $sede = Sede::where('id',$sedeEducationalData['sede_id'])->firstOrFail();
+            if ($closedSedeResponse = $this->redirectIfSedeClosed($sede)) {
+                return $closedSedeResponse;
+            }
             // Procesar cada nivel y su horario
             if (!is_array($levelSchedules) || count($levelSchedules) === 0) {
                 return redirect()->back()->with('flash_error_message', 'Error al vincular la oferta educativa: Debes seleccionar almenos un nivel educativo e ingresar almenos un horario');
@@ -237,14 +272,18 @@ class EducationalOfferController extends Controller
             'educationalLevel',
             'schedules',
             'schedules.anexo',
-            'sede:id,name,institution_id',
+            'sede:id,name,institution_id,state_slug',
             'sede.institution:id,nombre'
         ])
         ->where('id',$levelSedeId)
         ->first();
 
-        if(empty($levelSedeId))
+        if(empty($levelSede))
             return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
+
+        if ($closedSedeResponse = $this->redirectIfSedeClosed($levelSede->sede)) {
+            return $closedSedeResponse;
+        }
 
         $selectedSede = $levelSede->sede;
          $allSedes = Sede::select('id','name')->orderBy('name')->get();
@@ -295,9 +334,13 @@ class EducationalOfferController extends Controller
     }
     public function vinculationDestroy(int $levelSedeId = null)
     {
-        $levelSede = LevelSedeEducational::where('id',$levelSedeId)->first();
+        $levelSede = LevelSedeEducational::with('sede')->where('id',$levelSedeId)->first();
         if(empty($levelSede))
             return redirect()->back()->with('flash_error_message', "Vinculación de oferta educativa no encontrada");
+
+        if ($closedSedeResponse = $this->redirectIfSedeClosed($levelSede->sede)) {
+            return $closedSedeResponse;
+        }
 
         $levelSede->schedules()->delete();
         $levelSede->delete();
@@ -306,9 +349,16 @@ class EducationalOfferController extends Controller
     }
     public function updateVinculation(Request $request, int $levelSede = null)
     {
+        $levelSedeToUpdate = LevelSedeEducational::with('sede')->where('id',$levelSede)->first();
+        if (!$levelSedeToUpdate) {
+            return redirect()->back()->with('flash_error_message', 'Vinculación de oferta educativa no encontrada');
+        }
+        if ($closedSedeResponse = $this->redirectIfSedeClosed($levelSedeToUpdate->sede)) {
+            return $closedSedeResponse;
+        }
+
         try {
             DB::beginTransaction();
-            $levelSedeToUpdate = LevelSedeEducational::where('id',$levelSede)->first();
             // Actualizar el horario
             $newSchedules =  $request->input('schedule');
             foreach ($newSchedules as $key => $newSchedule) {

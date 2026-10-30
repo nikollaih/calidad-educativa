@@ -252,6 +252,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('institution/{institutionId}/save-new-pei', [InstitutionController::class, 'updatePei'])
      ->name('update.pei');
         // Rutas para la gestion de sedes
+        Route::post('sede/{sede}/state', [SedeController::class, 'changeState'])->name('sede.change-state');
         Route::resource('{institutionId}/sede-with-institution'             , SedeController::class);
         Route::resource('sede', SedeController::class);
         // Rutas para la gestion de ofertas educativas

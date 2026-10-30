@@ -225,6 +225,7 @@
                                 <th>DIRECCIÓN</th>
                                 <th>ZONA</th>
                                 <th>TIPO DE SEDE</th>
+                                <th>ESTADO</th>
                                 <th>ACCIONES</th>
 
 
@@ -240,6 +241,11 @@
                                     <td>{{ $sede->zone }}</td>
                                     <td>{{ $sede->parent_sede_id ? "Adscrita" : "Principal" }}</td>
                                     <td>
+                                        <span class="badge {{ $sede->state_slug === 'cerrada' ? 'bg-danger' : 'bg-success' }}">
+                                            {{ \App\Models\Enums\State::tryFrom($sede->state_slug)?->label() ?? 'Abierta' }}
+                                        </span>
+                                    </td>
+                                    <td>
                                         <div
                                             data-component="CTableActionButton"
                                             data-title="Ver detalles"
@@ -247,6 +253,19 @@
                                             data-icon-class="fa fa-eye"
                                             data-hover-icon-color="text-custom-primary"
                                         ></div>
+                                        @if(auth()->user()->can('s-institucion-editar') || auth()->user()->hasRole('rector'))
+                                            <div
+                                                data-component="SedeStateAction"
+                                                data-state-slug="{{ $sede->state_slug }}"
+                                                data-action-url="{{ route('sede.change-state', ['sede' => $sede->id]) }}"
+                                                data-csrf-token="{{ csrf_token() }}"
+                                                data-sede-id="{{ $sede->id }}"
+                                                data-sede-name="{{ $sede->name }}"
+                                                data-open-on-load="{{ old('_sede_id') == $sede->id ? 'true' : 'false' }}"
+                                                data-old-observation="{{ old('_sede_id') == $sede->id ? old('observation', '') : '' }}"
+                                                data-validation-errors="{{ json_encode(['administrativeActFile' => $errors->first('administrative_act_file'), 'observation' => $errors->first('observation'), 'stateSlug' => $errors->first('state_slug')], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                            ></div>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

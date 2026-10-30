@@ -16,7 +16,7 @@ class SedeRequest extends FormRequest {
                 'permissions' => ['s-institucion-crear'],
                 'roles' => ['rector'],
             ],
-            'update,edit' => [
+            'update,edit,changeState' => [
                 'permissions' => ['s-institucion-editar'],
                 'roles' => ['rector'],
             ],

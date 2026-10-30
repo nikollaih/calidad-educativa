@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Enums\State;
 
 class Sede extends Model
 {
@@ -14,7 +15,7 @@ class Sede extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+     protected $fillable = [
         'name',
         'dane',
         'zone',
@@ -25,7 +26,11 @@ class Sede extends Model
         'institution_id',
         'administrative_act',
         'parent_sede_id',
-        'modelo_pedagogico_id'
+         'modelo_pedagogico_id'
+     ];
+
+    protected $attributes = [
+        'state_slug' => State::Abierta->value,
     ];
 
     // Relaciones
@@ -59,6 +64,15 @@ class Sede extends Model
     }
     public function educationalOffer (){
         return $this->hasOne(EducationalOffer::class,'sede_id');
+    }
+    public function stateChanges() {
+        return $this->hasMany(SedeStateChange::class, 'sede_id')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
+    }
+
+    public function isClosed(): bool {
+        return $this->state_slug === State::Cerrada->value;
     }
         /**
      * The attributes that should be casted to native types.

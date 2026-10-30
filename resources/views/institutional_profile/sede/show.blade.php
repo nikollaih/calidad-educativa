@@ -56,6 +56,11 @@
                         Mobiliario
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cierres-tab" data-bs-toggle="tab" data-bs-target="#cierres" type="button" role="tab">
+                        Cierres de la sede
+                    </button>
+                </li>
 
 
                 <!-- Agrega más pestañas si es necesario -->
@@ -649,6 +654,9 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                        <div class="tab-pane fade" id="cierres" role="tabpanel" aria-labelledby="cierres-tab">
+                            <div data-component="SedeStateHistory" data-events="{{ json_encode($stateHistory, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"></div>
                         </div>
                     </div>
                 </form>

@@ -16,8 +16,13 @@ use App\Http\Services\TitularitySedesService;
 use App\Models\EducationalModel;
 use App\Models\EducationalOffer;
 use App\Models\Enums\TitularityTypes;
+use App\Models\Enums\State;
 use App\Models\ModeloPedagogico;
+use App\Models\SedeStateChange;
 use App\Models\Sede;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 class SedeController extends Controller {
     public function __construct(
         private SedesService $sedesService,
@@ -151,11 +156,19 @@ class SedeController extends Controller {
             'steamClassroom',
             'inventories',
             'infraestructuras',
-            'mobiliarios'
+            'mobiliarios',
+            'stateChanges.administrativeAct'
         )->first();
 
         if (empty($sede)) {
             return redirect()->back()->with('flash_error_message', 'Sede no encontradaa');
+        }
+        if ($sede->isClosed()) {
+            return redirect()->route('sede-with-institution.show', [
+                'institutionId' => $sede->institution_id,
+                'sede_with_institution' => $sede->id,
+                'origin' => request()->query('origin'),
+            ])->with('flash_error_message', 'La sede está cerrada y no se puede editar.');
         }
         $educationalOffer = EducationalOffer::where('sede_id',$sede->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
         $eduactionalModels = SelectorOrder::sort(EducationalModel::orderBy('name')->get(), fn (EducationalModel $model) => $model->name);
@@ -168,7 +181,8 @@ class SedeController extends Controller {
                 'educationalOffer' => $educationalOffer,
                 'eduactionalModels' => $eduactionalModels,
                 'modelosPedagogicos' => $modelosPedagogicos,
-                'availableSedes'=>$availableSedes
+                'availableSedes'=>$availableSedes,
+                'stateHistory' => $this->formatStateHistory($sede),
             ]);
     }
     public function show(Request $request, int $institutionId = null,int $sede = null) {
@@ -180,7 +194,8 @@ class SedeController extends Controller {
             'steamClassroom',
             'inventories',
             'infraestructuras',
-            'mobiliarios'
+            'mobiliarios',
+            'stateChanges.administrativeAct'
         )->first();
 
         if (empty($sede)) {
@@ -197,7 +212,8 @@ class SedeController extends Controller {
                 'modelosPedagogicos' => $modelosPedagogicos,
                 'educationalOffer' => $educationalOffer,
                 'eduactionalModels' => $eduactionalModels,
-                'availableSedes'=>$availableSedes
+                'availableSedes'=>$availableSedes,
+                'stateHistory' => $this->formatStateHistory($sede),
             ]);
     }
 
@@ -208,6 +224,12 @@ class SedeController extends Controller {
 
         if (empty($sedeToUpdate)) {
             return redirect()->back()->with('flash_error_message', 'Sede no encontrada');
+        }
+        if ($sedeToUpdate->isClosed()) {
+            return redirect()->route('sede-with-institution.show', [
+                'institutionId' => $sedeToUpdate->institution_id,
+                'sede_with_institution' => $sedeToUpdate->id,
+            ])->with('flash_error_message', 'La sede está cerrada y no se puede editar.');
         }
         $educationalOffer = EducationalOffer::where('sede_id', $sedeToUpdate->id)->with('educationalModels','validationAuthorizationAdjunto')->first();
         if (!empty($educationalOffer)) {
@@ -310,6 +332,76 @@ class SedeController extends Controller {
         //return redirect()->route('sede.edit',['institution'=>$sedeToUpdate->institution_id,  'sede' => $sedeToUpdate->id])->with('success', 'Sede actualizada correctamente.');
     }
 
+    public function changeState(Request $request, int $sede) {
+        $validated = $request->validate([
+            'state_slug' => ['required', Rule::enum(State::class)],
+            'administrative_act_file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+            'observation' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $sedeToChange = Sede::findOrFail($sede);
+        $targetState = State::from($validated['state_slug']);
+
+        if ($sedeToChange->state_slug === $targetState->value) {
+            return redirect()->back()
+                ->withErrors(['state_slug' => 'La sede ya se encuentra en ese estado.'])
+                ->withInput();
+        }
+
+        $storedAttachment = $this->adjuntoService->storeAdjunto(
+            adjunto: $request->file('administrative_act_file'),
+            ruta: 'sedes/'.$sedeToChange->institution_id.'/actos_estado',
+            disk: 'public',
+        );
+
+        if (!$storedAttachment->success) {
+            return redirect()->back()
+                ->withErrors(['administrative_act_file' => $storedAttachment->msg])
+                ->withInput();
+        }
+
+        $adjunto = $storedAttachment->data;
+
+        try {
+            $changed = DB::transaction(function () use ($sede, $targetState, $adjunto, $validated) {
+                $lockedSede = Sede::whereKey($sede)->lockForUpdate()->firstOrFail();
+
+                if ($lockedSede->state_slug === $targetState->value) {
+                    return false;
+                }
+
+                $lockedSede->state_slug = $targetState->value;
+                $lockedSede->save();
+
+                SedeStateChange::create([
+                    'sede_id' => $lockedSede->id,
+                    'state_slug' => $targetState->value,
+                    'administrative_act_id' => $adjunto->id,
+                    'observation' => $validated['observation'],
+                ]);
+
+                return true;
+            });
+        } catch (\Throwable $exception) {
+            Storage::disk($adjunto->disco)->delete($adjunto->ruta);
+            $adjunto->delete();
+            throw $exception;
+        }
+
+        if (!$changed) {
+            Storage::disk($adjunto->disco)->delete($adjunto->ruta);
+            $adjunto->delete();
+
+            return redirect()->back()
+                ->withErrors(['state_slug' => 'La sede ya se encuentra en ese estado.'])
+                ->withInput();
+        }
+
+        $action = $targetState === State::Cerrada ? 'cerrada' : 'abierta';
+
+        return redirect()->back()->with('success', "La sede fue {$action} correctamente.");
+    }
+
     public function destroy(Request $request, int $sede = null) {
         $sedeToDel = Sede::find($sede);
         if (empty($sedeToDel)) {
@@ -318,5 +410,15 @@ class SedeController extends Controller {
         $institutionId = $sedeToDel->institution_id;
         $sedeToDel->delete();
         return redirect()->route('institution.show',['institution'=>$institutionId])->with('success', 'Sede eliminada correctamente.');
+    }
+
+    private function formatStateHistory(Sede $sede): array {
+        return $sede->stateChanges->map(fn (SedeStateChange $change) => [
+            'event' => $change->state_slug === State::Cerrada->value ? 'Cierre' : 'Apertura',
+            'date' => $change->created_at?->format('d/m/Y H:i'),
+            'documentUrl' => $change->administrativeAct?->url,
+            'documentName' => $change->administrativeAct?->nombre_completo,
+            'observation' => $change->observation,
+        ])->values()->all();
     }
 }
