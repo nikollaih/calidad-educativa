@@ -9,6 +9,7 @@ use App\Models\FactorCritico;
 use App\Models\FactorCriticoCalificacion;
 use App\Models\GrupoCalificacion;
 use Illuminate\Support\Collection;
+use RuntimeException;
 
 class AutoevaluacionService {
     const PUNTAJE_MINIMO_PARA_PMI = 4;
@@ -236,9 +237,9 @@ class AutoevaluacionService {
             ]);
 
 
-            // También agregamos las calificaciones individuales con valor 1 o no calificadas
+            // Los valores 1, 2 y 3 seleccionan el tipo de factor según la guía.
             $calificacionesMejora = $grupo['notas']->filter(function ($nota) {
-                return $nota['valor'] <= 3 || is_null($nota['valor']);
+                return $nota['valor'] === null || ($nota['valor'] >= 1 && $nota['valor'] <= 3);
             });
 
             if ($calificacionesMejora->count() > 0) {
@@ -248,12 +249,45 @@ class AutoevaluacionService {
                 }
 
                 foreach ($calificacionesMejora as $nota) {
-                    $factorCritico = FactorCriticoCalificacion::where('indice_calificacion',$nota['indice_calificacion'])->first();
+                    if ($nota['valor'] === null) {
+                        $oportunidadesMejora['Calificaciones específicas - ' . $nombreGrupo]->push([
+                            'nombre' => $nota['nombre_calificacion'],
+                            'indice' => $nota['indice_calificacion'],
+                            'valor' => null,
+                            'estado' => 'No evaluada',
+                        ]);
+
+                        continue;
+                    }
+
+                    $factorCritico = FactorCriticoCalificacion::query()
+                        ->where('indice_calificacion', $nota['indice_calificacion'])
+                        ->where('valor_nota', $nota['valor'])
+                        ->where(function ($query) use ($autoevaluacion) {
+                            $query->whereNull('institucion_id')
+                                ->orWhere('institucion_id', $autoevaluacion->institucion_id);
+                        })
+                        ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$autoevaluacion->institucion_id])
+                        ->first();
+
+                    if ($factorCritico === null) {
+                        throw new RuntimeException(sprintf(
+                            'No existe factor crítico para la calificación %s y el valor %d.',
+                            $nota['indice_calificacion'],
+                            $nota['valor']
+                        ));
+                    }
+
                     $factoresCriticosPorDefecto->push($factorCritico);
                     $oportunidadesMejora['Calificaciones específicas - ' . $nombreGrupo]->push([
                         'nombre' => $nota['nombre_calificacion'],
                         'indice' => $nota['indice_calificacion'],
-                        'estado' => is_null($nota['valor']) ? 'No evaluada' : 'Existencia (1)'
+                        'valor' => $nota['valor'],
+                        'estado' => match ((int) $nota['valor']) {
+                            1 => 'Existencia (1)',
+                            2 => 'Pertinencia (2)',
+                            3 => 'Apropiación (3)',
+                        },
                     ]);
                 }
             }
@@ -261,18 +295,24 @@ class AutoevaluacionService {
         if ($autoevaluacion->alias_estado != 'VALIDACION') {
             // Recolectar los registros válidos que vamos a mantener
             $idsParaMantener = [];
-            foreach ($factoresCriticosPorDefecto as $factorPorDefecto) {
-                $factoresCriticosExistentes = $factoresCriticosRegistrados->where('calificacion_indice',$factorPorDefecto->indice_calificacion);
-                if ($factoresCriticosExistentes->isNotEmpty()) {
-                    $idsParaMantener = array_merge(
-                        $idsParaMantener,
-                        $factoresCriticosExistentes->pluck('id')->toArray()
-                    );
+            foreach ($factoresCriticosPorDefecto->unique('indice_calificacion') as $factorPorDefecto) {
+                $factorCriticoExistente = $factoresCriticosRegistrados
+                    ->where('calificacion_indice', $factorPorDefecto->indice_calificacion)
+                    ->where('valor_nota', $factorPorDefecto->valor_nota)
+                    ->first();
+
+                if ($factorCriticoExistente !== null) {
+                    $idsParaMantener[] = $factorCriticoExistente->id;
                 } else {
-                    // Buscar si ya existe uno igual
+                    // Si cambió el nivel de respuesta, el factor anterior y sus vínculos ya no aplican.
+                    FactorCritico::where('autoevaluacion_id', $autoevaluacionId)
+                        ->where('calificacion_indice', $factorPorDefecto->indice_calificacion)
+                        ->delete();
+
                     $factorCreado = FactorCritico::create(
                         [
                             'calificacion_indice' => $factorPorDefecto->indice_calificacion,
+                            'valor_nota' => $factorPorDefecto->valor_nota,
                             'autoevaluacion_id' => $autoevaluacionId,
                             'descripcion' => $factorPorDefecto->descripcion,
                             'valor' => 1,

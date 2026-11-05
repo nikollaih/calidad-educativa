@@ -263,11 +263,13 @@ class InstitutionController extends Controller {
             $valor = (int) $factor['valor'];
             $autoevaluacionId = (int) $factor['autoevaluacion_id'];
             $calificacionIndice = $factor['calificacion_indice'];
+            $valorNota = isset($factor['valor_nota']) ? (int) $factor['valor_nota'] : null;
 
             // Buscar si ya existe uno igual
             $factorCritico = FactorCritico::firstOrCreate(
                 [
                     'calificacion_indice' => $calificacionIndice,
+                    'valor_nota' => $valorNota,
                     'autoevaluacion_id' => $autoevaluacionId,
                     'descripcion' => $descripcion,
                     'valor' => $valor,
@@ -278,6 +280,7 @@ class InstitutionController extends Controller {
             // con institucion_id NULL o exactamente el mismo institucion_id
             $existe = FactorCriticoCalificacion::where('descripcion', $descripcion)
                 ->where('indice_calificacion', $calificacionIndice)
+                ->where('valor_nota', $valorNota)
                 ->where(function ($q) use ($institucionId) {
                     $q->whereNull('institucion_id')
                       ->orWhere('institucion_id', $institucionId);
@@ -289,6 +292,7 @@ class InstitutionController extends Controller {
                 FactorCriticoCalificacion::create([
                     'descripcion' => $descripcion,
                     'indice_calificacion' => $calificacionIndice,
+                    'valor_nota' => $valorNota,
                     'institucion_id' => $institucionId,
                 ]);
             }

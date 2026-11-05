@@ -3,59 +3,71 @@
 namespace Database\Seeders;
 
 use App\Models\GrupoCalificacion;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Calificacion;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class GrupoCalificacionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-       $grupoCalificaciones = [
-            // Niveles principales
-            [ 'nombre' => 'GESTIÓN DIRECTIVA',                   'indice' => '1', 'padre_id' => null],
-            [ 'nombre' => 'GESTIÓN ACADÉMICA',                   'indice' => '2', 'padre_id' => null],
-            [ 'nombre' => 'GESTIÓN ADMINISTRATIVA Y FINANCIERA', 'indice' => '3', 'padre_id' => null],
-            [ 'nombre' => 'GESTIÓN DE LA COMUNIDAD',             'indice' => '4', 'padre_id' => null],
-            // Subniveles de gestion directiva
-            [ 'nombre' => 'Direccionamiento estratégico',        'indice' => '1.1', 'padre_id' => 1],
-            [ 'nombre' => 'Gestión estratégica',                 'indice' => '1.2', 'padre_id' => 1],
-            [ 'nombre' => 'Gobierno escolar',                    'indice' => '1.3', 'padre_id' => 1],
-            [ 'nombre' => 'Cultura institucional',               'indice' => '1.4', 'padre_id' => 1],
-            [ 'nombre' => 'Clima escolar',                       'indice' => '1.5', 'padre_id' => 1],
-            [ 'nombre' => 'Relaciones con el entorno',           'indice' => '1.6', 'padre_id' => 1],
-            // Subniveles de gestion academica
-            [ 'nombre' => 'Diseño pedagógico',                   'indice' => '2.1', 'padre_id' => 2],
-            [ 'nombre' => 'Prácticas pedagógicas',               'indice' => '2.2', 'padre_id' => 2],
-            [ 'nombre' => 'Gestón de aula',                      'indice' => '2.3', 'padre_id' => 2],
-            [ 'nombre' => 'Seguimiento académico',               'indice' => '2.4', 'padre_id' => 2],
-            // Subniveles de gestion administrativa
-            [ 'nombre' => 'Apoyo a la gestión académica',                         'indice' => '3.1', 'padre_id' => 3],
-            [ 'nombre' => 'Administración de la planta física y de los recursos', 'indice' => '3.2', 'padre_id' => 3],
-            [ 'nombre' => 'Administración de los servicios complementarios',      'indice' => '3.3', 'padre_id' => 3],
-            [ 'nombre' => 'Talento humano',                                       'indice' => '3.4', 'padre_id' => 3],
-            [ 'nombre' => 'Apoyo financiero y contable',                          'indice' => '3.5', 'padre_id' => 3],
-            // Subniveles de gestion de la comunidad
-            [ 'nombre' => 'Accesibilidad',                   'indice' => '4.1', 'padre_id' => 4],
-            [ 'nombre' => 'Proyección a la comunidad',       'indice' => '4.2', 'padre_id' => 4],
-            [ 'nombre' => 'Participación y convivencia',     'indice' => '4.3', 'padre_id' => 4],
-            [ 'nombre' => 'Prevención de riesgos',           'indice' => '4.4', 'padre_id' => 4],
+        $catalogo = Guia34Catalogo::cargar();
+
+        // Se conservan literalmente los cuatro niveles principales actuales.
+        $nivelesPrincipales = [
+            '1' => 'GESTIÓN DIRECTIVA',
+            '2' => 'GESTIÓN ACADÉMICA',
+            '3' => 'GESTIÓN ADMINISTRATIVA Y FINANCIERA',
+            '4' => 'GESTIÓN DE LA COMUNIDAD',
         ];
-            foreach ($grupoCalificaciones as $grupo) {
-            GrupoCalificacion::UpdateOrCreate(
-            // Condición para buscar
-                [
-                    'indice' => $grupo['indice'],
-                    'padre_id' => $grupo['padre_id'],
-                ],
-                // Datos a insertar/actualizar
-                [
-                    'nombre' => $grupo['nombre'],
-                ]
+
+        if (app()->environment('production')) {
+            throw new RuntimeException('El reemplazo de la Guía 34 no debe ejecutarse en producción.');
+        }
+
+        if (DB::table('autoevaluacions')->exists() || DB::table('pmis')->exists()) {
+            throw new RuntimeException(
+                'Antes de reemplazar el catálogo Guía 34, ejecute php artisan calidad:limpiar-calificaciones en un entorno local. No ejecute esa limpieza en producción.'
             );
         }
+
+        DB::transaction(function () use ($catalogo, $nivelesPrincipales): void {
+            // Limpiar plantillas históricas, desde sus dependientes hacia los padres.
+            DB::table('pmi_actividads')->delete();
+            DB::table('pmi_metas')->delete();
+            DB::table('pmi_objetivos')->delete();
+            Calificacion::query()->delete();
+            GrupoCalificacion::query()->whereNotNull('padre_id')->delete();
+            GrupoCalificacion::query()
+                ->whereNull('padre_id')
+                ->whereNotIn('indice', array_keys($nivelesPrincipales))
+                ->delete();
+
+            foreach ($nivelesPrincipales as $indice => $nombre) {
+                GrupoCalificacion::updateOrCreate(
+                    ['indice' => $indice, 'padre_id' => null],
+                    ['nombre' => $nombre]
+                );
+            }
+
+            $idsPrincipales = GrupoCalificacion::query()
+                ->whereNull('padre_id')
+                ->whereIn('indice', array_keys($nivelesPrincipales))
+                ->pluck('id', 'indice');
+
+            foreach ($catalogo['procesos'] as $indice => $proceso) {
+                $padreId = $idsPrincipales->get($proceso['padre_indice']);
+
+                if ($padreId === null) {
+                    throw new \RuntimeException("No existe el nivel principal {$proceso['padre_indice']} para el proceso {$indice}.");
+                }
+
+                GrupoCalificacion::updateOrCreate(
+                    ['indice' => $indice, 'padre_id' => $padreId],
+                    ['nombre' => $proceso['nombre']]
+                );
+            }
+        });
     }
 }
-

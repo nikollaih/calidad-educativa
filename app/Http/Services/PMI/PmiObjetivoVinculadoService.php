@@ -35,11 +35,14 @@ class PmiObjetivoVinculadoService {
             if (data_get($objetivo,'objetivo_general_id') == null && request()->input('institucionId') != null) {
                 $institucionId = request()->input('institucionId');
                 $factorCriticoVinculado = FactorCritico::findOrFail($objetivoUpdated->factor_id);
-                $factorCalificacion = FactorCriticoCalificacion::where('descripcion', $factorCriticoVinculado->descripcion)
+                $factorCalificacion = FactorCriticoCalificacion::query()
+                    ->where('indice_calificacion', $factorCriticoVinculado->calificacion_indice)
+                    ->where('valor_nota', $factorCriticoVinculado->valor_nota)
                     ->where(function ($query) use ($institucionId) {
                         $query->whereNull('institucion_id')
-                              ->orWhere('institucion_id', $institucionId);
+                            ->orWhere('institucion_id', $institucionId);
                     })
+                    ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$institucionId])
                     ->first();
                 if (!empty($factorCalificacion)) {
                     // Verificar si ya existe uno con mismo descripcion + indice_calificacion

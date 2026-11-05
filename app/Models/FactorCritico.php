@@ -12,9 +12,14 @@ class FactorCritico extends Model
     protected $fillable = [
         'autoevaluacion_id',
         'calificacion_indice',
+        'valor_nota',
         'descripcion',
         'pmi_id',
         'valor',
+    ];
+
+    protected $casts = [
+        'valor_nota' => 'integer',
     ];
 
     public function calificacion() {

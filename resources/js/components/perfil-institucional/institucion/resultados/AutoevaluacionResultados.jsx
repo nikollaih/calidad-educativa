@@ -55,12 +55,13 @@ export default function AutoevaluacionResultados({
         });
         };
 
-    const agregarFactorCritico = (calificacionIndice, descripcion) => {
+    const agregarFactorCritico = (calificacionIndice, descripcion, valorNota) => {
     const nuevoFactor = {
         id: `virtual-${Math.floor(Math.random() * 1000000)}`,
         descripcion: descripcion,
         valor: 1,
-        calificacion_indice: calificacionIndice
+        calificacion_indice: calificacionIndice,
+        valor_nota: valorNota
     };
 
     setFactoresCriticos(prev => [...prev, nuevoFactor]);
@@ -172,6 +173,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                             <input type="hidden" name={`factores[${factorIndex}][valor]`} value={factor.valor} />
                             <input type="hidden" name={`factores[${factorIndex}][autoevaluacion_id]`} value={autoevaluacionId} />
                             <input type="hidden" name={`factores[${factorIndex}][calificacion_indice]`} value={factor.calificacion_indice} />
+                            <input type="hidden" name={`factores[${factorIndex}][valor_nota]`} value={factor.valor_nota} />
                         </div>
                     ))}
                 {puedeEditar && (
@@ -253,7 +255,8 @@ const getOportunidadesMejora = (gestionNombre) => {
                                             {factoresCriticos
                                                 .filter(
                                                     (factor) =>
-                                                        factor.calificacion_indice ===  calificacion.indice
+                                                        factor.calificacion_indice === calificacion.indice &&
+                                                        Number(factor.valor_nota) === Number(calificacion.valor)
                                                 )
                                                 .map((factor, index) => (
                                                     <div key={factor.id} className="mb-3 p-2 border rounded">
@@ -316,7 +319,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                                         </div>
 
                                         {/* Selector de factores críticos existentes */}
-                                        {puedeEditar && (
+                                        {puedeEditar && calificacion.valor !== null && (
                                             <select
                                                 className="w-full !border border-custom-blue-dark rounded-xl mb-2"
                                                 defaultValue=""
@@ -326,7 +329,11 @@ const getOportunidadesMejora = (gestionNombre) => {
                                                         (f) => f.id === selectedId
                                                     );
                                                     if (seleccionado) {
-                                                        agregarFactorCritico(seleccionado.indice_calificacion, seleccionado.descripcion)
+                                                        agregarFactorCritico(
+                                                            seleccionado.indice_calificacion,
+                                                            seleccionado.descripcion,
+                                                            seleccionado.valor_nota
+                                                        )
                                                     }
                                                     e.target.value = ""; // reset después de agregar
                                                 }}
@@ -334,7 +341,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                                                 <option value="">+ Seleccionar factor crítico existente</option>
                                                  {sortBySelectorText(
                                                      factoresCriticosInstitucion
-                                                         .filter((f) => f.indice_calificacion === calificacion.indice),
+                                                         .filter((f) => f.indice_calificacion === calificacion.indice && Number(f.valor_nota) === Number(calificacion.valor)),
                                                      (f) => f.descripcion
                                                  )
                                                      .map((f) => (
@@ -345,12 +352,12 @@ const getOportunidadesMejora = (gestionNombre) => {
                                             </select>
                                         )}
                                         <div className="d-flex justify-content-between align-items-center mb-2">
-                                            {puedeEditar && (
+                                            {puedeEditar && calificacion.valor !== null && (
                                                 <button
                                                     type="button"
                                                     className="btn btn-sm btn-outline-primary"
                                                     onClick={() =>
-                                                        agregarFactorCritico(calificacion.indice, '')
+                                                        agregarFactorCritico(calificacion.indice, '', calificacion.valor)
                                                     }
                                                 >
                                                     + Agregar factor crítico
@@ -384,6 +391,7 @@ const getOportunidadesMejora = (gestionNombre) => {
                             <input type="hidden" name={`factores[${factorIndex}][valor]`} value={factor.valor} />
                             <input type="hidden" name={`factores[${factorIndex}][autoevaluacion_id]`} value={autoevaluacionId} />
                             <input type="hidden" name={`factores[${factorIndex}][calificacion_indice]`} value={factor.calificacion_indice} />
+                            <input type="hidden" name={`factores[${factorIndex}][valor_nota]`} value={factor.valor_nota} />
                         </div>
                     ))}
                 {puedeEditar && (

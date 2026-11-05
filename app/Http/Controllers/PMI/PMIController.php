@@ -241,7 +241,14 @@ class PMIController extends Controller {
                 'objetivos.metas.indicadores.actividades'
             ])
             ->firstOrFail();
-        $factorCriticoCalificacion = FactorCriticoCalificacion::where('indice_calificacion',$factorCritico->calificacion_indice)
+        $factorCriticoCalificacion = FactorCriticoCalificacion::query()
+            ->where('indice_calificacion', $factorCritico->calificacion_indice)
+            ->where('valor_nota', $factorCritico->valor_nota)
+            ->where(function ($query) use ($institucionId) {
+                $query->whereNull('institucion_id')
+                    ->orWhere('institucion_id', $institucionId);
+            })
+            ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$institucionId])
             ->firstOrFail();
 
         $objetivos = PmiObjetivo::with('metas')->where('factor_id',$factorCriticoCalificacion->id)->get();

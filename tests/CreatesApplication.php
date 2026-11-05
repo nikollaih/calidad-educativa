@@ -16,6 +16,15 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        $connection = $app['config']->get('database.default');
+        $database = $app['config']->get("database.connections.{$connection}.database");
+
+        if ($connection !== 'sqlite' || $database !== ':memory:') {
+            throw new \RuntimeException(
+                'Las pruebas solo pueden ejecutarse con SQLite en memoria; se bloqueó el acceso a una base persistente.'
+            );
+        }
+
         return $app;
     }
 }

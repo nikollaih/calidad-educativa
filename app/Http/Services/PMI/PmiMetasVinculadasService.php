@@ -4,6 +4,7 @@ namespace App\Http\Services\PMI;
 
 use App\Models\PMI\PmiMeta;
 use App\Models\PMI\PmiObjetivo;
+use App\Models\FactorCriticoCalificacion;
 use App\Models\PmiMetaVinculada;
 use App\Models\PmiObjetivoVinculado;
 
@@ -35,12 +36,26 @@ class PmiMetasVinculadasService {
             if ($metaId == null && request()->input('institucionId') != null) {
                 $institucionId = request()->input('institucionId');
                 $objetivoVinculado = PmiObjetivoVinculado::findOrFail($metaUpdated->objetivo_id);
-                $objetivoParametrizado = PmiObjetivo::where('descripcion', $objetivoVinculado->descripcion)
+                $factorCalificacion = FactorCriticoCalificacion::query()
+                    ->where('indice_calificacion', $objetivoVinculado->factor->calificacion_indice)
+                    ->where('valor_nota', $objetivoVinculado->factor->valor_nota)
                     ->where(function ($query) use ($institucionId) {
                         $query->whereNull('institucion_id')
                             ->orWhere('institucion_id', $institucionId);
                     })
+                    ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$institucionId])
                     ->first();
+
+                $objetivoParametrizado = $factorCalificacion
+                    ? PmiObjetivo::where('factor_id', $factorCalificacion->id)
+                        ->where('descripcion', $objetivoVinculado->descripcion)
+                        ->where(function ($query) use ($institucionId) {
+                            $query->whereNull('institucion_id')
+                                ->orWhere('institucion_id', $institucionId);
+                        })
+                        ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$institucionId])
+                        ->first()
+                    : null;
                 if (!empty($objetivoParametrizado)) {
                     // Verificar si ya existe uno con mismo descripcion + indice_calificacion
                     // con institucion_id NULL o exactamente el mismo institucion_id
@@ -50,9 +65,8 @@ class PmiMetasVinculadasService {
                     // Si no existe, lo creamos
                     if (!$existe) {
                         PmiMeta::create([
-                            'descripcion'  => $metaUpdated->descripcion,
-                            'indicador_id' => $metaUpdated->indicador_id,
-                            'objetivo_id'  => $objetivoParametrizado->id,
+                            'descripcion' => $metaUpdated->descripcion,
+                            'objetivo_id' => $objetivoParametrizado->id,
                         ]);
                     }
                 }
