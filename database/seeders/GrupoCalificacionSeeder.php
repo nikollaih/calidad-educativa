@@ -22,10 +22,6 @@ class GrupoCalificacionSeeder extends Seeder
             '4' => 'GESTIÓN DE LA COMUNIDAD',
         ];
 
-        if (app()->environment('production')) {
-            throw new RuntimeException('El reemplazo de la Guía 34 no debe ejecutarse en producción.');
-        }
-
         if (DB::table('autoevaluacions')->exists() || DB::table('pmis')->exists()) {
             throw new RuntimeException(
                 'Antes de reemplazar el catálogo Guía 34, ejecute php artisan calidad:limpiar-calificaciones en un entorno local. No ejecute esa limpieza en producción.'
