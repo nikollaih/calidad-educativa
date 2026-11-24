@@ -96,7 +96,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                             />
                                         }
                                         {/* Mostrar Editar solo si no está en VALIDACION */}
-                                        {permissions.canEdit && evaluacion.alias_estado !== "VALIDACION" && (
+                                        {permissions.canEdit && evaluacion.alias_estado !== "VALIDADO" && (
                                             <CTableActionButton
                                                 title={'Editar'}
                                                 route={`/institutional_profile/institution/${evaluacion.id}/autoevaluaciones-editar`}
@@ -115,7 +115,7 @@ export default function Lista({ agregarUrl, autoevaluaciones, csrfToken = '',}) 
                                                     <input type="hidden" name="_token" value={csrfToken}/>
                                                 </form>
                                                 <CTableActionButton
-                                                    title={'Enviar a Validación'}
+                                                    title={'Validar'}
                                                     iconClass={'fa fa-paper-plane'}
                                                     hoverIconColor={'text-custom-primary'}
 						    onClick={() => document.getElementById(`form-validar-${evaluacion.id}`)?.submit()}

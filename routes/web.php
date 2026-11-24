@@ -140,7 +140,7 @@ Route::get('/dashboard', function () {
     $porcProceso = $pmiTotal > 0 ? round(($pmiProceso / $pmiTotal) * 100, 1) : 0;
 
     $autoProceso = $autoevaluacionesPorEstado['PROCESO'] ?? 0;
-    $autoValidacion = $autoevaluacionesPorEstado['VALIDACION'] ?? 0;
+    $autoValidadas = $autoevaluacionesPorEstado['VALIDADO'] ?? 0;
 
     $municipios = Municipio::get();
 
@@ -159,7 +159,7 @@ Route::get('/dashboard', function () {
             'porc_proceso' => $porcProceso,
             'autoevaluaciones_total' => $autoevaluacionesTotal,
             'autoevaluaciones_proceso' => $autoProceso,
-            'autoevaluaciones_validacion' => $autoValidacion,
+            'autoevaluaciones_validadas' => $autoValidadas,
         ],
         'charts' => [
             'pmi_por_estado' => [

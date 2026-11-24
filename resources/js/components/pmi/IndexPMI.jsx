@@ -82,19 +82,18 @@ export default function IndexPMI({
     };
     // Verificar permisos y roles
     const permissions = useMemo(() => ({
-        canCreateAutoevaluacion: auth.can('s-institucion-editar') ||
-            auth.hasRole('rector'),
+        canCreate: auth.can('s-institucion-editar') ||
+            auth.hasRole('rector') ||
+            auth.hasRole('super_admin') ||
+            auth.can('s-pmi-gestionar') ,
         canEdit: auth.can('s-institucion-editar') ||
             auth.hasRole('rector') ||
-            auth.can('s-autoevaluacion-calificar-gestion_directiva') ||
-            auth.can('s-autoevaluacion-calificar-gestion_academica') ||
-            auth.can('s-autoevaluacion-calificar-gestion_admin_financi') ||
-            auth.can('s-autoevaluacion-calificar-gestion_comunidad')
-        ,
-        canValidate: auth.can('s-institucion-editar') ||
-            auth.hasRole('rector'),
-        canEditResoults: auth.can('s-institucion-editar') ||
-            auth.hasRole('rector'),
+            auth.hasRole('super_admin') ||
+            auth.can('s-pmi-gestionar'),
+        canShow: auth.can('s-institucion-ver') ||
+            auth.hasRole('rector') ||
+            auth.hasRole('super_admin') ||
+            auth.can('s-pmi-gestionar'),
     }), []);
     return (
         <div className="!border border-custom-blue-light rounded-md mt-3">
@@ -102,7 +101,7 @@ export default function IndexPMI({
                 <h1 className="p-2 px-3 text-custom-primary">Planes de mejoramiento institucional</h1>
                 <div className="card-body">
                     <div className="col-md-12">
-                        {permissions.canEdit &&
+                        {permissions.canCreate &&
                             <CAddButton onClick={handleAgregarClick}/>
                         }
 
@@ -127,7 +126,7 @@ export default function IndexPMI({
                                     <td>{pmi.descripcion}</td>
                                     <td>{pmi.estado}</td>
                                     <td class="d-flex gap-1">
-                                        {permissions.canEdit &&
+                                        {permissions.canShow &&
                                             <CTableActionButton
                                                 title={'Ver detalles'}
                                                 route={`/${institucionId}/pmi/${pmi.id}`}

@@ -107,6 +107,7 @@ return [
     's-pam-consultar' => 'Consultar PAM (solo lectura)',
     // PMI
     's-pmi-validar' => 'Validar PMI',
+    's-pmi-gestionar' => 'Gestionar PMI',
     // Autoevaluacion
     's-autoevaluacion-calificar-gestion_directiva'     => 'Calificar gestión directiva',
     's-autoevaluacion-calificar-gestion_academica'     => 'Calificar gestión acádemica',

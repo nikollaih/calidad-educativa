@@ -44,6 +44,7 @@ class PermissionSeeder extends Seeder {
             ['name'=>'s-pam-consultar'],
             // PMI
             ['name'=>'s-pmi-validar'],
+            ['name'=>'s-pmi-gestionar'],
             // Autoevaluacion
             ['name'=>'s-autoevaluacion-calificar-gestion_directiva'],
             ['name'=>'s-autoevaluacion-calificar-gestion_academica'],

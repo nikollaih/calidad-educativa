@@ -30,7 +30,7 @@ use App\Models\PmiActividadAvance;
 use App\Models\PmiActividadAvanceFiles;
 use App\Models\PmiActividadVinculada;
 use App\Models\PmiMetaVinculada;
-use Illuminate\Http\Request;
+use App\Http\Requests\PMI\PMIRequest as Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -103,7 +103,7 @@ class PMIController extends Controller {
 
     public function create(Request $request, int $institucionId ) {
         $autoevaluaciones = Autoevaluacion::where('institucion_id', $institucionId)
-            ->where('alias_estado', 'VALIDACION')
+            ->where('alias_estado', 'VALIDADO')
             ->whereDoesntHave('pmi')
             ->get();
         $autoevaluaciones = SelectorOrder::sortIfRequested(
@@ -251,7 +251,7 @@ class PMIController extends Controller {
             ->orderByRaw('CASE WHEN institucion_id = ? THEN 0 ELSE 1 END', [$institucionId])
             ->firstOrFail();
 
-        $objetivos = PmiObjetivo::with('metas')->where('factor_id',$factorCriticoCalificacion->id)->get();
+        $objetivos = PmiObjetivo::with('metas.actividades')->where('factor_id',$factorCriticoCalificacion->id)->get();
         $indicadores = PmiIndicador::get();
 
         return view('pmi.editFactorCritico',

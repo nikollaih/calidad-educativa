@@ -463,12 +463,12 @@ class InstitutionController extends Controller {
                 ->route('institution.autoevaluaciones',  ['institution' => $autoevaluacion->institucion_id])
                 ->with('flash_error_message','Debe tener almenos dos factores crítico priorizados');
         }
-        $autoevaluacion->alias_estado = "VALIDACION";
+        $autoevaluacion->alias_estado = "VALIDADO";
         $autoevaluacion->save();
         return redirect()->route(
             'institution.autoevaluaciones',
             ['institution' => $autoevaluacion->institucion_id]
-        )->with('flash_success_message', 'Autoevaluación enviada a validación correctamente');
+        )->with('flash_success_message', 'Autoevaluación validada correctamente');
     }
     public function autoevaluacionesAlmacenarActualizacion(Request $request, int $autoevaluacionId = null) {
         $autoevaluacion = Autoevaluacion::find($autoevaluacionId);

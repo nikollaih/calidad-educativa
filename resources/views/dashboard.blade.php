@@ -41,7 +41,7 @@
             ],
             [
                 'label'  => 'Autoev. en Validación',
-                'value'  => $stats['autoevaluaciones_validacion'] ?? 0,
+                'value'  => $stats['autoevaluaciones_validadas'] ?? 0,
                 'sub'    => null,
             ],
         ];

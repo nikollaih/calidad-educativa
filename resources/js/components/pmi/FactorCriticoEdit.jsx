@@ -193,24 +193,43 @@ const FactorCriticoEdit = ({
             return;
         }
 
+        const actividadesImportadas = (metaSeleccionada.actividades || []).map((actividad) => ({
+            id: `actividad-virtual-${uniqueId()}`,
+            descripcion: actividad.descripcion,
+            peso: actividad.peso ?? 0,
+            max_suma_indicador: actividad.max_suma_indicador ?? 0,
+            afecta_indicador: actividad.afecta_indicador ?? 0,
+            responsables: '',
+            instrumentos_recoleccion: '',
+            recursos: '',
+            fecha_inicio: '',
+            fecha_fin: '',
+            meta_id: metaSeleccionada.id,
+            frecuencia_recoleccion: '',
+        }));
+
+        const indicadorId = actividadesImportadas.length > 0 ? `indicador-${uniqueId()}` : null;
+
         const newMeta = {
             id: `meta-virtual-${uniqueId()}`,
             __source_meta_id: metaSeleccionada.id, // solo para control interno (no se envía)
             descripcion: metaSeleccionada.descripcion,
             objetivo_id: objetivo.id,
-            actividades: (metaSeleccionada.actividades || []).map((actividad) => ({
-                id: `actividad-virtual-${uniqueId()}`,
-                descripcion: actividad.descripcion,
-                peso: actividad.peso ?? 0,
-                max_suma_indicador: actividad.max_suma_indicador ?? 0,
-                afecta_indicador: actividad.afecta_indicador ?? 0,
-                responsables: '',
-                instrumentos_recoleccion: '',
-                recursos: '',
-                fecha_inicio: '',
-                fecha_fin: '',
-                meta_id: metaSeleccionada.id,
-            })),
+            indicadores: indicadorId
+                ? [
+                      {
+                          id: indicadorId,
+                          unidad_total: '',
+                          unidad_parcial: '',
+                          valor_requerido: metaSeleccionada.valor_requerido ?? 0,
+                          meta_id: metaSeleccionada.id,
+                          actividades: actividadesImportadas.map((act) => ({
+                              ...act,
+                              indicador_id: indicadorId,
+                          })),
+                      },
+                  ]
+                : [],
         };
 
         setFormData((prev) => ({
@@ -620,7 +639,7 @@ const FactorCriticoEdit = ({
                             disabled={false}
                         />
                     </div>
-                    {meta?.indicadores?.length == 0 && (
+                    {!meta?.indicadores?.length && (
                         <button
                             type="button"
                             className="border bg-blue-500  text-white p-2 rounded-pill mt-4"
@@ -731,7 +750,7 @@ const FactorCriticoEdit = ({
                                 step="0.01"
                             />
                         </div>
-                        {indicador?.actividades?.length == 0 && (
+                        {!indicador?.actividades?.length && (
                             <button
                                 type="button"
                                 className="border bg-blue-500  text-white p-2 rounded-pill mt-4"

@@ -292,7 +292,7 @@ class AutoevaluacionService {
                 }
             }
         }
-        if ($autoevaluacion->alias_estado != 'VALIDACION') {
+        if ($autoevaluacion->alias_estado != 'VALIDADO') {
             // Recolectar los registros válidos que vamos a mantener
             $idsParaMantener = [];
             foreach ($factoresCriticosPorDefecto->unique('indice_calificacion') as $factorPorDefecto) {
@@ -342,7 +342,7 @@ class AutoevaluacionService {
             'autoevaluacionId' => $autoevaluacion->id,
             'institucionId' => $autoevaluacion->institucion_id,
             'factoresCriticosPorDefecto' => $factoresCriticos,
-            'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDACION',
+            'puedeEditar' => $autoevaluacion->alias_estado != 'VALIDADO',
             'factoresCriticosInstitucion' => $factoresCriticosInstitucion
         ];
     }
