@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import {useEffect, useState} from 'preact/hooks';
 import CTooltip from '@/components/shared/CTooltip.jsx';
+import CObservacionModal from '@/components/shared/CObservacionModal.jsx';
 
 export default function Crear({  agregarUrl = '#',
                                  institutionId = '#',
@@ -235,16 +236,14 @@ export default function Crear({  agregarUrl = '#',
 
                                                                             {/* Evidencia */}
                                                                             <div className="col-12 col-md-3">
-                                                                                <label htmlFor={`evidencia-${cal.id}`}
-                                                                                       className="block text-sm mb-2 ml-4">Evidencia</label>
-                                                                                <textarea
-                                                                                    id={`evidencia-${cal.id}`}
-                                                                                    className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
-                                                                                    rows="1"
-                                                                                    maxLength="400"
+                                                                                <label className="block text-sm mb-2 ml-4">Evidencia</label>
+                                                                                <CObservacionModal
+                                                                                    notaId={notaSeleccionada?.id}
+                                                                                    title={cal.nombre}
                                                                                     value={evidencias[cal.id] || ''}
-                                                                                    onInput={(e) => handleEvidenciaChange(cal.id, e)}
-                                                                                ></textarea>
+                                                                                    onSave={(val) => setEvidencias(prev => ({ ...prev, [cal.id]: val }))}
+                                                                                    help="Registra la evidencia u observación que respalda la calificación seleccionada."
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -272,20 +271,7 @@ export default function Crear({  agregarUrl = '#',
                         ))}
                     </div>
                 </div>
-                {Object.entries(notasSeleccionadas).map(([calId, nota], index) => (
-                    <div key={`nota-hidden-${calId}`}>
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][nota_calificacion_id]`}
-                            value={nota.id}
-                        />
-                        <input
-                            type="hidden"
-                            name={`notas[${index}][evidencia]`}
-                            value={evidencias[calId] || ''}
-                        />
-                    </div>
-                ))}
+                {/* Las observaciones se envían mediante los inputs ocultos del componente CObservacionModal */}
 
 
                 <button type="submit" className="border bg-blue-500  text-white p-2 rounded-pill mt-4">
