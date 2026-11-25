@@ -1,11 +1,16 @@
 <nav class="h-16 bg-custom-blue-dark shadow-sm flex items-center px-4 justify-between z-10" id="layout-navbar">
     <div class="w-full flex items-center justify-between">
+        <button type="button"
+                class="lg:hidden mr-3 text-white"
+                onclick="window.toggleSidebar && window.toggleSidebar()">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
         <div id="navbar-item-1" class="flex w-full"></div>
 
         <div class="flex items-center ml-auto" id="navbar-collapse">
             <div class="flex flex-row items-center ml-auto">
                 <li class="relative group">
-                    <a class="flex items-center layout-menu-toggle" href="javascript:void(0);" onclick="toggleDropdown(event)">
+                    <a class="flex items-center" href="javascript:void(0);" onclick="toggleDropdown(event)">
                         <img src="{{asset('assets/icon/navbar-profile.png')}}" alt="" class="w-11 h-11 rounded-full" />
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 !border border-white rounded-full"></span>
                     </a>

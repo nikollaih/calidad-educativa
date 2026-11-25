@@ -698,23 +698,7 @@ const FactorCriticoEdit = ({
                 </div>
                 <div className="card-body">
                     <div className="row">
-                        <div className="col-md-4">
-                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Unidad Total" content="Unidad de medida total del indicador (por ejemplo, 'total de estudiantes de la institución'). Define el universo sobre el que se mide el resultado." /> Unidad Total:</label>
-                            <input
-                                type="text"
-                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
-                                value={indicador.unidad_total}
-                                onChange={(e) =>
-                                    updateField(
-                                        indicador.id,
-                                        'unidad_total',
-                                        e.target.value,
-                                        'indicador'
-                                    )
-                                }
-                                placeholder="Ej: Total de estudiantes beneficiados"
-                            />
-                        </div>
+
                         <div className="col-md-4">
                             <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Unidad Parcial" content="Unidad de medida parcial o beneficiaria del indicador (por ejemplo, 'estudiantes beneficiados'). Es la población objetivo de la mejora." /> Unidad Parcial:</label>
                             <input
@@ -730,6 +714,23 @@ const FactorCriticoEdit = ({
                                     )
                                 }
                                 placeholder="Ej: Número de estudiantes beneficiados"
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Unidad Total" content="Unidad de medida total del indicador (por ejemplo, 'total de estudiantes de la institución'). Define el universo sobre el que se mide el resultado." /> Unidad Total:</label>
+                            <input
+                                type="text"
+                                className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
+                                value={indicador.unidad_total}
+                                onChange={(e) =>
+                                    updateField(
+                                        indicador.id,
+                                        'unidad_total',
+                                        e.target.value,
+                                        'indicador'
+                                    )
+                                }
+                                placeholder="Ej: Total de estudiantes beneficiados"
                             />
                         </div>
                         <div className="col-md-4">

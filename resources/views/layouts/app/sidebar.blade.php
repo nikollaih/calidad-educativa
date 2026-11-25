@@ -162,7 +162,7 @@ $hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
 @endphp
 
 <aside id="layout-menu"
-       class="w-64 flex-shrink-0  border-custom-primary flex flex-col transition-all duration-300 z-10 overflow-hidden"
+       class="fixed top-0 left-0 h-screen w-64 flex-shrink-0 border-custom-primary flex flex-col transition-all duration-300 z-50 overflow-hidden shadow-2xl lg:static lg:z-10 lg:shadow-none"
        style="border-right-width: 1px"
 >
     <!-- Logo Header -->
@@ -466,6 +466,9 @@ $hasVisibleSubItems = function($item) use ($canView, &$hasVisibleSubItems) {
                     backdrop?.classList.toggle('hidden');
                 }
             }
+
+            // Exponer para poder abrir/cerrar desde el navbar en móvil
+            window.toggleSidebar = toggleSidebar;
 
             toggleButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
