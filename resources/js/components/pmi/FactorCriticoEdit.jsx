@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import TextMultipleTags from '@/components/shared/TextMultipleTags.jsx';
+import CInfoIcon from '@/components/shared/CInfoIcon.jsx';
 import { sortBySelectorText } from '@/utilidades/string.js';
 
 const uniqueId = (p = 'v-') => `${p}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -391,7 +392,7 @@ const FactorCriticoEdit = ({
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
-                        <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Descripción" content="Descripción clara y medible del elemento (actividad, meta u objetivo). Evita ambigüedades para facilitar el seguimiento y la evaluación." /> Descripción:</label>
                         <textarea
                             className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
@@ -412,7 +413,7 @@ const FactorCriticoEdit = ({
                     <div className="row">
                         <div className="col-md-6">
                             <label className="block text-sm mb-2 ml-4 fw-bold">
-                                Peso (%) :
+                                <CInfoIcon title="Peso (%)" content="Peso porcentual que esta actividad aporta al indicador. La suma de los pesos de todas las actividades del indicador debe ser exactamente 100%." /> Peso (%) :
                                 {restante < 0 ? (
                                     <span className="text-danger fw-bold">
                                         Excedido por {Math.abs(restante)}%
@@ -446,7 +447,7 @@ const FactorCriticoEdit = ({
                         <div className="col-md-6">
                             <div className="d-flex justify-content-center align-items-center h-100">
                                 <label className="block text-sm mb-2 ml-4 fw-bold  m-0 px-2">
-                                    Sumará al indicador:
+                                    <CInfoIcon title="Sumará al indicador" content="Marca esta opción si la actividad contribuye al cumplimiento del indicador. Solo las actividades marcadas suman unidades al valor requerido." /> Sumará al indicador:
                                 </label>
                                 <input
                                     type="checkbox"
@@ -466,7 +467,7 @@ const FactorCriticoEdit = ({
                         {Boolean(actividad.afecta_indicador) && (
                             <div className="col-md-6">
                                 <label className="block text-sm mb-2 ml-4 fw-bold">
-                                    Valor que aporta al indicador:
+                                    <CInfoIcon title="Valor que aporta" content="Cantidad de unidades que esta actividad aporta al indicador. La suma de los valores de las actividades marcadas debe ser igual al valor requerido del indicador." /> Valor que aporta al indicador:
                                     {restanteValorRequerido < 0 ? (
                                         <span className="text-danger fw-bold">
                                             Excedido por {restanteValorRequerido}
@@ -495,7 +496,7 @@ const FactorCriticoEdit = ({
                         )}
 
                         <div className="col-md-6">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Responsables:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Responsables" content="Personas o cargos responsables de ejecutar y hacer seguimiento a la actividad. Separa varios responsables con comas." /> Responsables:</label>
                             <TextMultipleTags
                                 initialValue={actividad.responsables}
                                 label={''}
@@ -511,7 +512,7 @@ const FactorCriticoEdit = ({
                         </div>
                         <div className="col-md-6">
                             <label className="block text-sm mb-2 ml-4 fw-bold">
-                                Instrumentos de recolección:
+                                <CInfoIcon title="Instrumentos de recolección" content="Medios o instrumentos con los que se recolectará la evidencia del avance (listas de asistencia, formatos, registros, etc.)." /> Instrumentos de recolección:
                             </label>
                             <TextMultipleTags
                                 initialValue={actividad.instrumentos_recoleccion}
@@ -527,7 +528,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Frecuencia de recolección:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Frecuencia de recolección" content="Periodicidad con la que se recolectará la evidencia del avance (mensual, trimestral, semestral, etc.)." /> Frecuencia de recolección:</label>
                             <Select
                                 value={
                                     actividad.frecuencia_recoleccion
@@ -555,7 +556,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Recursos:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Recursos" content="Recursos humanos, técnicos o financieros necesarios para ejecutar la actividad (presupuesto, materiales, equipos, etc.)." /> Recursos:</label>
                             <TextMultipleTags
                                 initialValue={actividad.recursos}
                                 label={''}
@@ -568,7 +569,7 @@ const FactorCriticoEdit = ({
 
                     <div className="row mt-3">
                         <div className="col-md-6">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Inicio:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Fecha de Inicio" content="Fecha en la que inicia la ejecución de la actividad. Debe estar dentro del período del PMI." /> Fecha de Inicio:</label>
                             <input
                                 type="date"
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -586,7 +587,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Fecha de Fin:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Fecha de Fin" content="Fecha límite para finalizar la actividad. Debe ser posterior a la fecha de inicio." /> Fecha de Fin:</label>
                             <input
                                 type="date"
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -627,7 +628,7 @@ const FactorCriticoEdit = ({
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
-                        <label className="block text-sm mb-2 ml-4 fw-bold">Descripción:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Descripción" content="Descripción clara y medible del elemento (actividad, meta u objetivo). Evita ambigüedades para facilitar el seguimiento y la evaluación." /> Descripción:</label>
                         <textarea
                             className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                             rows="3"
@@ -698,7 +699,7 @@ const FactorCriticoEdit = ({
                 <div className="card-body">
                     <div className="row">
                         <div className="col-md-4">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad Total:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Unidad Total" content="Unidad de medida total del indicador (por ejemplo, 'total de estudiantes de la institución'). Define el universo sobre el que se mide el resultado." /> Unidad Total:</label>
                             <input
                                 type="text"
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -715,7 +716,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-4">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Unidad Parcial:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Unidad Parcial" content="Unidad de medida parcial o beneficiaria del indicador (por ejemplo, 'estudiantes beneficiados'). Es la población objetivo de la mejora." /> Unidad Parcial:</label>
                             <input
                                 type="text"
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -732,7 +733,7 @@ const FactorCriticoEdit = ({
                             />
                         </div>
                         <div className="col-md-4">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Valor Requerido:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Valor Requerido" content="Meta numérica que se debe alcanzar en la unidad parcial para considerar cumplido el indicador." /> Valor Requerido:</label>
                             <input
                                 type="number"
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
@@ -811,7 +812,7 @@ const FactorCriticoEdit = ({
                     {/* Descripción completa del objetivo seleccionado */}
                     {
                         <div className="mt-3">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Descripción del objetivo:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Descripción del objetivo" content="Descripción completa del objetivo general seleccionado. Puedes ajustarla para adaptarla al contexto institucional sin perder su sentido." /> Descripción del objetivo:</label>
                             <textarea
                                 className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-xl"
                                 rows="3"
@@ -829,7 +830,7 @@ const FactorCriticoEdit = ({
                         </div>
                     }
                     <div className="mb-3">
-                        <label className="block text-sm mb-2 ml-4 fw-bold">Seleccione un objetivo:</label>
+                        <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Seleccione un objetivo" content="Selecciona un objetivo general del banco de objetivos asociado al factor crítico. Al seleccionarlo se cargan sus metas para que las agregues al plan." /> Seleccione un objetivo:</label>
                         <select
                             className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
                             value={objetivo.objetivo_general_id || ''}
@@ -853,7 +854,7 @@ const FactorCriticoEdit = ({
                     {/* Select de metas + botón agregar */}
                     {objetivo.objetivo_general_id && (
                         <div className="mb-3">
-                            <label className="block text-sm mb-2 ml-4 fw-bold">Metas del objetivo:</label>
+                            <label className="block text-sm mb-2 ml-4 fw-bold"><CInfoIcon title="Metas del objetivo" content="Metas del objetivo general. Selecciona una meta del listado y agrégala para definir los indicadores y actividades del plan de mejoramiento." /> Metas del objetivo:</label>
                             <div className="d-flex gap-2">
                                 <select
                                     className="!border border-custom-blue-dark focus:outline-none focus:ring-1 focus:ring-custom-blue-dark focus:border-transparent w-full px-3 py-2 rounded-pill"
