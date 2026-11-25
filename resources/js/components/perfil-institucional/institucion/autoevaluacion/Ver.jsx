@@ -104,6 +104,32 @@ export default function Ver({  gruposCalificaciones = [],
                     x: {
                         grid: {
                             display: false // Eliminar líneas verticales
+                        },
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: false,
+                            font: { size: 10 },
+                            callback: function (value) {
+                                const label = this.getLabelForValue(value);
+                                if (typeof label !== 'string' || label.length <= 14) {
+                                    return label;
+                                }
+                                // Envolver por palabras (no cortar palabras a la mitad)
+                                const words = label.split(' ');
+                                const lines = [];
+                                let current = '';
+                                words.forEach((word) => {
+                                    if (current && (current + ' ' + word).length > 14) {
+                                        lines.push(current);
+                                        current = word;
+                                    } else {
+                                        current = current ? current + ' ' + word : word;
+                                    }
+                                });
+                                if (current) lines.push(current);
+                                return lines.length > 1 ? lines : label;
+                            }
                         }
                     }
                 },
